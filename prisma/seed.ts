@@ -1,9 +1,10 @@
-// prisma/seed.ts - COMPREHENSIVE VERSION FOLLOWING PRISMA DOC PATTERN
+// prisma/seed.ts
 import { PrismaClient, Prisma } from "../app/generated/prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import "dotenv/config";
 import { hash } from "bcryptjs";
 
+// Initialize Prisma
 const adapter = new PrismaPg({
   connectionString: process.env.DATABASE_URL,
 });
@@ -12,7 +13,9 @@ const prisma = new PrismaClient({
   adapter,
 });
 
-// ==================== USER DATA ====================
+// ==================== DATA DEFINITIONS ====================
+
+// Define User Data (same as before)
 const userData: Prisma.UserCreateInput[] = [
   // SUPER ADMIN
   {
@@ -345,7 +348,6 @@ const userData: Prisma.UserCreateInput[] = [
   },
 ];
 
-// ==================== CLASS DATA ====================
 const classData: Prisma.ClassCreateInput[] = [
   {
     name: "Quran Memorization - Beginner Level",
@@ -507,7 +509,6 @@ const classData: Prisma.ClassCreateInput[] = [
   },
 ];
 
-// ==================== ENROLLMENT DATA ====================
 const enrollmentData: Prisma.EnrollmentCreateInput[] = [
   {
     student: { connect: { userId: "student.omar@example.com" } },
@@ -539,7 +540,6 @@ const enrollmentData: Prisma.EnrollmentCreateInput[] = [
   },
 ];
 
-// ==================== ANNOUNCEMENT DATA ====================
 const announcementData: Prisma.AnnouncementCreateInput[] = [
   {
     title: "Welcome to New Academic Year 2024-2025!",
@@ -565,7 +565,6 @@ const announcementData: Prisma.AnnouncementCreateInput[] = [
   },
 ];
 
-// ==================== QURAN PROGRESS DATA ====================
 const quranProgressData: Prisma.QuranProgressCreateInput[] = [
   {
     student: { connect: { userId: "student.omar@example.com" } },
@@ -597,7 +596,6 @@ const quranProgressData: Prisma.QuranProgressCreateInput[] = [
   },
 ];
 
-// ==================== ASSIGNMENT DATA ====================
 const assignmentData: Prisma.AssignmentCreateInput[] = [
   {
     title: "Memorize Surah An-Naziat (1-20)",
@@ -614,7 +612,6 @@ const assignmentData: Prisma.AssignmentCreateInput[] = [
   },
 ];
 
-// ==================== STUDENT GROUP DATA ====================
 const studentGroupData: Prisma.StudentGroupCreateInput[] = [
   {
     name: "Hifz Excellence Group",
@@ -648,25 +645,47 @@ const studentGroupData: Prisma.StudentGroupCreateInput[] = [
 export async function main() {
   console.log("🌱 Starting database seeding...");
 
+  // Arrays to hold created entities for linking later
+  // We use 'any' here for simplicity in the seed file, but in a real app these would be typed
+  const createdStudents: any[] = [];
+  const createdTeachers: any[] = [];
+
   try {
     // Clear existing data
     console.log("🧹 Clearing existing data...");
+    // Using CASCADE to clean up dependent tables
     await prisma.$executeRaw`TRUNCATE TABLE users CASCADE;`;
+    await prisma.$executeRaw`TRUNCATE TABLE pricing_plans CASCADE;`;
+    await prisma.$executeRaw`TRUNCATE TABLE courses CASCADE;`;
 
-    // Hash passwords and create users
+    // 1. Create Users (Students, Teachers, Admins, Parents)
     console.log("👤 Creating users...");
     for (const user of userData) {
       const hashedPassword = await hash(user.password!, 12);
-      await prisma.user.create({
+
+      const createdUser = await prisma.user.create({
         data: {
           ...user,
           password: hashedPassword,
         },
+        include: {
+          studentProfile: true,
+          teacherProfile: true,
+        },
       });
+
+      // Capture created profiles for later usage in subscriptions/courses
+      if (createdUser.studentProfile) {
+        createdStudents.push(createdUser.studentProfile);
+      }
+      if (createdUser.teacherProfile) {
+        createdTeachers.push(createdUser.teacherProfile);
+      }
+
       console.log(`✅ Created user: ${user.email}`);
     }
 
-    // Create classes
+    // 2. Create Classes
     console.log("🏫 Creating classes...");
     for (const classItem of classData) {
       await prisma.class.create({
@@ -675,28 +694,35 @@ export async function main() {
       console.log(`✅ Created class: ${classItem.name}`);
     }
 
-    // Link students to parents
+    // 3. Link Students to Parents
     console.log("👨‍👩‍👧‍👦 Linking students to parents...");
-    await prisma.student.update({
-      where: { userId: "student.omar@example.com" },
-      data: {
-        parent: { connect: { userId: "parent.ahmed@example.com" } },
-      },
+    // Fetch parents ids
+    const parentAhmed = await prisma.parent.findFirst({
+      where: { user: { email: "parent.ahmed@example.com" } },
     });
-    await prisma.student.update({
-      where: { userId: "student.aisha@example.com" },
-      data: {
-        parent: { connect: { userId: "parent.ahmed@example.com" } },
-      },
-    });
-    await prisma.student.update({
-      where: { userId: "student.hassan@example.com" },
-      data: {
-        parent: { connect: { userId: "parent.sara@example.com" } },
-      },
+    const parentSara = await prisma.parent.findFirst({
+      where: { user: { email: "parent.sara@example.com" } },
     });
 
-    // Create enrollments
+    if (parentAhmed) {
+      await prisma.student.update({
+        where: { userId: "student.omar@example.com" },
+        data: { parent: { connect: { id: parentAhmed.id } } },
+      });
+      await prisma.student.update({
+        where: { userId: "student.aisha@example.com" },
+        data: { parent: { connect: { id: parentAhmed.id } } },
+      });
+    }
+
+    if (parentSara) {
+      await prisma.student.update({
+        where: { userId: "student.hassan@example.com" },
+        data: { parent: { connect: { id: parentSara.id } } },
+      });
+    }
+
+    // 4. Create Enrollments
     console.log("📝 Creating enrollments...");
     for (const enrollment of enrollmentData) {
       await prisma.enrollment.create({
@@ -707,11 +733,9 @@ export async function main() {
       );
     }
 
-    // Add to prisma/seed.ts - After creating other data
-
-    // ==================== CREATE PRICING PLANS ====================
-
-    const pricingPlans = await Promise.all([
+    // 5. Create Pricing Plans
+    console.log("💰 Creating Pricing Plans...");
+    const createdPlans = await Promise.all([
       // One-on-One Quran Memorization Plan
       prisma.pricingPlan.create({
         data: {
@@ -872,61 +896,68 @@ export async function main() {
       }),
     ]);
 
-    console.log("✅ Created", pricingPlans.length, "Pricing Plans");
+    console.log("✅ Created", createdPlans.length, "Pricing Plans");
 
-    // ==================== CREATE SAMPLE SUBSCRIPTIONS ====================
+    // 6. Create Subscriptions
+    // We only create subscriptions if we have valid students and plans
+    if (
+      createdStudents.length >= 2 &&
+      createdPlans.length >= 2 &&
+      createdTeachers.length > 0
+    ) {
+      console.log("💳 Creating Sample Subscriptions...");
 
-    const subscriptions = await Promise.all([
-      prisma.subscription.create({
-        data: {
-          studentId: students[0].studentProfile!.id,
-          planId: pricingPlans[0].id,
-          duration: 30,
-          daysPerWeek: 3,
-          sessionsPerWeek: 3,
-          scheduleType: "REGULAR",
-          basePrice: 360.0,
-          discount: 10.0,
-          finalPrice: 324.0,
-          billingPeriod: "MONTHLY",
-          currency: "USD",
-          preferredDays: [1, 3, 5], // Mon, Wed, Fri
-          preferredTimes: ["14:00", "15:00", "16:00"],
-          timezone: "America/New_York",
-          status: "ACTIVE",
-          startDate: new Date(),
-          nextBillingAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30 days from now
-          autoRenew: true,
-        },
-      }),
-      prisma.subscription.create({
-        data: {
-          studentId: students[1].studentProfile!.id,
-          planId: pricingPlans[1].id,
-          duration: 45,
-          daysPerWeek: 2,
-          sessionsPerWeek: 2,
-          scheduleType: "REGULAR",
-          teacherId: teachers[0].teacherProfile!.id,
-          basePrice: 152.0,
-          discount: 15.0,
-          finalPrice: 129.2,
-          billingPeriod: "QUARTERLY",
-          currency: "USD",
-          preferredDays: [2, 4], // Tue, Thu
-          preferredTimes: ["17:00", "18:00"],
-          timezone: "Europe/London",
-          status: "ACTIVE",
-          startDate: new Date(),
-          nextBillingAt: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000), // 90 days
-          autoRenew: true,
-        },
-      }),
-    ]);
+      const subscriptions = await Promise.all([
+        prisma.subscription.create({
+          data: {
+            studentId: createdStudents[0].id, // Using captured Student ID
+            planId: createdPlans[0].id,
+            duration: 30,
+            daysPerWeek: 3,
+            sessionsPerWeek: 3,
+            scheduleType: "REGULAR",
+            basePrice: 360.0,
+            discount: 10.0,
+            finalPrice: 324.0,
+            billingPeriod: "MONTHLY",
+            currency: "USD",
+            preferredDays: [1, 3, 5], // Mon, Wed, Fri
+            preferredTimes: ["14:00", "15:00", "16:00"],
+            timezone: "America/New_York",
+            status: "ACTIVE",
+            startDate: new Date(),
+            nextBillingAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+            autoRenew: true,
+          },
+        }),
+        prisma.subscription.create({
+          data: {
+            studentId: createdStudents[1].id, // Using captured Student ID
+            planId: createdPlans[1].id,
+            duration: 45,
+            daysPerWeek: 2,
+            sessionsPerWeek: 2,
+            scheduleType: "REGULAR",
+            teacherId: createdTeachers[0].id, // Using captured Teacher ID
+            basePrice: 152.0,
+            discount: 15.0,
+            finalPrice: 129.2,
+            billingPeriod: "QUARTERLY",
+            currency: "USD",
+            preferredDays: [2, 4], // Tue, Thu
+            preferredTimes: ["17:00", "18:00"],
+            timezone: "Europe/London",
+            status: "ACTIVE",
+            startDate: new Date(),
+            nextBillingAt: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000),
+            autoRenew: true,
+          },
+        }),
+      ]);
+      console.log("✅ Created", subscriptions.length, "Sample Subscriptions");
+    }
 
-    console.log("✅ Created", subscriptions.length, "Sample Subscriptions");
-
-    // Create announcements
+    // 7. Create Announcements
     console.log("📢 Creating announcements...");
     for (const announcement of announcementData) {
       await prisma.announcement.create({
@@ -935,7 +966,7 @@ export async function main() {
       console.log(`✅ Created announcement: ${announcement.title}`);
     }
 
-    // Create Quran progress
+    // 8. Create Quran Progress
     console.log("📖 Creating Quran progress records...");
     for (const progress of quranProgressData) {
       await prisma.quranProgress.create({
@@ -946,217 +977,159 @@ export async function main() {
       );
     }
 
-    // Add to prisma/seed.ts - After creating teachers
+    // 9. Create Courses (Requires Teacher ID)
+    if (createdTeachers.length >= 2) {
+      console.log("📚 Creating Courses...");
 
-    // ==================== CREATE COURSES ====================
-
-    const courses = await Promise.all([
-      // Quran Memorization Course
-      prisma.course.create({
-        data: {
-          name: "Complete Quran Memorization (Hifz) Program",
-          description:
-            "A comprehensive program to memorize the entire Quran with proper tajweed and understanding. This course follows a structured methodology that has helped thousands of students worldwide.",
-          category: "QURAN",
-          level: "Beginner to Advanced",
-          duration: "12-36 months",
-          totalLessons: 240,
-          price: 49.0,
-          currency: "USD",
-          features: [
-            "Personalized memorization plan",
-            "Daily revision schedule",
-            "Tajweed correction sessions",
-            "Monthly progress evaluations",
-            "Audio recording reviews",
-            "One-on-one teacher sessions",
-            "Memorization techniques workshop",
-            "Quran understanding sessions",
-          ],
-          requirements: [
-            "Basic ability to read Arabic script",
-            "Dedication to daily practice (minimum 1 hour)",
-            "Microphone and webcam for live sessions",
-            "Quran copy (mushaf)",
-            "Commitment to complete the program",
-          ],
-          curriculum: {
-            modules: [
-              {
-                title: "Foundation & Preparation",
-                weeks: 2,
-                topics: [
-                  "Introduction to Hifz methodology",
-                  "Setting realistic goals",
-                  "Time management for memorization",
-                  "Revision system setup",
-                ],
-              },
-              {
-                title: "Juz Amma (Part 1)",
-                weeks: 4,
-                topics: [
-                  "Memorizing Surah An-Naba to An-Naziat",
-                  "Tajweed rules application",
-                  "Understanding meanings",
-                  "Revision techniques",
-                ],
-              },
+      const courses = await Promise.all([
+        // Quran Memorization Course
+        prisma.course.create({
+          data: {
+            name: "Complete Quran Memorization (Hifz) Program",
+            description:
+              "A comprehensive program to memorize the entire Quran with proper tajweed and understanding.",
+            category: "QURAN",
+            level: "Beginner to Advanced",
+            duration: "12-36 months",
+            totalLessons: 240,
+            price: 49.0,
+            currency: "USD",
+            features: [
+              "Personalized memorization plan",
+              "Daily revision schedule",
+              "Tajweed correction sessions",
+              "Monthly progress evaluations",
             ],
-          },
-          schedule: {
-            liveSessions: [
-              {
-                day: "Monday",
-                time: "9:00 AM - 10:30 AM",
-                type: "Memorization",
-              },
-              {
-                day: "Wednesday",
-                time: "9:00 AM - 10:30 AM",
-                type: "Memorization",
-              },
-              {
-                day: "Friday",
-                time: "3:00 PM - 4:30 PM",
-                type: "Revision & Q&A",
-              },
+            requirements: [
+              "Basic ability to read Arabic script",
+              "Dedication to daily practice",
             ],
-            selfStudy: "Daily 1-hour practice recommended",
+            curriculum: {
+              modules: [
+                {
+                  title: "Foundation & Preparation",
+                  weeks: 2,
+                  topics: [
+                    "Introduction to Hifz methodology",
+                    "Setting realistic goals",
+                  ],
+                },
+              ],
+            },
+            schedule: {
+              liveSessions: [
+                {
+                  day: "Monday",
+                  time: "9:00 AM - 10:30 AM",
+                  type: "Memorization",
+                },
+              ],
+              selfStudy: "Daily 1-hour practice recommended",
+            },
+            teacherId: createdTeachers[0].id, // Referenced correctly
+            isActive: true,
+            isPublic: true,
+            isFeatured: true,
+            viewCount: 1567,
+            rating: 4.9,
+            totalRatings: 324,
           },
-          teacherId: teachers[0].teacherProfile!.id,
-          isActive: true,
-          isPublic: true,
-          isFeatured: true,
-          viewCount: 1567,
-          rating: 4.9,
-          totalRatings: 324,
-        },
-      }),
+        }),
 
-      // Tajweed Course
-      prisma.course.create({
-        data: {
-          name: "Tajweed Rules Mastery",
-          description:
-            "Master the rules of Quranic recitation with practical exercises and teacher feedback. Learn proper pronunciation, characteristics of letters, and application in recitation.",
-          category: "TAJWEED",
-          level: "Beginner to Intermediate",
-          duration: "3 months",
-          totalLessons: 36,
-          price: 29.0,
-          currency: "USD",
-          features: [
-            "Complete tajweed rules coverage",
-            "Practical recitation exercises",
-            "Individual correction sessions",
-            "Audio recording analysis",
-            "Certificate of completion",
-            "Lifetime access to materials",
-          ],
-          requirements: [
-            "Ability to read Arabic script fluently",
-            "Basic Quran reading skills",
-            "Microphone for recording practice",
-            "Regular attendance commitment",
-          ],
-          teacherId: teachers[0].teacherProfile!.id,
-          isActive: true,
-          isPublic: true,
-          isFeatured: true,
-          viewCount: 892,
-          rating: 4.7,
-          totalRatings: 156,
-        },
-      }),
+        // Tajweed Course
+        prisma.course.create({
+          data: {
+            name: "Tajweed Rules Mastery",
+            description:
+              "Master the rules of Quranic recitation with practical exercises and teacher feedback.",
+            category: "TAJWEED",
+            level: "Beginner to Intermediate",
+            duration: "3 months",
+            totalLessons: 36,
+            price: 29.0,
+            currency: "USD",
+            features: [
+              "Complete tajweed rules coverage",
+              "Practical recitation exercises",
+            ],
+            requirements: ["Ability to read Arabic script fluently"],
+            teacherId: createdTeachers[0].id, // Referenced correctly
+            isActive: true,
+            isPublic: true,
+            isFeatured: true,
+            viewCount: 892,
+            rating: 4.7,
+            totalRatings: 156,
+          },
+        }),
 
-      // Fiqh Course
-      prisma.course.create({
-        data: {
-          name: "Fiqh of Worship - Comprehensive Guide",
-          description:
-            "Learn the rulings of purification, prayer, fasting, zakat, and hajj according to Hanafi madhhab with practical applications for daily life.",
-          category: "FIQH",
-          level: "All Levels",
-          duration: "4 months",
-          totalLessons: 48,
-          price: 34.0,
-          currency: "USD",
-          features: [
-            "Detailed rulings of purification (taharah)",
-            "Complete prayer (salah) guidelines",
-            "Fasting (sawm) rules and exceptions",
-            "Zakat calculations and rulings",
-            "Hajj and Umrah procedures",
-            "Practical case studies",
-          ],
-          teacherId: teachers[1].teacherProfile!.id,
-          isActive: true,
-          isPublic: true,
-          isFeatured: false,
-          viewCount: 567,
-          rating: 4.8,
-          totalRatings: 89,
-        },
-      }),
-    ]);
+        // Fiqh Course
+        prisma.course.create({
+          data: {
+            name: "Fiqh of Worship - Comprehensive Guide",
+            description:
+              "Learn the rulings of purification, prayer, fasting, zakat, and hajj according to Hanafi madhhab.",
+            category: "FIQH",
+            level: "All Levels",
+            duration: "4 months",
+            totalLessons: 48,
+            price: 34.0,
+            currency: "USD",
+            features: [
+              "Detailed rulings of purification",
+              "Complete prayer guidelines",
+            ],
+            teacherId: createdTeachers[1].id, // Referenced correctly
+            isActive: true,
+            isPublic: true,
+            isFeatured: false,
+            viewCount: 567,
+            rating: 4.8,
+            totalRatings: 89,
+          },
+        }),
+      ]);
 
-    console.log("✅ Created", courses.length, "Courses");
+      console.log("✅ Created", courses.length, "Courses");
 
-    // ==================== CREATE COURSE MATERIALS ====================
+      // 10. Create Course Materials (Linked to created courses)
+      const courseMaterials = await Promise.all([
+        prisma.courseMaterial.create({
+          data: {
+            courseId: courses[0].id,
+            title: "Complete Hifz Methodology Guide",
+            description:
+              "Detailed guide on the methodology used in this course",
+            type: "DOCUMENT",
+            fileUrl: "https://example.com/hifz-methodology.pdf",
+            fileSize: 2450000,
+            fileType: "application/pdf",
+            chapter: "Introduction",
+            lessonNumber: 1,
+            isFree: true,
+            orderIndex: 1,
+          },
+        }),
+        prisma.courseMaterial.create({
+          data: {
+            courseId: courses[0].id,
+            title: "Daily Revision Schedule Template",
+            description: "Excel template for tracking daily revision",
+            type: "DOCUMENT",
+            fileUrl: "https://example.com/revision-schedule.xlsx",
+            fileSize: 150000,
+            fileType: "application/vnd.ms-excel",
+            chapter: "Foundation",
+            lessonNumber: 2,
+            isFree: true,
+            orderIndex: 2,
+          },
+        }),
+      ]);
+      console.log("✅ Created", courseMaterials.length, "Course Materials");
+    }
 
-    const courseMaterials = await Promise.all([
-      // Materials for Quran Course
-      prisma.courseMaterial.create({
-        data: {
-          courseId: courses[0].id,
-          title: "Complete Hifz Methodology Guide",
-          description: "Detailed guide on the methodology used in this course",
-          type: "DOCUMENT",
-          fileUrl: "https://example.com/hifz-methodology.pdf",
-          fileSize: 2450000,
-          fileType: "application/pdf",
-          chapter: "Introduction",
-          lessonNumber: 1,
-          isFree: true,
-          orderIndex: 1,
-        },
-      }),
-      prisma.courseMaterial.create({
-        data: {
-          courseId: courses[0].id,
-          title: "Daily Revision Schedule Template",
-          description: "Excel template for tracking daily revision",
-          type: "DOCUMENT",
-          fileUrl: "https://example.com/revision-schedule.xlsx",
-          fileSize: 150000,
-          fileType: "application/vnd.ms-excel",
-          chapter: "Foundation",
-          lessonNumber: 2,
-          isFree: true,
-          orderIndex: 2,
-        },
-      }),
-      prisma.courseMaterial.create({
-        data: {
-          courseId: courses[0].id,
-          title: "Tajweed Rules Reference Sheet",
-          description: "Quick reference for all tajweed rules",
-          type: "DOCUMENT",
-          fileUrl: "https://example.com/tajweed-reference.pdf",
-          fileSize: 1800000,
-          fileType: "application/pdf",
-          chapter: "Tajweed",
-          lessonNumber: 3,
-          isFree: false,
-          orderIndex: 3,
-        },
-      }),
-    ]);
-
-    console.log("✅ Created", courseMaterials.length, "Course Materials");
-
-    // Create assignments
+    // 11. Create Assignments
     console.log("📚 Creating assignments...");
     for (const assignment of assignmentData) {
       await prisma.assignment.create({
@@ -1165,7 +1138,7 @@ export async function main() {
       console.log(`✅ Created assignment: ${assignment.title}`);
     }
 
-    // Create student groups
+    // 12. Create Student Groups
     console.log("👥 Creating student groups...");
     for (const group of studentGroupData) {
       const createdGroup = await prisma.studentGroup.create({
@@ -1194,13 +1167,10 @@ export async function main() {
 
     console.log("🎉 Database seeding completed successfully!");
     console.log("\n📊 Summary:");
-    console.log(`   - Users: ${userData.length}`);
-    console.log(`   - Classes: ${classData.length}`);
+    console.log(`   - Users Created: ${userData.length}`);
+    console.log(`   - Classes Created: ${classData.length}`);
+    console.log(`   - Pricing Plans: ${createdPlans.length}`);
     console.log(`   - Enrollments: ${enrollmentData.length}`);
-    console.log(`   - Announcements: ${announcementData.length}`);
-    console.log(`   - Quran Progress: ${quranProgressData.length}`);
-    console.log(`   - Assignments: ${assignmentData.length}`);
-    console.log(`   - Student Groups: ${studentGroupData.length}`);
 
     console.log("\n🔑 Default Login Credentials:");
     console.log("   Super Admin: admin@madrasah.com / Admin123!");
@@ -1222,4 +1192,3 @@ main()
   .finally(async () => {
     await prisma.$disconnect();
   });
-
