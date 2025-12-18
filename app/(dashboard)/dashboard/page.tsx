@@ -32,7 +32,7 @@ import { auth } from "@/lib/auth";
 
 
 // src/app/(dashboard)/admin/page.tsx
-import { auth } from '@/auth'
+import { auth } from '@/lib/auth'
 import { redirect } from 'next/navigation'
 import { getDashboardStats, getRecentActivities } from '@/lib/db/users'
 import AdminDashboardClient from '@/components/dashboard/admin-dashboard-client'

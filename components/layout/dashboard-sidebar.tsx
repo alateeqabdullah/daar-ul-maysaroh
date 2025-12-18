@@ -22,6 +22,7 @@ import {
   GraduationCap,
   Wallet,
   Bell,
+  User,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -33,22 +34,23 @@ interface SidebarProps {
   user: any;
 }
 
+
 const adminNavigation = [
-  { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
-  {
-    name: "User Approval",
-    href: "/admin/approvals",
-    icon: UserCheck,
-    badge: "pending",
-  },
-  { name: "User Management", href: "/admin/users", icon: Users },
-  { name: "Student Groups", href: "/admin/groups", icon: Users2 },
-  { name: "Class Management", href: "/admin/classes", icon: BookOpen },
-  { name: "Teacher Management", href: "/admin/teachers", icon: GraduationCap },
-  { name: "Schedule", href: "/admin/schedule", icon: Calendar },
-  { name: "Financial", href: "/admin/financial", icon: Wallet },
-  { name: "Reports", href: "/admin/reports", icon: BarChart3 },
-  { name: "System Settings", href: "/admin/settings", icon: Settings },
+  { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
+  { name: 'User Approval', href: '/admin/approvals', icon: UserCheck, badge: 'pending' },
+  { name: 'User Management', href: '/admin/users', icon: Users },
+  { name: 'Student Groups', href: '/admin/groups', icon: Users2 },
+  { name: 'Class Management', href: '/admin/classes', icon: BookOpen },
+  { name: 'Teacher Management', href: '/admin/teachers', icon: GraduationCap },
+  { name: 'Student Management', href: '/admin/students', icon: User },
+  { name: 'Parent Management', href: '/admin/parents', icon: Users },
+  { name: 'Schedule', href: '/admin/schedule', icon: Calendar },
+  { name: 'Attendance', href: '/admin/attendance', icon: UserCheck },
+  { name: 'Assignments', href: '/admin/assignments', icon: FileText },
+  { name: 'Grades', href: '/admin/grades', icon: BarChart3 },
+  { name: 'Financial', href: '/admin/financial', icon: Wallet },
+  { name: 'Reports', href: '/admin/reports', icon: BarChart3 },
+  { name: 'System Settings', href: '/admin/settings', icon: Settings },
 ];
 
 const teacherNavigation = [
@@ -129,7 +131,7 @@ export default function DashboardSidebar({ user }: SidebarProps) {
       {/* Sidebar */}
       <div
         className={cn(
-          "fixed inset-y-0 left-0 z-50 flex w-72 flex-col bg-gradient-to-b from-purple-900 to-indigo-900 shadow-xl transition-transform duration-300 lg:translate-x-0",
+          "fixed inset-y-0 left-0 z-50 flex w-72 flex-col bg-linear-to-b from-purple-900 to-indigo-900 shadow-xl transition-transform duration-300 lg:translate-x-0",
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         )}
       >
