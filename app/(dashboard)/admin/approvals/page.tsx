@@ -662,7 +662,7 @@
 //   );
 // }
 
-
+ 
 // src/app/(dashboard)/admin/approvals/page.tsx
 
 import { redirect } from 'next/navigation'
@@ -671,50 +671,58 @@ import UserApprovalsClient from '@/components/admin/user-approvals-client'
 import { auth } from '@/lib/auth'
 
 interface PageProps {
-  searchParams: {
+  // In Next.js 15, searchParams is a Promise
+  searchParams: Promise<{
     page?: string
     limit?: string
     role?: string
     search?: string
     status?: string
-  }
+  }>
 }
 
 export default async function UserApprovalsPage({ searchParams }: PageProps) {
+  // 1. Authenticate and Authorize
   const session = await auth()
 
   if (!session) {
     redirect('/login')
   }
 
-  if (!['SUPER_ADMIN', 'ADMIN'].includes(session.user.role)) {
+  const userRole = session.user.role
+  if (!['SUPER_ADMIN', 'ADMIN'].includes(userRole)) {
     redirect('/dashboard')
   }
 
-  const page = parseInt(searchParams.page || '1')
-  const limit = parseInt(searchParams.limit || '10')
-  const role = searchParams.role
-  const search = searchParams.search
-  const status = searchParams.status || 'PENDING'
+  // 2. Await searchParams (Crucial for Next.js 15 / Turbopack)
+  const resolvedSearchParams = await searchParams
+  
+  const page = parseInt(resolvedSearchParams.page || '1')
+  const limit = parseInt(resolvedSearchParams.limit || '10')
+  const role = resolvedSearchParams.role
+  const search = resolvedSearchParams.search
+  const status = resolvedSearchParams.status || 'PENDING'
+
+  // 3. Data Fetching Logic
+  let users = []
+  let pagination = { page: 1, limit: 10, total: 0, pages: 0 }
 
   try {
-    const { users, pagination } = await getPendingUsers(page, limit, role as any, search)
-
-    return (
-      <UserApprovalsClient
-        initialUsers={users}
-        pagination={pagination}
-        filters={{ role, search, status }}
-      />
-    )
+    // We only perform the async data call inside the try/catch
+    const result = await getPendingUsers(page, limit, role as any, search)
+    users = result.users
+    pagination = result.pagination
   } catch (error) {
+    // Log error for debugging, but let the page render with an empty state
     console.error('Error loading pending users:', error)
-    return (
-      <UserApprovalsClient
-        initialUsers={[]}
-        pagination={{ page: 1, limit: 10, total: 0, pages: 0 }}
-        filters={{ role, search, status }}
-      />
-    )
   }
+
+  // 4. Return JSX (Always outside of try/catch)
+  return (
+    <UserApprovalsClient
+      initialUsers={users}
+      pagination={pagination}
+      filters={{ role, search, status }}
+    />
+  )
 }
