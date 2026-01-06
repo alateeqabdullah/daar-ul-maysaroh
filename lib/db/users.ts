@@ -191,3 +191,33 @@ export async function getDashboardStats() {
     todayAttendance,
   };
 }
+
+
+export async function getRecentActivities(limit: number = 5) {
+  try {
+    const recentUsers = await prisma.user.findMany({
+      orderBy: { createdAt: 'desc' },
+      take: limit,
+      select: {
+        id: true,
+        name: true,
+        role: true,
+        status: true,
+        createdAt: true,
+      }
+    });
+
+    return recentUsers.map(user => ({
+      id: user.id,
+      type: user.status === 'PENDING' ? 'REGISTRATION' : 'APPROVAL',
+      // FIX: Ensure description is a plain string, not containing objects
+      description: `${user.name} (${user.role.toLowerCase()}) joined the system`,
+      timestamp: user.createdAt.toISOString(), // Convert Date to string for safe serialization
+      userName: user.name, // Flattening: just a string
+      userRole: user.role, // Flattening: just a string
+    }));
+  } catch (error) {
+    console.error("Error fetching recent activities:", error);
+    return [];
+  }
+}

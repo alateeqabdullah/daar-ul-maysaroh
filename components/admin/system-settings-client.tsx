@@ -1,4 +1,3 @@
-// src/components/admin/system-settings-client.tsx
 "use client";
 
 import { useState } from "react";
@@ -37,77 +36,88 @@ import {
 } from "@/components/ui/select";
 import { toast } from "sonner";
 
-export default function SystemSettingsClient() {
+// Define the interface to match the data passed from the Server Component
+interface SystemSettingsProps {
+  initialSettings: {
+    siteName: string;
+    siteDescription: string;
+    contactEmail: string;
+    contactPhone: string;
+    timezone: string;
+    dateFormat: string;
+    language: string;
+    smtpHost?: string;
+    smtpPort?: string;
+    smtpUsername?: string;
+    smtpPassword?: string;
+    emailFrom?: string;
+    emailNotifications: boolean;
+    pushNotifications: boolean;
+    newUserAlerts: boolean;
+    paymentAlerts: boolean;
+    attendanceAlerts: boolean;
+    requireEmailVerification: boolean;
+    requireStrongPasswords: boolean;
+    sessionTimeout: string;
+    maxLoginAttempts: string;
+    academicYear: string;
+    defaultClassCapacity: string;
+    attendanceThreshold: string;
+    gradingScale: string;
+    currency: string;
+    paymentGateway: string;
+    taxRate: string;
+    lateFeeAmount: string;
+    lateFeeDays: string;
+    maintenanceMode: boolean;
+    requireApproval: boolean;
+    enableRegistration: boolean;
+  };
+}
+
+export default function SystemSettingsClient({
+  initialSettings,
+}: SystemSettingsProps) {
   const [isLoading, setIsLoading] = useState(false);
-  const [settings, setSettings] = useState({
-    // General Settings
-    siteName: "MadrasahPro",
-    siteDescription: "Comprehensive Islamic Education Platform",
-    contactEmail: "admin@madrasahpro.com",
-    contactPhone: "+1234567890",
-    timezone: "UTC",
-    dateFormat: "MM/DD/YYYY",
-    language: "en",
 
-    // Email Settings
-    smtpHost: "smtp.gmail.com",
-    smtpPort: "587",
-    smtpUsername: "",
-    smtpPassword: "",
-    emailFrom: "noreply@madrasahpro.com",
+  // Initialize state with the settings fetched from the database
+  const [settings, setSettings] = useState(initialSettings);
 
-    // Notification Settings
-    emailNotifications: true,
-    pushNotifications: true,
-    newUserAlerts: true,
-    paymentAlerts: true,
-    attendanceAlerts: true,
-
-    // Security Settings
-    requireEmailVerification: true,
-    requireStrongPasswords: true,
-    sessionTimeout: "24",
-    maxLoginAttempts: "5",
-
-    // Academic Settings
-    academicYear: "2024-2025",
-    defaultClassCapacity: "20",
-    attendanceThreshold: "75",
-    gradingScale: "percentage",
-
-    // Financial Settings
-    currency: "USD",
-    paymentGateway: "stripe",
-    taxRate: "0",
-    lateFeeAmount: "10",
-    lateFeeDays: "7",
-  });
 
   const handleSaveSettings = async () => {
     setIsLoading(true);
     try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1500));
+      // Call the API Route
+      const response = await fetch("/api/admin/settings", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(settings),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to update settings");
+      }
 
       toast.success("Settings saved successfully", {
-        description: "All changes have been applied.",
+        description: "All changes have been applied to the database.",
       });
     } catch (error) {
       toast.error("Failed to save settings", {
-        description: "Please try again.",
+        description: "Please check your connection and try again.",
       });
     } finally {
       setIsLoading(false);
     }
   };
-
   const handleResetSettings = () => {
     if (
       confirm(
         "Are you sure you want to reset all settings to default? This action cannot be undone."
       )
     ) {
-      // Reset to default settings
+      // Logic to reset settings to system defaults
       toast.success("Settings reset to default");
     }
   };
@@ -370,7 +380,7 @@ export default function SystemSettingsClient() {
                   <Label htmlFor="smtpHost">SMTP Host</Label>
                   <Input
                     id="smtpHost"
-                    value={settings.smtpHost}
+                    value={settings.smtpHost || ""}
                     onChange={(e) =>
                       setSettings({ ...settings, smtpHost: e.target.value })
                     }
@@ -380,7 +390,7 @@ export default function SystemSettingsClient() {
                   <Label htmlFor="smtpPort">SMTP Port</Label>
                   <Input
                     id="smtpPort"
-                    value={settings.smtpPort}
+                    value={settings.smtpPort || ""}
                     onChange={(e) =>
                       setSettings({ ...settings, smtpPort: e.target.value })
                     }
@@ -390,7 +400,7 @@ export default function SystemSettingsClient() {
                   <Label htmlFor="smtpUsername">SMTP Username</Label>
                   <Input
                     id="smtpUsername"
-                    value={settings.smtpUsername}
+                    value={settings.smtpUsername || ""}
                     onChange={(e) =>
                       setSettings({ ...settings, smtpUsername: e.target.value })
                     }
@@ -401,7 +411,7 @@ export default function SystemSettingsClient() {
                   <Input
                     id="smtpPassword"
                     type="password"
-                    value={settings.smtpPassword}
+                    value={settings.smtpPassword || ""}
                     onChange={(e) =>
                       setSettings({ ...settings, smtpPassword: e.target.value })
                     }
@@ -412,7 +422,7 @@ export default function SystemSettingsClient() {
                   <Input
                     id="emailFrom"
                     type="email"
-                    value={settings.emailFrom}
+                    value={settings.emailFrom || ""}
                     onChange={(e) =>
                       setSettings({ ...settings, emailFrom: e.target.value })
                     }

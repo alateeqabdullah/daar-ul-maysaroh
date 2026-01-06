@@ -230,7 +230,7 @@ export default function DashboardHeader({ user }: HeaderProps) {
           {/* Right side - Actions */}
           <div className="flex items-center space-x-4">
             {/* Search */}
-            <div className="hidden lg:block">
+            {/* <div className="hidden lg:block">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
                 <Input
@@ -239,7 +239,7 @@ export default function DashboardHeader({ user }: HeaderProps) {
                   className="w-64 pl-10"
                 />
               </div>
-            </div>
+            </div> */}
 
             {/* Theme Toggle */}
             <Button

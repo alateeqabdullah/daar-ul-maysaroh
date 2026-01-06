@@ -72,15 +72,23 @@ export default async function proxy(request: NextRequest) {
 // Ensure you include /login and /register in the matcher if you handle redirects there
 export const config = {
   matcher: [
+    /*
+     * Match all request paths except for the ones starting with:
+     * - api (internal API routes)
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     */
+    "/((?!api|_next/static|_next/image|favicon.ico).*)",
+
+    // Explicitly include your protected UI routes
     "/dashboard/:path*",
     "/admin/:path*",
     "/teacher/:path*",
     "/student/:path*",
     "/parent/:path*",
     "/settings/:path*",
-    "/login", // Included to handle redirection logic above
-    "/register", // Included to handle redirection logic above
-    // Note: Pending page should ideally not be matched here if you want to allow it
-    // access without extra checks, but your logic handles /pending well.
+    "/login",
+    "/register",
   ],
 };

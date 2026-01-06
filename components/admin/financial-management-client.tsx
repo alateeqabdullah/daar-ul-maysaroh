@@ -1,16 +1,15 @@
-// src/components/admin/financial-management-client.tsx
 "use client";
 
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
   DollarSign,
-  CreditCard,
+
   TrendingUp,
   TrendingDown,
   Calendar,
   Download,
-  Filter,
+
   Search,
   MoreVertical,
   CheckCircle,
@@ -46,6 +45,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import {
   BarChart,
   Bar,
@@ -83,6 +89,26 @@ interface FinancialManagementClientProps {
   };
 }
 
+// Map for Tailwind dynamic classes to ensure they are compiled correctly
+const statColorMap: Record<string, { bg: string; text: string }> = {
+  purple: {
+    bg: "bg-purple-100 dark:bg-purple-900/30",
+    text: "text-purple-600 dark:text-purple-400",
+  },
+  blue: {
+    bg: "bg-blue-100 dark:bg-blue-900/30",
+    text: "text-blue-600 dark:text-blue-400",
+  },
+  green: {
+    bg: "bg-green-100 dark:bg-green-900/30",
+    text: "text-green-600 dark:text-green-400",
+  },
+  yellow: {
+    bg: "bg-yellow-100 dark:bg-yellow-900/30",
+    text: "text-yellow-600 dark:text-yellow-400",
+  },
+};
+
 export default function FinancialManagementClient({
   initialPayments,
   pagination,
@@ -93,8 +119,14 @@ export default function FinancialManagementClient({
   const searchParams = useSearchParams();
   const [payments, setPayments] = useState(initialPayments);
   const [isLoading, setIsLoading] = useState(false);
+
+  // Dialog State
+  const [selectedPayment, setSelectedPayment] = useState<any>(null);
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+
+  // Filter States - Fixed: Use "all" instead of empty string for Select values
   const [selectedStatus, setSelectedStatus] = useState(filters.status || "ALL");
-  const [selectedMonth, setSelectedMonth] = useState(filters.month || "");
+  const [selectedMonth, setSelectedMonth] = useState(filters.month || "all");
   const [selectedYear, setSelectedYear] = useState(
     filters.year || new Date().getFullYear().toString()
   );
@@ -108,14 +140,47 @@ export default function FinancialManagementClient({
     setIsLoading(true);
     try {
       const params = new URLSearchParams(searchParams.toString());
+
       if (selectedStatus !== "ALL") params.set("status", selectedStatus);
-      if (selectedMonth) params.set("month", selectedMonth);
+      else params.delete("status");
+
+      if (selectedMonth !== "all") params.set("month", selectedMonth);
+      else params.delete("month");
+
       if (selectedYear) params.set("year", selectedYear);
 
+      if (searchQuery) params.set("q", searchQuery);
+      else params.delete("q");
+
+      params.set("page", "1");
       router.push(`/admin/financial?${params.toString()}`);
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const exportToCSV = () => {
+    const headers = ["Invoice,Customer,Amount,Status,Method,Date"];
+    const rows = payments.map((p: any) => {
+      const name = p.student?.user.name || p.parent?.user.name || "Unknown";
+      return `${p.invoiceNumber || p.id},${name},${p.amount},${p.status},${
+        p.paymentMethod
+      },${p.paidAt}`;
+    });
+
+    const csvContent =
+      "data:text/csv;charset=utf-8," + [headers, ...rows].join("\n");
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute(
+      "download",
+      `payments_report_${new Date().toISOString().split("T")[0]}.csv`
+    );
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    toast.success("CSV Export successful");
   };
 
   const handleSearch = (e: React.FormEvent) => {
@@ -140,25 +205,14 @@ export default function FinancialManagementClient({
         body: JSON.stringify({ status }),
       });
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || "Failed to update payment status");
-      }
+      if (!response.ok) throw new Error("Failed to update status");
 
       toast.success(`Payment marked as ${status.toLowerCase()}`);
-
-      // Update local state
       setPayments(
-        payments.map((payment) =>
-          payment.id === paymentId ? { ...payment, status } : payment
-        )
+        payments.map((p) => (p.id === paymentId ? { ...p, status } : p))
       );
     } catch (error) {
-      toast.error("Failed to update payment", {
-        description:
-          error instanceof Error ? error.message : "Please try again.",
-      });
+      toast.error("Update failed. Please try again.");
     }
   };
 
@@ -166,20 +220,26 @@ export default function FinancialManagementClient({
     switch (status) {
       case "COMPLETED":
         return (
-          <Badge className="bg-green-100 text-green-800">
+          <Badge className="bg-green-100 text-green-800 border-none">
             <CheckCircle className="mr-1 h-3 w-3" /> Paid
           </Badge>
         );
       case "PENDING":
         return (
-          <Badge className="bg-yellow-100 text-yellow-800">
+          <Badge className="bg-yellow-100 text-yellow-800 border-none">
             <Clock className="mr-1 h-3 w-3" /> Pending
           </Badge>
         );
       case "FAILED":
         return (
-          <Badge className="bg-red-100 text-red-800">
+          <Badge className="bg-red-100 text-red-800 border-none">
             <XCircle className="mr-1 h-3 w-3" /> Failed
+          </Badge>
+        );
+      case "REFUNDED":
+        return (
+          <Badge className="bg-blue-100 text-blue-800 border-none">
+            Refunded
           </Badge>
         );
       default:
@@ -187,20 +247,6 @@ export default function FinancialManagementClient({
     }
   };
 
-  const getStatusIcon = (status: string) => {
-    switch (status) {
-      case "COMPLETED":
-        return <CheckCircle className="h-5 w-5 text-green-500" />;
-      case "PENDING":
-        return <Clock className="h-5 w-5 text-yellow-500" />;
-      case "FAILED":
-        return <XCircle className="h-5 w-5 text-red-500" />;
-      default:
-        return <Clock className="h-5 w-5 text-gray-500" />;
-    }
-  };
-
-  // Mock chart data - Replace with real data from API
   const revenueData = [
     { month: "Jan", revenue: 4000 },
     { month: "Feb", revenue: 4500 },
@@ -208,7 +254,7 @@ export default function FinancialManagementClient({
     { month: "Apr", revenue: 5800 },
     { month: "May", revenue: 6200 },
     { month: "Jun", revenue: 6800 },
-    { month: "Jul", revenue: 7200 },
+    { month: "Jul", revenue: stats.thisMonthRevenue || 7200 },
   ];
 
   const paymentMethodsData = [
@@ -255,7 +301,7 @@ export default function FinancialManagementClient({
   ];
 
   const months = [
-    { value: "", label: "All Months" },
+    { value: "all", label: "All Months" }, // Changed from "" to "all"
     { value: "01", label: "January" },
     { value: "02", label: "February" },
     { value: "03", label: "March" },
@@ -277,7 +323,7 @@ export default function FinancialManagementClient({
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
           <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
             Financial Management
@@ -287,83 +333,72 @@ export default function FinancialManagementClient({
           </p>
         </div>
         <div className="flex items-center space-x-3">
-          <Button variant="outline" className="gap-2">
-            <Download className="h-4 w-4" />
-            Export
+          <Button variant="outline" onClick={exportToCSV} className="gap-2">
+            <Download className="h-4 w-4" /> Export
           </Button>
-          <Button className="bg-gradient-primary gap-2">
-            <FileText className="h-4 w-4" />
-            Generate Report
+          <Button className="bg-gradient-to-r from-purple-600 to-blue-600 text-white gap-2">
+            <FileText className="h-4 w-4" /> Generate Report
           </Button>
         </div>
       </div>
 
-      {/* Stats */}
+      {/* Stats Cards */}
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        {statsData.map((stat, index) => (
-          <Card key={index}>
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm font-medium text-gray-600">
-                    {stat.label}
-                  </p>
-                  <p className="mt-2 text-2xl font-bold text-gray-900 dark:text-white">
-                    {stat.value}
-                  </p>
-                  {stat.change && (
-                    <div className="mt-1 flex items-center text-sm">
-                      {stat.change === "up" ? (
-                        <TrendingUp className="mr-1 h-4 w-4 text-green-500" />
-                      ) : (
-                        <TrendingDown className="mr-1 h-4 w-4 text-red-500" />
-                      )}
-                      <span
-                        className={
-                          stat.change === "up"
-                            ? "text-green-600"
-                            : "text-red-600"
-                        }
-                      >
-                        {stat.changePercent}% from last month
-                      </span>
-                    </div>
-                  )}
+        {statsData.map((stat, index) => {
+          const colors = statColorMap[stat.color];
+          return (
+            <Card key={index}>
+              <CardContent className="p-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-medium text-gray-600">
+                      {stat.label}
+                    </p>
+                    <p className="mt-2 text-2xl font-bold">{stat.value}</p>
+                    {stat.change && (
+                      <div className="mt-1 flex items-center text-sm">
+                        {stat.change === "up" ? (
+                          <TrendingUp className="mr-1 h-4 w-4 text-green-500" />
+                        ) : (
+                          <TrendingDown className="mr-1 h-4 w-4 text-red-500" />
+                        )}
+                        <span
+                          className={
+                            stat.change === "up"
+                              ? "text-green-600"
+                              : "text-red-600"
+                          }
+                        >
+                          {stat.changePercent}% vs last month
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                  <div className={`rounded-lg p-3 ${colors.bg}`}>
+                    <stat.icon className={`h-6 w-6 ${colors.text}`} />
+                  </div>
                 </div>
-                <div className={`rounded-lg bg-${stat.color}-100 p-3`}>
-                  <stat.icon className={`h-6 w-6 text-${stat.color}-600`} />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
+              </CardContent>
+            </Card>
+          );
+        })}
       </div>
 
-      {/* Charts */}
+      {/* Charts Section */}
       <div className="grid gap-6 lg:grid-cols-2">
-        {/* Revenue Chart */}
         <Card>
           <CardHeader>
             <CardTitle>Revenue Overview</CardTitle>
-            <CardDescription>
-              Monthly revenue for the past 7 months
-            </CardDescription>
+            <CardDescription>Monthly revenue trends</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="h-80">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={revenueData}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-                  <XAxis dataKey="month" stroke="#9CA3AF" />
-                  <YAxis stroke="#9CA3AF" />
-                  <Tooltip
-                    contentStyle={{
-                      backgroundColor: "white",
-                      border: "1px solid #E5E7EB",
-                      borderRadius: "8px",
-                    }}
-                    formatter={(value) => [`$${value}`, "Revenue"]}
-                  />
+                  <CartesianGrid strokeDasharray="3 3" vertical={false} />
+                  <XAxis dataKey="month" />
+                  <YAxis />
+                  <Tooltip />
                   <Bar dataKey="revenue" fill="#8b5cf6" radius={[4, 4, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
@@ -371,11 +406,10 @@ export default function FinancialManagementClient({
           </CardContent>
         </Card>
 
-        {/* Payment Methods Chart */}
         <Card>
           <CardHeader>
             <CardTitle>Payment Methods</CardTitle>
-            <CardDescription>Distribution of payment methods</CardDescription>
+            <CardDescription>Distribution of usage</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="h-80">
@@ -385,26 +419,16 @@ export default function FinancialManagementClient({
                     data={paymentMethodsData}
                     cx="50%"
                     cy="50%"
-                    labelLine={false}
-                    label={({ name, percent }) =>
-                      `${name}: ${(percent * 100).toFixed(0)}%`
-                    }
+                    innerRadius={60}
                     outerRadius={80}
-                    fill="#8884d8"
+                    paddingAngle={5}
                     dataKey="value"
                   >
                     {paymentMethodsData.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={entry.color} />
                     ))}
                   </Pie>
-                  <Tooltip
-                    contentStyle={{
-                      backgroundColor: "white",
-                      border: "1px solid #E5E7EB",
-                      borderRadius: "8px",
-                    }}
-                    formatter={(value) => [`${value}%`, "Usage"]}
-                  />
+                  <Tooltip />
                 </RechartsPieChart>
               </ResponsiveContainer>
             </div>
@@ -416,26 +440,21 @@ export default function FinancialManagementClient({
       <Card>
         <CardContent className="p-6">
           <form onSubmit={handleSearch} className="grid gap-4 sm:grid-cols-4">
-            <div>
-              <label className="mb-2 block text-sm font-medium">Search</label>
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Search</label>
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
                 <Input
-                  placeholder="Search by name or ID..."
+                  placeholder="Invoice or name..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="pl-10"
-                  disabled={isLoading}
                 />
               </div>
             </div>
-            <div>
-              <label className="mb-2 block text-sm font-medium">Status</label>
-              <Select
-                value={selectedStatus}
-                onValueChange={setSelectedStatus}
-                disabled={isLoading}
-              >
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Status</label>
+              <Select value={selectedStatus} onValueChange={setSelectedStatus}>
                 <SelectTrigger>
                   <SelectValue placeholder="All Status" />
                 </SelectTrigger>
@@ -444,75 +463,50 @@ export default function FinancialManagementClient({
                   <SelectItem value="COMPLETED">Completed</SelectItem>
                   <SelectItem value="PENDING">Pending</SelectItem>
                   <SelectItem value="FAILED">Failed</SelectItem>
-                  <SelectItem value="REFUNDED">Refunded</SelectItem>
                 </SelectContent>
               </Select>
             </div>
-            <div>
-              <label className="mb-2 block text-sm font-medium">Month</label>
-              <Select
-                value={selectedMonth}
-                onValueChange={setSelectedMonth}
-                disabled={isLoading}
-              >
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Month</label>
+              <Select value={selectedMonth} onValueChange={setSelectedMonth}>
                 <SelectTrigger>
                   <SelectValue placeholder="Select Month" />
                 </SelectTrigger>
                 <SelectContent>
-                  {months.map((month) => (
-                    <SelectItem key={month.value} value={month.value}>
-                      {month.label}
+                  {months.map((m) => (
+                    <SelectItem key={m.value} value={m.value}>
+                      {m.label}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
-            <div>
-              <label className="mb-2 block text-sm font-medium">Year</label>
-              <Select
-                value={selectedYear}
-                onValueChange={setSelectedYear}
-                disabled={isLoading}
-              >
+            <div className="space-y-2">
+              <label className="text-sm font-medium">Year</label>
+              <Select value={selectedYear} onValueChange={setSelectedYear}>
                 <SelectTrigger>
-                  <SelectValue placeholder="Select Year" />
+                  <SelectValue placeholder="Year" />
                 </SelectTrigger>
                 <SelectContent>
-                  {years.map((year) => (
-                    <SelectItem key={year} value={year}>
-                      {year}
+                  {years.map((y) => (
+                    <SelectItem key={y} value={y}>
+                      {y}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
-            <div className="sm:col-span-4 flex justify-end space-x-2">
+            <div className="sm:col-span-4 flex justify-end gap-2">
               <Button
                 type="button"
                 variant="outline"
-                onClick={() => {
-                  setSelectedStatus("ALL");
-                  setSelectedMonth("");
-                  setSelectedYear(new Date().getFullYear().toString());
-                  setSearchQuery("");
-                  router.push("/admin/financial");
-                }}
-                disabled={isLoading}
+                onClick={() => router.push("/admin/financial")}
               >
-                Clear Filters
+                Clear
               </Button>
               <Button type="submit" disabled={isLoading}>
-                {isLoading ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Applying...
-                  </>
-                ) : (
-                  <>
-                    <Filter className="mr-2 h-4 w-4" />
-                    Apply Filters
-                  </>
-                )}
+                {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}{" "}
+                Apply Filters
               </Button>
             </div>
           </form>
@@ -522,211 +516,181 @@ export default function FinancialManagementClient({
       {/* Payments Table */}
       <Card>
         <CardHeader>
-          <div className="flex items-center justify-between">
-            <div>
-              <CardTitle>All Payments</CardTitle>
-              <CardDescription>
-                {pagination.total} payments found • Page {pagination.page} of{" "}
-                {pagination.pages}
-              </CardDescription>
-            </div>
-          </div>
+          <CardTitle>Transactions</CardTitle>
+          <CardDescription>{pagination.total} records found</CardDescription>
         </CardHeader>
         <CardContent>
-          {isLoading ? (
-            <div className="flex h-64 items-center justify-center">
-              <Loader2 className="h-8 w-8 animate-spin text-purple-500" />
-            </div>
-          ) : payments.length === 0 ? (
-            <div className="py-12 text-center">
-              <CreditCard className="mx-auto h-12 w-12 text-gray-300" />
-              <h3 className="mt-4 text-lg font-semibold">No payments found</h3>
-              <p className="mt-2 text-gray-500">
-                No payments match your search criteria.
-              </p>
-            </div>
-          ) : (
-            <>
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead>
-                    <tr className="border-b">
-                      <th className="px-4 py-3 text-left text-sm font-medium text-gray-600">
-                        Payment
-                      </th>
-                      <th className="px-4 py-3 text-left text-sm font-medium text-gray-600">
-                        Student/Parent
-                      </th>
-                      <th className="px-4 py-3 text-left text-sm font-medium text-gray-600">
-                        Amount
-                      </th>
-                      <th className="px-4 py-3 text-left text-sm font-medium text-gray-600">
-                        Status
-                      </th>
-                      <th className="px-4 py-3 text-left text-sm font-medium text-gray-600">
-                        Date
-                      </th>
-                      <th className="px-4 py-3 text-left text-sm font-medium text-gray-600">
-                        Actions
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y">
-                    {payments.map((payment) => (
-                      <tr key={payment.id} className="hover:bg-gray-50">
-                        <td className="px-4 py-3">
-                          <div className="space-y-1">
-                            <p className="font-medium">
-                              #{payment.invoiceNumber || payment.id.slice(0, 8)}
-                            </p>
-                            <p className="text-sm text-gray-500 capitalize">
-                              {payment.paymentMethod
-                                ?.replace("_", " ")
-                                .toLowerCase()}
-                            </p>
-                          </div>
-                        </td>
-                        <td className="px-4 py-3">
-                          <div className="flex items-center space-x-3">
-                            <Avatar>
-                              <AvatarFallback className="bg-gradient-primary text-white">
-                                {getInitials(
-                                  payment.student?.user.name ||
-                                    payment.parent?.user.name ||
-                                    "Unknown"
-                                )}
-                              </AvatarFallback>
-                            </Avatar>
-                            <div>
-                              <p className="font-medium">
-                                {payment.student?.user.name ||
-                                  payment.parent?.user.name ||
-                                  "Unknown"}
-                              </p>
-                              <p className="text-sm text-gray-500">
-                                {payment.student ? "Student" : "Parent"}
-                              </p>
-                            </div>
-                          </div>
-                        </td>
-                        <td className="px-4 py-3">
-                          <div className="space-y-1">
-                            <p className="font-medium">
-                              {formatCurrency(
-                                Number(payment.amount),
-                                payment.currency
-                              )}
-                            </p>
-                            <p className="text-sm text-gray-500">
-                              {payment.description}
-                            </p>
-                          </div>
-                        </td>
-                        <td className="px-4 py-3">
-                          {getStatusBadge(payment.status)}
-                        </td>
-                        <td className="px-4 py-3 text-sm text-gray-500">
-                          {payment.paidAt
-                            ? formatDate(payment.paidAt)
-                            : "Not paid"}
-                        </td>
-                        <td className="px-4 py-3">
-                          <div className="flex items-center space-x-2">
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              onClick={() => {
-                                // View payment details
-                              }}
-                            >
-                              <Eye className="h-4 w-4" />
+          <div className="rounded-md border overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead className="bg-gray-50 dark:bg-gray-800">
+                <tr className="border-b">
+                  <th className="px-4 py-3 text-left font-medium">Invoice</th>
+                  <th className="px-4 py-3 text-left font-medium">User</th>
+                  <th className="px-4 py-3 text-left font-medium">Amount</th>
+                  <th className="px-4 py-3 text-left font-medium">Status</th>
+                  <th className="px-4 py-3 text-left font-medium">Date</th>
+                  <th className="px-4 py-3 text-right font-medium">Actions</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y">
+                {payments.map((payment) => (
+                  <tr
+                    key={payment.id}
+                    className="hover:bg-gray-50 dark:hover:bg-gray-900/50 transition-colors"
+                  >
+                    <td className="px-4 py-3 font-mono text-xs">
+                      #{payment.invoiceNumber || payment.id.slice(0, 8)}
+                    </td>
+                    <td className="px-4 py-3">
+                      <div className="flex items-center gap-3">
+                        <Avatar className="h-8 w-8">
+                          <AvatarFallback className="bg-purple-600 text-white text-[10px]">
+                            {getInitials(
+                              payment.student?.user.name ||
+                                payment.parent?.user.name ||
+                                "?"
+                            )}
+                          </AvatarFallback>
+                        </Avatar>
+                        <span className="font-medium">
+                          {payment.student?.user.name ||
+                            payment.parent?.user.name}
+                        </span>
+                      </div>
+                    </td>
+                    <td className="px-4 py-3 font-semibold">
+                      {formatCurrency(payment.amount)}
+                    </td>
+                    <td className="px-4 py-3">
+                      {getStatusBadge(payment.status)}
+                    </td>
+                    <td className="px-4 py-3 text-gray-500">
+                      {formatDate(payment.paidAt)}
+                    </td>
+                    <td className="px-4 py-3 text-right">
+                      <div className="flex justify-end gap-2">
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          onClick={() => {
+                            setSelectedPayment(payment);
+                            setIsDetailsOpen(true);
+                          }}
+                        >
+                          <Eye className="h-4 w-4" />
+                        </Button>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button size="icon" variant="ghost">
+                              <MoreVertical className="h-4 w-4" />
                             </Button>
-                            <DropdownMenu>
-                              <DropdownMenuTrigger asChild>
-                                <Button size="sm" variant="ghost">
-                                  <MoreVertical className="h-4 w-4" />
-                                </Button>
-                              </DropdownMenuTrigger>
-                              <DropdownMenuContent align="end">
-                                <DropdownMenuItem>
-                                  <FileText className="mr-2 h-4 w-4" />
-                                  View Invoice
-                                </DropdownMenuItem>
-                                {payment.status === "PENDING" && (
-                                  <DropdownMenuItem
-                                    onClick={() =>
-                                      handleUpdatePaymentStatus(
-                                        payment.id,
-                                        "COMPLETED"
-                                      )
-                                    }
-                                  >
-                                    <CheckCircle className="mr-2 h-4 w-4" />
-                                    Mark as Paid
-                                  </DropdownMenuItem>
-                                )}
-                                {payment.status === "COMPLETED" && (
-                                  <DropdownMenuItem
-                                    onClick={() =>
-                                      handleUpdatePaymentStatus(
-                                        payment.id,
-                                        "REFUNDED"
-                                      )
-                                    }
-                                  >
-                                    <DollarSign className="mr-2 h-4 w-4" />
-                                    Issue Refund
-                                  </DropdownMenuItem>
-                                )}
-                              </DropdownMenuContent>
-                            </DropdownMenu>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuItem
+                              onClick={() =>
+                                handleUpdatePaymentStatus(
+                                  payment.id,
+                                  "COMPLETED"
+                                )
+                              }
+                            >
+                              Mark as Paid
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                              className="text-red-600"
+                              onClick={() =>
+                                handleUpdatePaymentStatus(payment.id, "FAILED")
+                              }
+                            >
+                              Mark Failed
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
 
-              {/* Pagination */}
-              {pagination.pages > 1 && (
-                <div className="mt-6 flex items-center justify-between">
-                  <div className="text-sm text-gray-700">
-                    Showing {(pagination.page - 1) * pagination.limit + 1} to{" "}
-                    {Math.min(
-                      pagination.page * pagination.limit,
-                      pagination.total
-                    )}{" "}
-                    of {pagination.total} results
-                  </div>
-                  <div className="flex space-x-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handlePageChange(pagination.page - 1)}
-                      disabled={pagination.page === 1 || isLoading}
-                    >
-                      <ChevronLeft className="h-4 w-4" />
-                      Previous
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handlePageChange(pagination.page + 1)}
-                      disabled={
-                        pagination.page === pagination.pages || isLoading
-                      }
-                    >
-                      Next
-                      <ChevronRight className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
-              )}
-            </>
+          {/* Pagination */}
+          {pagination.pages > 1 && (
+            <div className="mt-6 flex items-center justify-between">
+              <p className="text-sm text-gray-500">
+                Page {pagination.page} of {pagination.pages}
+              </p>
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handlePageChange(pagination.page - 1)}
+                  disabled={pagination.page === 1}
+                >
+                  <ChevronLeft className="h-4 w-4" /> Prev
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handlePageChange(pagination.page + 1)}
+                  disabled={pagination.page === pagination.pages}
+                >
+                  Next <ChevronRight className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
           )}
         </CardContent>
       </Card>
+
+      {/* Details Dialog */}
+      <Dialog open={isDetailsOpen} onOpenChange={setIsDetailsOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Transaction Details</DialogTitle>
+            <DialogDescription>
+              Invoice Details for #
+              {selectedPayment?.invoiceNumber ||
+                selectedPayment?.id.slice(0, 8)}
+            </DialogDescription>
+          </DialogHeader>
+          {selectedPayment && (
+            <div className="space-y-4 py-4">
+              <div className="grid grid-cols-2 gap-4 border-b pb-4">
+                <div>
+                  <p className="text-xs text-gray-500 uppercase">Customer</p>
+                  <p className="font-medium">
+                    {selectedPayment.student?.user.name ||
+                      selectedPayment.parent?.user.name}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-xs text-gray-500 uppercase">Method</p>
+                  <p className="capitalize">
+                    {selectedPayment.paymentMethod?.replace("_", " ")}
+                  </p>
+                </div>
+              </div>
+              <div className="space-y-2">
+                <div className="flex justify-between">
+                  <span>Amount</span>
+                  <span className="font-bold">
+                    {formatCurrency(selectedPayment.amount)}
+                  </span>
+                </div>
+                <div className="flex justify-between">
+                  <span>Tax (0%)</span>
+                  <span>$0.00</span>
+                </div>
+                <div className="flex justify-between border-t pt-2 font-bold text-lg">
+                  <span>Total</span>
+                  <span>{formatCurrency(selectedPayment.amount)}</span>
+                </div>
+              </div>
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

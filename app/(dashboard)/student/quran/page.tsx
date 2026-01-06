@@ -1,183 +1,301 @@
-// src/app/student/quran/page.tsx
+// src/app/(dashboard)/student/quran/page.tsx
 "use client";
 
-import { useState, useEffect } from "react";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { useState } from "react";
 import {
-  BookOpen,
-  Award,
+  Book,
+  Target,
   TrendingUp,
   Calendar,
-  PlayCircle,
-  Mic,
   CheckCircle,
   Clock,
-  Star,
-  Target,
-  FileText,
-  Download,
+  Award,
   Share2,
+  Printer,
+  Bookmark,
+  Volume2,
+  Play,
+  Pause,
+  RefreshCw,
+  ChevronDown,
+  ChevronUp,
+  History,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
   CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Progress } from "@/components/ui/progress";
+import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Progress } from "@/components/ui/progress";
 import { toast } from "sonner";
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+} from "recharts";
+import Link from "next/link";
 
-interface QuranProgress {
-  id: string;
-  surahName: string;
-  surahNumber: number;
-  juzNumber: number;
-  fromAyah: number;
-  toAyah: number;
-  status: string;
-  evaluationScore?: number;
-  lastRevisedAt?: string;
-  revisionCount: number;
-}
+// Mock data
+const juzData = [
+  {
+    number: 1,
+    name: "Al-Fatihah - Al-Baqarah 141",
+    status: "completed",
+    progress: 100,
+    pages: 20,
+    revisionCount: 15,
+  },
+  {
+    number: 2,
+    name: "Al-Baqarah 142-252",
+    status: "completed",
+    progress: 100,
+    pages: 20,
+    revisionCount: 12,
+  },
+  {
+    number: 3,
+    name: "Al-Baqarah 253 - Al-Imran 92",
+    status: "completed",
+    progress: 100,
+    pages: 20,
+    revisionCount: 10,
+  },
+  {
+    number: 30,
+    name: "An-Naba - An-Nas",
+    status: "completed",
+    progress: 100,
+    pages: 20,
+    revisionCount: 20,
+  },
+  {
+    number: 29,
+    name: "Al-Mulk - Al-Mursalat",
+    status: "in-progress",
+    progress: 65,
+    pages: 20,
+    revisionCount: 8,
+  },
+  {
+    number: 28,
+    name: "Al-Mujadila - At-Tahrim",
+    status: "not-started",
+    progress: 0,
+    pages: 20,
+    revisionCount: 0,
+  },
+];
 
-export default function QuranPage() {
-  const { data: session, status } = useSession();
-  const router = useRouter();
+const surahProgress = [
+  {
+    surah: 78,
+    name: "An-Naba",
+    status: "completed",
+    ayahs: 40,
+    memorized: 40,
+    lastRevised: "2024-01-10",
+  },
+  {
+    surah: 79,
+    name: "An-Naziat",
+    status: "in-progress",
+    ayahs: 46,
+    memorized: 25,
+    lastRevised: "2024-01-12",
+  },
+  {
+    surah: 80,
+    name: "Abasa",
+    status: "not-started",
+    ayahs: 42,
+    memorized: 0,
+    lastRevised: null,
+  },
+  {
+    surah: 81,
+    name: "At-Takwir",
+    status: "not-started",
+    ayahs: 29,
+    memorized: 0,
+    lastRevised: null,
+  },
+  {
+    surah: 82,
+    name: "Al-Infitar",
+    status: "not-started",
+    ayahs: 19,
+    memorized: 0,
+    lastRevised: null,
+  },
+];
 
-  const [progress, setProgress] = useState<QuranProgress[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [activeTab, setActiveTab] = useState("memorization");
+const monthlyProgress = [
+  { month: "Sep", pages: 5, revision: 12 },
+  { month: "Oct", pages: 8, revision: 15 },
+  { month: "Nov", pages: 12, revision: 18 },
+  { month: "Dec", pages: 15, revision: 20 },
+  { month: "Jan", pages: 10, revision: 16 },
+];
 
-  useEffect(() => {
-    if (status === "loading") return;
+const goals = [
+  {
+    id: 1,
+    title: "Complete Juz 29",
+    target: "2024-02-15",
+    progress: 65,
+    daysLeft: 21,
+  },
+  {
+    id: 2,
+    title: "Daily Revision",
+    target: "Daily",
+    progress: 85,
+    daysLeft: 0,
+  },
+  {
+    id: 3,
+    title: "Improve Tajweed",
+    target: "2024-03-01",
+    progress: 40,
+    daysLeft: 35,
+  },
+];
 
-    if (!session) {
-      router.push("/login");
-      return;
-    }
+const recentActivities = [
+  {
+    id: 1,
+    action: "Memorized An-Naziat (1-10)",
+    date: "Today, 09:00",
+    type: "memorization",
+  },
+  {
+    id: 2,
+    action: "Revised Juz 30",
+    date: "Yesterday, 14:00",
+    type: "revision",
+  },
+  {
+    id: 3,
+    action: "Teacher evaluation",
+    date: "2 days ago",
+    type: "evaluation",
+    score: 8.5,
+  },
+  {
+    id: 4,
+    action: "Group revision session",
+    date: "3 days ago",
+    type: "revision",
+  },
+];
 
-    if (
-      !["STUDENT", "TEACHER", "ADMIN", "SUPER_ADMIN"].includes(
-        session.user.role
-      )
-    ) {
-      router.push("/dashboard");
-    }
-  }, [session, status, router]);
+export default function QuranProgressPage() {
+  const [activeJuz, setActiveJuz] = useState(29);
+  const [isRecording, setIsRecording] = useState(false);
+  const [expandedSurah, setExpandedSurah] = useState<number | null>(79);
 
-  useEffect(() => {
-    if (session) {
-      fetchProgress();
-    }
-  }, [session]);
+  const handleStartRecording = () => {
+    setIsRecording(true);
+    toast.info("Recording started", {
+      description: "Recite the ayahs clearly.",
+    });
+  };
 
-  const fetchProgress = async () => {
-    setLoading(true);
-    try {
-      const response = await fetch(
-        `/api/quran/progress?studentId=${session?.user?.studentProfile?.id}`
-      );
-      const data = await response.json();
+  const handleStopRecording = () => {
+    setIsRecording(false);
+    toast.success("Recording saved", {
+      description: "Your recitation has been saved for teacher review.",
+    });
+  };
 
-      if (response.ok) {
-        setProgress(data.progress);
-      } else {
-        toast.error(data.message || "Failed to fetch Quran progress");
-      }
-    } catch (error) {
-      console.error("Error fetching progress:", error);
-    } finally {
-      setLoading(false);
+  const handleMarkComplete = (surahNumber: number) => {
+    toast.success("Marked as completed", {
+      description: `Surah ${surahNumber} marked as memorized.`,
+    });
+  };
+
+  const handleRequestEvaluation = (surahNumber: number) => {
+    toast.info("Evaluation requested", {
+      description: "Teacher will review your recitation soon.",
+    });
+  };
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case "completed":
+        return "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400";
+      case "in-progress":
+        return "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400";
+      default:
+        return "bg-gray-100 text-gray-800 dark:bg-gray-800 dark:text-gray-400";
     }
   };
 
-  const getCompletionPercentage = () => {
-    const completed = progress.filter((p) => p.status === "COMPLETED").length;
-    const total = progress.length || 1;
-    return Math.round((completed / total) * 100);
+  const getStatusIcon = (status: string) => {
+    switch (status) {
+      case "completed":
+        return <CheckCircle className="h-4 w-4" />;
+      case "in-progress":
+        return <Clock className="h-4 w-4" />;
+      default:
+        return <Book className="h-4 w-4" />;
+    }
   };
-
-  const getJuzProgress = (juzNumber: number) => {
-    const juzProgress = progress.filter((p) => p.juzNumber === juzNumber);
-    const completed = juzProgress.filter(
-      (p) => p.status === "COMPLETED"
-    ).length;
-    const total = juzProgress.length || 1;
-    return Math.round((completed / total) * 100);
-  };
-
-  const getStatusBadge = (status: string) => {
-    const variants = {
-      COMPLETED: { label: "Completed", color: "bg-green-100 text-green-800" },
-      IN_PROGRESS: {
-        label: "In Progress",
-        color: "bg-yellow-100 text-yellow-800",
-      },
-      REVIEWED: { label: "Reviewed", color: "bg-blue-100 text-blue-800" },
-      NOT_STARTED: { label: "Not Started", color: "bg-gray-100 text-gray-800" },
-    };
-    const variant =
-      variants[status as keyof typeof variants] || variants.NOT_STARTED;
-    return <Badge className={variant.color}>{variant.label}</Badge>;
-  };
-
-  if (status === "loading" || loading) {
-    return (
-      <div className="flex h-screen items-center justify-center">
-        <div className="h-8 w-8 animate-spin rounded-full border-4 border-purple-600 border-t-transparent" />
-      </div>
-    );
-  }
 
   return (
     <div className="space-y-6">
       {/* Header */}
       <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Quran Progress</h1>
-          <p className="text-gray-600 dark:text-gray-400">
-            Track your Quran memorization and revision
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+            Quran Progress Tracker
+          </h1>
+          <p className="mt-2 text-gray-600 dark:text-gray-400">
+            Track your memorization journey and set goals
           </p>
         </div>
-
         <div className="flex items-center gap-3">
-          <Button variant="outline">
-            <Download className="mr-2 h-4 w-4" />
-            Export Report
+          <Button variant="outline" className="gap-2">
+            <Printer className="h-4 w-4" />
+            Print Report
           </Button>
-          <Button>
-            <Mic className="mr-2 h-4 w-4" />
-            New Recording
+          <Button variant="outline" className="gap-2">
+            <Share2 className="h-4 w-4" />
+            Share Progress
+          </Button>
+          <Button className="bg-gradient-primary gap-2">
+            <Target className="h-4 w-4" />
+            Set New Goal
           </Button>
         </div>
       </div>
 
       {/* Stats Overview */}
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                  Overall Progress
+                <p className="text-sm font-medium text-gray-600">
+                  Juz Completed
                 </p>
-                <p className="text-3xl font-bold">
-                  {getCompletionPercentage()}%
-                </p>
-                <p className="text-sm text-gray-500">
-                  {progress.length} surahs tracked
-                </p>
+                <p className="mt-2 text-2xl font-bold text-gray-900">4/30</p>
+                <Progress value={(4 / 30) * 100} className="mt-2" />
               </div>
               <div className="rounded-lg bg-purple-100 p-3 dark:bg-purple-900/30">
-                <TrendingUp className="h-6 w-6 text-purple-600 dark:text-purple-400" />
+                <Book className="h-6 w-6 text-purple-600 dark:text-purple-400" />
               </div>
             </div>
-            <Progress value={getCompletionPercentage()} className="mt-4" />
           </CardContent>
         </Card>
 
@@ -185,11 +303,11 @@ export default function QuranPage() {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                  Juz Completed
+                <p className="text-sm font-medium text-gray-600">
+                  Surah Memorized
                 </p>
-                <p className="text-3xl font-bold">4/30</p>
-                <p className="text-sm text-gray-500">13% of Quran</p>
+                <p className="mt-2 text-2xl font-bold text-gray-900">15</p>
+                <p className="text-sm text-green-600">+2 this month</p>
               </div>
               <div className="rounded-lg bg-green-100 p-3 dark:bg-green-900/30">
                 <CheckCircle className="h-6 w-6 text-green-600 dark:text-green-400" />
@@ -202,14 +320,14 @@ export default function QuranPage() {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                  Recent Revision
+                <p className="text-sm font-medium text-gray-600">
+                  Revision Streak
                 </p>
-                <p className="text-3xl font-bold">3 days</p>
-                <p className="text-sm text-gray-500">Since last revision</p>
+                <p className="mt-2 text-2xl font-bold text-gray-900">14 days</p>
+                <p className="text-sm text-blue-600">Keep it up!</p>
               </div>
               <div className="rounded-lg bg-blue-100 p-3 dark:bg-blue-900/30">
-                <Clock className="h-6 w-6 text-blue-600 dark:text-blue-400" />
+                <TrendingUp className="h-6 w-6 text-blue-600 dark:text-blue-400" />
               </div>
             </div>
           </CardContent>
@@ -219,14 +337,12 @@ export default function QuranPage() {
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                  Avg. Score
-                </p>
-                <p className="text-3xl font-bold">8.5/10</p>
-                <p className="text-sm text-gray-500">Teacher evaluations</p>
+                <p className="text-sm font-medium text-gray-600">Avg. Score</p>
+                <p className="mt-2 text-2xl font-bold text-gray-900">8.2/10</p>
+                <p className="text-sm text-yellow-600">Good progress</p>
               </div>
               <div className="rounded-lg bg-yellow-100 p-3 dark:bg-yellow-900/30">
-                <Star className="h-6 w-6 text-yellow-600 dark:text-yellow-400" />
+                <Award className="h-6 w-6 text-yellow-600 dark:text-yellow-400" />
               </div>
             </div>
           </CardContent>
@@ -234,308 +350,359 @@ export default function QuranPage() {
       </div>
 
       {/* Main Content */}
-      <Tabs
-        value={activeTab}
-        onValueChange={setActiveTab}
-        className="space-y-6"
-      >
-        <TabsList className="grid w-full grid-cols-3 lg:w-auto lg:inline-flex">
-          <TabsTrigger value="memorization">Memorization</TabsTrigger>
-          <TabsTrigger value="revision">Revision</TabsTrigger>
-          <TabsTrigger value="analytics">Analytics</TabsTrigger>
-        </TabsList>
-
-        {/* Memorization Tab */}
-        <TabsContent value="memorization" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Surah Progress</CardTitle>
-              <CardDescription>
-                Track your memorization progress surah by surah
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {progress.slice(0, 5).map((item) => (
-                  <div
-                    key={item.id}
-                    className="flex items-center justify-between rounded-lg border border-gray-200 p-4 dark:border-gray-700"
-                  >
-                    <div className="flex items-center space-x-4">
-                      <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-purple-100 dark:bg-purple-900/30">
-                        <BookOpen className="h-6 w-6 text-purple-600 dark:text-purple-400" />
-                      </div>
-                      <div>
-                        <h4 className="font-medium">
-                          {item.surahName} (Surah {item.surahNumber})
-                        </h4>
-                        <div className="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
-                          <span>Juz {item.juzNumber}</span>
-                          <span>•</span>
-                          <span>
-                            Ayah {item.fromAyah}-{item.toAyah}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center space-x-4">
-                      <div>
-                        {getStatusBadge(item.status)}
-                        {item.evaluationScore && (
-                          <div className="mt-1 text-center text-sm font-medium">
-                            {item.evaluationScore}/10
-                          </div>
-                        )}
-                      </div>
-
-                      <Button size="sm" variant="outline">
-                        <PlayCircle className="mr-2 h-4 w-4" />
-                        Play
-                      </Button>
-                    </div>
-                  </div>
-                ))}
-
-                {progress.length === 0 && (
-                  <div className="text-center py-8">
-                    <BookOpen className="mx-auto h-12 w-12 text-gray-400" />
-                    <h3 className="mt-4 text-lg font-semibold">
-                      No progress recorded
-                    </h3>
-                    <p className="mt-2 text-gray-600 dark:text-gray-400">
-                      Start your Quran memorization journey today
-                    </p>
-                    <Button className="mt-4">
-                      <Mic className="mr-2 h-4 w-4" />
-                      Start Recording
-                    </Button>
-                  </div>
-                )}
-              </div>
-            </CardContent>
-          </Card>
-
+      <div className="grid gap-6 lg:grid-cols-3">
+        {/* Left Column - Juz Progress */}
+        <div className="lg:col-span-2 space-y-6">
           {/* Juz Progress */}
           <Card>
             <CardHeader>
               <CardTitle>Juz Progress</CardTitle>
               <CardDescription>
-                Track completion percentage for each Juz
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-5 lg:grid-cols-6">
-                {Array.from({ length: 30 }, (_, i) => i + 1).map((juz) => {
-                  const progress = getJuzProgress(juz);
-                  return (
-                    <div key={juz} className="text-center">
-                      <div className="relative mx-auto mb-2 h-16 w-16">
-                        <div className="absolute inset-0 flex items-center justify-center">
-                          <div className="text-xl font-bold">ج{juz}</div>
-                        </div>
-                        <svg className="h-16 w-16 -rotate-90 transform">
-                          <circle
-                            cx="32"
-                            cy="32"
-                            r="28"
-                            stroke="currentColor"
-                            strokeWidth="4"
-                            fill="none"
-                            className="text-gray-200 dark:text-gray-700"
-                          />
-                          <circle
-                            cx="32"
-                            cy="32"
-                            r="28"
-                            stroke="currentColor"
-                            strokeWidth="4"
-                            fill="none"
-                            strokeDasharray={`${progress * 1.76} 176`}
-                            className="text-green-500"
-                          />
-                        </svg>
-                      </div>
-                      <div className="text-sm font-medium">Juz {juz}</div>
-                      <div className="text-xs text-gray-600 dark:text-gray-400">
-                        {progress}%
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </CardContent>
-          </Card>
-        </TabsContent>
-
-        {/* Revision Tab */}
-        <TabsContent value="revision" className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>Revision Schedule</CardTitle>
-              <CardDescription>
-                Plan and track your Quran revision
+                Your progress through each Juz of the Quran
               </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {[
-                  {
-                    day: "Monday",
-                    surahs: "Al-Fatihah, Al-Baqarah (1-50)",
-                    time: "After Fajr",
-                  },
-                  {
-                    day: "Tuesday",
-                    surahs: "Al-Baqarah (51-100)",
-                    time: "After Dhuhr",
-                  },
-                  {
-                    day: "Wednesday",
-                    surahs: "Al-Baqarah (101-150)",
-                    time: "After Asr",
-                  },
-                  {
-                    day: "Thursday",
-                    surahs: "Al-Baqarah (151-200)",
-                    time: "After Maghrib",
-                  },
-                  {
-                    day: "Friday",
-                    surahs: "Juz 30 Complete",
-                    time: "After Isha",
-                  },
-                ].map((item, index) => (
+                {juzData.map((juz) => (
                   <div
-                    key={index}
-                    className="flex items-center justify-between rounded-lg border border-gray-200 p-4 dark:border-gray-700"
+                    key={juz.number}
+                    className={`rounded-lg border p-4 transition-all hover:shadow-md ${
+                      activeJuz === juz.number
+                        ? "border-purple-300 bg-purple-50 dark:border-purple-700 dark:bg-purple-900/20"
+                        : "border-gray-200 dark:border-gray-700"
+                    }`}
+                    onClick={() => setActiveJuz(juz.number)}
                   >
-                    <div className="flex items-center space-x-4">
-                      <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-blue-100 dark:bg-blue-900/30">
-                        <Calendar className="h-6 w-6 text-blue-600 dark:text-blue-400" />
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-primary text-white">
+                          {juz.number}
+                        </div>
+                        <div>
+                          <h3 className="font-semibold">Juz {juz.number}</h3>
+                          <p className="text-sm text-gray-600">{juz.name}</p>
+                        </div>
                       </div>
-                      <div>
-                        <h4 className="font-medium">{item.day}</h4>
-                        <p className="text-sm text-gray-600 dark:text-gray-400">
-                          {item.surahs}
-                        </p>
+                      <div className="flex items-center gap-3">
+                        <Badge className={getStatusColor(juz.status)}>
+                          {getStatusIcon(juz.status)}
+                          <span className="ml-1 capitalize">
+                            {juz.status.replace("-", " ")}
+                          </span>
+                        </Badge>
+                        <span className="text-sm text-gray-500">
+                          {juz.pages} pages
+                        </span>
                       </div>
                     </div>
-                    <div className="text-right">
-                      <Badge className="bg-green-100 text-green-800">
-                        {item.time}
-                      </Badge>
-                      <Button size="sm" variant="ghost" className="mt-2">
-                        Mark Complete
-                      </Button>
+                    <div className="mt-4">
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="text-gray-600">Progress</span>
+                        <span className="font-medium">{juz.progress}%</span>
+                      </div>
+                      <Progress value={juz.progress} className="mt-2" />
+                      <div className="mt-2 flex items-center justify-between text-sm">
+                        <span className="text-gray-600">
+                          Revisions:{" "}
+                          <span className="font-medium">
+                            {juz.revisionCount}
+                          </span>
+                        </span>
+                        {juz.status === "in-progress" && (
+                          <Button size="sm" variant="outline">
+                            Continue
+                          </Button>
+                        )}
+                      </div>
                     </div>
                   </div>
                 ))}
               </div>
             </CardContent>
+            <CardFooter>
+              <Button variant="outline" className="w-full">
+                View All Juz Progress
+              </Button>
+            </CardFooter>
           </Card>
-        </TabsContent>
 
-        {/* Analytics Tab */}
-        <TabsContent value="analytics" className="space-y-6">
-          <div className="grid gap-6 lg:grid-cols-2">
-            <Card>
-              <CardHeader>
-                <CardTitle>Progress Timeline</CardTitle>
-                <CardDescription>
-                  Your memorization journey over time
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {[
-                    { month: "Jan", progress: 20 },
-                    { month: "Feb", progress: 35 },
-                    { month: "Mar", progress: 50 },
-                    { month: "Apr", progress: 65 },
-                    { month: "May", progress: 78 },
-                    { month: "Jun", progress: 85 },
-                  ].map((item) => (
-                    <div key={item.month} className="space-y-2">
-                      <div className="flex justify-between text-sm">
-                        <span>{item.month}</span>
-                        <span>{item.progress}%</span>
+          {/* Surah Progress */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Surah Progress - Juz {activeJuz}</CardTitle>
+              <CardDescription>
+                Detailed progress for each surah
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {surahProgress.map((surah) => (
+                  <div
+                    key={surah.surah}
+                    className="rounded-lg border border-gray-200 p-4 dark:border-gray-700"
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400">
+                          {surah.surah}
+                        </div>
+                        <div>
+                          <h3 className="font-semibold">Surah {surah.name}</h3>
+                          <p className="text-sm text-gray-600">
+                            {surah.ayahs} ayahs
+                          </p>
+                        </div>
                       </div>
-                      <Progress value={item.progress} />
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        onClick={() =>
+                          setExpandedSurah(
+                            expandedSurah === surah.surah ? null : surah.surah
+                          )
+                        }
+                      >
+                        {expandedSurah === surah.surah ? (
+                          <ChevronUp className="h-4 w-4" />
+                        ) : (
+                          <ChevronDown className="h-4 w-4" />
+                        )}
+                      </Button>
                     </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
 
-            <Card>
-              <CardHeader>
-                <CardTitle>Performance Metrics</CardTitle>
-                <CardDescription>
-                  Detailed analysis of your memorization
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-2">
-                      <Target className="h-5 w-5 text-purple-600" />
-                      <span>Retention Rate</span>
+                    <div className="mt-4">
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="text-gray-600">Memorized</span>
+                        <span className="font-medium">
+                          {surah.memorized}/{surah.ayahs}
+                        </span>
+                      </div>
+                      <Progress
+                        value={(surah.memorized / surah.ayahs) * 100}
+                        className="mt-2"
+                      />
                     </div>
-                    <span className="font-bold">92%</span>
+
+                    {expandedSurah === surah.surah && (
+                      <div className="mt-4 space-y-3 border-t pt-4">
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm text-gray-600">
+                            Last Revised
+                          </span>
+                          <span className="text-sm font-medium">
+                            {surah.lastRevised || "Never"}
+                          </span>
+                        </div>
+                        <div className="grid grid-cols-2 gap-2">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => handleMarkComplete(surah.surah)}
+                          >
+                            <CheckCircle className="mr-2 h-4 w-4" />
+                            Mark Complete
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => handleRequestEvaluation(surah.surah)}
+                          >
+                            <Award className="mr-2 h-4 w-4" />
+                            Request Evaluation
+                          </Button>
+                        </div>
+                      </div>
+                    )}
                   </div>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-2">
-                      <Clock className="h-5 w-5 text-blue-600" />
-                      <span>Avg. Study Time/Day</span>
+                ))}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Right Column - Goals & Activities */}
+        <div className="space-y-6">
+          {/* Goals */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Your Goals</CardTitle>
+              <CardDescription>
+                Memorization targets and deadlines
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {goals.map((goal) => (
+                  <div
+                    key={goal.id}
+                    className="rounded-lg border border-gray-200 p-4 dark:border-gray-700"
+                  >
+                    <div className="flex items-start justify-between">
+                      <div>
+                        <h3 className="font-semibold">{goal.title}</h3>
+                        <div className="mt-1 flex items-center gap-2 text-sm text-gray-600">
+                          <Calendar className="h-3 w-3" />
+                          Target: {goal.target}
+                          {goal.daysLeft > 0 && (
+                            <Badge variant="outline">
+                              {goal.daysLeft} days left
+                            </Badge>
+                          )}
+                        </div>
+                      </div>
+                      <Badge className="bg-gradient-primary">
+                        {goal.progress}%
+                      </Badge>
                     </div>
-                    <span className="font-bold">45 min</span>
+                    <Progress value={goal.progress} className="mt-3" />
                   </div>
+                ))}
+              </div>
+              <Button className="mt-4 w-full" variant="outline">
+                <Target className="mr-2 h-4 w-4" />
+                Set New Goal
+              </Button>
+            </CardContent>
+          </Card>
+
+          {/* Recording */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Record Your Recitation</CardTitle>
+              <CardDescription>Record for teacher evaluation</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                <div className="rounded-lg bg-purple-50 p-4 dark:bg-purple-900/20">
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-2">
-                      <Award className="h-5 w-5 text-yellow-600" />
-                      <span>Best Surah</span>
+                    <div>
+                      <p className="font-medium">Current Surah: An-Naziat</p>
+                      <p className="text-sm text-purple-600">Ayahs 1-25</p>
                     </div>
-                    <span className="font-bold">Al-Mulk (9.8/10)</span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-2">
-                      <FileText className="h-5 w-5 text-green-600" />
-                      <span>Recordings</span>
-                    </div>
-                    <span className="font-bold">24 files</span>
+                    <Bookmark className="h-5 w-5 text-purple-600" />
                   </div>
                 </div>
-              </CardContent>
-            </Card>
-          </div>
-        </TabsContent>
-      </Tabs>
 
-      {/* Quick Actions */}
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between text-sm">
+                    <span className="text-gray-600">Recording Duration</span>
+                    <span className="font-medium">00:00</span>
+                  </div>
+                  <div className="h-2 rounded-full bg-gray-200">
+                    <div className="h-full w-1/3 rounded-full bg-purple-600"></div>
+                  </div>
+                </div>
+
+                <div className="flex justify-center gap-4">
+                  {isRecording ? (
+                    <Button
+                      className="bg-red-500 hover:bg-red-600"
+                      onClick={handleStopRecording}
+                    >
+                      <Pause className="mr-2 h-4 w-4" />
+                      Stop Recording
+                    </Button>
+                  ) : (
+                    <Button
+                      className="bg-gradient-primary"
+                      onClick={handleStartRecording}
+                    >
+                      <Play className="mr-2 h-4 w-4" />
+                      Start Recording
+                    </Button>
+                  )}
+                  <Button variant="outline">
+                    <Volume2 className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Recent Activities */}
+          <Card>
+            <CardHeader>
+              <CardTitle>Recent Activities</CardTitle>
+              <CardDescription>
+                Your recent memorization activities
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {recentActivities.map((activity) => (
+                  <div key={activity.id} className="flex items-start space-x-3">
+                    <div
+                      className={`mt-0.5 rounded-full p-1 ${
+                        activity.type === "memorization"
+                          ? "bg-green-100 text-green-600"
+                          : activity.type === "revision"
+                          ? "bg-blue-100 text-blue-600"
+                          : "bg-purple-100 text-purple-600"
+                      }`}
+                    >
+                      {activity.type === "memorization" && (
+                        <Book className="h-4 w-4" />
+                      )}
+                      {activity.type === "revision" && (
+                        <RefreshCw className="h-4 w-4" />
+                      )}
+                      {activity.type === "evaluation" && (
+                        <Award className="h-4 w-4" />
+                      )}
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-sm">
+                        <span className="font-medium">{activity.action}</span>
+                      </p>
+                      <div className="mt-1 flex items-center justify-between">
+                        <p className="text-xs text-gray-500">{activity.date}</p>
+                        {activity.score && (
+                          <Badge variant="outline" className="text-xs">
+                            {activity.score}/10
+                          </Badge>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <Button className="mt-4 w-full" variant="outline" asChild>
+                <Link href="/student/quran/history">
+                  <History className="mr-2 h-4 w-4" />
+                  View Full History
+                </Link>
+              </Button>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+
+      {/* Charts Section */}
       <Card>
         <CardHeader>
-          <CardTitle>Quick Actions</CardTitle>
-          <CardDescription>Common tasks for Quran study</CardDescription>
+          <CardTitle>Progress Analytics</CardTitle>
+          <CardDescription>
+            Monthly memorization and revision trends
+          </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-            <Button variant="outline" className="h-auto flex-col p-4">
-              <Mic className="mb-2 h-6 w-6" />
-              <span>New Recording</span>
-            </Button>
-            <Button variant="outline" className="h-auto flex-col p-4">
-              <Calendar className="mb-2 h-6 w-6" />
-              <span>Schedule Revision</span>
-            </Button>
-            <Button variant="outline" className="h-auto flex-col p-4">
-              <Share2 className="mb-2 h-6 w-6" />
-              <span>Share Progress</span>
-            </Button>
-            <Button variant="outline" className="h-auto flex-col p-4">
-              <FileText className="mb-2 h-6 w-6" />
-              <span>Generate Report</span>
-            </Button>
+          <div className="h-80">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={monthlyProgress}>
+                <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
+                <XAxis dataKey="month" stroke="#9CA3AF" />
+                <YAxis stroke="#9CA3AF" />
+                <Tooltip
+                  contentStyle={{
+                    backgroundColor: "white",
+                    border: "1px solid #E5E7EB",
+                    borderRadius: "8px",
+                  }}
+                />
+                <Bar dataKey="pages" fill="#8b5cf6" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="revision" fill="#3b82f6" radius={[4, 4, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
           </div>
         </CardContent>
       </Card>

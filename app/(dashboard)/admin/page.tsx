@@ -264,7 +264,7 @@ export default function AdminDashboardPage() {
       </div>
 
       {/* Stats Grid */}
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 ">
         {stats.map((stat) => (
           <Card key={stat.name} className="overflow-hidden">
             <CardContent className="p-6">

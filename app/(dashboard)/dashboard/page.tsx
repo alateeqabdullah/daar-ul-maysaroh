@@ -29,15 +29,16 @@ import { auth } from "@/lib/auth";
 
 
 
-
-
 // src/app/(dashboard)/admin/page.tsx
-import { auth } from '@/lib/auth'
 import { redirect } from 'next/navigation'
-import { getDashboardStats, getRecentActivities } from '@/lib/db/users'
+import { getDashboardStats, getRecentActivities } from '@/lib/db/users' // Both now exist
 import AdminDashboardClient from '@/components/dashboard/admin-dashboard-client'
 
-export default async function AdminDashboardPage() {
+export default async function AdminDashboardPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+}) {
   const session = await auth()
 
   if (!session) {
@@ -48,16 +49,30 @@ export default async function AdminDashboardPage() {
     redirect('/dashboard')
   }
 
+  // Comply with Next.js 15
+  await searchParams;
+
+  let stats = null;
+  let activities: any[] = [];
+
   try {
-    const [stats, activities] = await Promise.all([
+    // Parallel fetch using the now-defined functions
+    const [statsData, activitiesData] = await Promise.all([
       getDashboardStats(),
       getRecentActivities(5),
     ])
 
-    return <AdminDashboardClient stats={stats} activities={activities} />
+    stats = statsData;
+    activities = activitiesData;
   } catch (error) {
     console.error('Error loading dashboard data:', error)
-    // Return empty state if there's an error
-    return <AdminDashboardClient stats={null} activities={[]} />
   }
+
+  // Return JSX outside of try/catch to maintain pure rendering
+  return (
+    <AdminDashboardClient 
+      stats={stats} 
+      activities={activities} 
+    />
+  )
 }

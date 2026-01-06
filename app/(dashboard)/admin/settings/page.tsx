@@ -7,35 +7,72 @@ import SystemSettingsClient from "@/components/admin/system-settings-client";
 export default async function SystemSettingsPage() {
   const session = await auth();
 
-  // 1. Authentication Check
-  if (!session) {
-    redirect("/login");
-  }
-
-  // 2. Authorization Check
-  if (!["SUPER_ADMIN", "ADMIN"].includes(session.user.role)) {
+  if (!session || !["SUPER_ADMIN", "ADMIN"].includes(session.user.role)) {
     redirect("/dashboard");
   }
 
-  // 3. Data Fetching (Placeholder for future database-driven settings)
-  let settings = null;
-  try {
-    // If you have a settings table, you would fetch it here:
-    // settings = await prisma.systemSettings.findFirst();
+  const rawSettings = await prisma.systemSetting.findMany();
 
-    // For now, we pass the session or initial empty config
-    settings = {
-      institutionName: "Islamic Institute",
-      timezone: "UTC",
-      currency: "USD",
-    };
-  } catch (error) {
-    console.error("Error loading system settings:", error);
-  }
+  const settingsMap = rawSettings.reduce((acc, setting) => {
+    acc[setting.key] = setting.value;
+    return acc;
+  }, {} as Record<string, string>);
 
-  return (
-    <SystemSettingsClient
-      initialSettings={settings ? JSON.parse(JSON.stringify(settings)) : null}
-    />
-  );
+  // Helper to convert DB strings to booleans
+  const toBool = (val: string | undefined, fallback: boolean) =>
+    val === undefined ? fallback : val === "true";
+
+  const initialSettings = {
+    // General
+    siteName: settingsMap.siteName || "MadrasahPro",
+    siteDescription:
+      settingsMap.siteDescription || "Islamic Education Platform",
+    contactEmail: settingsMap.contactEmail || "admin@example.com",
+    contactPhone: settingsMap.contactPhone || "",
+    timezone: settingsMap.timezone || "UTC",
+    dateFormat: settingsMap.dateFormat || "MM/DD/YYYY",
+    language: settingsMap.language || "en",
+
+    // Email (Optional fields)
+    smtpHost: settingsMap.smtpHost,
+    smtpPort: settingsMap.smtpPort,
+    smtpUsername: settingsMap.smtpUsername,
+    emailFrom: settingsMap.emailFrom,
+
+    // Notifications (Must be boolean)
+    emailNotifications: toBool(settingsMap.emailNotifications, true),
+    pushNotifications: toBool(settingsMap.pushNotifications, false),
+    newUserAlerts: toBool(settingsMap.newUserAlerts, true),
+    paymentAlerts: toBool(settingsMap.paymentAlerts, true),
+    attendanceAlerts: toBool(settingsMap.attendanceAlerts, true),
+
+    // Security
+    requireEmailVerification: toBool(
+      settingsMap.requireEmailVerification,
+      true
+    ),
+    requireStrongPasswords: toBool(settingsMap.requireStrongPasswords, true),
+    sessionTimeout: settingsMap.sessionTimeout || "24",
+    maxLoginAttempts: settingsMap.maxLoginAttempts || "5",
+
+    // Academic
+    academicYear: settingsMap.academicYear || "2023-2024",
+    defaultClassCapacity: settingsMap.defaultClassCapacity || "25",
+    attendanceThreshold: settingsMap.attendanceThreshold || "80",
+    gradingScale: settingsMap.gradingScale || "percentage",
+
+    // Financial
+    currency: settingsMap.currency || "USD",
+    paymentGateway: settingsMap.paymentGateway || "stripe",
+    taxRate: settingsMap.taxRate || "0",
+    lateFeeAmount: settingsMap.lateFeeAmount || "0",
+    lateFeeDays: settingsMap.lateFeeDays || "7",
+
+    // Status
+    maintenanceMode: toBool(settingsMap.maintenanceMode, false),
+    requireApproval: toBool(settingsMap.requireApproval, true),
+    enableRegistration: toBool(settingsMap.enableRegistration, true),
+  };
+
+  return <SystemSettingsClient initialSettings={initialSettings} />;
 }

@@ -262,7 +262,7 @@ export default function UserManagementClient({
       </div>
 
       {/* Stats */}
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-5">
+      <div className="grid gap-6  sm:grid-cols-2 lg:grid-cols-3">
         {statsData.map((stat, index) => (
           <Card key={index}>
             <CardContent className="p-6">
