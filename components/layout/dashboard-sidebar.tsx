@@ -34,7 +34,6 @@
 //   user: any;
 // }
 
-
 // const adminNavigation = [
 //   { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
 //   { name: 'User Approval', href: '/admin/approvals', icon: UserCheck, badge: 'pending' },
@@ -306,9 +305,6 @@
 //   );
 // }
 
-
-
-
 "use client";
 
 import { useState, useEffect } from "react"; // Added useEffect
@@ -332,9 +328,10 @@ import {
   Book,
   GraduationCap,
   Wallet,
-  Bell,
   User,
   MessageSquare,
+  Folder,
+  PieChart,
 } from "lucide-react";
 import { cn, getInitials } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -380,8 +377,8 @@ const adminNavigation: NavigationItem[] = [
   { name: "Reports", href: "/admin/reports", icon: BarChart3 },
   { name: "System Settings", href: "/admin/settings", icon: Settings },
 ];
-
-const teacherNavigation: NavigationItem[] = [
+// In dashboard-sidebar.tsx, update teacherNavigation:
+const teacherNavigation = [
   { name: "Dashboard", href: "/teacher", icon: LayoutDashboard },
   { name: "My Classes", href: "/teacher/classes", icon: BookOpen },
   { name: "Students", href: "/teacher/students", icon: Users },
@@ -389,7 +386,14 @@ const teacherNavigation: NavigationItem[] = [
   { name: "Assignments", href: "/teacher/assignments", icon: FileText },
   { name: "Grades", href: "/teacher/grades", icon: BarChart3 },
   { name: "Schedule", href: "/teacher/schedule", icon: Calendar },
-  { name: "Resources", href: "/teacher/resources", icon: Book },
+  { name: "Quran Progress", href: "/teacher/quran", icon: Book },
+  { name: "Resources", href: "/teacher/resources", icon: Folder },
+  {
+    name: "Communication",
+    href: "/teacher/communication",
+    icon: MessageSquare,
+  },
+  { name: "Reports", href: "/teacher/reports", icon: PieChart },
 ];
 
 const studentNavigation: NavigationItem[] = [
@@ -403,15 +407,15 @@ const studentNavigation: NavigationItem[] = [
 ];
 
 const parentNavigation = [
-  { name: 'Dashboard', href: '/parent', icon: LayoutDashboard },
-  { name: 'My Children', href: '/parent/children', icon: Users },
-  { name: 'Progress Reports', href: '/parent/progress', icon: BarChart3 },
-  { name: 'Attendance', href: '/parent/attendance', icon: UserCheck },
-  { name: 'Payments', href: '/parent/payments', icon: Wallet },
-  { name: 'Messages', href: '/parent/messages', icon: MessageSquare },
-  { name: 'Schedule', href: '/parent/schedule', icon: Calendar },
-  { name: 'Quran Progress', href: '/parent/quran', icon: Book },
-]
+  { name: "Dashboard", href: "/parent", icon: LayoutDashboard },
+  { name: "My Children", href: "/parent/children", icon: Users },
+  { name: "Progress Reports", href: "/parent/progress", icon: BarChart3 },
+  { name: "Attendance", href: "/parent/attendance", icon: UserCheck },
+  { name: "Payments", href: "/parent/payments", icon: Wallet },
+  { name: "Messages", href: "/parent/messages", icon: MessageSquare },
+  { name: "Schedule", href: "/parent/schedule", icon: Calendar },
+  { name: "Quran Progress", href: "/parent/quran", icon: Book },
+];
 
 export default function DashboardSidebar({ user }: SidebarProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false);

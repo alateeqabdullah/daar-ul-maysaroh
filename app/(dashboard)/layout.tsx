@@ -115,8 +115,7 @@ export default async function DashboardLayout({
   }
 
   return (
-    <html lang="en" dir="ltr" suppressHydrationWarning>
-      <body className={`${inter.variable} ${notoSansArabic.variable} font-sans antialiased`}>
+ 
         <ThemeProvider
           attribute="class"
           defaultTheme="light"
@@ -138,8 +137,7 @@ export default async function DashboardLayout({
             </div>
           </AuthProvider>
         </ThemeProvider>
-      </body>
-    </html>
+     
   )
 }
 
