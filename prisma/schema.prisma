@@ -1777,3 +1777,1840 @@ enum CourseCategory {
   ISLAMIC_HISTORY
   OTHER
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// // prisma/schema.prisma
+// generator client {
+//   provider = "prisma-client"
+//   output   = "../app/generated/prisma"
+// }
+
+// datasource db {
+//   provider = "postgresql"
+// }
+
+// // ==================== CORE USER MODELS ====================
+
+// model User {
+//   id            String     @id @default(cuid())
+//   email         String     @unique
+//   password      String? // Nullable for OAuth users
+//   name          String
+//   phone         String?
+//   image         String?
+//   role          UserRole   @default(STUDENT)
+//   status        UserStatus @default(PENDING)
+//   emailVerified DateTime?
+//   phoneVerified Boolean    @default(false)
+//   language      String     @default("en")
+//   timezone      String     @default("UTC")
+
+//   // Approval tracking
+//   approvedAt      DateTime?
+//   approvedBy      User?     @relation("UserApprovals", fields: [approvedById], references: [id])
+//   approvedById    String?
+//   rejectionReason String?
+
+//   // Role-specific profiles (one-to-one relations)
+//   studentProfile Student?
+//   teacherProfile Teacher?
+//   parentProfile  Parent?
+//   adminProfile   AdminProfile?
+
+//   // Authentication (add missing relation names)
+//   sessions           Session[]
+//   accounts           Account[]
+//   verificationTokens VerificationToken[]
+
+//   // Activity tracking
+//   lastLogin  DateTime?
+//   loginCount Int       @default(0)
+//   createdAt  DateTime  @default(now())
+//   updatedAt  DateTime  @updatedAt
+//   isActive   Boolean   @default(true)
+//   deletedAt  DateTime?
+
+//   // Relations
+//   notifications       Notification[]
+//   sentMessages        Message[]            @relation("MessageSender")
+//   receivedMessages    Message[]            @relation("MessageReceiver")
+//   createdClasses      Class[]              @relation("ClassCreator")
+//   approvedUsers       User[]               @relation("UserApprovals")
+//   groupAnnouncements  GroupAnnouncement[]
+//   groupAssignments    GroupAssignment[]
+//   assignments         Assignment[]
+//   classMaterials      ClassMaterial[]
+//   subjectMaterials    SubjectMaterial[]
+//   announcements       Announcement[]
+//   events              Event[]
+//   courseAnnouncements CourseAnnouncement[]
+//   auditLogs           AuditLog[]
+
+//   @@index([email])
+//   @@index([status])
+//   @@index([role])
+//   @@map("users")
+// }
+
+// enum UserRole {
+//   SUPER_ADMIN
+//   ADMIN
+//   TEACHER
+//   STUDENT
+//   PARENT
+//   CONTENT_MANAGER
+//   SUPPORT
+// }
+
+// enum UserStatus {
+//   PENDING
+//   APPROVED
+//   REJECTED
+//   SUSPENDED
+//   DEACTIVATED
+// }
+
+// // ==================== PROFILE MODELS ====================
+
+// model Student {
+//   id     String @id @default(cuid())
+//   userId String @unique
+//   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+//   // Student Information
+//   studentId        String    @unique
+//   dateOfBirth      DateTime?
+//   gender           Gender
+//   nationality      String?
+//   address          String?
+//   city             String?
+//   country          String?
+//   emergencyContact String?
+//   emergencyPhone   String?
+//   medicalNotes     String?
+
+//   // Academic Information
+//   enrollmentDate DateTime @default(now())
+//   currentLevel   String?
+//   currentClassId String?
+//   currentClass   Class?   @relation(fields: [currentClassId], references: [id])
+//   academicYear   String
+
+//   // Islamic Education Tracking
+//   hifzLevel        String?
+//   tajweedLevel     String?
+//   qiraahStyle      String?
+//   memorizationGoal String?
+
+//   // Parent/Guardian
+//   parentId String?
+//   parent   Parent? @relation("ParentChildren", fields: [parentId], references: [id])
+
+//   // Relations (add missing relations)
+//   enrollments      Enrollment[]
+//   attendance       Attendance[]
+//   grades           Grade[]
+//   submissions      AssignmentSubmission[]
+//   quranProgress    QuranProgress[]
+//   prayerRecords    PrayerRecord[]
+//   payments         Payment[]
+//   certificates     Certificate[]
+//   groupMemberships GroupMember[]
+//   groupAttendances GroupAttendanceRecord[]
+//   groupSubmissions GroupAssignmentSubmission[]
+
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+
+//   subscriptions Subscription[]
+
+//   @@index([studentId])
+//   @@index([enrollmentDate])
+//   @@map("students")
+// }
+
+// model Teacher {
+//   id     String @id @default(cuid())
+//   userId String @unique
+//   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+//   // Teacher Information
+//   teacherId       String   @unique
+//   qualification   String?
+//   specialization  String?
+//   experienceYears Int?     @default(0)
+//   bio             String?
+//   expertise       String[]
+
+//   // Employment Details
+//   joiningDate  DateTime     @default(now())
+//   contractType ContractType @default(FULL_TIME)
+//   salary       Float?
+//   isAvailable  Boolean      @default(true)
+
+//   // Teaching Details
+//   maxStudents   Int     @default(20)
+//   teachingStyle String?
+
+//   // Relations (add missing relations)
+//   classes            Class[]        @relation("ClassTeacher")
+//   subjects           Subject[]
+//   assignedGrades     Grade[]
+//   assignedAttendance Attendance[]
+//   announcements      Announcement[]
+//   groups             StudentGroup[] @relation("GroupSupervisor")
+//   assistantGroups    StudentGroup[] @relation("GroupAssistant")
+
+//   createdAt         DateTime           @default(now())
+//   updatedAt         DateTime           @updatedAt
+//   scheduledSessions ScheduledSession[]
+//   subscriptions     Subscription[]
+//   courses           Course[]
+//   attendances       Attendance[]       @relation("AttendanceMarker")
+
+//   @@map("teachers")
+// }
+
+// model Parent {
+//   id     String @id @default(cuid())
+//   userId String @unique
+//   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+//   // Parent Information
+//   occupation    String?
+//   employer      String?
+//   maritalStatus MaritalStatus?
+
+//   // Family Information
+//   spouseName  String?
+//   spousePhone String?
+//   familySize  Int?
+
+//   // Relations (add missing relation names)
+//   students Student[] @relation("ParentChildren")
+//   payments Payment[]
+
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+
+//   @@map("parents")
+// }
+
+// model AdminProfile {
+//   id     String @id @default(cuid())
+//   userId String @unique
+//   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+//   department  String?
+//   permissions String[]
+
+//   createdAt DateTime @default(now())
+
+//   @@map("admin_profiles")
+// }
+
+// enum Gender {
+//   MALE
+//   FEMALE
+// }
+
+// enum ContractType {
+//   FULL_TIME
+//   PART_TIME
+//   CONTRACTUAL
+//   VOLUNTEER
+// }
+
+// enum MaritalStatus {
+//   SINGLE
+//   MARRIED
+//   DIVORCED
+//   WIDOWED
+// }
+
+// // ==================== ACADEMIC MODELS ====================
+
+// model Class {
+//   id                String  @id @default(cuid())
+//   name              String
+//   code              String  @unique
+//   description       String?
+//   level             String
+//   section           String?
+//   capacity          Int     @default(20)
+//   currentEnrollment Int     @default(0)
+//   academicYear      String
+//   term              String?
+
+//   // Teacher assignment
+//   teacherId String
+//   teacher   Teacher @relation("ClassTeacher", fields: [teacherId], references: [id])
+
+//   // Creator tracking
+//   createdById String
+//   createdBy   User   @relation("ClassCreator", fields: [createdById], references: [id])
+
+//   // Schedule
+//   scheduleType ScheduleType    @default(REGULAR)
+//   schedules    ClassSchedule[]
+
+//   // Relations (add missing relations)
+//   enrollments   Enrollment[]
+//   subjects      Subject[]
+//   announcements Announcement[]
+//   materials     ClassMaterial[]
+//   studentGroups StudentGroup[]
+
+//   // Status
+//   isActive  Boolean   @default(true)
+//   startDate DateTime?
+//   endDate   DateTime?
+
+//   createdAt   DateTime     @default(now())
+//   updatedAt   DateTime     @updatedAt
+//   students    Student[]
+//   attendances Attendance[]
+//   events      Event[]
+
+//   @@index([code])
+//   @@index([academicYear])
+//   @@index([teacherId])
+//   @@map("classes")
+// }
+
+// model ClassSchedule {
+//   id      String @id @default(cuid())
+//   classId String
+//   class   Class  @relation(fields: [classId], references: [id], onDelete: Cascade)
+
+//   dayOfWeek Int
+//   startTime String
+//   endTime   String
+//   timezone  String @default("UTC")
+
+//   // Live session details
+//   isLive          Boolean         @default(true)
+//   meetingPlatform MeetingPlatform @default(ZOOM)
+//   meetingUrl      String?
+//   meetingId       String?
+//   meetingPassword String?
+
+//   // Recurrence
+//   isRecurring    Boolean @default(true)
+//   recurrenceRule String?
+
+//   createdAt   DateTime     @default(now())
+//   updatedAt   DateTime     @updatedAt
+//   attendances Attendance[]
+
+//   @@unique([classId, dayOfWeek, startTime])
+//   @@map("class_schedules")
+// }
+
+// model Subject {
+//   id          String          @id @default(cuid())
+//   name        String
+//   code        String          @unique
+//   description String?
+//   category    SubjectCategory
+
+//   // Teacher assignment
+//   teacherId String
+//   teacher   Teacher @relation(fields: [teacherId], references: [id])
+
+//   // Class assignment
+//   classId String
+//   class   Class  @relation(fields: [classId], references: [id])
+
+//   // Academic details
+//   creditHours Int @default(1)
+//   orderIndex  Int @default(0)
+
+//   // Materials
+//   materials SubjectMaterial[]
+
+//   // Relations (add missing relations)
+//   assignments Assignment[]
+//   grades      Grade[]
+
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+
+//   @@index([category])
+//   @@map("subjects")
+// }
+
+// enum ScheduleType {
+//   REGULAR
+//   FLEXIBLE
+//   SELF_PACED
+// }
+
+// enum MeetingPlatform {
+//   ZOOM
+//   GOOGLE_MEET
+//   MICROSOFT_TEAMS
+//   JITSI
+//   OTHER
+// }
+
+// enum SubjectCategory {
+//   QURAN
+//   TAJWEED
+//   ARABIC
+//   FIQH
+//   AQEEDAH
+//   SEERAH
+//   HADITH
+//   AKHLAQ
+//   HISTORY
+//   OTHER
+// }
+
+// // ==================== ENROLLMENT & ATTENDANCE ====================
+
+// model Enrollment {
+//   id        String  @id @default(cuid())
+//   studentId String
+//   student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+//   classId   String
+//   class     Class   @relation(fields: [classId], references: [id], onDelete: Cascade)
+
+//   enrolledAt     DateTime         @default(now())
+//   enrollmentType EnrollmentType   @default(REGULAR)
+//   status         EnrollmentStatus @default(ACTIVE)
+
+//   // Payment reference if paid class
+//   paymentId String?
+//   payment   Payment? @relation(fields: [paymentId], references: [id])
+
+//   // Academic progress
+//   progress    Float?    @default(0)
+//   completedAt DateTime?
+//   courses     Course[]
+
+//   @@unique([studentId, classId])
+//   @@index([studentId])
+//   @@index([classId])
+//   @@index([status])
+//   @@map("enrollments")
+// }
+
+// enum EnrollmentType {
+//   REGULAR
+//   TRIAL
+//   AUDIT
+//   MAKEUP
+// }
+
+// enum EnrollmentStatus {
+//   ACTIVE
+//   COMPLETED
+//   DROPPED
+//   SUSPENDED
+//   FAILED
+// }
+
+// model Attendance {
+//   id         String        @id @default(cuid())
+//   studentId  String
+//   student    Student       @relation(fields: [studentId], references: [id], onDelete: Cascade)
+//   classId    String
+//   class      Class         @relation(fields: [classId], references: [id], onDelete: Cascade)
+//   scheduleId String
+//   schedule   ClassSchedule @relation(fields: [scheduleId], references: [id], onDelete: Cascade)
+
+//   date       DateTime
+//   status     AttendanceStatus @default(PRESENT)
+//   markedById String?
+//   markedBy   Teacher?         @relation("AttendanceMarker", fields: [markedById], references: [id])
+//   markedAt   DateTime?
+//   remarks    String?
+
+//   // Late arrival details
+//   arrivalTime       DateTime?
+//   departureTime     DateTime?
+//   teachers          Teacher[]
+//   scheduledSessions ScheduledSession[]
+
+//   @@unique([studentId, scheduleId, date])
+//   @@index([studentId])
+//   @@index([classId])
+//   @@index([date])
+//   @@index([status])
+//   @@map("attendance")
+// }
+
+// enum AttendanceStatus {
+//   PRESENT
+//   ABSENT
+//   LATE
+//   EXCUSED
+//   LEAVE
+// }
+
+// // ==================== GROUP MODELS (Added missing ones) ====================
+
+// model StudentGroup {
+//   id          String    @id @default(cuid())
+//   name        String
+//   description String?
+//   type        GroupType @default(ACADEMIC)
+
+//   // Group Configuration
+//   academicYear String
+//   term         String?
+//   capacity     Int     @default(20)
+//   currentCount Int     @default(0)
+
+//   // Supervisor
+//   teacherId          String?
+//   teacher            Teacher? @relation("GroupSupervisor", fields: [teacherId], references: [id])
+//   assistantTeacherId String?
+//   assistantTeacher   Teacher? @relation("GroupAssistant", fields: [assistantTeacherId], references: [id])
+
+//   // Parent Class
+//   classId String?
+//   class   Class?  @relation(fields: [classId], references: [id])
+
+//   // Schedule
+//   scheduleType ScheduleType    @default(REGULAR)
+//   schedules    GroupSchedule[]
+
+//   // Relations
+//   members       GroupMember[]
+//   announcements GroupAnnouncement[]
+//   assignments   GroupAssignment[]
+//   attendance    GroupAttendance[]
+
+//   // Status
+//   isActive  Boolean   @default(true)
+//   startDate DateTime?
+//   endDate   DateTime?
+
+//   // Settings
+//   settings Json?
+
+//   createdAt     DateTime       @default(now())
+//   updatedAt     DateTime       @updatedAt
+//   subscriptions Subscription[]
+
+//   @@index([type])
+//   @@index([teacherId])
+//   @@index([classId])
+//   @@index([isActive])
+//   @@map("student_groups")
+// }
+
+// model GroupMember {
+//   id        String       @id @default(cuid())
+//   groupId   String
+//   group     StudentGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+//   studentId String
+//   student   Student      @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+//   // Membership details
+//   joinedAt DateTime         @default(now())
+//   role     GroupRole        @default(MEMBER)
+//   status   MembershipStatus @default(ACTIVE)
+
+//   // Performance in group
+//   groupProgress Float?  @default(0)
+//   notes         String?
+
+//   @@unique([groupId, studentId])
+//   @@index([groupId])
+//   @@index([studentId])
+//   @@index([status])
+//   @@map("group_members")
+// }
+
+// model GroupSchedule {
+//   id      String       @id @default(cuid())
+//   groupId String
+//   group   StudentGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+
+//   dayOfWeek Int
+//   startTime String
+//   endTime   String
+//   timezone  String @default("UTC")
+
+//   // Location/Platform
+//   isOnline         Boolean         @default(true)
+//   meetingPlatform  MeetingPlatform @default(ZOOM)
+//   meetingUrl       String?
+//   meetingId        String?
+//   meetingPassword  String?
+//   physicalLocation String?
+
+//   // Recurrence
+//   isRecurring    Boolean @default(true)
+//   recurrenceRule String?
+
+//   createdAt        DateTime          @default(now())
+//   groupAttendances GroupAttendance[]
+
+//   @@unique([groupId, dayOfWeek, startTime])
+//   @@map("group_schedules")
+// }
+
+// model GroupAttendance {
+//   id         String        @id @default(cuid())
+//   groupId    String
+//   group      StudentGroup  @relation(fields: [groupId], references: [id], onDelete: Cascade)
+//   scheduleId String
+//   schedule   GroupSchedule @relation(fields: [scheduleId], references: [id], onDelete: Cascade)
+
+//   date       DateTime
+//   recordedBy String
+
+//   // Individual attendance records
+//   attendanceRecords GroupAttendanceRecord[]
+
+//   createdAt DateTime @default(now())
+
+//   @@unique([groupId, scheduleId, date])
+//   @@index([groupId])
+//   @@index([date])
+//   @@map("group_attendance")
+// }
+
+// model GroupAttendanceRecord {
+//   id           String          @id @default(cuid())
+//   attendanceId String
+//   attendance   GroupAttendance @relation(fields: [attendanceId], references: [id], onDelete: Cascade)
+//   studentId    String
+//   student      Student         @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+//   status        AttendanceStatus @default(PRESENT)
+//   arrivalTime   DateTime?
+//   departureTime DateTime?
+//   remarks       String?
+
+//   @@unique([attendanceId, studentId])
+//   @@index([studentId])
+//   @@map("group_attendance_records")
+// }
+
+// model GroupAnnouncement {
+//   id      String       @id @default(cuid())
+//   groupId String
+//   group   StudentGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+
+//   title    String
+//   content  String
+//   priority PriorityLevel @default(NORMAL)
+
+//   // Creator
+//   createdById String
+//   createdBy   User   @relation(fields: [createdById], references: [id])
+
+//   // Attachments
+//   attachments String[]
+
+//   // Scheduling
+//   publishAt   DateTime  @default(now())
+//   expireAt    DateTime?
+//   isPublished Boolean   @default(true)
+
+//   createdAt DateTime @default(now())
+
+//   @@index([groupId])
+//   @@index([publishAt])
+//   @@map("group_announcements")
+// }
+
+// model GroupAssignment {
+//   id      String       @id @default(cuid())
+//   groupId String
+//   group   StudentGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+
+//   title       String
+//   description String?
+//   type        AssignmentType @default(HOMEWORK)
+//   dueDate     DateTime
+//   totalMarks  Float          @default(100)
+
+//   // Resources
+//   attachments  String[]
+//   instructions String?
+
+//   // Creator
+//   createdById String
+//   createdBy   User   @relation(fields: [createdById], references: [id])
+
+//   // Submissions
+//   submissions GroupAssignmentSubmission[]
+
+//   createdAt DateTime @default(now())
+
+//   @@index([groupId])
+//   @@index([dueDate])
+//   @@map("group_assignments")
+// }
+
+// model GroupAssignmentSubmission {
+//   id           String          @id @default(cuid())
+//   assignmentId String
+//   assignment   GroupAssignment @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
+//   studentId    String
+//   student      Student         @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+//   submittedAt    DateTime @default(now())
+//   submissionText String?
+//   attachments    String[]
+//   lateSubmission Boolean  @default(false)
+
+//   // Grading
+//   marks    Float?
+//   gradedAt DateTime?
+//   gradedBy String?
+//   feedback String?
+//   status   SubmissionStatus @default(SUBMITTED)
+
+//   @@unique([assignmentId, studentId])
+//   @@index([assignmentId])
+//   @@index([studentId])
+//   @@map("group_assignment_submissions")
+// }
+
+// enum GroupType {
+//   ACADEMIC
+//   HIFZ
+//   REVISION
+//   SUPPORT
+//   PROJECT
+//   COMPETITION
+//   SOCIAL
+//   OTHER
+// }
+
+// enum GroupRole {
+//   LEADER
+//   ASSISTANT
+//   MEMBER
+//   MONITOR
+// }
+
+// enum MembershipStatus {
+//   ACTIVE
+//   INACTIVE
+//   SUSPENDED
+//   GRADUATED
+// }
+
+// // ==================== ASSESSMENTS & GRADES ====================
+
+// model Assignment {
+//   id          String  @id @default(cuid())
+//   title       String
+//   description String?
+//   subjectId   String
+//   subject     Subject @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+
+//   // Assignment details
+//   dueDate    DateTime
+//   totalMarks Float          @default(100)
+//   weightage  Float          @default(100)
+//   type       AssignmentType @default(HOMEWORK)
+
+//   // Resources
+//   attachments  String[]
+//   instructions String?
+//   rubric       String?
+
+//   // Creator
+//   createdById String
+//   createdBy   User   @relation(fields: [createdById], references: [id])
+
+//   // Submissions
+//   submissions AssignmentSubmission[]
+
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+
+//   @@index([subjectId])
+//   @@index([dueDate])
+//   @@map("assignments")
+// }
+
+// model AssignmentSubmission {
+//   id           String     @id @default(cuid())
+//   assignmentId String
+//   assignment   Assignment @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
+//   studentId    String
+//   student      Student    @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+//   // Submission details
+//   submittedAt    DateTime @default(now())
+//   submissionText String?
+//   attachments    String[]
+//   lateSubmission Boolean  @default(false)
+//   lateMinutes    Int?
+
+//   // Grading
+//   marks    Float?
+//   gradedAt DateTime?
+//   gradedBy String?
+//   feedback String?
+//   status   SubmissionStatus @default(SUBMITTED)
+
+//   @@unique([assignmentId, studentId])
+//   @@index([assignmentId])
+//   @@index([studentId])
+//   @@index([submittedAt])
+//   @@map("assignment_submissions")
+// }
+
+// model Grade {
+//   id        String  @id @default(cuid())
+//   studentId String
+//   student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+//   subjectId String
+//   subject   Subject @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+
+//   // Grading details
+//   examType   ExamType @default(MIDTERM)
+//   score      Float
+//   totalScore Float    @default(100)
+//   percentage Float
+//   grade      String?
+//   gradePoint Float?
+
+//   // Assessment details
+//   assessmentDate DateTime @default(now())
+//   assessedBy     String
+//   remarks        String?
+
+//   // Status
+//   isPublished Boolean   @default(false)
+//   publishedAt DateTime?
+
+//   createdAt DateTime  @default(now())
+//   updatedAt DateTime  @updatedAt
+//   teachers  Teacher[]
+
+//   @@index([studentId])
+//   @@index([subjectId])
+//   @@index([examType])
+//   @@index([assessmentDate])
+//   @@map("grades")
+// }
+
+// enum AssignmentType {
+//   HOMEWORK
+//   PROJECT
+//   QUIZ
+//   TEST
+//   PRESENTATION
+//   RECITATION
+//   OTHER
+// }
+
+// enum SubmissionStatus {
+//   NOT_SUBMITTED
+//   SUBMITTED
+//   LATE
+//   GRADED
+//   RETURNED
+// }
+
+// enum ExamType {
+//   MIDTERM
+//   FINAL
+//   QUIZ
+//   ASSIGNMENT
+//   RECITATION_TEST
+//   MEMORIZATION_TEST
+//   ORAL_EXAM
+//   WRITTEN_EXAM
+// }
+
+// // ==================== ISLAMIC FEATURES ====================
+
+// model QuranProgress {
+//   id        String  @id @default(cuid())
+//   studentId String
+//   student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+//   // Progress tracking
+//   type        QuranType @default(MEMORIZATION)
+//   surahNumber Int
+//   surahName   String
+//   juzNumber   Int
+//   pageNumber  Int?
+//   fromAyah    Int
+//   toAyah      Int
+//   totalAyahs  Int
+
+//   // Status
+//   status      ProgressStatus @default(NOT_STARTED)
+//   startedAt   DateTime?
+//   completedAt DateTime?
+//   reviewedAt  DateTime?
+
+//   // Evaluation
+//   evaluationType  EvaluationType?
+//   evaluationScore Int?
+//   evaluationNotes String?
+//   evaluatedBy     String?
+//   evaluatedAt     DateTime?
+
+//   // Audio recording
+//   recordingUrl      String?
+//   recordingDuration Int?
+
+//   // Revision tracking
+//   lastRevisedAt DateTime?
+//   revisionCount Int       @default(0)
+
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+
+//   @@index([studentId])
+//   @@index([surahNumber])
+//   @@index([juzNumber])
+//   @@index([status])
+//   @@map("quran_progress")
+// }
+
+// model PrayerRecord {
+//   id        String  @id @default(cuid())
+//   studentId String
+//   student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+//   date         DateTime
+//   prayer       PrayerType
+//   status       PrayerStatus     @default(MISSED)
+//   congregation CongregationType @default(ALONE)
+
+//   // Timing
+//   scheduledTime DateTime
+//   actualTime    DateTime?
+
+//   // Verification
+//   verifiedBy String?
+//   verifiedAt DateTime?
+//   notes      String?
+
+//   createdAt DateTime @default(now())
+
+//   @@unique([studentId, date, prayer])
+//   @@index([studentId])
+//   @@index([date])
+//   @@index([prayer])
+//   @@map("prayer_records")
+// }
+
+// enum QuranType {
+//   MEMORIZATION
+//   REVISION
+//   STUDY
+//   RECITATION
+// }
+
+// enum ProgressStatus {
+//   NOT_STARTED
+//   IN_PROGRESS
+//   COMPLETED
+//   REVIEWED
+//   MASTERED
+// }
+
+// enum EvaluationType {
+//   FLUENCY
+//   TAJWEED
+//   MELODY
+//   MEMORIZATION
+//   COMPREHENSION
+// }
+
+// enum PrayerType {
+//   FAJR
+//   DHUHR
+//   ASR
+//   MAGHRIB
+//   ISHA
+// }
+
+// enum PrayerStatus {
+//   PERFORMED
+//   MISSED
+//   QADA
+//   EXCUSED
+// }
+
+// enum CongregationType {
+//   ALONE
+//   WITH_FAMILY
+//   IN_MASJID
+//   WITH_GROUP
+// }
+
+// // ==================== FINANCIAL MODELS ====================
+
+// model Payment {
+//   id String @id @default(cuid())
+
+//   // Payer information
+//   studentId String?
+//   student   Student? @relation(fields: [studentId], references: [id])
+//   parentId  String?
+//   parent    Parent?  @relation(fields: [parentId], references: [id])
+
+//   // Payment details
+//   amount      Decimal @db.Decimal(10, 2)
+//   currency    String  @default("USD")
+//   description String
+//   period      String?
+
+//   // Payment method
+//   paymentMethod    PaymentMethod
+//   paymentGateway   PaymentGateway @default(STRIPE)
+//   gatewayReference String?        @unique // Stripe PaymentIntent ID
+//   gatewayResponse  String?
+
+//   // Status
+//   status  PaymentStatus @default(PENDING)
+//   paidAt  DateTime?
+//   dueDate DateTime?
+
+//   // Invoice
+//   invoiceNumber String? @unique
+//   invoiceUrl    String?
+
+//   // Refund information
+//   refundedAmount Float?
+//   refundedAt     DateTime?
+//   refundReason   String?
+
+//   // Relations
+//   enrollments Enrollment[]
+
+//   createdAt     DateTime       @default(now())
+//   updatedAt     DateTime       @updatedAt
+//   subscriptions Subscription[]
+
+//   @@index([studentId])
+//   @@index([parentId])
+//   @@index([status])
+//   @@index([createdAt])
+//   @@map("payments")
+// }
+
+// enum PaymentMethod {
+//   CREDIT_CARD
+//   DEBIT_CARD
+//   BANK_TRANSFER
+//   MOBILE_MONEY
+//   CASH
+//   CHECK
+//   OTHER
+// }
+
+// enum PaymentGateway {
+//   STRIPE
+//   PAYPAL
+//   RAZORPAY
+//   EASYPAISA
+//   JAZZCASH
+//   MADA
+//   SADAD
+//   VALU
+//   FAWRY
+//   CASHFREE
+//   PAYTM
+//   MANUAL
+// }
+
+// enum PaymentStatus {
+//   PENDING
+//   PROCESSING
+//   COMPLETED
+//   FAILED
+//   REFUNDED
+//   PARTIALLY_REFUNDED
+//   CANCELLED
+// }
+
+// // ==================== RESOURCE MANAGEMENT ====================
+
+// model ClassMaterial {
+//   id      String @id @default(cuid())
+//   classId String
+//   class   Class  @relation(fields: [classId], references: [id], onDelete: Cascade)
+
+//   title        String
+//   description  String?
+//   type         MaterialType @default(DOCUMENT)
+//   fileUrl      String
+//   thumbnailUrl String?
+//   fileSize     Int?
+//   fileType     String?
+
+//   // Access control
+//   isPublic       Boolean   @default(true)
+//   availableFrom  DateTime?
+//   availableUntil DateTime?
+
+//   // Metadata
+//   uploadedById  String
+//   uploadedBy    User   @relation(fields: [uploadedById], references: [id])
+//   downloadCount Int    @default(0)
+//   viewCount     Int    @default(0)
+
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+
+//   @@index([classId])
+//   @@index([type])
+//   @@index([createdAt])
+//   @@map("class_materials")
+// }
+
+// model SubjectMaterial {
+//   id        String  @id @default(cuid())
+//   subjectId String
+//   subject   Subject @relation(fields: [subjectId], references: [id], onDelete: Cascade)
+
+//   title       String
+//   description String?
+//   type        MaterialType @default(DOCUMENT)
+//   fileUrl     String
+//   fileSize    Int?
+//   fileType    String?
+
+//   // Chapter/lesson reference
+//   chapter      String?
+//   lessonNumber Int?
+
+//   uploadedById String
+//   uploadedBy   User   @relation(fields: [uploadedById], references: [id])
+
+//   createdAt DateTime @default(now())
+
+//   @@index([subjectId])
+//   @@index([chapter])
+//   @@map("subject_materials")
+// }
+
+// enum MaterialType {
+//   DOCUMENT
+//   VIDEO
+//   AUDIO
+//   IMAGE
+//   PRESENTATION
+//   LINK
+//   OTHER
+// }
+
+// // ==================== COMMUNICATION MODELS ====================
+
+// model Announcement {
+//   id String @id @default(cuid())
+
+//   // Targeting
+//   title    String
+//   content  String
+//   type     AnnouncementType @default(GENERAL)
+//   priority PriorityLevel    @default(NORMAL)
+
+//   // Audience
+//   targetAudience  AudienceType[]
+//   specificClassId String?
+//   specificClass   Class?         @relation(fields: [specificClassId], references: [id])
+//   specificUserIds String[]
+
+//   // Scheduling
+//   publishAt   DateTime  @default(now())
+//   expireAt    DateTime?
+//   isPublished Boolean   @default(true)
+
+//   // Creator
+//   createdById String
+//   createdBy   User   @relation(fields: [createdById], references: [id])
+
+//   // Attachments
+//   attachments String[]
+
+//   // Analytics
+//   views Int @default(0)
+
+//   createdAt DateTime  @default(now())
+//   updatedAt DateTime  @updatedAt
+//   teachers  Teacher[]
+
+//   @@index([type])
+//   @@index([publishAt])
+//   @@index([createdById])
+//   @@map("announcements")
+// }
+
+// model Message {
+//   id String @id @default(cuid())
+
+//   // Participants
+//   senderId   String
+//   sender     User   @relation("MessageSender", fields: [senderId], references: [id])
+//   receiverId String
+//   receiver   User   @relation("MessageReceiver", fields: [receiverId], references: [id])
+
+//   // Message content
+//   content     String
+//   messageType MessageType @default(TEXT)
+//   attachments String[]
+
+//   // Status tracking
+//   isRead      Boolean   @default(false)
+//   readAt      DateTime?
+//   deliveredAt DateTime?
+
+//   // Thread support
+//   parentMessageId String?
+//   parentMessage   Message?  @relation("MessageThread", fields: [parentMessageId], references: [id])
+//   threadMessages  Message[] @relation("MessageThread")
+
+//   createdAt DateTime @default(now())
+
+//   @@index([senderId])
+//   @@index([receiverId])
+//   @@index([createdAt])
+//   @@index([isRead])
+//   @@map("messages")
+// }
+
+// model Notification {
+//   id String @id @default(cuid())
+
+//   // Recipient
+//   userId String
+//   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+//   // Notification content
+//   title    String
+//   message  String
+//   type     NotificationType @default(SYSTEM)
+//   priority PriorityLevel    @default(NORMAL)
+
+//   // Action/Reference
+//   actionUrl     String?
+//   referenceId   String?
+//   referenceType String?
+
+//   // Status
+//   isRead Boolean   @default(false)
+//   readAt DateTime?
+
+//   createdAt DateTime @default(now())
+
+//   @@index([userId])
+//   @@index([isRead])
+//   @@index([createdAt])
+//   @@map("notifications")
+// }
+
+// enum AnnouncementType {
+//   GENERAL
+//   ACADEMIC
+//   FINANCIAL
+//   EVENT
+//   HOLIDAY
+//   URGENT
+//   SYSTEM
+// }
+
+// enum MessageType {
+//   TEXT
+//   IMAGE
+//   AUDIO
+//   VIDEO
+//   DOCUMENT
+//   SYSTEM
+// }
+
+// enum NotificationType {
+//   SYSTEM
+//   ANNOUNCEMENT
+//   ASSIGNMENT
+//   GRADE
+//   ATTENDANCE
+//   PAYMENT
+//   MESSAGE
+//   EVENT
+// }
+
+// enum AudienceType {
+//   ALL
+//   STUDENTS
+//   TEACHERS
+//   PARENTS
+//   ADMINS
+//   SPECIFIC_CLASS
+//   SPECIFIC_USERS
+// }
+
+// enum PriorityLevel {
+//   LOW
+//   NORMAL
+//   HIGH
+//   URGENT
+// }
+
+// // ==================== CERTIFICATES & ACHIEVEMENTS ====================
+
+// model Certificate {
+//   id        String  @id @default(cuid())
+//   studentId String
+//   student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+//   // Certificate details
+//   type            CertificateType
+//   title           String
+//   description     String?
+//   achievementDate DateTime        @default(now())
+
+//   // Issuance details
+//   issuedBy   String
+//   issuedById String?
+//   issuedAt   DateTime @default(now())
+
+//   // Digital certificate
+//   certificateNumber String  @unique
+//   certificateUrl    String?
+//   verificationCode  String?
+
+//   // Metadata
+//   template String?
+
+//   createdAt DateTime @default(now())
+
+//   @@index([studentId])
+//   @@index([type])
+//   @@index([certificateNumber])
+//   @@map("certificates")
+// }
+
+// enum CertificateType {
+//   COMPLETION
+//   MEMORIZATION
+//   EXCELLENCE
+//   ATTENDANCE
+//   PARTICIPATION
+//   ACHIEVEMENT
+// }
+
+// // ==================== AUTHENTICATION MODELS ====================
+
+// model Session {
+//   id           String   @id @default(cuid())
+//   sessionToken String   @unique
+//   userId       String
+//   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+//   expires      DateTime
+//   createdAt    DateTime @default(now())
+
+//   @@index([sessionToken])
+//   @@index([userId])
+//   @@map("sessions")
+// }
+
+// model Account {
+//   id                String  @id @default(cuid())
+//   userId            String
+//   user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+//   type              String
+//   provider          String
+//   providerAccountId String
+//   refresh_token     String?
+//   access_token      String?
+//   expires_at        Int?
+//   token_type        String?
+//   scope             String?
+//   id_token          String?
+//   session_state     String?
+
+//   @@unique([provider, providerAccountId])
+//   @@index([userId])
+//   @@map("accounts")
+// }
+
+// model VerificationToken {
+//   id         String   @id @default(cuid())
+//   identifier String
+//   token      String   @unique
+//   expires    DateTime
+//   createdAt  DateTime @default(now())
+//   users      User[]
+
+//   @@unique([identifier, token])
+//   @@map("verification_tokens")
+// }
+
+// // ==================== SYSTEM CONFIGURATION ====================
+
+// model SystemSetting {
+//   id          String      @id @default(cuid())
+//   key         String      @unique
+//   value       String
+//   type        SettingType @default(STRING)
+//   category    String
+//   description String?
+//   isPublic    Boolean     @default(false)
+
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+
+//   @@map("system_settings")
+// }
+
+// enum SettingType {
+//   STRING
+//   NUMBER
+//   BOOLEAN
+//   JSON
+//   ARRAY
+// }
+
+// // ==================== EVENT & CALENDAR ====================
+
+// model Event {
+//   id          String    @id @default(cuid())
+//   title       String
+//   description String?
+//   type        EventType
+//   startDate   DateTime
+//   endDate     DateTime
+//   allDay      Boolean   @default(false)
+
+//   // Location/Online
+//   location   String?
+//   isOnline   Boolean @default(false)
+//   meetingUrl String?
+
+//   // Audience
+//   targetAudience  AudienceType[]
+//   specificClassId String?
+//   specificClass   Class?         @relation(fields: [specificClassId], references: [id])
+
+//   // Organizer
+//   organizedById String
+//   organizedBy   User   @relation(fields: [organizedById], references: [id])
+
+//   // Recurrence
+//   isRecurring    Boolean @default(false)
+//   recurrenceRule String?
+
+//   // Status
+//   isPublished Boolean @default(true)
+
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+
+//   @@index([type])
+//   @@index([startDate])
+//   @@index([organizedById])
+//   @@map("events")
+// }
+
+// enum EventType {
+//   CLASS
+//   EXAM
+//   HOLIDAY
+//   EVENT
+//   MEETING
+//   DEADLINE
+//   CUSTOM
+// }
+
+// // Update in prisma/schema.prisma - Add/modify these models
+
+// // ==================== PRICING MODELS ====================
+
+// model PricingPlan {
+//   id          String       @id @default(cuid())
+//   name        String // e.g., "One-on-One Basic", "Group Standard"
+//   description String?
+//   type        PlanType     @default(ONE_ON_ONE) // ONE_ON_ONE, GROUP, CLASS
+//   category    PlanCategory @default(QURAN) // Quran, Arabic, Fiqh, etc.
+//   level       String? // Beginner, Intermediate, Advanced
+
+//   // Base configuration
+//   minDuration  Int  @default(30) // Minimum minutes per session
+//   maxDuration  Int? // Maximum minutes per session
+//   durationStep Int  @default(5) // Increment step for duration
+
+//   // Frequency options
+//   daysPerWeek     Int[] // [1, 2, 3, 5, 7] - Available days per week
+//   sessionsPerWeek Int[] // [1, 2, 3, 4, 5] - Sessions per week
+
+//   // Pricing structure
+//   basePrice       Decimal  @db.Decimal(10, 2)
+//   pricePerMinute  Decimal? @db.Decimal(10, 2)
+//   pricePerSession Decimal? @db.Decimal(10, 2)
+//   currency        String   @default("USD")
+
+//   // Discounts
+//   monthlyDiscount   Decimal? @db.Decimal(5, 2) // Percentage
+//   quarterlyDiscount Decimal? @db.Decimal(5, 2)
+//   yearlyDiscount    Decimal? @db.Decimal(5, 2)
+
+//   // Features included
+//   features String[] // Array of feature descriptions
+
+//   // Availability
+//   isActive   Boolean @default(true)
+//   isPublic   Boolean @default(true)
+//   orderIndex Int     @default(0)
+
+//   // Relations
+//   subscriptions Subscription[]
+//   pricingTiers  PricingTier[]
+
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+
+//   @@index([type])
+//   @@index([category])
+//   @@index([isActive])
+//   @@map("pricing_plans")
+// }
+
+// model PricingTier {
+//   id     String      @id @default(cuid())
+//   planId String
+//   plan   PricingPlan @relation(fields: [planId], references: [id], onDelete: Cascade)
+
+//   // Tier configuration
+//   minDuration     Int // Minutes
+//   maxDuration     Int? // Minutes (null for unlimited)
+//   daysPerWeek     Int // 1-7
+//   sessionsPerWeek Int // Could be different from daysPerWeek
+
+//   // Tier-specific pricing
+//   pricePerSession Decimal @db.Decimal(10, 2)
+//   pricePerMonth   Decimal @db.Decimal(10, 2)
+
+//   // Additional settings
+//   isRecommended Boolean @default(false)
+
+//   @@unique([planId, minDuration, daysPerWeek, sessionsPerWeek])
+//   @@map("pricing_tiers")
+// }
+
+// model Subscription {
+//   id String @id @default(cuid())
+
+//   // Student information
+//   studentId String
+//   student   Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+//   // Plan selection
+//   planId String
+//   plan   PricingPlan @relation(fields: [planId], references: [id])
+
+//   stripeSubscriptionId String? @unique
+//   stripePriceId        String?
+
+//   // Custom configuration (user-selected)
+//   duration        Int // Minutes per session
+//   daysPerWeek     Int // Days per week
+//   sessionsPerWeek Int // Sessions per week
+//   scheduleType    ScheduleType @default(REGULAR)
+
+//   // Teacher/Group assignment (if applicable)
+//   teacherId String?
+//   teacher   Teacher?      @relation(fields: [teacherId], references: [id])
+//   groupId   String?
+//   group     StudentGroup? @relation(fields: [groupId], references: [id])
+
+//   // Calculated pricing
+//   basePrice     Decimal       @db.Decimal(10, 2)
+//   discount      Decimal?      @db.Decimal(5, 2)
+//   finalPrice    Decimal       @db.Decimal(10, 2)
+//   billingPeriod BillingPeriod @default(MONTHLY)
+//   currency      String        @default("USD")
+
+//   // Scheduling details
+//   preferredDays  Int[] // [0,2,4] for Sun,Tue,Thu
+//   preferredTimes String[] // ["14:00", "15:00"] in 24h format
+//   timezone       String   @default("UTC")
+
+//   // Status
+//   status      SubscriptionStatus @default(PENDING)
+//   startDate   DateTime?
+//   endDate     DateTime?
+//   trialEndsAt DateTime?
+//   autoRenew   Boolean            @default(true)
+
+//   // Payment tracking
+//   payments Payment[]
+
+//   // Next billing
+//   nextBillingAt DateTime?
+
+//   createdAt         DateTime           @default(now())
+//   updatedAt         DateTime           @updatedAt
+//   scheduledSessions ScheduledSession[]
+
+//   @@index([studentId])
+//   @@index([status])
+//   @@index([nextBillingAt])
+//   @@map("subscriptions")
+// }
+
+// model ScheduledSession {
+//   id             String       @id @default(cuid())
+//   subscriptionId String
+//   subscription   Subscription @relation(fields: [subscriptionId], references: [id], onDelete: Cascade)
+
+//   // Session details
+//   date      DateTime
+//   startTime String // "14:00"
+//   endTime   String // "14:30"
+//   duration  Int // Minutes
+
+//   // Teacher assignment
+//   teacherId String
+//   teacher   Teacher @relation(fields: [teacherId], references: [id])
+
+//   // Status
+//   status     SessionStatus @default(SCHEDULED)
+//   meetingUrl String?
+//   meetingId  String?
+
+//   // Rescheduling
+//   rescheduledFrom  DateTime?
+//   rescheduleReason String?
+
+//   // Attendance
+//   attendance   Attendance? @relation(fields: [attendanceid], references: [id])
+//   attendanceid String?
+
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+
+//   @@unique([subscriptionId, date, startTime])
+//   @@index([date])
+//   @@index([teacherId])
+//   @@map("scheduled_sessions")
+// }
+
+// // ==================== ENUMS ====================
+
+// enum PlanType {
+//   ONE_ON_ONE
+//   GROUP
+//   CLASS
+//   CUSTOM
+// }
+
+// enum PlanCategory {
+//   QURAN
+//   TAJWEED
+//   ARABIC
+//   FIQH
+//   AQEEDAH
+//   SEERAH
+//   HADITH
+//   GENERAL
+// }
+
+// enum BillingPeriod {
+//   MONTHLY
+//   QUARTERLY
+//   YEARLY
+//   LIFETIME
+// }
+
+// enum SubscriptionStatus {
+//   PENDING
+//   ACTIVE
+//   PAUSED
+//   CANCELLED
+//   EXPIRED
+//   TRIAL
+// }
+
+// enum SessionStatus {
+//   SCHEDULED
+//   COMPLETED
+//   CANCELLED
+//   RESCHEDULED
+//   NO_SHOW
+// }
+
+// // Add to prisma/schema.prisma - Course model
+
+// model Course {
+//   id           String         @id @default(cuid())
+//   name         String
+//   description  String?
+//   category     CourseCategory
+//   level        String // Beginner, Intermediate, Advanced
+//   duration     String? // e.g., "3 months", "12 weeks"
+//   totalLessons Int?           @default(0)
+//   price        Decimal?       @db.Decimal(10, 2)
+//   currency     String         @default("USD")
+
+//   // Features
+//   features     String[] // Array of features
+//   requirements String[] // Array of requirements
+//   curriculum   Json? // JSON structure for curriculum
+//   schedule     Json? // JSON structure for schedule
+
+//   // Media
+//   thumbnailUrl  String?
+//   promoVideoUrl String?
+
+//   // Teacher
+//   teacherId String
+//   teacher   Teacher @relation(fields: [teacherId], references: [id])
+
+//   // Relations
+//   enrollments   Enrollment[]
+//   materials     CourseMaterial[]
+//   announcements CourseAnnouncement[]
+
+//   // Status
+//   isActive   Boolean @default(true)
+//   isPublic   Boolean @default(true)
+//   isFeatured Boolean @default(false)
+
+//   // Metadata
+//   viewCount    Int      @default(0)
+//   rating       Decimal? @db.Decimal(3, 2)
+//   totalRatings Int      @default(0)
+
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+
+//   @@index([category])
+//   @@index([teacherId])
+//   @@index([isActive])
+//   @@index([isFeatured])
+//   @@map("courses")
+// }
+
+// model CourseMaterial {
+//   id       String @id @default(cuid())
+//   courseId String
+//   course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+//   title       String
+//   description String?
+//   type        MaterialType @default(DOCUMENT)
+//   fileUrl     String
+//   fileSize    Int?
+//   fileType    String?
+
+//   // Chapter/Lesson reference
+//   chapter      String?
+//   lessonNumber Int?
+
+//   // Access
+//   isFree     Boolean @default(false)
+//   orderIndex Int     @default(0)
+
+//   // Stats
+//   downloadCount Int @default(0)
+//   viewCount     Int @default(0)
+
+//   createdAt DateTime @default(now())
+
+//   @@index([courseId])
+//   @@index([chapter])
+//   @@map("course_materials")
+// }
+
+// model CourseAnnouncement {
+//   id       String @id @default(cuid())
+//   courseId String
+//   course   Course @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+//   title    String
+//   content  String
+//   priority PriorityLevel @default(NORMAL)
+
+//   // Creator
+//   createdById String
+//   createdBy   User   @relation(fields: [createdById], references: [id])
+
+//   // Attachments
+//   attachments String[]
+
+//   createdAt DateTime @default(now())
+
+//   @@index([courseId])
+//   @@index([createdAt])
+//   @@map("course_announcements")
+// }
+
+// enum CourseCategory {
+//   QURAN
+//   TAJWEED
+//   ARABIC
+//   FIQH
+//   AQEEDAH
+//   SEERAH
+//   HADITH
+//   AKHLAQ
+//   ISLAMIC_HISTORY
+//   OTHER
+// }
+
+// model AuditLog {
+//   id        String   @id @default(cuid())
+//   action    String // e.g., "UPDATE_GRADE"
+//   entity    String // e.g., "Grade"
+//   entityId  String
+//   userId    String
+//   user      User     @relation(fields: [userId], references: [id])
+//   details   Json?
+//   createdAt DateTime @default(now())
+// }
+
+

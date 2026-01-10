@@ -1,7 +1,10 @@
-// src/app/(dashboard)/admin/page.tsx
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import axios from "axios";
+import { motion, AnimatePresence } from "framer-motion";
+import { formatDistanceToNow } from "date-fns";
 import {
   Users,
   UserCheck,
@@ -9,14 +12,11 @@ import {
   GraduationCap,
   DollarSign,
   TrendingUp,
-  AlertCircle,
   Clock,
-  CheckCircle,
-  XCircle,
-  MoreVertical,
   Download,
-  Filter,
-  Search,
+  CalendarCheck,
+  CheckCircle2,
+  ArrowRight,
 } from "lucide-react";
 import {
   Card,
@@ -27,15 +27,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-// import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Input } from "@/components/ui/input";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { Skeleton } from "@/components/ui/skeleton";
 import {
   BarChart,
   Bar,
@@ -47,509 +39,618 @@ import {
   PieChart,
   Pie,
   Cell,
-  LineChart,
-  Line,
+  AreaChart,
+  Area,
+  Legend,
 } from "recharts";
-import { getInitials } from "@/lib/utils";
 import { toast } from "sonner";
+import { ApprovalsTable } from "@/components/dashboard/ApprovalsTable";
+import { Counter } from "@/components/admin/dashboard-ui"; // Import the counter we made
+import type { DashboardApiResponse, PendingUser } from "@/types/dashboard";
 
-// Mock data - In production, this would come from API
-const stats = [
-  {
-    name: "Total Users",
-    value: "1,234",
-    icon: Users,
-    change: "+12%",
-    color: "bg-purple-500",
+// --- ANIMATION VARIANTS ---
+const containerVariants = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1, // Stagger effect
+      delayChildren: 0.2,
+    },
   },
-  {
-    name: "Pending Approvals",
-    value: "24",
-    icon: UserCheck,
-    change: "+3",
-    color: "bg-yellow-500",
-  },
-  {
-    name: "Active Classes",
-    value: "56",
-    icon: BookOpen,
-    change: "+8%",
-    color: "bg-blue-500",
-  },
-  {
-    name: "Active Teachers",
-    value: "42",
-    icon: GraduationCap,
-    change: "+5%",
-    color: "bg-green-500",
-  },
-  {
-    name: "Revenue",
-    value: "$12,450",
-    icon: DollarSign,
-    change: "+18%",
-    color: "bg-emerald-500",
-  },
-  {
-    name: "Attendance Rate",
-    value: "94%",
-    icon: TrendingUp,
-    change: "+2%",
-    color: "bg-indigo-500",
-  },
-];
+};
 
-const pendingUsers = [
-  {
-    id: 1,
-    name: "Ahmed Khan",
-    email: "ahmed@example.com",
-    role: "STUDENT",
-    applied: "2 hours ago",
+const itemVariants = {
+  hidden: { y: 20, opacity: 0 },
+  show: {
+    y: 0,
+    opacity: 1,
+    transition: { type: "spring", stiffness: 50, damping: 10 },
   },
-  {
-    id: 2,
-    name: "Fatima Ali",
-    email: "fatima@example.com",
-    role: "TEACHER",
-    applied: "5 hours ago",
-  },
-  {
-    id: 3,
-    name: "Omar Hassan",
-    email: "omar@example.com",
-    role: "STUDENT",
-    applied: "1 day ago",
-  },
-  {
-    id: 4,
-    name: "Sara Mohamed",
-    email: "sara@example.com",
-    role: "PARENT",
-    applied: "2 days ago",
-  },
-  {
-    id: 5,
-    name: "Yusuf Abdullah",
-    email: "yusuf@example.com",
-    role: "TEACHER",
-    applied: "3 days ago",
-  },
-];
-
-const recentActivities = [
-  {
-    id: 1,
-    user: "Admin",
-    action: "approved student registration",
-    time: "5 min ago",
-    type: "success",
-  },
-  {
-    id: 2,
-    user: "System",
-    action: "sent monthly reports",
-    time: "1 hour ago",
-    type: "info",
-  },
-  {
-    id: 3,
-    user: "Teacher Ahmed",
-    action: "added new assignment",
-    time: "2 hours ago",
-    type: "info",
-  },
-  {
-    id: 4,
-    user: "Student Omar",
-    action: "submitted assignment late",
-    time: "3 hours ago",
-    type: "warning",
-  },
-  {
-    id: 5,
-    user: "Parent Sara",
-    action: "made payment",
-    time: "5 hours ago",
-    type: "success",
-  },
-];
-
-const attendanceData = [
-  { day: "Mon", present: 65, absent: 5 },
-  { day: "Tue", present: 70, absent: 2 },
-  { day: "Wed", present: 68, absent: 4 },
-  { day: "Thu", present: 72, absent: 0 },
-  { day: "Fri", present: 66, absent: 6 },
-  { day: "Sat", present: 60, absent: 2 },
-  { day: "Sun", present: 55, absent: 7 },
-];
-
-const revenueData = [
-  { month: "Jan", revenue: 4000 },
-  { month: "Feb", revenue: 4500 },
-  { month: "Mar", revenue: 5200 },
-  { month: "Apr", revenue: 5800 },
-  { month: "May", revenue: 6200 },
-  { month: "Jun", revenue: 6800 },
-  { month: "Jul", revenue: 7200 },
-];
-
-const userDistributionData = [
-  { name: "Students", value: 65, color: "#8b5cf6" },
-  { name: "Teachers", value: 15, color: "#3b82f6" },
-  { name: "Parents", value: 12, color: "#10b981" },
-  { name: "Admins", value: 8, color: "#f59e0b" },
-];
+};
 
 export default function AdminDashboardPage() {
+  const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [data, setData] = useState<DashboardApiResponse | null>(null);
+  const [localPendingUsers, setLocalPendingUsers] = useState<PendingUser[]>([]);
 
+  // 1. Fetch Data
   useEffect(() => {
-    // Simulate loading data
-    setTimeout(() => setIsLoading(false), 1000);
-  }, []);
+    const fetchData = async () => {
+      try {
+        const response = await axios.get<DashboardApiResponse>(
+          "/api/admin/dashboard"
+        );
+        setData(response.data);
+        setLocalPendingUsers(response.data.pendingUsers);
+      } catch (error: any) {
+        if (error.response?.status === 401 || error.response?.status === 403) {
+          toast.error("Unauthorized Access");
+          router.push("/auth/login");
+          return;
+        }
+        toast.error("Failed to load dashboard data");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchData();
+  }, [router]);
 
-  const handleApproveUser = (userId: number) => {
-    toast.success("User approved", {
-      description: "The user has been approved successfully.",
-    });
-    // In production: API call to approve user
+  // 2. Export Functionality (CSV Generator)
+  const handleExport = () => {
+    if (!data) return;
+
+    try {
+      const headers = ["Metric", "Value"];
+      const rows = [
+        ["Total Users", data.stats.totalUsers],
+        ["Revenue", data.stats.revenue],
+        ["Active Classes", data.stats.activeClasses],
+        ["Pending Approvals", data.stats.pendingUsers],
+      ];
+
+      // Convert to CSV format
+      const csvContent =
+        "data:text/csv;charset=utf-8," +
+        headers.join(",") +
+        "\n" +
+        rows.map((e) => e.join(",")).join("\n");
+
+      // Create download link
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute(
+        "download",
+        `dashboard_report_${new Date().toISOString().split("T")[0]}.csv`
+      );
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      toast.success("Report downloaded successfully");
+    } catch (error) {
+      toast.error("Failed to export data");
+    }
   };
 
-  const handleRejectUser = (userId: number) => {
-    toast.error("User rejected", {
-      description: "The user has been rejected.",
-    });
-    // In production: API call to reject user
+  // 3. Scroll to Table Action
+  const scrollToApprovals = () => {
+    const element = document.getElementById("approvals-section");
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+    }
   };
 
-  const filteredUsers = pendingUsers.filter(
-    (user) =>
-      user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      user.email.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  // 4. Approve/Reject Logic
+  const handleUserAction = async (
+    userId: string,
+    action: "APPROVE" | "REJECT"
+  ) => {
+    setLocalPendingUsers((prev) => prev.filter((u) => u.id !== userId));
+    try {
+      await axios.post("/api/admin/users/action", { userId, action });
+      toast.success(action === "APPROVE" ? "User Approved" : "User Rejected");
+    } catch (error) {
+      toast.error("Action failed");
+      // Optional: Refetch data here to sync
+    }
+  };
 
-  if (isLoading) {
-    return (
-      <div className="flex h-64 items-center justify-center">
-        <div className="h-8 w-8 animate-spin rounded-full border-4 border-purple-500 border-t-transparent"></div>
-      </div>
-    );
-  }
+  if (isLoading) return <DashboardSkeleton />;
+  if (!data) return null;
+
+  // Configuration for Stats Cards
+  const statCards = [
+    {
+      name: "Total Users",
+      value: data.stats.totalUsers,
+      icon: Users,
+      color: "from-violet-500 to-purple-600",
+      shadow: "shadow-purple-500/20",
+    },
+    {
+      name: "Pending",
+      value: data.stats.pendingUsers,
+      icon: UserCheck,
+      color: "from-amber-400 to-orange-500",
+      shadow: "shadow-orange-500/20",
+    },
+    {
+      name: "Classes",
+      value: data.stats.activeClasses,
+      icon: BookOpen,
+      color: "from-blue-400 to-cyan-500",
+      shadow: "shadow-blue-500/20",
+    },
+    {
+      name: "Teachers",
+      value: data.stats.activeTeachers,
+      icon: GraduationCap,
+      color: "from-emerald-400 to-teal-500",
+      shadow: "shadow-emerald-500/20",
+    },
+    {
+      name: "Revenue",
+      value: data.stats.revenue,
+      prefix: "$",
+      icon: DollarSign,
+      color: "from-green-500 to-emerald-700",
+      shadow: "shadow-green-500/20",
+    },
+    {
+      name: "Attendance",
+      value: data.stats.attendanceRate,
+      suffix: "%",
+      icon: TrendingUp,
+      color: "from-indigo-400 to-blue-600",
+      shadow: "shadow-indigo-500/20",
+    },
+  ];
 
   return (
-    <div className="space-y-6">
-      {/* Welcome Header */}
-      <div className="flex items-center justify-between">
+    <motion.div
+      variants={containerVariants}
+      initial="hidden"
+      animate="show"
+      className="space-y-8 pb-10"
+    >
+      {/* --- HEADER --- */}
+      <motion.div
+        variants={itemVariants}
+        className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"
+      >
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+          <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-400 bg-clip-text text-transparent">
             Admin Dashboard
           </h1>
-          <p className="mt-2 text-gray-600 dark:text-gray-400">
-            Overview of your madrasah&apos;s performance and activities
+          <p className="text-muted-foreground mt-1">
+            Overview of your madrasah&apos;s performance.
           </p>
         </div>
-        <div className="flex items-center space-x-3">
-          <Button variant="outline" className="gap-2">
+        <div className="flex items-center gap-3">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleExport}
+            className="gap-2 hover:bg-muted/50 transition-colors"
+          >
             <Download className="h-4 w-4" />
-            Export Report
+            Export
           </Button>
-          <Button className="bg-gradient-primary gap-2">
+          <Button
+            size="sm"
+            onClick={scrollToApprovals}
+            className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white shadow-lg gap-2 transition-all hover:scale-105"
+          >
             <UserCheck className="h-4 w-4" />
-            Quick Actions
+            Review Requests
           </Button>
         </div>
-      </div>
+      </motion.div>
 
-      {/* Stats Grid */}
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 ">
-        {stats.map((stat) => (
-          <Card key={stat.name} className="overflow-hidden">
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
+      {/* --- STATS GRID --- */}
+      <motion.div
+        variants={containerVariants}
+        className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
+      >
+        {statCards.map((stat, i) => (
+          <motion.div
+            key={stat.name}
+            variants={itemVariants}
+            whileHover={{ y: -5, transition: { duration: 0.2 } }}
+            className="group"
+          >
+            <Card
+              className={`border-none shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden relative`}
+            >
+              {/* Gradient Background Decoration */}
+              <div
+                className={`absolute top-0 right-0 w-24 h-24 bg-gradient-to-br ${stat.color} opacity-10 rounded-bl-full group-hover:scale-110 transition-transform`}
+              />
+
+              <CardContent className="p-6 flex justify-between items-center relative z-10">
                 <div>
-                  <p className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                     {stat.name}
                   </p>
-                  <p className="mt-2 text-2xl font-bold text-gray-900 dark:text-white">
-                    {stat.value}
-                  </p>
-                  <p className="mt-1 text-sm text-green-600 dark:text-green-400">
-                    {stat.change} from last month
-                  </p>
+                  <div className="text-3xl font-bold mt-2 text-foreground">
+                    <Counter
+                      value={stat.value}
+                      prefix={stat.prefix}
+                      suffix={stat.suffix}
+                    />
+                  </div>
                 </div>
-                <div className={`rounded-lg ${stat.color} p-3`}>
-                  <stat.icon className="h-6 w-6 text-white" />
+                <div
+                  className={`p-3 rounded-xl bg-gradient-to-br ${stat.color} text-white ${stat.shadow} shadow-lg group-hover:rotate-6 transition-transform`}
+                >
+                  <stat.icon className="h-6 w-6" />
                 </div>
-              </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
 
-      {/* Main Content Grid */}
+      {/* --- MAIN CONTENT GRID --- */}
       <div className="grid gap-6 lg:grid-cols-3">
-        {/* Left Column - Charts */}
+        {/* LEFT COLUMN */}
         <div className="lg:col-span-2 space-y-6">
-          {/* Revenue Chart */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Revenue Overview</CardTitle>
-              <CardDescription>
-                Monthly revenue for the past 7 months
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="h-80">
+          {/* Revenue Area Chart (More Premium than Line) */}
+          <motion.div variants={itemVariants}>
+            <Card className="shadow-md border-muted/50">
+              <CardHeader>
+                <CardTitle>Revenue Analytics</CardTitle>
+                <CardDescription>Monthly income trends</CardDescription>
+              </CardHeader>
+              <CardContent className="h-[320px]">
                 <ResponsiveContainer width="100%" height="100%">
-                  <LineChart data={revenueData}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-                    <XAxis dataKey="month" stroke="#9CA3AF" />
-                    <YAxis stroke="#9CA3AF" />
+                  <AreaChart data={data.charts.revenue}>
+                    <defs>
+                      <linearGradient
+                        id="colorRevenue"
+                        x1="0"
+                        y1="0"
+                        x2="0"
+                        y2="1"
+                      >
+                        <stop
+                          offset="5%"
+                          stopColor="#8b5cf6"
+                          stopOpacity={0.3}
+                        />
+                        <stop
+                          offset="95%"
+                          stopColor="#8b5cf6"
+                          stopOpacity={0}
+                        />
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid
+                      strokeDasharray="3 3"
+                      vertical={false}
+                      stroke="#e5e7eb"
+                      opacity={0.5}
+                    />
+                    <XAxis
+                      dataKey="month"
+                      axisLine={false}
+                      tickLine={false}
+                      dy={10}
+                      tick={{ fontSize: 12, fill: "#6b7280" }}
+                    />
+                    <YAxis
+                      axisLine={false}
+                      tickLine={false}
+                      tickFormatter={(v) => `$${v}`}
+                      tick={{ fontSize: 12, fill: "#6b7280" }}
+                    />
                     <Tooltip
                       contentStyle={{
-                        backgroundColor: "white",
-                        border: "1px solid #E5E7EB",
-                        borderRadius: "8px",
+                        borderRadius: "12px",
+                        border: "none",
+                        boxShadow: "0 10px 15px -3px rgb(0 0 0 / 0.1)",
                       }}
+                      formatter={(value) => [
+                        `$${Number(value).toLocaleString()}`,
+                        "Revenue",
+                      ]}
                     />
-                    <Line
+                    <Area
                       type="monotone"
                       dataKey="revenue"
                       stroke="#8b5cf6"
-                      strokeWidth={2}
-                      dot={{ fill: "#8b5cf6", strokeWidth: 2, r: 4 }}
-                      activeDot={{ r: 6 }}
+                      strokeWidth={3}
+                      fillOpacity={1}
+                      fill="url(#colorRevenue)"
                     />
-                  </LineChart>
+                  </AreaChart>
                 </ResponsiveContainer>
-              </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          </motion.div>
 
-          {/* Attendance Chart */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Weekly Attendance</CardTitle>
-              <CardDescription>
-                Student attendance for the current week
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="h-80">
+          {/* Attendance Bar Chart */}
+          <motion.div variants={itemVariants}>
+            <Card className="shadow-md border-muted/50">
+              <CardHeader className="flex flex-row items-center justify-between">
+                <div>
+                  <CardTitle>Attendance Overview</CardTitle>
+                  <CardDescription>Weekly student presence</CardDescription>
+                </div>
+                <Badge variant="outline" className="gap-1">
+                  <CalendarCheck className="h-3 w-3" /> Last 7 Days
+                </Badge>
+              </CardHeader>
+              <CardContent className="h-[300px]">
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={attendanceData}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
-                    <XAxis dataKey="day" stroke="#9CA3AF" />
-                    <YAxis stroke="#9CA3AF" />
+                  <BarChart data={data.charts.attendance} barGap={8}>
+                    <CartesianGrid
+                      strokeDasharray="3 3"
+                      vertical={false}
+                      stroke="#e5e7eb"
+                      opacity={0.5}
+                    />
+                    <XAxis
+                      dataKey="day"
+                      axisLine={false}
+                      tickLine={false}
+                      dy={10}
+                      tick={{ fontSize: 12, fill: "#6b7280" }}
+                    />
+                    <YAxis
+                      axisLine={false}
+                      tickLine={false}
+                      tick={{ fontSize: 12, fill: "#6b7280" }}
+                    />
                     <Tooltip
+                      cursor={{ fill: "#f3f4f6", opacity: 0.4 }}
                       contentStyle={{
-                        backgroundColor: "white",
-                        border: "1px solid #E5E7EB",
-                        borderRadius: "8px",
+                        borderRadius: "12px",
+                        border: "none",
+                        boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
                       }}
+                    />
+                    <Legend
+                      iconType="circle"
+                      wrapperStyle={{ paddingTop: "20px" }}
                     />
                     <Bar
                       dataKey="present"
-                      fill="#10b981"
-                      radius={[4, 4, 0, 0]}
+                      name="Present"
+                      fill="#8b5cf6"
+                      radius={[6, 6, 0, 0]}
+                      maxBarSize={50}
                     />
                     <Bar
                       dataKey="absent"
+                      name="Absent"
                       fill="#ef4444"
-                      radius={[4, 4, 0, 0]}
+                      radius={[6, 6, 0, 0]}
+                      maxBarSize={50}
                     />
                   </BarChart>
                 </ResponsiveContainer>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+              </CardContent>
+            </Card>
+          </motion.div>
 
-        {/* Right Column - Pending Approvals & Activities */}
-        <div className="space-y-6">
-          {/* Pending Approvals */}
-          <Card>
-            <CardHeader className="pb-3">
-              <div className="flex items-center justify-between">
+          {/* Pending Approvals (Scroll Target) */}
+          <motion.div variants={itemVariants} id="approvals-section">
+            <Card
+              className={`shadow-md border-muted/50 ${
+                localPendingUsers.length > 0
+                  ? "border-l-4 border-l-yellow-400"
+                  : "border-l-4 border-l-green-400"
+              }`}
+            >
+              <CardHeader className="flex flex-row items-center justify-between">
                 <div>
                   <CardTitle>Pending Approvals</CardTitle>
-                  <CardDescription>
-                    {pendingUsers.length} users waiting for approval
-                  </CardDescription>
+                  <CardDescription>New users awaiting access</CardDescription>
                 </div>
-                <Badge variant="destructive">New</Badge>
-              </div>
-              <div className="mt-4">
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
-                  <Input
-                    placeholder="Search users..."
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pl-10"
+                <Badge
+                  className={`${
+                    localPendingUsers.length > 0
+                      ? "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-100"
+                      : "bg-green-100 text-green-800"
+                  }`}
+                >
+                  {localPendingUsers.length} Requests
+                </Badge>
+              </CardHeader>
+              <CardContent>
+                {localPendingUsers.length === 0 ? (
+                  <div className="text-center py-12 text-muted-foreground flex flex-col items-center animate-in fade-in zoom-in duration-500">
+                    <div className="h-16 w-16 bg-green-50 rounded-full flex items-center justify-center mb-4">
+                      <CheckCircle2 className="h-8 w-8 text-green-500" />
+                    </div>
+                    <p className="font-medium text-lg">All Caught Up!</p>
+                    <p className="text-sm">
+                      There are no pending registration requests.
+                    </p>
+                  </div>
+                ) : (
+                  <ApprovalsTable
+                    users={localPendingUsers}
+                    onApprove={(id) => handleUserAction(id, "APPROVE")}
+                    onReject={(id) => handleUserAction(id, "REJECT")}
                   />
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {filteredUsers.map((user) => (
-                  <div
-                    key={user.id}
-                    className="flex items-center justify-between rounded-lg border border-gray-200 p-4 dark:border-gray-700"
-                  >
-                    <div className="flex items-center space-x-3">
-                      <Avatar>
-                        <AvatarFallback className="bg-gradient-primary text-white">
-                          {getInitials(user.name)}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div>
-                        <p className="font-medium">{user.name}</p>
-                        <p className="text-sm text-gray-500">{user.email}</p>
-                        <div className="mt-1 flex items-center space-x-2">
-                          <Badge variant="outline" className="capitalize">
-                            {user.role.toLowerCase()}
-                          </Badge>
-                          <span className="text-xs text-gray-500">
-                            {user.applied}
-                          </span>
+                )}
+              </CardContent>
+            </Card>
+          </motion.div>
+        </div>
+
+        {/* RIGHT COLUMN */}
+        <div className="space-y-6">
+          {/* Pie Chart */}
+          <motion.div variants={itemVariants}>
+            <Card className="shadow-md border-muted/50">
+              <CardHeader>
+                <CardTitle>User Demographics</CardTitle>
+                <CardDescription>Role distribution</CardDescription>
+              </CardHeader>
+              <CardContent className="h-[250px] flex justify-center">
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={data.charts.userDistribution}
+                      innerRadius={60}
+                      outerRadius={80}
+                      paddingAngle={5}
+                      dataKey="value"
+                      stroke="none"
+                    >
+                      {data.charts.userDistribution.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.color} />
+                      ))}
+                    </Pie>
+                    <Tooltip
+                      contentStyle={{
+                        borderRadius: "12px",
+                        border: "none",
+                        boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
+                      }}
+                    />
+                    <Legend
+                      verticalAlign="bottom"
+                      height={36}
+                      iconType="circle"
+                    />
+                  </PieChart>
+                </ResponsiveContainer>
+              </CardContent>
+            </Card>
+          </motion.div>
+
+          {/* Activity Feed */}
+          <motion.div variants={itemVariants}>
+            <Card className="shadow-md border-muted/50 h-fit">
+              <CardHeader>
+                <CardTitle>Live Activity</CardTitle>
+                <CardDescription>Recent system events</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-0">
+                  {data.recentActivity.length === 0 ? (
+                    <div className="text-center py-8 text-muted-foreground">
+                      <Clock className="h-8 w-8 mx-auto mb-2 opacity-50" />
+                      <p>No recent activity</p>
+                    </div>
+                  ) : (
+                    data.recentActivity.map((activity, idx) => (
+                      <div
+                        key={activity.id}
+                        className="relative flex gap-4 pb-6 last:pb-0"
+                      >
+                        {/* Timeline Line */}
+                        {idx !== data.recentActivity.length - 1 && (
+                          <span className="absolute left-4 top-8 bottom-0 w-[2px] bg-gradient-to-b from-border to-transparent" />
+                        )}
+
+                        <div
+                          className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full shadow-sm z-10 
+                          ${
+                            activity.type === "PAYMENT"
+                              ? "bg-green-100 text-green-600"
+                              : "bg-blue-100 text-blue-600"
+                          }`}
+                        >
+                          {activity.type === "PAYMENT" ? (
+                            <DollarSign className="h-4 w-4" />
+                          ) : (
+                            <Users className="h-4 w-4" />
+                          )}
+                        </div>
+
+                        <div className="space-y-1 flex-1">
+                          <div className="flex justify-between items-start">
+                            <p className="text-sm font-semibold leading-none text-foreground">
+                              {activity.title}
+                            </p>
+                            <span className="text-[10px] text-muted-foreground bg-muted px-2 py-0.5 rounded-full">
+                              {formatDistanceToNow(
+                                new Date(activity.timestamp),
+                                { addSuffix: false }
+                              )}
+                            </span>
+                          </div>
+                          <p className="text-xs text-muted-foreground line-clamp-2">
+                            {activity.description}
+                          </p>
+                          {activity.amount && (
+                            <p className="text-xs font-medium text-green-600">
+                              +${activity.amount.toLocaleString()}
+                            </p>
+                          )}
                         </div>
                       </div>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <Button
-                        size="sm"
-                        className="h-8 bg-green-500 hover:bg-green-600"
-                        onClick={() => handleApproveUser(user.id)}
-                      >
-                        <CheckCircle className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="destructive"
-                        className="h-8"
-                        onClick={() => handleRejectUser(user.id)}
-                      >
-                        <XCircle className="h-4 w-4" />
-                      </Button>
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button
-                            size="sm"
-                            variant="ghost"
-                            className="h-8 w-8 p-0"
-                          >
-                            <MoreVertical className="h-4 w-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuItem>View Details</DropdownMenuItem>
-                          <DropdownMenuItem>Send Message</DropdownMenuItem>
-                          <DropdownMenuItem>Request More Info</DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </div>
-                  </div>
-                ))}
-                {filteredUsers.length === 0 && (
-                  <div className="py-8 text-center">
-                    <UserCheck className="mx-auto h-12 w-12 text-gray-300" />
-                    <p className="mt-2 text-gray-500">No pending users found</p>
-                  </div>
-                )}
-              </div>
-              <Button variant="outline" className="mt-4 w-full" asChild>
-                <a href="/admin/approvals">View All Pending Approvals</a>
-              </Button>
-            </CardContent>
-          </Card>
+                    ))
+                  )}
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
 
-          {/* Recent Activities */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Recent Activities</CardTitle>
-              <CardDescription>Latest system activities</CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {recentActivities.map((activity) => (
-                  <div key={activity.id} className="flex items-start space-x-3">
-                    <div
-                      className={`mt-0.5 flex h-8 w-8 items-center justify-center rounded-full ${
-                        activity.type === "success"
-                          ? "bg-green-100 text-green-600"
-                          : activity.type === "warning"
-                          ? "bg-yellow-100 text-yellow-600"
-                          : "bg-blue-100 text-blue-600"
-                      }`}
-                    >
-                      {activity.type === "success" ? (
-                        <CheckCircle className="h-4 w-4" />
-                      ) : activity.type === "warning" ? (
-                        <AlertCircle className="h-4 w-4" />
-                      ) : (
-                        <Clock className="h-4 w-4" />
-                      )}
-                    </div>
-                    <div className="flex-1">
-                      <p className="text-sm">
-                        <span className="font-medium">{activity.user}</span>{" "}
-                        {activity.action}
-                      </p>
-                      <p className="text-xs text-gray-500">{activity.time}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+          {/* Quick Tip / Promo Card */}
+          <motion.div variants={itemVariants}>
+            <div className="rounded-xl bg-gradient-to-br from-indigo-600 to-purple-700 p-6 text-white shadow-lg">
+              <h3 className="font-bold text-lg mb-2">Need Help?</h3>
+              <p className="text-indigo-100 text-sm mb-4">
+                Check our documentation for advanced reports and system
+                configuration.
+              </p>
+              <Button
+                variant="secondary"
+                size="sm"
+                className="w-full text-indigo-700 font-semibold hover:bg-white/90"
+              >
+                View Docs <ArrowRight className="h-4 w-4 ml-2" />
+              </Button>
+            </div>
+          </motion.div>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
+// --- SKELETON LOADER (Matches new layout) ---
+function DashboardSkeleton() {
+  return (
+    <div className="space-y-8 pb-10">
+      <div className="flex justify-between items-center">
+        <div className="space-y-2">
+          <Skeleton className="h-8 w-[200px]" />
+          <Skeleton className="h-4 w-[300px]" />
+        </div>
+        <div className="flex gap-2">
+          <Skeleton className="h-9 w-[100px]" />
+          <Skeleton className="h-9 w-[140px]" />
         </div>
       </div>
 
-      {/* User Distribution Chart */}
-      <Card>
-        <CardHeader>
-          <CardTitle>User Distribution</CardTitle>
-          <CardDescription>
-            Breakdown of user roles in the system
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="h-80">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={userDistributionData}
-                  cx="50%"
-                  cy="50%"
-                  labelLine={false}
-                  label={({ name, percent }) =>
-                    `${name}: ${(percent * 100).toFixed(0)}%`
-                  }
-                  outerRadius={80}
-                  fill="#8884d8"
-                  dataKey="value"
-                >
-                  {userDistributionData.map((entry, index) => (
-                    <Cell key={`cell-${index}`} fill={entry.color} />
-                  ))}
-                </Pie>
-                <Tooltip
-                  contentStyle={{
-                    backgroundColor: "white",
-                    border: "1px solid #E5E7EB",
-                    borderRadius: "8px",
-                  }}
-                />
-              </PieChart>
-            </ResponsiveContainer>
-          </div>
-        </CardContent>
-      </Card>
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {[...Array(6)].map((_, i) => (
+          <Skeleton key={i} className="h-[120px] rounded-xl" />
+        ))}
+      </div>
+
+      <div className="grid gap-6 lg:grid-cols-3">
+        <div className="lg:col-span-2 space-y-6">
+          <Skeleton className="h-[350px] rounded-xl" />
+          <Skeleton className="h-[350px] rounded-xl" />
+          <Skeleton className="h-[300px] rounded-xl" />
+        </div>
+        <div className="space-y-6">
+          <Skeleton className="h-[300px] rounded-xl" />
+          <Skeleton className="h-[500px] rounded-xl" />
+        </div>
+      </div>
     </div>
   );
 }

@@ -17,7 +17,7 @@ const notoSansArabic = Noto_Sans_Arabic({
 });
 
 export const metadata: Metadata = {
-  title: "MadrasahPro - Islamic Education Management System",
+  title: "Daar-Ul-Maysaroh Institute - Quran Memorization Institute ",
   description:
     "Comprehensive management system for online madrasahs with Quran tracking, attendance, grades, and more.",
   keywords: [

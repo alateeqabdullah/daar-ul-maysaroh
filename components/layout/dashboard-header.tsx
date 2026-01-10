@@ -1,179 +1,23 @@
-// // src/components/layout/dashboard-header.tsx
-// "use client";
+"use client";
 
-// import { useState } from "react";
-// import { useTheme } from "next-themes";
-// import { Bell, Menu, Moon, Search, Sun, User } from "lucide-react";
-// import { Button } from "@/components/ui/button";
-// import { Input } from "@/components/ui/input";
-// import {
-//   DropdownMenu,
-//   DropdownMenuContent,
-//   DropdownMenuItem,
-//   DropdownMenuLabel,
-//   DropdownMenuSeparator,
-//   DropdownMenuTrigger,
-// } from "@/components/ui/dropdown-menu";
-// import Link from "next/link";
-
-// interface HeaderProps {
-//   onSidebarToggle: () => void;
-//   user: any;
-// }
-
-// export default function Header({ onSidebarToggle, user }: HeaderProps) {
-//   const { theme, setTheme } = useTheme();
-//   const [notifications] = useState([
-//     { id: 1, title: "New assignment posted", time: "10 min ago" },
-//     { id: 2, title: "Quran evaluation completed", time: "1 hour ago" },
-//     { id: 3, title: "Class schedule updated", time: "2 hours ago" },
-//   ]);
-
-//   const unreadNotifications = notifications.length;
-
-//   return (
-//     <header className="sticky top-0 z-30 border-b border-gray-200 bg-white/80 backdrop-blur-md dark:border-gray-700 dark:bg-gray-800/80">
-//       <div className="px-4 sm:px-6 lg:px-8">
-//         <div className="flex h-16 items-center justify-between">
-//           {/* Left section */}
-//           <div className="flex items-center">
-//             <Button
-//               variant="ghost"
-//               size="icon"
-//               className="mr-2 lg:hidden"
-//               onClick={onSidebarToggle}
-//             >
-//               <Menu className="h-5 w-5" />
-//             </Button>
-
-//             <div className="relative hidden md:block">
-//               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
-//               <Input placeholder="Search..." className="w-64 pl-10" />
-//             </div>
-//           </div>
-
-//           {/* Right section */}
-//           <div className="flex items-center space-x-4">
-//             {/* Theme toggle */}
-//             <Button
-//               variant="ghost"
-//               size="icon"
-//               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-//             >
-//               <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-//               <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-//               <span className="sr-only">Toggle theme</span>
-//             </Button>
-
-//             {/* Notifications */}
-//             <DropdownMenu>
-//               <DropdownMenuTrigger asChild>
-//                 <Button variant="ghost" size="icon" className="relative">
-//                   <Bell className="h-5 w-5" />
-//                   {unreadNotifications > 0 && (
-//                     <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs text-white">
-//                       {unreadNotifications}
-//                     </span>
-//                   )}
-//                 </Button>
-//               </DropdownMenuTrigger>
-//               <DropdownMenuContent align="end" className="w-80">
-//                 <DropdownMenuLabel>Notifications</DropdownMenuLabel>
-//                 <DropdownMenuSeparator />
-//                 {notifications.map((notification) => (
-//                   <DropdownMenuItem
-//                     key={notification.id}
-//                     className="cursor-pointer py-3"
-//                   >
-//                     <div className="flex flex-col">
-//                       <span className="font-medium">{notification.title}</span>
-//                       <span className="text-xs text-gray-500">
-//                         {notification.time}
-//                       </span>
-//                     </div>
-//                   </DropdownMenuItem>
-//                 ))}
-//                 <DropdownMenuSeparator />
-//                 <DropdownMenuItem className="cursor-pointer text-center text-purple-600 hover:text-purple-700 dark:text-purple-400">
-//                   View all notifications
-//                 </DropdownMenuItem>
-//               </DropdownMenuContent>
-//             </DropdownMenu>
-
-//             {/* User menu */}
-//             <DropdownMenu>
-//               <DropdownMenuTrigger asChild>
-//                 <Button
-//                   variant="ghost"
-//                   className="relative h-8 w-8 rounded-full"
-//                 >
-//                   <div className="h-8 w-8 rounded-full bg-gradient-primary p-0.5">
-//                     <div className="flex h-full w-full items-center justify-center rounded-full bg-white dark:bg-gray-800">
-//                       <User className="h-4 w-4 text-purple-600" />
-//                     </div>
-//                   </div>
-//                 </Button>
-//               </DropdownMenuTrigger>
-//               <DropdownMenuContent align="end" className="w-56">
-//                 <DropdownMenuLabel>
-//                   <div className="flex flex-col space-y-1">
-//                     <p className="text-sm font-medium leading-none">
-//                       {user?.name}
-//                     </p>
-//                     <p className="text-xs leading-none text-gray-500">
-//                       {user?.email}
-//                     </p>
-//                     <p className="text-xs leading-none text-purple-600 capitalize">
-//                       {user?.role?.toLowerCase().replace("_", " ")}
-//                     </p>
-//                   </div>
-//                 </DropdownMenuLabel>
-//                 <DropdownMenuSeparator />
-//                 <DropdownMenuItem asChild>
-//                   <a href="/profile">Profile</a>
-//                 </DropdownMenuItem>
-//                 <DropdownMenuItem asChild>
-//                   <a href="/settings">Settings</a>
-//                 </DropdownMenuItem>
-//                 <DropdownMenuSeparator />
-//                 <DropdownMenuItem asChild>
-//                   <Link
-//                     href="/api/auth/signout"
-//                     className="text-red-600 hover:text-red-700"
-//                   >
-//                     Sign out
-//                   </Link>
-//                 </DropdownMenuItem>
-//               </DropdownMenuContent>
-//             </DropdownMenu>
-//           </div>
-//         </div>
-//       </div>
-//     </header>
-//   );
-// }
-
-
-
-// src/components/layout/dashboard-header.tsx
-"use client"
-
-import { useState } from 'react'
-import { usePathname } from 'next/navigation'
-import { 
-  Bell, 
-  Search, 
-  HelpCircle,
+import { useState } from "react";
+import { usePathname } from "next/navigation";
+import {
+  Bell,
+  Search,
   Moon,
   Sun,
   Globe,
   ChevronDown,
   User,
-  Settings
-} from 'lucide-react'
-import { useTheme } from 'next-themes'
-import { Button } from '@/components/ui/button'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+  Settings,
+  Command,
+  LogOut,
+  Menu,
+} from "lucide-react";
+import { useTheme } from "next-themes";
+import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -181,180 +25,261 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
-import { Input } from '@/components/ui/input'
-import { getInitials } from '@/lib/utils'
-import { signOut } from 'next-auth/react'
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
+import { getInitials, cn } from "@/lib/utils";
+import { signOut } from "next-auth/react";
+import Link from "next/link";
+import { useSidebarStore } from "@/store/use-sidebar-store";
 
 interface HeaderProps {
-  user: any
+  user: {
+    name: string;
+    email: string;
+    role: string;
+    image?: string;
+  };
 }
 
 export default function DashboardHeader({ user }: HeaderProps) {
-  const pathname = usePathname()
-  const { theme, setTheme } = useTheme()
+  const pathname = usePathname();
+  const { theme, setTheme } = useTheme();
+  const { toggle } = useSidebarStore();
+
   const [notifications] = useState([
-    { id: 1, text: 'New student registration pending approval', time: '5 min ago' },
-    { id: 2, text: 'Class schedule updated for Quran 101', time: '1 hour ago' },
-    { id: 3, text: 'Monthly report ready for review', time: '2 hours ago' },
-  ])
+    {
+      id: 1,
+      text: "New student registration pending approval",
+      time: "5 min ago",
+    },
+    { id: 2, text: "Class schedule updated for Quran 101", time: "1 hour ago" },
+    { id: 3, text: "Monthly report ready for review", time: "2 hours ago" },
+  ]);
 
   const getBreadcrumb = () => {
-    const path = pathname.split('/').filter(p => p)
-    if (path.length === 0) return 'Dashboard'
-    
-    const lastSegment = path[path.length - 1]
-    return lastSegment.charAt(0).toUpperCase() + lastSegment.slice(1).replace('-', ' ')
-  }
+    const path = pathname.split("/").filter((p) => p);
+    if (path.length === 0) return "Dashboard";
+
+    const lastSegment = path[path.length - 1];
+    return (
+      lastSegment.charAt(0).toUpperCase() +
+      lastSegment.slice(1).replace("-", " ")
+    );
+  };
 
   const handleSignOut = async () => {
-    await signOut({ callbackUrl: '/' })
-  }
+    await signOut({ callbackUrl: "/" });
+  };
 
   return (
-    <header className="sticky top-0 z-40 border-b border-gray-200 bg-white/80 backdrop-blur-md dark:border-gray-800 dark:bg-gray-900/80">
+    <header className="sticky top-0 z-40 border-b border-slate-200/60 bg-white/70 backdrop-blur-xl dark:border-white/10 dark:bg-slate-950/70">
       <div className="px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
-          {/* Left side - Breadcrumb */}
-          <div className="flex items-center">
+          {/* Left side - Menu Toggle, Breadcrumb & Greeting */}
+          <div className="flex items-center gap-4">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="lg:hidden rounded-xl hover:bg-slate-100 dark:hover:bg-white/5"
+              onClick={toggle}
+            >
+              <Menu className="h-6 w-6 text-slate-600 dark:text-slate-400" />
+            </Button>
+
             <div className="hidden sm:block">
-              <h1 className="text-lg font-semibold text-gray-900 dark:text-white">
+              <h1 className="text-sm font-black uppercase tracking-wider text-slate-900 dark:text-white">
                 {getBreadcrumb()}
               </h1>
-              <p className="text-sm text-gray-600 dark:text-gray-400">
-                Welcome back, {user.name} 👋
+              <p className="text-xs font-medium text-slate-500 dark:text-slate-400">
+                Welcome,{" "}
+                <span className="text-purple-600 dark:text-purple-400 font-bold">
+                  {user.name}
+                </span>{" "}
+                👋
               </p>
             </div>
           </div>
 
-          {/* Right side - Actions */}
-          <div className="flex items-center space-x-4">
-            {/* Search */}
-            {/* <div className="hidden lg:block">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
-                <Input
-                  type="search"
-                  placeholder="Search..."
-                  className="w-64 pl-10"
-                />
+          {/* Center - Search */}
+          <div className="hidden max-w-md flex-1 px-8 lg:block">
+            <div className="relative group">
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400 transition-colors group-focus-within:text-purple-500" />
+              <Input
+                type="search"
+                placeholder="Quick search... (Press /)"
+                className="w-full border-slate-200 bg-slate-100/50 pl-10 pr-10 text-xs focus-visible:ring-purple-500 dark:border-white/10 dark:bg-white/5"
+              />
+              <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                <kbd className="hidden rounded border border-slate-200 bg-white px-1.5 font-sans text-[10px] font-medium text-slate-400 dark:border-white/10 dark:bg-slate-900 lg:inline-block">
+                  <Command className="mr-1 inline-block h-2 w-2" />K
+                </kbd>
               </div>
-            </div> */}
+            </div>
+          </div>
 
+          {/* Right side - Actions */}
+          <div className="flex items-center space-x-2 sm:space-x-4">
             {/* Theme Toggle */}
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-              className="rounded-full"
+              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+              className="rounded-xl hover:bg-slate-100 dark:hover:bg-white/5"
             >
               <Sun className="h-5 w-5 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-              <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
-              <span className="sr-only">Toggle theme</span>
+              <Moon className="absolute h-5 w-5 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100 text-purple-400" />
             </Button>
 
-            {/* Language */}
+            {/* Language Selection */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="rounded-full">
-                  <Globe className="h-5 w-5" />
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="rounded-xl hover:bg-slate-100 dark:hover:bg-white/5"
+                >
+                  <Globe className="h-5 w-5 text-slate-600 dark:text-slate-400" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem>English</DropdownMenuItem>
-                <DropdownMenuItem>العربية</DropdownMenuItem>
-                <DropdownMenuItem>اردو</DropdownMenuItem>
-                <DropdownMenuItem>Français</DropdownMenuItem>
+              <DropdownMenuContent
+                align="end"
+                className="w-40 rounded-xl border-slate-200 dark:border-white/10"
+              >
+                <DropdownMenuItem className="cursor-pointer font-bold text-xs">
+                  English
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  className="cursor-pointer font-bold text-xs font-arabic"
+                  dir="rtl"
+                >
+                  العربية
+                </DropdownMenuItem>
+                <DropdownMenuItem className="cursor-pointer font-bold text-xs">
+                  Urdu
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
 
             {/* Notifications */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="relative rounded-full">
-                  <Bell className="h-5 w-5" />
-                  <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-red-500 text-xs text-white">
-                    3
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="relative rounded-xl hover:bg-slate-100 dark:hover:bg-white/5"
+                >
+                  <Bell className="h-5 w-5 text-slate-600 dark:text-slate-400" />
+                  <span className="absolute right-2 top-2 flex h-2 w-2 items-center justify-center rounded-full bg-purple-500 ring-2 ring-white dark:ring-slate-950">
+                    <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-purple-400 opacity-75"></span>
                   </span>
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-80">
-                <DropdownMenuLabel className="font-normal">
-                  <div className="flex flex-col space-y-1">
-                    <p className="text-sm font-medium leading-none">Notifications</p>
-                    <p className="text-xs leading-none text-gray-500">
-                      You have {notifications.length} unread notifications
+              <DropdownMenuContent
+                align="end"
+                className="w-80 rounded-2xl border-slate-200 shadow-2xl dark:border-white/10"
+              >
+                <DropdownMenuLabel className="p-4">
+                  <div className="flex items-center justify-between">
+                    <p className="text-sm font-black uppercase tracking-wider">
+                      Notifications
                     </p>
+                    <span className="rounded-full bg-purple-100 px-2 py-0.5 text-[10px] font-bold text-purple-600 dark:bg-purple-500/20">
+                      {notifications.length} New
+                    </span>
                   </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                {notifications.map((notification) => (
-                  <DropdownMenuItem key={notification.id} className="cursor-pointer">
-                    <div className="grid gap-1">
-                      <p className="text-sm font-medium">{notification.text}</p>
-                      <p className="text-xs text-gray-500">{notification.time}</p>
-                    </div>
-                  </DropdownMenuItem>
-                ))}
+                <div className="max-h-[300px] overflow-y-auto">
+                  {notifications.map((notification) => (
+                    <DropdownMenuItem
+                      key={notification.id}
+                      className="cursor-pointer p-4 focus:bg-slate-50 dark:focus:bg-white/5"
+                    >
+                      <div className="flex flex-col gap-1">
+                        <p className="text-sm font-bold text-slate-900 dark:text-white leading-tight">
+                          {notification.text}
+                        </p>
+                        <p className="text-[10px] font-medium text-slate-500">
+                          {notification.time}
+                        </p>
+                      </div>
+                    </DropdownMenuItem>
+                  ))}
+                </div>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem className="cursor-pointer text-center text-sm font-medium text-purple-600">
-                  View all notifications
+                <DropdownMenuItem className="cursor-pointer justify-center py-3 text-xs font-bold text-purple-600 hover:text-purple-700">
+                  View all updates
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
 
-            {/* Help */}
-            <Button variant="ghost" size="icon" className="rounded-full" asChild>
-              <a href="/help">
-                <HelpCircle className="h-5 w-5" />
-              </a>
-            </Button>
-
-            {/* User Menu */}
+            {/* User Profile */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="flex items-center space-x-2 rounded-full px-2">
-                  <Avatar className="h-8 w-8">
-                    <AvatarImage src={user.image} />
-                    <AvatarFallback className="bg-gradient-primary text-white">
-                      {getInitials(user.name)}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="hidden flex-col items-start text-sm lg:flex">
-                    <span className="font-medium">{user.name}</span>
-                    <span className="text-xs text-gray-500 capitalize">
-                      {user.role.toLowerCase().replace('_', ' ')}
+                <Button
+                  variant="ghost"
+                  className="flex items-center space-x-3 rounded-xl px-2 hover:bg-slate-100 dark:hover:bg-white/5 transition-all"
+                >
+                  <div className="relative">
+                    <Avatar className="h-9 w-9 border-2 border-purple-500/20">
+                      <AvatarImage src={user.image} />
+                      <AvatarFallback className="bg-purple-600 text-white text-xs font-black">
+                        {getInitials(user.name)}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full border-2 border-white bg-emerald-500 dark:border-slate-950" />
+                  </div>
+                  <div className="hidden flex-col items-start text-left lg:flex">
+                    <span className="text-xs font-black text-slate-900 dark:text-white leading-none">
+                      {user.name}
+                    </span>
+                    <span className="text-[10px] font-bold text-slate-500 uppercase tracking-tighter">
+                      {user.role.replace("_", " ")}
                     </span>
                   </div>
-                  <ChevronDown className="hidden h-4 w-4 lg:block" />
+                  <ChevronDown className="hidden h-4 w-4 text-slate-400 lg:block" />
                 </Button>
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-56">
-                <DropdownMenuLabel className="font-normal">
+              <DropdownMenuContent
+                align="end"
+                className="w-56 rounded-2xl border-slate-200 shadow-2xl dark:border-white/10"
+              >
+                <DropdownMenuLabel className="font-normal p-4">
                   <div className="flex flex-col space-y-1">
-                    <p className="text-sm font-medium leading-none">{user.name}</p>
-                    <p className="text-xs leading-none text-gray-500">{user.email}</p>
+                    <p className="text-sm font-black text-slate-900 dark:text-white">
+                      {user.name}
+                    </p>
+                    <p className="text-xs font-medium text-slate-500">
+                      {user.email}
+                    </p>
                   </div>
                 </DropdownMenuLabel>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem asChild>
-                  <a href="/profile">
-                    <User className="mr-2 h-4 w-4" />
-                    Profile
-                  </a>
+                <DropdownMenuItem
+                  className="p-3 cursor-pointer font-bold text-xs"
+                  asChild
+                >
+                  <Link href="/profile">
+                    <User className="mr-3 h-4 w-4 text-purple-500" />
+                    My Profile
+                  </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem asChild>
-                  <a href="/settings">
-                    <Settings className="mr-2 h-4 w-4" />
-                    Settings
-                  </a>
+                <DropdownMenuItem
+                  className="p-3 cursor-pointer font-bold text-xs"
+                  asChild
+                >
+                  <Link href="/settings">
+                    <Settings className="mr-3 h-4 w-4 text-purple-500" />
+                    Account Settings
+                  </Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem 
-                  className="text-red-600 focus:text-red-600"
+                <DropdownMenuItem
+                  className="p-3 cursor-pointer font-bold text-xs text-red-500 focus:bg-red-50 focus:text-red-600 dark:focus:bg-red-500/10"
                   onClick={handleSignOut}
                 >
-                  Sign out
+                  <LogOut className="mr-3 h-4 w-4" />
+                  Sign Out
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -362,5 +287,5 @@ export default function DashboardHeader({ user }: HeaderProps) {
         </div>
       </div>
     </header>
-  )
+  );
 }
