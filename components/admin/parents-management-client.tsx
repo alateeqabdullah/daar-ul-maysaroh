@@ -1,36 +1,32 @@
-// src/components/admin/parents-management-client.tsx
 "use client";
 
 import { useState } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Search,
-  Filter,
-  Download,
-  Mail,
-  Phone,
-  Calendar,
-  Briefcase,
-  Users,
-  UserPlus,
+  Plus,
+  MoreVertical,
   Edit,
   Trash2,
-  MoreVertical,
-  ChevronLeft,
-  ChevronRight,
+  Download,
+  LayoutGrid,
+  List as ListIcon,
   Loader2,
-  Eye,
+  X,
   User,
-  BookOpen,
-  Home,
+  Shield,
+  Mail,
+  Phone,
+  MapPin,
+  Briefcase,
+  Users,
+  Wallet,
+  CheckCircle,
+  Ban,
+  GraduationCap,
 } from "lucide-react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -41,714 +37,826 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
-import { getInitials, formatDate } from "@/lib/utils";
+import { getInitials } from "@/lib/utils";
+import { Counter } from "@/components/admin/dashboard-ui";
+
+// --- ANIMATION ---
+const containerVariants = {
+  hidden: { opacity: 0 },
+  show: { opacity: 1, transition: { staggerChildren: 0.05 } },
+};
+const itemVariants = {
+  hidden: { y: 20, opacity: 0 },
+  show: { y: 0, opacity: 1, transition: { type: "spring", stiffness: 50 } },
+};
 
 interface ParentsManagementClientProps {
   initialParents: any[];
-  total: number;
-  page: number;
-  filters: any;
+  stats: any;
+  pagination: any;
 }
 
 export default function ParentsManagementClient({
   initialParents,
-  total,
-  page,
-  filters,
+  stats,
+  pagination,
 }: ParentsManagementClientProps) {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const [parents, setParents] = useState(initialParents);
   const [isLoading, setIsLoading] = useState(false);
-  const [searchQuery, setSearchQuery] = useState(filters.search || "");
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [searchQuery, setSearchQuery] = useState("");
+
+  // Modals
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
   const [selectedParent, setSelectedParent] = useState<any>(null);
-  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
-  const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
+  const [isDetailOpen, setIsDetailOpen] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
 
-  const refreshData = async () => {
-    setIsLoading(true);
-    try {
-      const params = new URLSearchParams();
-      if (searchQuery) params.set("search", searchQuery);
-      if (page > 1) params.set("page", page.toString());
-
-      router.push(`/admin/parents?${params.toString()}`);
-
-      const response = await fetch(`/api/admin/parents?${params.toString()}`);
-      const data = await response.json();
-
-      if (response.ok) {
-        setParents(data.parents);
-      }
-    } catch (error) {
-      console.error("Error refreshing data:", error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    refreshData();
-  };
-
-  const handlePageChange = (newPage: number) => {
-    const params = new URLSearchParams(searchParams.toString());
-    params.set("page", newPage.toString());
-    router.push(`/admin/parents?${params.toString()}`);
-  };
-
-  const handleDeleteParent = async (parentId: string) => {
-    if (!confirm("Are you sure you want to delete this parent?")) return;
-
-    try {
-      const response = await fetch(`/api/admin/parents/${parentId}`, {
-        method: "DELETE",
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to delete parent");
-      }
-
-      toast.success("Parent deleted successfully");
-      setParents(parents.filter((p) => p.id !== parentId));
-    } catch (error) {
-      toast.error("Failed to delete parent", {
-        description: "Please try again.",
-      });
-    }
-  };
-
-  const totalPages = Math.ceil(total / 10);
-
-  return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-            Parent Management
-          </h1>
-          <p className="mt-2 text-gray-600 dark:text-gray-400">
-            Manage and communicate with parents
-          </p>
-        </div>
-        <div className="flex items-center space-x-3">
-          <Button variant="outline" className="gap-2">
-            <Download className="h-4 w-4" />
-            Export
-          </Button>
-          <Dialog
-            open={isCreateDialogOpen}
-            onOpenChange={setIsCreateDialogOpen}
-          >
-            <DialogTrigger asChild>
-              <Button className="bg-gradient-primary gap-2">
-                <UserPlus className="h-4 w-4" />
-                Add Parent
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-[600px]">
-              <DialogHeader>
-                <DialogTitle>Add New Parent</DialogTitle>
-                <DialogDescription>
-                  Create a new parent account
-                </DialogDescription>
-              </DialogHeader>
-              <CreateParentForm
-                onSubmit={() => {}}
-                onCancel={() => setIsCreateDialogOpen(false)}
-              />
-            </DialogContent>
-          </Dialog>
-        </div>
-      </div>
-
-      {/* Stats */}
-      <div className="grid gap-6 sm:grid-cols-4">
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">
-                  Total Parents
-                </p>
-                <p className="mt-2 text-2xl font-bold text-purple-600">
-                  {total}
-                </p>
-              </div>
-              <div className="rounded-lg bg-purple-100 p-3">
-                <Users className="h-6 w-6 text-purple-600" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">
-                  Total Children
-                </p>
-                <p className="mt-2 text-2xl font-bold text-green-600">
-                  {parents.reduce((sum, p) => sum + p.students.length, 0)}
-                </p>
-              </div>
-              <div className="rounded-lg bg-green-100 p-3">
-                <User className="h-6 w-6 text-green-600" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">
-                  Avg Children/Parent
-                </p>
-                <p className="mt-2 text-2xl font-bold text-blue-600">
-                  {parents.length > 0
-                    ? (
-                        parents.reduce((sum, p) => sum + p.students.length, 0) /
-                        parents.length
-                      ).toFixed(1)
-                    : 0}
-                </p>
-              </div>
-              <div className="rounded-lg bg-blue-100 p-3">
-                <Home className="h-6 w-6 text-blue-600" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <p className="text-sm font-medium text-gray-600">
-                  Active Payments
-                </p>
-                <p className="mt-2 text-2xl font-bold text-orange-600">87%</p>
-              </div>
-              <div className="rounded-lg bg-orange-100 p-3">
-                <Briefcase className="h-6 w-6 text-orange-600" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* Filters */}
-      <Card>
-        <CardContent className="p-6">
-          <form onSubmit={handleSearch} className="grid gap-4 sm:grid-cols-3">
-            <div className="sm:col-span-2">
-              <Label htmlFor="search">Search</Label>
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
-                <Input
-                  id="search"
-                  placeholder="Search by name, email, or phone..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10"
-                />
-              </div>
-            </div>
-            <div className="flex items-end">
-              <Button type="submit" className="w-full" disabled={isLoading}>
-                {isLoading ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Searching...
-                  </>
-                ) : (
-                  <>
-                    <Filter className="mr-2 h-4 w-4" />
-                    Search
-                  </>
-                )}
-              </Button>
-            </div>
-          </form>
-        </CardContent>
-      </Card>
-
-      {/* Parents Table */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Parents List</CardTitle>
-          <CardDescription>
-            {total} parents found • Page {page} of {totalPages}
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          {isLoading ? (
-            <div className="flex h-64 items-center justify-center">
-              <Loader2 className="h-8 w-8 animate-spin text-purple-500" />
-            </div>
-          ) : parents.length === 0 ? (
-            <div className="py-12 text-center">
-              <Users className="mx-auto h-12 w-12 text-gray-300" />
-              <h3 className="mt-4 text-lg font-semibold">No parents found</h3>
-              <p className="mt-2 text-gray-500">
-                {searchQuery
-                  ? "Try adjusting your search query"
-                  : "Add your first parent"}
-              </p>
-              <Button
-                className="mt-4"
-                onClick={() => setIsCreateDialogOpen(true)}
-              >
-                <UserPlus className="mr-2 h-4 w-4" />
-                Add Parent
-              </Button>
-            </div>
-          ) : (
-            <>
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead>
-                    <tr className="border-b">
-                      <th className="py-3 text-left text-sm font-medium text-gray-600">
-                        Parent
-                      </th>
-                      <th className="py-3 text-left text-sm font-medium text-gray-600">
-                        Occupation
-                      </th>
-                      <th className="py-3 text-left text-sm font-medium text-gray-600">
-                        Contact
-                      </th>
-                      <th className="py-3 text-left text-sm font-medium text-gray-600">
-                        Children
-                      </th>
-                      <th className="py-3 text-left text-sm font-medium text-gray-600">
-                        Join Date
-                      </th>
-                      <th className="py-3 text-left text-sm font-medium text-gray-600">
-                        Actions
-                      </th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {parents.map((parent) => (
-                      <tr key={parent.id} className="border-b hover:bg-gray-50">
-                        <td className="py-4">
-                          <div className="flex items-center space-x-3">
-                            <Avatar>
-                              <AvatarFallback className="bg-gradient-primary text-white">
-                                {getInitials(parent.user.name)}
-                              </AvatarFallback>
-                            </Avatar>
-                            <div>
-                              <p className="font-medium">{parent.user.name}</p>
-                              {parent.maritalStatus && (
-                                <p className="text-sm text-gray-500 capitalize">
-                                  {parent.maritalStatus.toLowerCase()}
-                                </p>
-                              )}
-                            </div>
-                          </div>
-                        </td>
-                        <td className="py-4">
-                          <div>
-                            <p className="font-medium">
-                              {parent.occupation || "Not specified"}
-                            </p>
-                            <p className="text-sm text-gray-500">
-                              {parent.employer}
-                            </p>
-                          </div>
-                        </td>
-                        <td className="py-4">
-                          <div className="space-y-1">
-                            <p className="text-sm">{parent.user.email}</p>
-                            <p className="text-sm text-gray-500">
-                              {parent.user.phone}
-                            </p>
-                          </div>
-                        </td>
-                        <td className="py-4">
-                          <div className="space-y-2">
-                            {parent.students.map((student: any) => (
-                              <div
-                                key={student.id}
-                                className="flex items-center space-x-2"
-                              >
-                                <User className="h-3 w-3 text-gray-400" />
-                                <span className="text-sm">
-                                  {student.user.name} (
-                                  {student.currentClass?.name || "No class"})
-                                </span>
-                              </div>
-                            ))}
-                          </div>
-                        </td>
-                        <td className="py-4">
-                          <p className="text-sm">
-                            {formatDate(parent.createdAt)}
-                          </p>
-                        </td>
-                        <td className="py-4">
-                          <div className="flex items-center space-x-2">
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              onClick={() => {
-                                setSelectedParent(parent);
-                                setIsViewDialogOpen(true);
-                              }}
-                            >
-                              <Eye className="h-4 w-4" />
-                            </Button>
-                            <DropdownMenu>
-                              <DropdownMenuTrigger asChild>
-                                <Button size="sm" variant="ghost">
-                                  <MoreVertical className="h-4 w-4" />
-                                </Button>
-                              </DropdownMenuTrigger>
-                              <DropdownMenuContent align="end">
-                                <DropdownMenuItem>Edit</DropdownMenuItem>
-                                <DropdownMenuItem>
-                                  View Payments
-                                </DropdownMenuItem>
-                                <DropdownMenuItem>
-                                  Send Message
-                                </DropdownMenuItem>
-                                <DropdownMenuItem
-                                  className="text-red-600"
-                                  onClick={() => handleDeleteParent(parent.id)}
-                                >
-                                  Delete
-                                </DropdownMenuItem>
-                              </DropdownMenuContent>
-                            </DropdownMenu>
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-
-              {/* Pagination */}
-              {totalPages > 1 && (
-                <div className="mt-6 flex items-center justify-between">
-                  <div className="text-sm text-gray-700">
-                    Showing {(page - 1) * 10 + 1} to{" "}
-                    {Math.min(page * 10, total)} of {total} results
-                  </div>
-                  <div className="flex space-x-2">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handlePageChange(page - 1)}
-                      disabled={page === 1}
-                    >
-                      <ChevronLeft className="h-4 w-4" />
-                      Previous
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handlePageChange(page + 1)}
-                      disabled={page === totalPages}
-                    >
-                      Next
-                      <ChevronRight className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
-              )}
-            </>
-          )}
-        </CardContent>
-      </Card>
-
-      {/* Parent View Dialog */}
-      <Dialog open={isViewDialogOpen} onOpenChange={setIsViewDialogOpen}>
-        <DialogContent className="sm:max-w-[800px]">
-          {selectedParent && (
-            <>
-              <DialogHeader>
-                <DialogTitle>Parent Details</DialogTitle>
-                <DialogDescription>
-                  Complete information for {selectedParent.user.name}
-                </DialogDescription>
-              </DialogHeader>
-              <ParentDetails parent={selectedParent} />
-            </>
-          )}
-        </DialogContent>
-      </Dialog>
-    </div>
-  );
-}
-
-function CreateParentForm({ onSubmit, onCancel }: any) {
-  const [isLoading, setIsLoading] = useState(false);
+  // Form Data
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     phone: "",
-    password: "",
     occupation: "",
-    employer: "",
-    maritalStatus: "",
-    spouseName: "",
-    familySize: "",
+    address: "",
   });
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  // Filter Logic
+  const filteredParents = parents.filter((p) => {
+    const term = searchQuery.toLowerCase();
+    return (
+      p.user.name.toLowerCase().includes(term) ||
+      p.user.email.toLowerCase().includes(term) ||
+      p.user.phone?.toLowerCase().includes(term)
+    );
+  });
+
+  // --- ACTIONS ---
+  const handleCreateOrUpdate = async () => {
+    if (!formData.name || !formData.email)
+      return toast.error("Name and Email required");
     setIsLoading(true);
+
     try {
-      await onSubmit(formData);
+      const res = await fetch("/api/admin/parents/manage", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: isEditing ? "UPDATE" : "CREATE",
+          parentId: selectedParent?.id,
+          userId: selectedParent?.user.id,
+          data: formData,
+        }),
+      });
+
+      const result = await res.json();
+      if (!res.ok) throw new Error(result.error);
+
+      if (isEditing) {
+        const updatedParent = {
+          ...selectedParent,
+          ...result.parentProfile,
+          user: {
+            ...selectedParent.user,
+            name: formData.name,
+            email: formData.email,
+            phone: formData.phone,
+          },
+        };
+        setParents((prev) =>
+          prev.map((p) => (p.id === selectedParent.id ? updatedParent : p))
+        );
+        setSelectedParent(updatedParent);
+        toast.success("Profile updated");
+        setIsEditing(false);
+      } else {
+        setParents([result.parent, ...parents]);
+        toast.success("Parent created");
+        setIsAddModalOpen(false);
+        resetForm();
+      }
+    } catch (error: any) {
+      toast.error(error.message || "Failed");
     } finally {
       setIsLoading(false);
     }
   };
 
-  return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div className="grid gap-4 sm:grid-cols-2">
-        <div className="space-y-2">
-          <Label htmlFor="name">Full Name *</Label>
-          <Input
-            id="name"
-            value={formData.name}
-            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-            required
-          />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="email">Email *</Label>
-          <Input
-            id="email"
-            type="email"
-            value={formData.email}
-            onChange={(e) =>
-              setFormData({ ...formData, email: e.target.value })
-            }
-            required
-          />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="phone">Phone</Label>
-          <Input
-            id="phone"
-            value={formData.phone}
-            onChange={(e) =>
-              setFormData({ ...formData, phone: e.target.value })
-            }
-          />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="password">Password *</Label>
-          <Input
-            id="password"
-            type="password"
-            value={formData.password}
-            onChange={(e) =>
-              setFormData({ ...formData, password: e.target.value })
-            }
-            required
-          />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="occupation">Occupation</Label>
-          <Input
-            id="occupation"
-            value={formData.occupation}
-            onChange={(e) =>
-              setFormData({ ...formData, occupation: e.target.value })
-            }
-            placeholder="e.g., Business, Doctor, Engineer"
-          />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="employer">Employer</Label>
-          <Input
-            id="employer"
-            value={formData.employer}
-            onChange={(e) =>
-              setFormData({ ...formData, employer: e.target.value })
-            }
-            placeholder="Company or organization"
-          />
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="maritalStatus">Marital Status</Label>
-          <select
-            id="maritalStatus"
-            value={formData.maritalStatus}
-            onChange={(e) =>
-              setFormData({ ...formData, maritalStatus: e.target.value })
-            }
-            className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm"
-          >
-            <option value="">Select status</option>
-            <option value="SINGLE">Single</option>
-            <option value="MARRIED">Married</option>
-            <option value="DIVORCED">Divorced</option>
-            <option value="WIDOWED">Widowed</option>
-          </select>
-        </div>
-        <div className="space-y-2">
-          <Label htmlFor="familySize">Family Size</Label>
-          <Input
-            id="familySize"
-            type="number"
-            min="1"
-            value={formData.familySize}
-            onChange={(e) =>
-              setFormData({ ...formData, familySize: e.target.value })
-            }
-          />
-        </div>
-      </div>
-      <div className="space-y-2">
-        <Label htmlFor="spouseName">Spouse Name (if married)</Label>
-        <Input
-          id="spouseName"
-          value={formData.spouseName}
-          onChange={(e) =>
-            setFormData({ ...formData, spouseName: e.target.value })
-          }
-        />
-      </div>
-      <DialogFooter>
-        <Button type="button" variant="outline" onClick={onCancel}>
-          Cancel
-        </Button>
-        <Button type="submit" disabled={isLoading}>
-          {isLoading ? "Creating..." : "Create Parent"}
-        </Button>
-      </DialogFooter>
-    </form>
-  );
-}
+  const handleStatusChange = async (
+    parentId: string,
+    userId: string,
+    newStatus: string
+  ) => {
+    setParents((prev) =>
+      prev.map((p) =>
+        p.id === parentId ? { ...p, user: { ...p.user, status: newStatus } } : p
+      )
+    );
+    try {
+      await fetch("/api/admin/users/manage", {
+        method: "POST",
+        body: JSON.stringify({
+          action: "UPDATE_STATUS",
+          userId,
+          data: { status: newStatus },
+        }),
+      });
+      toast.success(`Parent marked as ${newStatus}`);
+    } catch {
+      toast.error("Failed to update status");
+      router.refresh();
+    }
+  };
 
-function ParentDetails({ parent }: { parent: any }) {
-  return (
-    <div className="space-y-6">
-      <Tabs defaultValue="overview">
-        <TabsList>
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="children">Children</TabsTrigger>
-          <TabsTrigger value="payments">Payments</TabsTrigger>
-        </TabsList>
+  const handleDelete = async (parentId: string, userId: string) => {
+    if (!confirm("Delete parent? usage history will be lost.")) return;
+    setParents((prev) => prev.filter((p) => p.id !== parentId));
+    setIsDetailOpen(false);
+    try {
+      await fetch("/api/admin/parents/manage", {
+        method: "POST",
+        body: JSON.stringify({ action: "DELETE", parentId, userId }),
+      });
+      toast.success("Parent deleted");
+    } catch {
+      toast.error("Delete failed");
+      router.refresh();
+    }
+  };
 
-        <TabsContent value="overview" className="space-y-4">
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div>
-              <h4 className="font-semibold">Personal Information</h4>
-              <div className="mt-2 space-y-2 text-sm">
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Full Name:</span>
-                  <span>{parent.user.name}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Marital Status:</span>
-                  <span className="capitalize">
-                    {parent.maritalStatus?.toLowerCase() || "Not specified"}
-                  </span>
-                </div>
-                {parent.spouseName && (
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Spouse Name:</span>
-                    <span>{parent.spouseName}</span>
-                  </div>
-                )}
-                {parent.familySize && (
-                  <div className="flex justify-between">
-                    <span className="text-gray-600">Family Size:</span>
-                    <span>{parent.familySize} members</span>
-                  </div>
-                )}
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Join Date:</span>
-                  <span>{formatDate(parent.createdAt)}</span>
-                </div>
-              </div>
-            </div>
-            <div>
-              <h4 className="font-semibold">Professional Information</h4>
-              <div className="mt-2 space-y-2 text-sm">
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Occupation:</span>
-                  <span>{parent.occupation || "Not specified"}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Employer:</span>
-                  <span>{parent.employer || "Not specified"}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Email:</span>
-                  <span>{parent.user.email}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-gray-600">Phone:</span>
-                  <span>{parent.user.phone || "Not set"}</span>
-                </div>
-              </div>
-            </div>
+  // --- HELPERS ---
+  const resetForm = () => {
+    setFormData({
+      name: "",
+      email: "",
+      phone: "",
+      occupation: "",
+      address: "",
+    });
+    setIsEditing(false);
+  };
+
+  const openAddModal = () => {
+    resetForm();
+    setIsAddModalOpen(true);
+  };
+
+  const openDetail = (p: any) => {
+    setSelectedParent(p);
+    setFormData({
+      name: p.user.name,
+      email: p.user.email,
+      phone: p.user.phone || "",
+      occupation: p.occupation || "",
+      address: p.address || "",
+    });
+    setIsDetailOpen(true);
+    setIsEditing(false);
+  };
+
+  const statCards = [
+    {
+      label: "Total Parents",
+      value: stats.totalParents,
+      icon: Users,
+      color: "from-emerald-500 to-green-600",
+      shadow: "shadow-emerald-500/20",
+    },
+    {
+      label: "Linked Students",
+      value: stats.linkedStudents,
+      icon: GraduationCap,
+      color: "from-blue-500 to-cyan-500",
+      shadow: "shadow-blue-500/20",
+    },
+    {
+      label: "Fees Pending",
+      value: "12",
+      icon: Wallet,
+      color: "from-amber-500 to-orange-500",
+      shadow: "shadow-amber-500/20",
+    }, // Mock data for now
+    {
+      label: "Suspended",
+      value: stats.suspended,
+      icon: Ban,
+      color: "from-red-500 to-rose-500",
+      shadow: "shadow-red-500/20",
+    },
+  ];
+
+  return (
+    <motion.div
+      variants={containerVariants}
+      initial="hidden"
+      animate="show"
+      className="space-y-8 pb-10"
+    >
+      {/* HEADER */}
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-400 bg-clip-text text-transparent">
+            Parent Management
+          </h1>
+          <p className="text-muted-foreground mt-1">
+            Manage guardians, families and finances
+          </p>
+        </div>
+        <div className="flex gap-2">
+          <div className="flex items-center bg-muted p-1 rounded-lg border">
+            <Button
+              size="icon"
+              variant={viewMode === "grid" ? "white" : "ghost"}
+              className={`h-7 w-7 rounded-md ${
+                viewMode === "grid" ? "shadow-sm" : ""
+              }`}
+              onClick={() => setViewMode("grid")}
+            >
+              <LayoutGrid className="h-4 w-4" />
+            </Button>
+            <Button
+              size="icon"
+              variant={viewMode === "list" ? "white" : "ghost"}
+              className={`h-7 w-7 rounded-md ${
+                viewMode === "list" ? "shadow-sm" : ""
+              }`}
+              onClick={() => setViewMode("list")}
+            >
+              <ListIcon className="h-4 w-4" />
+            </Button>
           </div>
-        </TabsContent>
+          <Button variant="outline">
+            <Download className="h-4 w-4 mr-2" /> Export
+          </Button>
+          <Button
+            className="bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-md hover:scale-105 transition-all"
+            onClick={openAddModal}
+          >
+            <Plus className="h-4 w-4 mr-2" /> Add Parent
+          </Button>
+        </div>
+      </div>
 
-        <TabsContent value="children" className="space-y-4">
-          <h4 className="font-semibold">Children ({parent.students.length})</h4>
-          {parent.students.length > 0 ? (
-            <div className="space-y-3">
-              {parent.students.map((student: any) => (
-                <div key={student.id} className="rounded-lg border p-4">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-3">
-                      <Avatar>
-                        <AvatarFallback>
-                          {getInitials(student.user.name)}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div>
-                        <p className="font-medium">{student.user.name}</p>
-                        <div className="flex items-center space-x-2 text-sm text-gray-600">
-                          <span>{student.studentId}</span>
-                          <span>•</span>
-                          <span>{student.hifzLevel || "Beginner"}</span>
-                        </div>
+      {/* STATS */}
+      <motion.div
+        variants={containerVariants}
+        className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4"
+      >
+        {statCards.map((stat) => (
+          <motion.div key={stat.label} variants={itemVariants}>
+            <Card className="border-none shadow-sm bg-white/50 backdrop-blur-sm dark:bg-slate-900/50 hover:shadow-md transition-all relative overflow-hidden">
+              <div
+                className={`absolute top-0 right-0 w-20 h-20 bg-gradient-to-br ${stat.color} opacity-10 rounded-bl-full`}
+              />
+              <CardContent className="p-6 relative z-10 flex items-center justify-between">
+                <div>
+                  <p className="text-xs font-semibold text-muted-foreground uppercase">
+                    {stat.label}
+                  </p>
+                  <div className="text-2xl font-bold mt-2">
+                    <Counter
+                      value={
+                        typeof stat.value === "string"
+                          ? parseInt(stat.value)
+                          : stat.value
+                      }
+                    />
+                  </div>
+                </div>
+                <div
+                  className={`p-3 rounded-xl bg-gradient-to-br ${stat.color} text-white ${stat.shadow} shadow-lg`}
+                >
+                  <stat.icon className="h-6 w-6" />
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+        ))}
+      </motion.div>
+
+      {/* FILTERS */}
+      <motion.div
+        variants={itemVariants}
+        className="flex flex-col sm:flex-row gap-4 bg-white/60 dark:bg-slate-900/60 backdrop-blur-md p-4 rounded-xl border shadow-sm"
+      >
+        <div className="relative flex-1">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder="Search parents by name, email, phone..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-9 bg-white dark:bg-slate-950"
+          />
+        </div>
+      </motion.div>
+
+      {/* GRID VIEW */}
+      {viewMode === "grid" ? (
+        <motion.div
+          variants={containerVariants}
+          className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
+        >
+          {filteredParents.map((p) => (
+            <motion.div
+              key={p.id}
+              variants={itemVariants}
+              layoutId={p.id}
+              onClick={() => openDetail(p)}
+              className="cursor-pointer"
+            >
+              <Card
+                className={`group h-full border hover:border-emerald-300 dark:hover:border-emerald-800 transition-all hover:shadow-xl bg-card ${
+                  p.user.status === "SUSPENDED" ? "opacity-70 grayscale" : ""
+                }`}
+              >
+                <CardContent className="p-6 flex flex-col h-full items-center text-center">
+                  <div className="relative mb-4">
+                    <Avatar className="h-24 w-24 border-4 border-white dark:border-slate-900 shadow-lg">
+                      <AvatarImage src={p.user.image} />
+                      <AvatarFallback className="text-2xl bg-gradient-to-br from-emerald-50 to-emerald-100 text-emerald-600">
+                        {getInitials(p.user.name)}
+                      </AvatarFallback>
+                    </Avatar>
+                    <Badge className="absolute -bottom-3 left-1/2 -translate-x-1/2 shadow-sm whitespace-nowrap bg-white text-foreground hover:bg-white dark:bg-slate-800 border-emerald-100 text-emerald-700">
+                      {p.studentsCount} Kids
+                    </Badge>
+                  </div>
+
+                  <h3 className="font-bold text-lg mt-2">{p.user.name}</h3>
+                  <p className="text-sm text-muted-foreground">
+                    {p.occupation || "Guardian"}
+                  </p>
+
+                  <div className="mt-auto w-full pt-4 border-t flex justify-between items-center text-xs text-muted-foreground mt-4">
+                    <div className="flex items-center gap-1">
+                      <Phone className="h-3 w-3" /> {p.user.phone || "No Phone"}
+                    </div>
+
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          className="h-auto p-0 hover:text-emerald-600"
+                        >
+                          Actions
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuItem onClick={() => openDetail(p)}>
+                          <Edit className="mr-2 h-4 w-4" /> View / Edit
+                        </DropdownMenuItem>
+                        {p.user.status === "APPROVED" ? (
+                          <DropdownMenuItem
+                            onClick={() =>
+                              handleStatusChange(p.id, p.user.id, "SUSPENDED")
+                            }
+                          >
+                            <Ban className="mr-2 h-4 w-4 text-amber-500" />{" "}
+                            Suspend
+                          </DropdownMenuItem>
+                        ) : (
+                          <DropdownMenuItem
+                            onClick={() =>
+                              handleStatusChange(p.id, p.user.id, "APPROVED")
+                            }
+                          >
+                            <CheckCircle className="mr-2 h-4 w-4 text-green-500" />{" "}
+                            Activate
+                          </DropdownMenuItem>
+                        )}
+                        <DropdownMenuItem
+                          onClick={() => handleDelete(p.id, p.user.id)}
+                          className="text-red-600"
+                        >
+                          <Trash2 className="mr-2 h-4 w-4" /> Delete
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+          ))}
+        </motion.div>
+      ) : (
+        /* LIST VIEW */
+        <motion.div variants={containerVariants}>
+          <Card className="border-none shadow-sm overflow-hidden bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm">
+            <CardContent className="p-0">
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead className="bg-muted/30 border-b">
+                    <tr>
+                      <th className="px-6 py-4 text-left">Parent</th>
+                      <th className="px-6 py-4 text-left">Contact</th>
+                      <th className="px-6 py-4 text-left">Children</th>
+                      <th className="px-6 py-4 text-center">Status</th>
+                      <th className="px-6 py-4 text-right">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y">
+                    {filteredParents.map((p) => (
+                      <motion.tr
+                        key={p.id}
+                        variants={itemVariants}
+                        className="group hover:bg-muted/40 transition-colors cursor-pointer"
+                        onClick={() => openDetail(p)}
+                      >
+                        <td className="px-6 py-4">
+                          <div className="flex items-center gap-3">
+                            <Avatar className="h-8 w-8">
+                              <AvatarImage src={p.user.image} />
+                              <AvatarFallback>
+                                {getInitials(p.user.name)}
+                              </AvatarFallback>
+                            </Avatar>
+                            <div>
+                              <p className="font-medium">{p.user.name}</p>
+                              <p className="text-xs text-muted-foreground">
+                                {p.occupation}
+                              </p>
+                            </div>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <div>
+                            <p className="text-xs">{p.user.email}</p>
+                            <p className="text-xs text-muted-foreground">
+                              {p.user.phone || "-"}
+                            </p>
+                          </div>
+                        </td>
+                        <td className="px-6 py-4">
+                          <Badge variant="outline">
+                            {p.studentsCount} Students
+                          </Badge>
+                        </td>
+                        <td className="px-6 py-4 text-center">
+                          {p.user.status === "APPROVED" ? (
+                            <Badge className="bg-green-100 text-green-700">
+                              Active
+                            </Badge>
+                          ) : (
+                            <Badge variant="destructive">Suspended</Badge>
+                          )}
+                        </td>
+                        <td className="px-6 py-4 text-right">
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button size="icon" variant="ghost">
+                                <MoreVertical className="h-4 w-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuItem onClick={() => openDetail(p)}>
+                                <Edit className="mr-2 h-4 w-4" /> Edit
+                              </DropdownMenuItem>
+                              <DropdownMenuItem
+                                onClick={() => handleDelete(p.id, p.user.id)}
+                                className="text-red-600"
+                              >
+                                <Trash2 className="mr-2 h-4 w-4" /> Delete
+                              </DropdownMenuItem>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </td>
+                      </motion.tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
+      )}
+
+      {/* --- ADD MODAL --- */}
+      <AnimatePresence>
+        {isAddModalOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+          >
+            <motion.div
+              initial={{ scale: 0.95 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0.95 }}
+              className="bg-background w-full max-w-lg rounded-2xl shadow-2xl border p-6"
+            >
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-xl font-bold">Add Parent</h2>
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  onClick={() => setIsAddModalOpen(false)}
+                >
+                  <X className="h-5 w-5" />
+                </Button>
+              </div>
+              <div className="grid gap-4">
+                <div className="space-y-1">
+                  <Label>Full Name</Label>
+                  <Input
+                    value={formData.name}
+                    onChange={(e) =>
+                      setFormData({ ...formData, name: e.target.value })
+                    }
+                  />
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-1">
+                    <Label>Email</Label>
+                    <Input
+                      value={formData.email}
+                      onChange={(e) =>
+                        setFormData({ ...formData, email: e.target.value })
+                      }
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <Label>Phone</Label>
+                    <Input
+                      value={formData.phone}
+                      onChange={(e) =>
+                        setFormData({ ...formData, phone: e.target.value })
+                      }
+                    />
+                  </div>
+                </div>
+                <div className="space-y-1">
+                  <Label>Occupation</Label>
+                  <Input
+                    value={formData.occupation}
+                    onChange={(e) =>
+                      setFormData({ ...formData, occupation: e.target.value })
+                    }
+                  />
+                </div>
+                <div className="space-y-1">
+                  <Label>Address</Label>
+                  <Input
+                    value={formData.address}
+                    onChange={(e) =>
+                      setFormData({ ...formData, address: e.target.value })
+                    }
+                  />
+                </div>
+                <Button
+                  className="w-full mt-4 bg-gradient-to-r from-emerald-600 to-teal-600 text-white"
+                  onClick={handleCreateOrUpdate}
+                  disabled={isLoading}
+                >
+                  {isLoading ? (
+                    <Loader2 className="animate-spin mr-2" />
+                  ) : (
+                    "Create Parent Account"
+                  )}
+                </Button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* --- DETAIL MODAL --- */}
+      <AnimatePresence>
+        {isDetailOpen && selectedParent && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+            onClick={() => setIsDetailOpen(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.95 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0.95 }}
+              onClick={(e) => e.stopPropagation()}
+              className="bg-background w-full max-w-3xl h-[85vh] rounded-2xl shadow-2xl border overflow-hidden flex flex-col"
+            >
+              {/* Profile Header */}
+              <div className="h-40 bg-gradient-to-r from-emerald-600 to-teal-600 p-6 flex items-end relative shrink-0">
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  className="absolute top-4 right-4 text-white hover:bg-white/20"
+                  onClick={() => setIsDetailOpen(false)}
+                >
+                  <X className="h-6 w-6" />
+                </Button>
+                <div className="flex items-end gap-6 relative top-8 w-full">
+                  <Avatar className="h-32 w-32 border-4 border-background shadow-xl">
+                    <AvatarImage src={selectedParent.user.image} />
+                    <AvatarFallback className="text-4xl bg-muted">
+                      {getInitials(selectedParent.user.name)}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="mb-8 text-white">
+                    <h2 className="text-3xl font-bold">
+                      {selectedParent.user.name}
+                    </h2>
+                    <p className="opacity-90 font-mono text-sm bg-black/20 px-2 py-1 rounded inline-block mt-1">
+                      Parent ID: {selectedParent.id.slice(-6)}
+                    </p>
+                  </div>
+                  <div className="ml-auto mb-8 flex gap-2">
+                    <Button
+                      variant="secondary"
+                      onClick={() => setIsEditing(!isEditing)}
+                    >
+                      {isEditing ? "View Mode" : "Edit Profile"}
+                    </Button>
+                  </div>
+                </div>
+              </div>
+
+              {/* Content */}
+              <div className="flex-1 overflow-y-auto bg-muted/10 p-6 pt-12">
+                {isEditing ? (
+                  <div className="max-w-2xl mx-auto space-y-4">
+                    <div className="space-y-1">
+                      <Label>Name</Label>
+                      <Input
+                        value={formData.name}
+                        onChange={(e) =>
+                          setFormData({ ...formData, name: e.target.value })
+                        }
+                      />
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-1">
+                        <Label>Email</Label>
+                        <Input
+                          value={formData.email}
+                          onChange={(e) =>
+                            setFormData({ ...formData, email: e.target.value })
+                          }
+                        />
+                      </div>
+                      <div className="space-y-1">
+                        <Label>Phone</Label>
+                        <Input
+                          value={formData.phone}
+                          onChange={(e) =>
+                            setFormData({ ...formData, phone: e.target.value })
+                          }
+                        />
                       </div>
                     </div>
-                    <div className="text-right">
-                      <p className="font-medium">
-                        {student.currentClass?.name || "No class"}
-                      </p>
-                      <p className="text-sm text-gray-600">
-                        {student.currentClass?.teacher?.user?.name}
-                      </p>
+                    <div className="space-y-1">
+                      <Label>Occupation</Label>
+                      <Input
+                        value={formData.occupation}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            occupation: e.target.value,
+                          })
+                        }
+                      />
                     </div>
+                    <div className="space-y-1">
+                      <Label>Address</Label>
+                      <Input
+                        value={formData.address}
+                        onChange={(e) =>
+                          setFormData({ ...formData, address: e.target.value })
+                        }
+                      />
+                    </div>
+                    <Button
+                      className="w-full bg-emerald-600 hover:bg-emerald-700"
+                      onClick={handleCreateOrUpdate}
+                      disabled={isLoading}
+                    >
+                      Save Changes
+                    </Button>
                   </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <p className="text-gray-500">No children registered</p>
-          )}
-        </TabsContent>
-      </Tabs>
-    </div>
+                ) : (
+                  <Tabs defaultValue="overview" className="w-full">
+                    <TabsList className="mb-6">
+                      <TabsTrigger value="overview">Overview</TabsTrigger>
+                      <TabsTrigger value="children">
+                        Children ({selectedParent.studentsCount})
+                      </TabsTrigger>
+                      <TabsTrigger value="finance">Finance</TabsTrigger>
+                    </TabsList>
+
+                    <TabsContent value="overview">
+                      <div className="grid gap-6 md:grid-cols-2">
+                        <Card>
+                          <CardContent className="p-6 space-y-4">
+                            <h3 className="font-semibold flex items-center gap-2">
+                              <Shield className="h-4 w-4 text-emerald-600" />{" "}
+                              Contact Info
+                            </h3>
+                            <div className="space-y-3 text-sm">
+                              <div className="flex justify-between border-b pb-2">
+                                <span className="text-muted-foreground">
+                                  Email
+                                </span>{" "}
+                                <span>{selectedParent.user.email}</span>
+                              </div>
+                              <div className="flex justify-between border-b pb-2">
+                                <span className="text-muted-foreground">
+                                  Phone
+                                </span>{" "}
+                                <span>{selectedParent.user.phone || "-"}</span>
+                              </div>
+                              <div className="flex justify-between">
+                                <span className="text-muted-foreground">
+                                  Address
+                                </span>{" "}
+                                <span>{selectedParent.address || "-"}</span>
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+                        <Card>
+                          <CardContent className="p-6 space-y-4">
+                            <h3 className="font-semibold flex items-center gap-2">
+                              <Briefcase className="h-4 w-4 text-blue-600" />{" "}
+                              Employment
+                            </h3>
+                            <div className="space-y-3 text-sm">
+                              <div className="flex justify-between">
+                                <span className="text-muted-foreground">
+                                  Occupation
+                                </span>{" "}
+                                <span>
+                                  {selectedParent.occupation || "Not Specified"}
+                                </span>
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+                      </div>
+                    </TabsContent>
+
+                    <TabsContent value="children">
+                      <div className="space-y-3">
+                        {selectedParent.students.length > 0 ? (
+                          selectedParent.students.map((child: any) => (
+                            <div
+                              key={child.id}
+                              className="flex items-center justify-between p-3 bg-card border rounded-lg"
+                            >
+                              <div className="flex items-center gap-3">
+                                <Avatar className="h-10 w-10">
+                                  <AvatarImage src={child.user.image} />
+                                  <AvatarFallback>
+                                    {getInitials(child.user.name)}
+                                  </AvatarFallback>
+                                </Avatar>
+                                <div>
+                                  <p className="font-bold">{child.user.name}</p>
+                                  <p className="text-xs text-muted-foreground">
+                                    {child.currentClass?.name || "Unassigned"}
+                                  </p>
+                                </div>
+                              </div>
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() =>
+                                  router.push(
+                                    `/admin/students?search=${child.user.name}`
+                                  )
+                                }
+                              >
+                                View Progress
+                              </Button>
+                            </div>
+                          ))
+                        ) : (
+                          <p className="text-center py-8 text-muted-foreground">
+                            No students linked yet.
+                          </p>
+                        )}
+                      </div>
+                    </TabsContent>
+
+                    <TabsContent value="finance">
+                      <div className="text-center py-12 text-muted-foreground bg-muted/30 rounded-xl border border-dashed">
+                        <Wallet className="h-10 w-10 mx-auto mb-3 opacity-20" />
+                        <p>No payment history available.</p>
+                      </div>
+                    </TabsContent>
+                  </Tabs>
+                )}
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
   );
 }
