@@ -1,9 +1,8 @@
-// src/app/(dashboard)/admin/users/page.tsx
-
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import UserManagementClient from "@/components/admin/user-management-client";
 import { auth } from "@/lib/auth";
+import { Prisma } from "@prisma/client";
 
 interface PageProps {
   searchParams: Promise<{
@@ -15,76 +14,51 @@ interface PageProps {
   }>;
 }
 
+export const metadata = {
+  title: "User Management | Admin",
+  description: "Manage all system users",
+};
+
 export default async function UserManagementPage({ searchParams }: PageProps) {
   const session = await auth();
+  if (!session) redirect("/login");
+  if (!["SUPER_ADMIN", "ADMIN"].includes(session.user.role)) redirect("/dashboard");
 
-  if (!session) {
-    redirect("/login");
-  }
-
-  if (!["SUPER_ADMIN", "ADMIN"].includes(session.user.role)) {
-    redirect("/dashboard");
-  }
-
-  // Await searchParams for Next.js 15 compatibility
   const params = await searchParams;
   const page = parseInt(params.page || "1");
   const limit = parseInt(params.limit || "20");
-  const role = params.role;
-  const search = params.search;
-  const status = params.status;
-
   const skip = (page - 1) * limit;
 
-  const where: any = {
-    role: { not: "SUPER_ADMIN" }, // Don't show super admins in list
+  // Build Filter
+  const where: Prisma.UserWhereInput = {
+    role: { not: "SUPER_ADMIN" }, // Hide Super Admins
   };
 
-  if (role && role !== "ALL") {
-    where.role = role;
+  if (params.role && params.role !== "ALL") {
+    // @ts-ignore - Prisma enum casting safely handled by logic
+    where.role = params.role; 
   }
 
-  if (status && status !== "ALL") {
-    where.status = status;
+  if (params.status && params.status !== "ALL") {
+    // @ts-ignore
+    where.status = params.status;
   }
 
-  if (search) {
+  if (params.search) {
     where.OR = [
-      { name: { contains: search, mode: "insensitive" } },
-      { email: { contains: search, mode: "insensitive" } },
-      { phone: { contains: search, mode: "insensitive" } },
+      { name: { contains: params.search, mode: "insensitive" } },
+      { email: { contains: params.search, mode: "insensitive" } },
     ];
   }
 
-  // Define default/empty state
-  let data = {
-    users: [],
-    pagination: {
-      page,
-      limit,
-      total: 0,
-      pages: 0,
-    },
-    stats: {
-      students: 0,
-      teachers: 0,
-      parents: 0,
-      pending: 0,
-      suspended: 0,
-    },
-  };
-
   try {
-    const [users, total, counts] = await Promise.all([
+    const [usersRaw, total, counts] = await Promise.all([
       prisma.user.findMany({
         where,
         include: {
           studentProfile: true,
           teacherProfile: true,
           parentProfile: true,
-          approvedBy: {
-            select: { name: true },
-          },
         },
         orderBy: { createdAt: "desc" },
         skip,
@@ -100,35 +74,32 @@ export default async function UserManagementPage({ searchParams }: PageProps) {
       ]),
     ]);
 
-    // Serialize data inside the try block
-    data = {
-      users: JSON.parse(JSON.stringify(users)),
-      pagination: {
-        page,
-        limit,
-        total,
-        pages: Math.ceil(total / limit),
-      },
-      stats: {
-        students: counts[0],
-        teachers: counts[1],
-        parents: counts[2],
-        pending: counts[3],
-        suspended: counts[4],
-      },
-    };
-  } catch (error) {
-    console.error("Error loading users:", error);
-    // Keep the default data structure initialized above
-  }
+    // Manual Serialization (Faster than JSON.parse/stringify)
+    const users = usersRaw.map(u => ({
+      ...u,
+      createdAt: u.createdAt.toISOString(),
+      updatedAt: u.updatedAt.toISOString(),
+      emailVerified: u.emailVerified?.toISOString() || null,
+      lastLogin: u.lastLogin?.toISOString() || null,
+      approvedAt: u.approvedAt?.toISOString() || null,
+    }));
 
-  // Return component outside of try/catch
-  return (
-    <UserManagementClient
-      initialUsers={data.users}
-      pagination={data.pagination}
-      filters={{ role, search, status }}
-      stats={data.stats}
-    />
-  );
+    return (
+      <UserManagementClient
+        initialUsers={users}
+        pagination={{ page, limit, total, pages: Math.ceil(total / limit) }}
+        filters={{ role: params.role, search: params.search, status: params.status }}
+        stats={{
+          students: counts[0],
+          teachers: counts[1],
+          parents: counts[2],
+          pending: counts[3],
+          suspended: counts[4],
+        }}
+      />
+    );
+  } catch (error) {
+    console.error("User Fetch Error:", error);
+    return <div>Error loading users. Please refresh.</div>;
+  }
 }

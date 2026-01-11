@@ -1,8 +1,8 @@
-// src/components/admin/user-approvals-client.tsx
 "use client";
 
-import { useState, useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   Search,
   Filter,
@@ -10,29 +10,21 @@ import {
   Mail,
   Phone,
   Calendar,
-  MapPin,
   Book,
   GraduationCap,
   User,
-  CheckCircle,
+  CheckCircle2,
   XCircle,
   Eye,
-  MoreVertical,
-  ChevronLeft,
-  ChevronRight,
   Loader2,
+  ShieldCheck,
+  MapPin,
 } from "lucide-react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -47,21 +39,59 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { toast } from "sonner";
-import { getInitials, formatDate } from "@/lib/utils";
+import { getInitials } from "@/lib/utils";
+import { Counter } from "@/components/admin/dashboard-ui"; // Ensure this path is correct based on previous steps
+
+// --- ANIMATION VARIANTS (Identical to Dashboard) ---
+const containerVariants = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.2,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { y: 20, opacity: 0 },
+  show: {
+    y: 0,
+    opacity: 1,
+    transition: { type: "spring", stiffness: 50, damping: 10 },
+  },
+};
+
+// --- TYPES ---
+interface ProfileData {
+  hifzLevel?: string;
+  gender?: string;
+  memorizationGoal?: string;
+  qualification?: string;
+  specialization?: string;
+  experienceYears?: number;
+  occupation?: string;
+}
+
+interface PendingUser {
+  id: string;
+  name: string;
+  email: string;
+  phone?: string | null;
+  role: string;
+  status: string;
+  image?: string | null;
+  createdAt: string;
+  studentProfile?: ProfileData | null;
+  teacherProfile?: ProfileData | null;
+  parentProfile?: ProfileData | null;
+}
 
 interface UserApprovalsClientProps {
-  initialUsers: any[];
-  pagination: {
-    page: number;
-    limit: number;
-    total: number;
-    pages: number;
-  };
-  filters: {
-    role?: string;
-    search?: string;
-    status?: string;
-  };
+  initialUsers: PendingUser[];
+  pagination: { page: number; total: number; pages: number };
+  filters: { role?: string; search?: string };
 }
 
 export default function UserApprovalsClient({
@@ -70,694 +100,516 @@ export default function UserApprovalsClient({
   filters,
 }: UserApprovalsClientProps) {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const [users, setUsers] = useState(initialUsers);
   const [isLoading, setIsLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState(filters.search || "");
   const [selectedRole, setSelectedRole] = useState(filters.role || "ALL");
-  const [selectedStatus, setSelectedStatus] = useState(
-    filters.status || "PENDING"
-  );
-  const [selectedUser, setSelectedUser] = useState<any>(null);
-  const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+  const [selectedUser, setSelectedUser] = useState<PendingUser | null>(null);
 
-  const refreshData = async () => {
+  // --- ACTIONS ---
+  const refresh = () => {
     setIsLoading(true);
-    try {
-      const params = new URLSearchParams(searchParams.toString());
-      if (searchQuery) params.set("search", searchQuery);
-      if (selectedRole !== "ALL") params.set("role", selectedRole);
-      params.set("status", selectedStatus);
-
-      router.push(`/admin/approvals?${params.toString()}`);
-
-      // Refetch data
-      const response = await fetch(
-        `/api/admin/users/pending?${params.toString()}`
-      );
-      const data = await response.json();
-
-      if (response.ok) {
-        setUsers(data.users);
-      }
-    } catch (error) {
-      console.error("Error refreshing data:", error);
-    } finally {
-      setIsLoading(false);
-    }
+    const params = new URLSearchParams();
+    if (searchQuery) params.set("search", searchQuery);
+    if (selectedRole !== "ALL") params.set("role", selectedRole);
+    router.push(`/admin/approvals?${params.toString()}`);
+    setTimeout(() => setIsLoading(false), 800);
   };
 
-  useEffect(() => {
-    setUsers(initialUsers);
-  }, [initialUsers]);
+  const handleAction = async (
+    userId: string,
+    action: "APPROVE" | "REJECT",
+    reason?: string
+  ) => {
+    // Optimistic UI Update: Remove card immediately
+    setUsers((prev) => prev.filter((u) => u.id !== userId));
+    if (selectedUser?.id === userId) setSelectedUser(null);
 
-  const handleApproveUser = async (userId: string) => {
     try {
-      const response = await fetch(`/api/admin/users/${userId}/approve`, {
-        method: "POST",
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error || "Failed to approve user");
-      }
-
-      toast.success("User approved successfully", {
-        description: "The user has been approved and notified via email.",
-      });
-
-      // Refresh data
-      refreshData();
-    } catch (error) {
-      toast.error("Failed to approve user", {
-        description:
-          error instanceof Error ? error.message : "Please try again.",
-      });
-    }
-  };
-
-  const handleRejectUser = async (userId: string, reason: string) => {
-    try {
-      const response = await fetch(`/api/admin/users/${userId}/reject`, {
+      const res = await fetch("/api/admin/users/action", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ rejectionReason: reason }),
+        body: JSON.stringify({ userId, action, rejectionReason: reason }),
       });
 
-      const data = await response.json();
+      if (!res.ok) throw new Error("Operation failed");
 
-      if (!response.ok) {
-        throw new Error(data.error || "Failed to reject user");
-      }
-
-      toast.error("User rejected", {
-        description: `User has been rejected: ${reason}`,
-      });
-
-      // Refresh data
-      refreshData();
-    } catch (error) {
-      toast.error("Failed to reject user", {
+      toast.success(action === "APPROVE" ? "User Approved" : "User Rejected", {
         description:
-          error instanceof Error ? error.message : "Please try again.",
+          action === "APPROVE"
+            ? "Account is now active."
+            : "User has been notified.",
       });
+
+      router.refresh();
+    } catch (err) {
+      toast.error("Action Failed", { description: "Restoring state..." });
+      router.refresh();
     }
   };
 
-  const handleBulkApprove = async () => {
-    try {
-      const userIds = users.map((user) => user.id);
-      const promises = userIds.map((id) =>
-        fetch(`/api/admin/users/${id}/approve`, { method: "POST" })
-      );
+  // --- HELPERS ---
+  const getRoleBadge = (role: string) => {
+    const styles: Record<string, string> = {
+      STUDENT: "bg-blue-100 text-blue-700 border-blue-200",
+      TEACHER: "bg-purple-100 text-purple-700 border-purple-200",
+      PARENT: "bg-emerald-100 text-emerald-700 border-emerald-200",
+      ADMIN: "bg-amber-100 text-amber-700 border-amber-200",
+    };
+    const icons: Record<string, any> = {
+      STUDENT: Book,
+      TEACHER: GraduationCap,
+      PARENT: User,
+      ADMIN: ShieldCheck,
+    };
+    const Icon = icons[role] || User;
 
-      await Promise.all(promises);
-
-      toast.success("Bulk approval completed", {
-        description: `${userIds.length} users have been approved.`,
-      });
-
-      // Refresh data
-      refreshData();
-    } catch (error) {
-      toast.error("Failed to approve users", {
-        description: "Some users could not be approved.",
-      });
-    }
+    return (
+      <Badge variant="outline" className={`gap-1.5 py-1 ${styles[role] || ""}`}>
+        <Icon className="h-3 w-3" />
+        {role}
+      </Badge>
+    );
   };
 
-  const handleSearch = (e: React.FormEvent) => {
-    e.preventDefault();
-    refreshData();
+  const formatDate = (dateStr: string) => {
+    return new Date(dateStr).toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
   };
 
-  const handlePageChange = (newPage: number) => {
-    const params = new URLSearchParams(searchParams.toString());
-    params.set("page", newPage.toString());
-    router.push(`/admin/approvals?${params.toString()}`);
-  };
-
-  const getRoleIcon = (role: string) => {
-    switch (role) {
-      case "TEACHER":
-        return <GraduationCap className="h-4 w-4" />;
-      case "STUDENT":
-        return <Book className="h-4 w-4" />;
-      case "PARENT":
-        return <User className="h-4 w-4" />;
-      default:
-        return <User className="h-4 w-4" />;
-    }
-  };
-
+  // --- STATS CONFIGURATION (Matches Dashboard Look) ---
   const stats = [
-    { label: "Total Pending", value: pagination.total, color: "yellow" },
+    {
+      label: "Total Pending",
+      value: users.length,
+      icon: Filter,
+      color: "from-violet-500 to-purple-600",
+      shadow: "shadow-purple-500/20",
+    },
     {
       label: "Students",
       value: users.filter((u) => u.role === "STUDENT").length,
-      color: "blue",
+      icon: Book,
+      color: "from-blue-400 to-cyan-500",
+      shadow: "shadow-blue-500/20",
     },
     {
       label: "Teachers",
       value: users.filter((u) => u.role === "TEACHER").length,
-      color: "purple",
+      icon: GraduationCap,
+      color: "from-amber-400 to-orange-500",
+      shadow: "shadow-amber-500/20",
     },
     {
       label: "Parents",
       value: users.filter((u) => u.role === "PARENT").length,
-      color: "green",
+      icon: User,
+      color: "from-emerald-400 to-teal-500",
+      shadow: "shadow-emerald-500/20",
     },
   ];
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
+    <motion.div
+      variants={containerVariants}
+      initial="hidden"
+      animate="show"
+      className="space-y-8 pb-10"
+    >
+      {/* --- HEADER --- */}
+      <motion.div
+        variants={itemVariants}
+        className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"
+      >
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+          <h1 className="text-3xl font-bold tracking-tight bg-linear-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-400 bg-clip-text text-transparent">
             User Approvals
           </h1>
-          <p className="mt-2 text-gray-600 dark:text-gray-400">
-            Review and manage user registration requests
+          <p className="text-muted-foreground mt-1">
+            Review and manage registration requests ({pagination.total})
           </p>
         </div>
-        <div className="flex items-center space-x-3">
+        <div className="flex items-center gap-3">
           <Button variant="outline" className="gap-2" disabled={isLoading}>
-            <Download className="h-4 w-4" />
-            Export
+            <Download className="h-4 w-4" /> Export
           </Button>
-          <Button
-            className="bg-gradient-primary gap-2"
-            onClick={handleBulkApprove}
-            disabled={isLoading || users.length === 0}
-          >
-            <CheckCircle className="h-4 w-4" />
-            Approve All ({users.length})
-          </Button>
+          {users.length > 0 && (
+            <Button className="bg-linear-to-r from-green-600 to-emerald-600 shadow-lg shadow-green-900/20 hover:scale-105 transition-all gap-2 text-white">
+              <CheckCircle2 className="h-4 w-4" /> Approve All
+            </Button>
+          )}
         </div>
-      </div>
+      </motion.div>
 
-      {/* Stats */}
-      <div className="grid gap-6 sm:grid-cols-4">
-        {stats.map((stat, index) => (
-          <Card key={index}>
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
+      {/* --- STATS GRID (Identical to Dashboard) --- */}
+      <motion.div
+        variants={containerVariants}
+        className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4"
+      >
+        {stats.map((stat) => (
+          <motion.div
+            key={stat.label}
+            variants={itemVariants}
+            whileHover={{ y: -5, transition: { duration: 0.2 } }}
+            className="group"
+          >
+            <Card className="border-none shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden relative">
+              {/* Gradient Blob */}
+              <div
+                className={`absolute top-0 right-0 w-24 h-24 bg-linear-to-br ${stat.color} opacity-10 rounded-bl-full group-hover:scale-110 transition-transform`}
+              />
+              <CardContent className="p-6 flex justify-between items-center relative z-10">
                 <div>
-                  <p className="text-sm font-medium text-gray-600">
+                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                     {stat.label}
                   </p>
-                  <p
-                    className={`mt-2 text-2xl font-bold text-${stat.color}-600`}
-                  >
-                    {stat.value}
-                  </p>
+                  <div className="text-2xl font-bold mt-2">
+                    <Counter value={stat.value} />
+                  </div>
                 </div>
-                <div className={`rounded-lg bg-${stat.color}-100 p-3`}>
-                  <User className={`h-6 w-6 text-${stat.color}-600`} />
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-
-      {/* Filters */}
-      <Card>
-        <CardContent className="p-6">
-          <form onSubmit={handleSearch} className="grid gap-4 sm:grid-cols-3">
-            <div>
-              <label className="mb-2 block text-sm font-medium">Search</label>
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
-                <Input
-                  placeholder="Search by name, email, or phone..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-10"
-                  disabled={isLoading}
-                />
-              </div>
-            </div>
-            <div>
-              <label className="mb-2 block text-sm font-medium">Role</label>
-              <Select
-                value={selectedRole}
-                onValueChange={setSelectedRole}
-                disabled={isLoading}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="All Roles" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="ALL">All Roles</SelectItem>
-                  <SelectItem value="STUDENT">Student</SelectItem>
-                  <SelectItem value="TEACHER">Teacher</SelectItem>
-                  <SelectItem value="PARENT">Parent</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div>
-              <label className="mb-2 block text-sm font-medium">Status</label>
-              <Select
-                value={selectedStatus}
-                onValueChange={setSelectedStatus}
-                disabled={isLoading}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select Status" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="PENDING">Pending</SelectItem>
-                  <SelectItem value="APPROVED">Approved</SelectItem>
-                  <SelectItem value="REJECTED">Rejected</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <div className="sm:col-span-3 flex justify-end space-x-2">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => {
-                  setSearchQuery("");
-                  setSelectedRole("ALL");
-                  setSelectedStatus("PENDING");
-                  router.push("/admin/approvals");
-                }}
-                disabled={isLoading}
-              >
-                Clear Filters
-              </Button>
-              <Button type="submit" disabled={isLoading}>
-                {isLoading ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Applying...
-                  </>
-                ) : (
-                  <>
-                    <Filter className="mr-2 h-4 w-4" />
-                    Apply Filters
-                  </>
-                )}
-              </Button>
-            </div>
-          </form>
-        </CardContent>
-      </Card>
-
-      {/* User List */}
-      <Card>
-        <CardHeader>
-          <div className="flex items-center justify-between">
-            <div>
-              <CardTitle>
-                {selectedStatus === "PENDING"
-                  ? "Pending Approvals"
-                  : selectedStatus === "APPROVED"
-                  ? "Approved Users"
-                  : "Rejected Users"}
-              </CardTitle>
-              <CardDescription>
-                {pagination.total} users found • Page {pagination.page} of{" "}
-                {pagination.pages}
-              </CardDescription>
-            </div>
-            {selectedStatus === "PENDING" && users.length > 0 && (
-              <Button
-                size="sm"
-                className="bg-green-500 hover:bg-green-600"
-                onClick={handleBulkApprove}
-                disabled={isLoading}
-              >
-                <CheckCircle className="mr-2 h-4 w-4" />
-                Approve All
-              </Button>
-            )}
-          </div>
-        </CardHeader>
-        <CardContent>
-          {isLoading ? (
-            <div className="flex h-64 items-center justify-center">
-              <Loader2 className="h-8 w-8 animate-spin text-purple-500" />
-            </div>
-          ) : users.length === 0 ? (
-            <div className="py-12 text-center">
-              <User className="mx-auto h-12 w-12 text-gray-300" />
-              <h3 className="mt-4 text-lg font-semibold">No users found</h3>
-              <p className="mt-2 text-gray-500">
-                {selectedStatus === "PENDING"
-                  ? "All registration requests have been processed."
-                  : "No users found with the selected criteria."}
-              </p>
-            </div>
-          ) : (
-            <div className="space-y-4">
-              {users.map((user) => (
                 <div
-                  key={user.id}
-                  className="rounded-lg border border-gray-200 p-4 dark:border-gray-700"
+                  className={`p-3 rounded-xl bg-linear-to-br ${stat.color} text-white ${stat.shadow} shadow-lg`}
                 >
-                  <div className="flex flex-col space-y-4 md:flex-row md:items-center md:justify-between md:space-y-0">
-                    <div className="flex items-center space-x-4">
-                      <Avatar>
-                        <AvatarFallback className="bg-gradient-primary text-white">
-                          {getInitials(user.name)}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div>
-                        <div className="flex items-center space-x-2">
-                          <h3 className="font-semibold">{user.name}</h3>
-                          <Badge variant="outline" className="gap-1">
-                            {getRoleIcon(user.role)}
-                            {user.role}
-                          </Badge>
-                          <Badge
-                            variant={
-                              user.status === "PENDING"
-                                ? "secondary"
-                                : user.status === "APPROVED"
-                                ? "default"
-                                : "destructive"
-                            }
-                          >
-                            {user.status}
-                          </Badge>
-                        </div>
-                        <div className="mt-2 flex flex-wrap gap-4 text-sm text-gray-600">
-                          <div className="flex items-center gap-1">
-                            <Mail className="h-4 w-4" />
-                            {user.email}
-                          </div>
-                          {user.phone && (
-                            <div className="flex items-center gap-1">
-                              <Phone className="h-4 w-4" />
-                              {user.phone}
-                            </div>
-                          )}
-                          <div className="flex items-center gap-1">
-                            <Calendar className="h-4 w-4" />
-                            Applied {formatDate(user.createdAt)}
-                          </div>
-                        </div>
-                        {user.studentProfile && (
-                          <p className="mt-2 text-sm text-gray-500">
-                            Student •{" "}
-                            {user.studentProfile.hifzLevel ||
-                              "No level specified"}
-                          </p>
-                        )}
-                        {user.teacherProfile && (
-                          <p className="mt-2 text-sm text-gray-500">
-                            Teacher •{" "}
-                            {user.teacherProfile.specialization ||
-                              "No specialization"}
-                          </p>
-                        )}
-                      </div>
+                  <stat.icon className="h-5 w-5" />
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+        ))}
+      </motion.div>
+
+      {/* --- FILTERS (Glassmorphism Toolbar) --- */}
+      <motion.div variants={itemVariants}>
+        <div className="flex flex-col sm:flex-row gap-3 bg-white/50 dark:bg-slate-900/50 backdrop-blur-md p-4 rounded-xl border shadow-sm">
+          <div className="relative flex-1">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Search by name, email, phone..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-9 bg-white dark:bg-slate-950 border-muted"
+            />
+          </div>
+          <Select value={selectedRole} onValueChange={setSelectedRole}>
+            <SelectTrigger className="w-full sm:w-[180px] bg-white dark:bg-slate-950 border-muted">
+              <SelectValue placeholder="Filter by Role" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="ALL">All Roles</SelectItem>
+              <SelectItem value="STUDENT">Students</SelectItem>
+              <SelectItem value="TEACHER">Teachers</SelectItem>
+              <SelectItem value="PARENT">Parents</SelectItem>
+            </SelectContent>
+          </Select>
+          <Button
+            onClick={refresh}
+            disabled={isLoading}
+            className="bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-md hover:shadow-lg transition-all"
+          >
+            {isLoading ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : (
+              "Apply Filters"
+            )}
+          </Button>
+        </div>
+      </motion.div>
+
+      {/* --- USERS LIST (Cards with Layout Animations) --- */}
+      <motion.div variants={containerVariants} className="space-y-4">
+        {users.length === 0 ? (
+          <motion.div
+            variants={itemVariants}
+            className="text-center py-20 bg-muted/20 rounded-xl border border-dashed border-muted-foreground/20"
+          >
+            <div className="h-16 w-16 bg-muted rounded-full flex items-center justify-center mx-auto mb-4">
+              <CheckCircle2 className="h-8 w-8 text-muted-foreground" />
+            </div>
+            <h3 className="text-lg font-semibold">All Caught Up!</h3>
+            <p className="text-muted-foreground">
+              No pending registration requests found matching your filters.
+            </p>
+          </motion.div>
+        ) : (
+          <AnimatePresence>
+            {users.map((user) => (
+              <motion.div
+                key={user.id}
+                layoutId={user.id}
+                variants={itemVariants}
+                exit={{ opacity: 0, x: -20 }}
+                className="group bg-card p-4 sm:p-5 rounded-xl border hover:border-purple-200 dark:hover:border-purple-900 transition-all shadow-sm hover:shadow-md flex flex-col sm:flex-row gap-5 items-start sm:items-center justify-between"
+              >
+                {/* User Info Section */}
+                <div className="flex items-start gap-4 w-full sm:w-auto">
+                  <Avatar className="h-12 w-12 border-2 border-white dark:border-slate-800 shadow-sm">
+                    <AvatarImage src={user.image || undefined} />
+                    <AvatarFallback className="bg-gradient-to-br from-purple-500 to-indigo-600 text-white font-bold text-sm">
+                      {getInitials(user.name)}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 flex-wrap mb-1">
+                      <h3 className="font-bold text-base truncate">
+                        {user.name}
+                      </h3>
+                      {getRoleBadge(user.role)}
+                    </div>
+                    <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted-foreground">
+                      <span className="flex items-center gap-1.5">
+                        <Mail className="h-3.5 w-3.5" /> {user.email}
+                      </span>
+                      <span className="flex items-center gap-1.5">
+                        <Calendar className="h-3.5 w-3.5" /> Applied{" "}
+                        {formatDate(user.createdAt)}
+                      </span>
                     </div>
 
-                    <div className="flex items-center space-x-2">
-                      {selectedStatus === "PENDING" && (
-                        <>
-                          <Button
-                            size="sm"
-                            className="bg-green-500 hover:bg-green-600"
-                            onClick={() => handleApproveUser(user.id)}
-                            disabled={isLoading}
-                          >
-                            <CheckCircle className="mr-2 h-4 w-4" />
-                            Approve
-                          </Button>
-                          <DropdownMenu>
-                            <DropdownMenuTrigger asChild>
-                              <Button
-                                size="sm"
-                                variant="destructive"
-                                disabled={isLoading}
-                              >
-                                <XCircle className="mr-2 h-4 w-4" />
-                                Reject
-                              </Button>
-                            </DropdownMenuTrigger>
-                            <DropdownMenuContent>
-                              <DropdownMenuItem
-                                onClick={() =>
-                                  handleRejectUser(
-                                    user.id,
-                                    "Incomplete information"
-                                  )
-                                }
-                              >
-                                Incomplete information
-                              </DropdownMenuItem>
-                              <DropdownMenuItem
-                                onClick={() =>
-                                  handleRejectUser(
-                                    user.id,
-                                    "Does not meet requirements"
-                                  )
-                                }
-                              >
-                                Does not meet requirements
-                              </DropdownMenuItem>
-                              <DropdownMenuItem
-                                onClick={() =>
-                                  handleRejectUser(user.id, "Other reason")
-                                }
-                              >
-                                Other reason
-                              </DropdownMenuItem>
-                            </DropdownMenuContent>
-                          </DropdownMenu>
-                        </>
-                      )}
+                    {/* Role Specific Snippet */}
+                    <div className="mt-2.5 flex items-center gap-2">
+                      <div className="text-xs font-medium text-muted-foreground/80 bg-muted/50 px-2.5 py-1 rounded-md border border-muted/50">
+                        {user.role === "STUDENT" &&
+                          `Goal: ${
+                            user.studentProfile?.memorizationGoal || "N/A"
+                          }`}
+                        {user.role === "TEACHER" &&
+                          `Spec: ${
+                            user.teacherProfile?.specialization || "General"
+                          }`}
+                        {user.role === "PARENT" &&
+                          `Occupation: ${
+                            user.parentProfile?.occupation || "N/A"
+                          }`}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Actions Section */}
+                <div className="flex items-center gap-2 w-full sm:w-auto mt-2 sm:mt-0 pt-3 sm:pt-0 border-t sm:border-t-0 border-muted">
+                  <Button
+                    size="sm"
+                    className="flex-1 sm:flex-none bg-emerald-600 hover:bg-emerald-700 text-white shadow-sm shadow-emerald-900/10"
+                    onClick={() => handleAction(user.id, "APPROVE")}
+                  >
+                    Approve
+                  </Button>
+
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
                       <Button
                         size="sm"
                         variant="outline"
-                        onClick={() => {
-                          setSelectedUser(user);
-                          setIsViewModalOpen(true);
-                        }}
-                        disabled={isLoading}
+                        className="text-red-600 hover:bg-red-50 border-red-100 dark:text-red-400 dark:border-red-900/30 dark:hover:bg-red-950/20"
                       >
-                        <Eye className="mr-2 h-4 w-4" />
-                        View
+                        Reject
                       </Button>
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button
-                            size="sm"
-                            variant="ghost"
-                            disabled={isLoading}
-                          >
-                            <MoreVertical className="h-4 w-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuItem>Send Message</DropdownMenuItem>
-                          <DropdownMenuItem>Request More Info</DropdownMenuItem>
-                          <DropdownMenuItem>
-                            View Full Application
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem
+                        onClick={() =>
+                          handleAction(user.id, "REJECT", "Incomplete Data")
+                        }
+                      >
+                        Incomplete Data
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() =>
+                          handleAction(user.id, "REJECT", "Ineligible")
+                        }
+                      >
+                        Ineligible
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() => handleAction(user.id, "REJECT", "Other")}
+                      >
+                        Other
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
 
-          {/* Pagination */}
-          {pagination.pages > 1 && (
-            <div className="mt-6 flex items-center justify-between">
-              <div className="text-sm text-gray-700">
-                Showing {(pagination.page - 1) * pagination.limit + 1} to{" "}
-                {Math.min(pagination.page * pagination.limit, pagination.total)}{" "}
-                of {pagination.total} results
-              </div>
-              <div className="flex space-x-2">
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    className="px-2 text-muted-foreground hover:text-foreground"
+                    onClick={() => setSelectedUser(user)}
+                  >
+                    <Eye className="h-4 w-4" />
+                  </Button>
+                </div>
+              </motion.div>
+            ))}
+          </AnimatePresence>
+        )}
+      </motion.div>
+
+      {/* --- DETAIL MODAL (Apple Style) --- */}
+      <AnimatePresence>
+        {selectedUser && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+            onClick={() => setSelectedUser(null)}
+          >
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.95, opacity: 0, y: 20 }}
+              onClick={(e) => e.stopPropagation()}
+              className="bg-background w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden border border-muted"
+            >
+              {/* Modal Header Art */}
+              <div className="relative h-28 bg-gradient-to-br from-indigo-600 via-purple-600 to-violet-600">
                 <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handlePageChange(pagination.page - 1)}
-                  disabled={pagination.page === 1 || isLoading}
+                  variant="ghost"
+                  size="icon"
+                  className="absolute top-2 right-2 text-white/70 hover:text-white hover:bg-white/20 rounded-full"
+                  onClick={() => setSelectedUser(null)}
                 >
-                  <ChevronLeft className="h-4 w-4" />
-                  Previous
+                  <XCircle className="h-6 w-6" />
                 </Button>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={() => handlePageChange(pagination.page + 1)}
-                  disabled={pagination.page === pagination.pages || isLoading}
-                >
-                  Next
-                  <ChevronRight className="h-4 w-4" />
-                </Button>
-              </div>
-            </div>
-          )}
-        </CardContent>
-      </Card>
-
-      {/* User Detail Modal */}
-      {isViewModalOpen && selectedUser && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-          <div className="mx-4 w-full max-w-2xl rounded-lg bg-white p-6 shadow-xl">
-            <div className="mb-6 flex items-center justify-between">
-              <div className="flex items-center space-x-3">
-                <Avatar className="h-12 w-12">
-                  <AvatarFallback className="bg-gradient-primary text-white">
-                    {getInitials(selectedUser.name)}
-                  </AvatarFallback>
-                </Avatar>
-                <div>
-                  <h2 className="text-xl font-bold">{selectedUser.name}</h2>
-                  <div className="flex items-center space-x-2">
-                    <Badge>{selectedUser.role}</Badge>
-                    <Badge
-                      variant={
-                        selectedUser.status === "PENDING"
-                          ? "secondary"
-                          : selectedUser.status === "APPROVED"
-                          ? "default"
-                          : "destructive"
-                      }
-                    >
-                      {selectedUser.status}
-                    </Badge>
-                  </div>
+                <div className="absolute -bottom-10 left-8">
+                  <Avatar className="h-24 w-24 border-[5px] border-background shadow-xl">
+                    <AvatarImage src={selectedUser.image || undefined} />
+                    <AvatarFallback className="bg-muted text-muted-foreground text-3xl font-bold">
+                      {getInitials(selectedUser.name)}
+                    </AvatarFallback>
+                  </Avatar>
                 </div>
               </div>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => setIsViewModalOpen(false)}
-              >
-                <XCircle className="h-5 w-5" />
-              </Button>
-            </div>
 
-            <div className="grid gap-6 md:grid-cols-2">
-              <div className="space-y-4">
+              {/* Modal Body */}
+              <div className="pt-14 p-8 space-y-6">
                 <div>
-                  <h3 className="mb-2 font-semibold">Contact Information</h3>
-                  <div className="space-y-2 text-sm">
-                    <div className="flex items-center gap-2">
-                      <Mail className="h-4 w-4 text-gray-400" />
-                      {selectedUser.email}
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Phone className="h-4 w-4 text-gray-400" />
-                      {selectedUser.phone || "Not provided"}
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Calendar className="h-4 w-4 text-gray-400" />
-                      Applied: {formatDate(selectedUser.createdAt)}
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <h2 className="text-2xl font-bold tracking-tight">
+                        {selectedUser.name}
+                      </h2>
+                      <div className="flex gap-2 mt-2">
+                        {getRoleBadge(selectedUser.role)}
+                        <Badge
+                          variant="outline"
+                          className="border-amber-200 bg-amber-50 text-amber-700 dark:bg-amber-900/20 dark:text-amber-400 dark:border-amber-800"
+                        >
+                          Pending Review
+                        </Badge>
+                      </div>
                     </div>
                   </div>
                 </div>
 
-                {selectedUser.studentProfile && (
-                  <div>
-                    <h3 className="mb-2 font-semibold">Student Information</h3>
-                    <div className="space-y-2 text-sm">
-                      <div>
-                        Gender:{" "}
-                        {selectedUser.studentProfile.gender || "Not specified"}
-                      </div>
-                      <div>
-                        Hifz Level:{" "}
-                        {selectedUser.studentProfile.hifzLevel ||
-                          "Not specified"}
-                      </div>
-                      <div>
-                        Memorization Goal:{" "}
-                        {selectedUser.studentProfile.memorizationGoal ||
-                          "Not specified"}
-                      </div>
+                <div className="grid grid-cols-2 gap-6 text-sm">
+                  <div className="space-y-3">
+                    <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
+                      Contact Info
+                    </p>
+                    <div className="space-y-2">
+                      <p className="flex items-center gap-2.5">
+                        <Mail className="h-4 w-4 text-primary" />{" "}
+                        {selectedUser.email}
+                      </p>
+                      <p className="flex items-center gap-2.5">
+                        <Phone className="h-4 w-4 text-primary" />{" "}
+                        {selectedUser.phone || "N/A"}
+                      </p>
                     </div>
                   </div>
-                )}
-
-                {selectedUser.teacherProfile && (
-                  <div>
-                    <h3 className="mb-2 font-semibold">Teacher Information</h3>
-                    <div className="space-y-2 text-sm">
-                      <div>
-                        Qualification:{" "}
-                        {selectedUser.teacherProfile.qualification ||
-                          "Not specified"}
-                      </div>
-                      <div>
-                        Specialization:{" "}
-                        {selectedUser.teacherProfile.specialization ||
-                          "Not specified"}
-                      </div>
-                      <div>
-                        Experience:{" "}
-                        {selectedUser.teacherProfile.experienceYears || 0} years
-                      </div>
+                  <div className="space-y-3">
+                    <p className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
+                      System Info
+                    </p>
+                    <div className="space-y-2">
+                      <p className="flex items-center gap-2.5">
+                        <Calendar className="h-4 w-4 text-primary" />{" "}
+                        {formatDate(selectedUser.createdAt)}
+                      </p>
+                      <p className="flex items-center gap-2.5">
+                        <MapPin className="h-4 w-4 text-primary" />{" "}
+                        {selectedUser.role}
+                      </p>
                     </div>
                   </div>
-                )}
-              </div>
+                </div>
 
-              <div className="space-y-4">
-                <div>
-                  <h3 className="mb-2 font-semibold">Quick Actions</h3>
-                  <div className="grid grid-cols-2 gap-2">
-                    {selectedUser.status === "PENDING" && (
-                      <>
-                        <Button
-                          className="bg-green-500 hover:bg-green-600"
-                          onClick={() => {
-                            handleApproveUser(selectedUser.id);
-                            setIsViewModalOpen(false);
-                          }}
-                          disabled={isLoading}
-                        >
-                          <CheckCircle className="mr-2 h-4 w-4" />
-                          Approve
-                        </Button>
-                        <Button
-                          variant="destructive"
-                          onClick={() => {
-                            handleRejectUser(
-                              selectedUser.id,
-                              "Reviewing application"
-                            );
-                            setIsViewModalOpen(false);
-                          }}
-                          disabled={isLoading}
-                        >
-                          <XCircle className="mr-2 h-4 w-4" />
-                          Reject
-                        </Button>
-                      </>
+                {/* Role Specific Details Box */}
+                <div className="bg-muted/40 p-5 rounded-xl border border-muted/60">
+                  <h3 className="font-semibold mb-4 flex items-center gap-2 text-sm">
+                    <ShieldCheck className="h-4 w-4 text-purple-600" />
+                    Detailed Profile
+                  </h3>
+
+                  {selectedUser.role === "STUDENT" &&
+                    selectedUser.studentProfile && (
+                      <div className="grid grid-cols-2 gap-y-3 text-sm">
+                        <div className="flex flex-col">
+                          <span className="text-xs text-muted-foreground">
+                            Hifz Level
+                          </span>
+                          <span className="font-medium">
+                            {selectedUser.studentProfile.hifzLevel || "-"}
+                          </span>
+                        </div>
+                        <div className="flex flex-col">
+                          <span className="text-xs text-muted-foreground">
+                            Goal
+                          </span>
+                          <span className="font-medium">
+                            {selectedUser.studentProfile.memorizationGoal ||
+                              "-"}
+                          </span>
+                        </div>
+                      </div>
                     )}
-                  </div>
+                  {selectedUser.role === "TEACHER" &&
+                    selectedUser.teacherProfile && (
+                      <div className="grid grid-cols-2 gap-y-3 text-sm">
+                        <div className="flex flex-col">
+                          <span className="text-xs text-muted-foreground">
+                            Specialization
+                          </span>
+                          <span className="font-medium">
+                            {selectedUser.teacherProfile.specialization || "-"}
+                          </span>
+                        </div>
+                        <div className="flex flex-col">
+                          <span className="text-xs text-muted-foreground">
+                            Experience
+                          </span>
+                          <span className="font-medium">
+                            {selectedUser.teacherProfile.experienceYears} Years
+                          </span>
+                        </div>
+                      </div>
+                    )}
+                </div>
+
+                {/* Action Footer */}
+                <div className="flex gap-3 pt-4 border-t border-muted">
+                  <Button
+                    variant="outline"
+                    className="flex-1"
+                    onClick={() => setSelectedUser(null)}
+                  >
+                    Close
+                  </Button>
+                  <Button
+                    className="flex-1 bg-green-600 hover:bg-green-700 text-white shadow-md"
+                    onClick={() => handleAction(selectedUser.id, "APPROVE")}
+                  >
+                    Approve Request
+                  </Button>
                 </div>
               </div>
-            </div>
-
-            <div className="mt-6 flex justify-end space-x-3">
-              <Button
-                variant="outline"
-                onClick={() => setIsViewModalOpen(false)}
-              >
-                Close
-              </Button>
-              <Button className="bg-gradient-primary">
-                Process Application
-              </Button>
-            </div>
-          </div>
-        </div>
-      )}
-    </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
   );
 }
