@@ -1,31 +1,36 @@
-// src/components/admin/class-management-client.tsx
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   BookOpen,
-  Users,
-  GraduationCap,
-  Calendar,
-  Plus,
   Search,
+  Plus,
+  MoreVertical,
   Edit,
   Trash2,
-  MoreVertical,
-  Check,
+  GraduationCap,
+  Users,
+  Calendar,
+  Download,
+  Layers,
+  Clock,
+  CheckCircle,
+  Ban,
   X,
+  Loader2,
+  LayoutGrid,
+  List as ListIcon,
+  Copy,
+  ChevronRight,
+  User,
 } from "lucide-react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -33,622 +38,935 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { Switch } from "@/components/ui/switch";
+import { Progress } from "@/components/ui/progress";
 import { toast } from "sonner";
 import { getInitials } from "@/lib/utils";
+import { Counter } from "@/components/admin/dashboard-ui";
+
+// --- ANIMATION VARIANTS ---
+const containerVariants = {
+  hidden: { opacity: 0 },
+  show: { opacity: 1, transition: { staggerChildren: 0.05 } },
+};
+const itemVariants = {
+  hidden: { y: 20, opacity: 0 },
+  show: { y: 0, opacity: 1, transition: { type: "spring", stiffness: 50 } },
+};
 
 interface ClassManagementClientProps {
   initialClasses: any[];
   teachers: any[];
-  subjects: any[];
-  stats: {
-    totalClasses: number;
-    activeClasses: number;
-    totalStudents: number;
-    totalTeachers: number;
-  };
+  stats: any;
 }
 
 export default function ClassManagementClient({
   initialClasses,
   teachers,
-  subjects,
   stats,
 }: ClassManagementClientProps) {
+  const router = useRouter();
   const [classes, setClasses] = useState(initialClasses);
-  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
-  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-  const [selectedClass, setSelectedClass] = useState<any>(null);
-  const [searchQuery, setSearchQuery] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const [newClass, setNewClass] = useState({
+  // View State
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [filterLevel, setFilterLevel] = useState("ALL");
+
+  // Modals
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [selectedClass, setSelectedClass] = useState<any>(null); // For View/Edit
+  const [isDetailOpen, setIsDetailOpen] = useState(false); // Controls Detail Modal
+  const [isEditing, setIsEditing] = useState(false); // Controls Edit Mode inside Modal
+
+  // Form
+  const [formData, setFormData] = useState({
     name: "",
     code: "",
     description: "",
-    level: "BEGINNER",
-    section: "",
-    capacity: 20,
-    academicYear: "2024-2025",
-    term: "Fall 2024",
+    level: "Beginner",
+    capacity: "20",
     teacherId: "",
-    isActive: true,
+    startDate: "",
+    endDate: "",
   });
 
-  const filteredClasses = classes.filter(
-    (cls) =>
-      cls.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      cls.code.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      cls.level.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  // --- FILTER LOGIC ---
+  const filteredClasses = classes.filter((c) => {
+    const term = searchQuery.toLowerCase();
+    const matchesSearch =
+      c.name.toLowerCase().includes(term) ||
+      c.code.toLowerCase().includes(term);
+    const matchesLevel = filterLevel === "ALL" || c.level === filterLevel;
+    return matchesSearch && matchesLevel;
+  });
 
-  const statsData = [
-    {
-      label: "Total Classes",
-      value: stats.totalClasses,
-      icon: BookOpen,
-      color: "purple",
-    },
-    {
-      label: "Active Classes",
-      value: stats.activeClasses,
-      icon: BookOpen,
-      color: "green",
-    },
-    {
-      label: "Total Students",
-      value: stats.totalStudents,
-      icon: Users,
-      color: "blue",
-    },
-    {
-      label: "Available Teachers",
-      value: stats.totalTeachers,
-      icon: GraduationCap,
-      color: "yellow",
-    },
-  ];
-
-  const handleCreateClass = async () => {
-    if (!newClass.name.trim() || !newClass.code.trim()) {
-      toast.error("Class name and code are required");
-      return;
+  // --- ACTIONS ---
+  const handleCreateOrUpdate = async () => {
+    if (!formData.name || !formData.code || !formData.teacherId) {
+      return toast.error("Please fill required fields");
     }
-
     setIsLoading(true);
+
     try {
-      const response = await fetch("/api/admin/classes", {
+      const res = await fetch("/api/admin/classes/manage", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newClass),
+        body: JSON.stringify({
+          action: isEditing ? "UPDATE" : "CREATE",
+          classId: selectedClass?.id,
+          data: formData,
+        }),
       });
 
-      const data = await response.json();
+      const result = await res.json();
+      if (!res.ok) throw new Error(result.error);
 
-      if (!response.ok) {
-        throw new Error(data.error || "Failed to create class");
+      if (isEditing) {
+        setClasses((prev) =>
+          prev.map((c) => (c.id === selectedClass.id ? result.class : c))
+        );
+        setSelectedClass(result.class); // Update the open modal
+        toast.success("Class updated");
+        setIsEditing(false); // Exit edit mode but keep modal open
+      } else {
+        setClasses([result.class, ...classes]);
+        toast.success("Class created");
+        setIsAddModalOpen(false);
+        resetForm();
       }
-
-      toast.success("Class created successfully");
-      setClasses([data.class, ...classes]);
-      setIsCreateDialogOpen(false);
-      resetNewClass();
-    } catch (error) {
-      toast.error("Failed to create class", {
-        description:
-          error instanceof Error ? error.message : "Please try again.",
-      });
+    } catch (error: any) {
+      toast.error(error.message || "Failed to save");
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleDeleteClass = async (classId: string) => {
-    if (
-      !confirm(
-        "Are you sure you want to delete this class? This will also remove all enrollments."
+  const handleToggleStatus = async (
+    classId: string,
+    currentStatus: boolean
+  ) => {
+    setClasses((prev) =>
+      prev.map((c) =>
+        c.id === classId ? { ...c, isActive: !currentStatus } : c
       )
-    ) {
-      return;
-    }
-
+    );
     try {
-      const response = await fetch(`/api/admin/classes/${classId}`, {
-        method: "DELETE",
+      await fetch("/api/admin/classes/manage", {
+        method: "POST",
+        body: JSON.stringify({
+          action: "TOGGLE_STATUS",
+          classId,
+          data: { isActive: !currentStatus },
+        }),
       });
-
-      if (!response.ok) {
-        throw new Error("Failed to delete class");
-      }
-
-      toast.success("Class deleted successfully");
-      setClasses(classes.filter((c) => c.id !== classId));
-    } catch (error) {
-      toast.error("Failed to delete class", {
-        description: "Please try again.",
-      });
+      toast.success(currentStatus ? "Class Deactivated" : "Class Activated");
+    } catch {
+      toast.error("Status update failed");
+      router.refresh();
     }
   };
 
-  const handleToggleActive = async (classId: string, isActive: boolean) => {
+  const handleDelete = async (classId: string) => {
+    if (!confirm("Delete this class? This cannot be undone.")) return;
+    setClasses((prev) => prev.filter((c) => c.id !== classId));
+    setIsDetailOpen(false); // Close modal if open
     try {
-      const response = await fetch(`/api/admin/classes/${classId}/status`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ isActive }),
+      await fetch("/api/admin/classes/manage", {
+        method: "POST",
+        body: JSON.stringify({ action: "DELETE", classId }),
       });
-
-      if (!response.ok) {
-        throw new Error("Failed to update class status");
-      }
-
-      toast.success(
-        `Class ${isActive ? "activated" : "deactivated"} successfully`
-      );
-
-      setClasses(
-        classes.map((cls) => (cls.id === classId ? { ...cls, isActive } : cls))
-      );
-    } catch (error) {
-      toast.error("Failed to update class", {
-        description: "Please try again.",
-      });
+      toast.success("Class deleted");
+    } catch {
+      toast.error("Delete failed");
+      router.refresh();
     }
   };
 
-  const resetNewClass = () => {
-    setNewClass({
+  const copyCode = (code: string) => {
+    navigator.clipboard.writeText(code);
+    toast.success("Class Code Copied!");
+  };
+
+  // --- HELPERS ---
+  const resetForm = () => {
+    setFormData({
       name: "",
       code: "",
       description: "",
-      level: "BEGINNER",
-      section: "",
-      capacity: 20,
-      academicYear: "2024-2025",
-      term: "Fall 2024",
+      level: "Beginner",
+      capacity: "20",
       teacherId: "",
-      isActive: true,
+      startDate: "",
+      endDate: "",
     });
+    setIsEditing(false);
   };
 
-  const levels = ["BEGINNER", "INTERMEDIATE", "ADVANCED"];
-  const terms = ["Fall 2024", "Spring 2025", "Summer 2025"];
+  const openAddModal = () => {
+    resetForm();
+    setIsAddModalOpen(true);
+  };
+
+  const openDetailModal = (c: any) => {
+    setSelectedClass(c);
+    // Pre-fill form data in case they switch to Edit mode
+    setFormData({
+      name: c.name,
+      code: c.code,
+      description: c.description || "",
+      level: c.level,
+      capacity: c.capacity.toString(),
+      teacherId: c.teacherId,
+      startDate: c.startDate
+        ? new Date(c.startDate).toISOString().split("T")[0]
+        : "",
+      endDate: c.endDate ? new Date(c.endDate).toISOString().split("T")[0] : "",
+    });
+    setIsDetailOpen(true);
+    setIsEditing(false);
+  };
+
+  const getCapacityColor = (current: number, max: number) => {
+    const percentage = (current / max) * 100;
+    if (percentage >= 100) return "bg-red-500";
+    if (percentage >= 80) return "bg-amber-500";
+    return "bg-emerald-500";
+  };
+
+  const statCards = [
+    {
+      label: "Total Classes",
+      value: stats.totalClasses,
+      icon: Layers,
+      color: "from-blue-500 to-cyan-500",
+      shadow: "shadow-blue-500/20",
+    },
+    {
+      label: "Active Classes",
+      value: stats.activeClasses,
+      icon: BookOpen,
+      color: "from-purple-500 to-pink-500",
+      shadow: "shadow-purple-500/20",
+    },
+    {
+      label: "Total Students",
+      value: stats.totalStudents,
+      icon: Users,
+      color: "from-emerald-500 to-green-500",
+      shadow: "shadow-emerald-500/20",
+    },
+    {
+      label: "Faculty",
+      value: stats.totalTeachers,
+      icon: GraduationCap,
+      color: "from-amber-400 to-orange-500",
+      shadow: "shadow-amber-500/20",
+    },
+  ];
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
+    <motion.div
+      variants={containerVariants}
+      initial="hidden"
+      animate="show"
+      className="space-y-8 pb-10"
+    >
+      {/* HEADER */}
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+          <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-400 bg-clip-text text-transparent">
             Class Management
           </h1>
-          <p className="mt-2 text-gray-600 dark:text-gray-400">
-            Manage all classes and course offerings
+          <p className="text-muted-foreground mt-1">
+            Manage curriculum, schedules, and capacity
           </p>
         </div>
-        <div className="flex items-center space-x-3">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
-            <Input
-              placeholder="Search classes..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 w-64"
-            />
+        <div className="flex gap-2">
+          <div className="flex items-center bg-muted p-1 rounded-lg border">
+            <Button
+              size="icon"
+              variant={viewMode === "grid" ? "white" : "ghost"}
+              className={`h-7 w-7 rounded-md ${
+                viewMode === "grid" ? "shadow-sm" : ""
+              }`}
+              onClick={() => setViewMode("grid")}
+            >
+              <LayoutGrid className="h-4 w-4" />
+            </Button>
+            <Button
+              size="icon"
+              variant={viewMode === "list" ? "white" : "ghost"}
+              className={`h-7 w-7 rounded-md ${
+                viewMode === "list" ? "shadow-sm" : ""
+              }`}
+              onClick={() => setViewMode("list")}
+            >
+              <ListIcon className="h-4 w-4" />
+            </Button>
           </div>
-          <Dialog
-            open={isCreateDialogOpen}
-            onOpenChange={setIsCreateDialogOpen}
+          <Button
+            className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-md hover:scale-105 transition-all gap-2"
+            onClick={openAddModal}
           >
-            <DialogTrigger asChild>
-              <Button className="bg-gradient-primary gap-2">
-                <Plus className="h-4 w-4" />
-                Create Class
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-[600px]">
-              <DialogHeader>
-                <DialogTitle>Create New Class</DialogTitle>
-                <DialogDescription>
-                  Create a new class with teacher assignment and schedule
-                </DialogDescription>
-              </DialogHeader>
-              <div className="grid gap-4 py-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="name">Class Name *</Label>
-                    <Input
-                      id="name"
-                      value={newClass.name}
-                      onChange={(e) =>
-                        setNewClass({ ...newClass, name: e.target.value })
-                      }
-                      placeholder="e.g., Quran Memorization - Level 1"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="code">Class Code *</Label>
-                    <Input
-                      id="code"
-                      value={newClass.code}
-                      onChange={(e) =>
-                        setNewClass({ ...newClass, code: e.target.value })
-                      }
-                      placeholder="e.g., QUR-101"
-                    />
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="description">Description</Label>
-                  <Textarea
-                    id="description"
-                    value={newClass.description}
-                    onChange={(e) =>
-                      setNewClass({ ...newClass, description: e.target.value })
-                    }
-                    placeholder="Describe the class curriculum and objectives..."
-                    rows={3}
-                  />
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="level">Level *</Label>
-                    <Select
-                      value={newClass.level}
-                      onValueChange={(value) =>
-                        setNewClass({ ...newClass, level: value })
-                      }
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select level" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {levels.map((level) => (
-                          <SelectItem key={level} value={level}>
-                            {level}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="section">Section</Label>
-                    <Input
-                      id="section"
-                      value={newClass.section}
-                      onChange={(e) =>
-                        setNewClass({ ...newClass, section: e.target.value })
-                      }
-                      placeholder="e.g., A, B, Morning"
-                    />
-                  </div>
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="capacity">Capacity</Label>
-                    <Input
-                      id="capacity"
-                      type="number"
-                      min="1"
-                      max="100"
-                      value={newClass.capacity}
-                      onChange={(e) =>
-                        setNewClass({
-                          ...newClass,
-                          capacity: parseInt(e.target.value),
-                        })
-                      }
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="teacher">Teacher *</Label>
-                    <Select
-                      value={newClass.teacherId}
-                      onValueChange={(value) =>
-                        setNewClass({ ...newClass, teacherId: value })
-                      }
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select teacher" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {teachers.map((teacher) => (
-                          <SelectItem key={teacher.id} value={teacher.id}>
-                            {teacher.user.name}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="academicYear">Academic Year</Label>
-                    <Input
-                      id="academicYear"
-                      value={newClass.academicYear}
-                      onChange={(e) =>
-                        setNewClass({
-                          ...newClass,
-                          academicYear: e.target.value,
-                        })
-                      }
-                      placeholder="e.g., 2024-2025"
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="term">Term</Label>
-                    <Select
-                      value={newClass.term}
-                      onValueChange={(value) =>
-                        setNewClass({ ...newClass, term: value })
-                      }
-                    >
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select term" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {terms.map((term) => (
-                          <SelectItem key={term} value={term}>
-                            {term}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Switch
-                    id="active"
-                    checked={newClass.isActive}
-                    onCheckedChange={(checked) =>
-                      setNewClass({ ...newClass, isActive: checked })
-                    }
-                  />
-                  <Label htmlFor="active">Active Class</Label>
-                </div>
-              </div>
-              <DialogFooter>
-                <Button
-                  variant="outline"
-                  onClick={() => setIsCreateDialogOpen(false)}
-                >
-                  Cancel
-                </Button>
-                <Button onClick={handleCreateClass} disabled={isLoading}>
-                  {isLoading ? "Creating..." : "Create Class"}
-                </Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
+            <Plus className="h-4 w-4" /> Add Class
+          </Button>
         </div>
       </div>
 
-      {/* Stats */}
-      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-        {statsData.map((stat, index) => (
-          <Card key={index}>
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between">
+      {/* STATS */}
+      <motion.div
+        variants={containerVariants}
+        className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4"
+      >
+        {statCards.map((stat) => (
+          <motion.div key={stat.label} variants={itemVariants}>
+            <Card className="border-none shadow-sm bg-white/50 backdrop-blur-sm dark:bg-slate-900/50 hover:shadow-md transition-all relative overflow-hidden">
+              <div
+                className={`absolute top-0 right-0 w-20 h-20 bg-gradient-to-br ${stat.color} opacity-10 rounded-bl-full`}
+              />
+              <CardContent className="p-5 relative z-10 flex items-center justify-between">
                 <div>
-                  <p className="text-sm font-medium text-gray-600">
+                  <p className="text-xs font-semibold text-muted-foreground uppercase">
                     {stat.label}
                   </p>
-                  <p
-                    className={`mt-2 text-2xl font-bold text-${stat.color}-600`}
-                  >
-                    {stat.value}
-                  </p>
+                  <div className="text-2xl font-bold mt-2">
+                    <Counter value={stat.value} />
+                  </div>
                 </div>
-                <div className={`rounded-lg bg-${stat.color}-100 p-3`}>
-                  <stat.icon className={`h-6 w-6 text-${stat.color}-600`} />
+                <div
+                  className={`p-2.5 rounded-xl bg-gradient-to-br ${stat.color} text-white ${stat.shadow} shadow-lg`}
+                >
+                  <stat.icon className="h-5 w-5" />
                 </div>
-              </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
 
-      {/* Classes Grid */}
-      <div className="grid gap-6 lg:grid-cols-2">
-        {filteredClasses.map((cls) => (
-          <Card key={cls.id} className="overflow-hidden">
-            <CardHeader className="pb-3">
-              <div className="flex items-start justify-between">
-                <div>
-                  <div className="flex items-center gap-2">
-                    <CardTitle className="text-lg">{cls.name}</CardTitle>
-                    <Badge variant={cls.isActive ? "default" : "outline"}>
+      {/* FILTERS */}
+      <motion.div
+        variants={itemVariants}
+        className="flex flex-col sm:flex-row gap-4 bg-white/60 dark:bg-slate-900/60 backdrop-blur-md p-4 rounded-xl border shadow-sm"
+      >
+        <div className="relative flex-1">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder="Search classes or code..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-9 bg-white dark:bg-slate-950"
+          />
+        </div>
+        <Select value={filterLevel} onValueChange={setFilterLevel}>
+          <SelectTrigger className="w-[180px] bg-white dark:bg-slate-950">
+            <SelectValue placeholder="Level" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectItem value="ALL">All Levels</SelectItem>
+            <SelectItem value="Beginner">Beginner</SelectItem>
+            <SelectItem value="Intermediate">Intermediate</SelectItem>
+            <SelectItem value="Advanced">Advanced</SelectItem>
+          </SelectContent>
+        </Select>
+      </motion.div>
+
+      {/* --- CONTENT AREA (Grid or List) --- */}
+      {viewMode === "grid" ? (
+        <motion.div
+          variants={containerVariants}
+          className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3"
+        >
+          {filteredClasses.map((cls) => (
+            <motion.div
+              key={cls.id}
+              variants={itemVariants}
+              layoutId={cls.id}
+              onClick={() => openDetailModal(cls)}
+              className="cursor-pointer"
+            >
+              <Card
+                className={`group h-full border hover:border-purple-300 dark:hover:border-purple-800 transition-all hover:shadow-xl bg-card ${
+                  !cls.isActive ? "opacity-80" : ""
+                }`}
+              >
+                <CardContent className="p-0">
+                  {/* Decorative Header */}
+                  <div className="h-20 bg-gradient-to-r from-purple-100 to-indigo-100 dark:from-purple-900/30 dark:to-indigo-900/30 relative p-4 flex justify-between items-start">
+                    <Badge
+                      variant="secondary"
+                      className="bg-white/90 dark:bg-black/50 backdrop-blur-sm shadow-sm"
+                    >
+                      {cls.code}
+                    </Badge>
+                    <Badge
+                      className={cls.isActive ? "bg-green-500" : "bg-gray-500"}
+                    >
                       {cls.isActive ? "Active" : "Inactive"}
                     </Badge>
-                    <Badge variant="outline">{cls.level}</Badge>
                   </div>
-                  <CardDescription className="mt-2">
-                    {cls.code} • {cls.teacher?.user.name}
-                  </CardDescription>
-                </div>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon">
-                      <MoreVertical className="h-4 w-4" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuItem>
-                      <Edit className="mr-2 h-4 w-4" />
-                      Edit
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      onClick={() => handleToggleActive(cls.id, !cls.isActive)}
-                    >
-                      {cls.isActive ? (
-                        <>
-                          <X className="mr-2 h-4 w-4" />
-                          Deactivate
-                        </>
-                      ) : (
-                        <>
-                          <Check className="mr-2 h-4 w-4" />
-                          Activate
-                        </>
-                      )}
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      className="text-red-600"
-                      onClick={() => handleDeleteClass(cls.id)}
-                    >
-                      <Trash2 className="mr-2 h-4 w-4" />
-                      Delete
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="space-y-4">
-                {/* Class Info */}
-                <div className="space-y-2">
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-600">Capacity:</span>
-                    <span className="font-medium">
-                      {cls.enrollments.length} / {cls.capacity} students
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-600">Academic Year:</span>
-                    <span className="font-medium">{cls.academicYear}</span>
-                  </div>
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-gray-600">Term:</span>
-                    <span className="font-medium">{cls.term}</span>
-                  </div>
-                  {cls.section && (
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-gray-600">Section:</span>
-                      <span className="font-medium">{cls.section}</span>
-                    </div>
-                  )}
-                </div>
 
-                {/* Schedule */}
-                {cls.schedules.length > 0 && (
-                  <div>
-                    <h4 className="mb-2 text-sm font-medium">Schedule</h4>
-                    <div className="space-y-2">
-                      {cls.schedules.map((schedule: any) => (
-                        <div
-                          key={schedule.id}
-                          className="flex items-center justify-between rounded-lg border p-2 text-sm"
-                        >
-                          <div className="flex items-center gap-2">
-                            <Calendar className="h-4 w-4 text-gray-400" />
-                            <span>
-                              {
-                                [
-                                  "Sun",
-                                  "Mon",
-                                  "Tue",
-                                  "Wed",
-                                  "Thu",
-                                  "Fri",
-                                  "Sat",
-                                ][schedule.dayOfWeek]
-                              }{" "}
-                              {schedule.startTime} - {schedule.endTime}
-                            </span>
-                          </div>
-                          <Badge variant="outline">
-                            {schedule.meetingPlatform}
-                          </Badge>
+                  <div className="p-6 pt-2">
+                    {/* Floating Avatar */}
+                    <div className="-mt-10 mb-3 flex justify-between items-end">
+                      <div className="flex items-end gap-2">
+                        <Avatar className="h-14 w-14 border-4 border-white dark:border-slate-950 shadow-md">
+                          <AvatarImage src={cls.teacher?.user.image} />
+                          <AvatarFallback className="bg-slate-200">
+                            {getInitials(cls.teacher?.user.name || "T")}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div className="mb-1">
+                          <p className="text-xs text-muted-foreground font-medium">
+                            Instructor
+                          </p>
+                          <p className="text-sm font-semibold leading-none">
+                            {cls.teacher?.user.name || "Unassigned"}
+                          </p>
                         </div>
-                      ))}
+                      </div>
+                    </div>
+
+                    <h3 className="font-bold text-lg leading-tight mb-2 group-hover:text-purple-600 transition-colors">
+                      {cls.name}
+                    </h3>
+
+                    {/* Progress Bar */}
+                    <div className="space-y-1.5 mb-4">
+                      <div className="flex justify-between text-xs font-medium">
+                        <span className="text-muted-foreground">Capacity</span>
+                        <span>
+                          {Math.round(
+                            (cls.currentEnrollment / cls.capacity) * 100
+                          )}
+                          % Full
+                        </span>
+                      </div>
+                      <Progress
+                        value={(cls.currentEnrollment / cls.capacity) * 100}
+                        className="h-2"
+                        indicatorClassName={getCapacityColor(
+                          cls.currentEnrollment,
+                          cls.capacity
+                        )}
+                      />
+                    </div>
+
+                    <div className="flex items-center justify-between text-xs text-muted-foreground bg-muted/50 p-2.5 rounded-lg">
+                      <div className="flex items-center gap-1.5">
+                        <Layers className="h-3.5 w-3.5" /> {cls.level}
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <Users className="h-3.5 w-3.5" />{" "}
+                        {cls.currentEnrollment} Students
+                      </div>
                     </div>
                   </div>
-                )}
-
-                {/* Students */}
-                <div>
-                  <div className="mb-2 flex items-center justify-between">
-                    <h4 className="text-sm font-medium">Students</h4>
-                    <span className="text-sm text-gray-500">
-                      {cls.enrollments.length} enrolled
-                    </span>
-                  </div>
-                  <div className="flex -space-x-2">
-                    {cls.enrollments.slice(0, 5).map((enrollment: any) => (
-                      <Avatar
-                        key={enrollment.id}
-                        className="border-2 border-white"
+                </CardContent>
+              </Card>
+            </motion.div>
+          ))}
+        </motion.div>
+      ) : (
+        /* LIST VIEW */
+        <motion.div variants={containerVariants}>
+          <Card className="border-none shadow-sm overflow-hidden bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm">
+            <CardContent className="p-0">
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead className="bg-muted/30 border-b">
+                    <tr>
+                      <th className="px-6 py-4 text-left font-semibold">
+                        Class Name
+                      </th>
+                      <th className="px-6 py-4 text-left font-semibold">
+                        Code
+                      </th>
+                      <th className="px-6 py-4 text-left font-semibold">
+                        Instructor
+                      </th>
+                      <th className="px-6 py-4 text-left font-semibold">
+                        Level
+                      </th>
+                      <th className="px-6 py-4 text-left font-semibold">
+                        Capacity
+                      </th>
+                      <th className="px-6 py-4 text-left font-semibold">
+                        Status
+                      </th>
+                      <th className="px-6 py-4 text-right font-semibold">
+                        Action
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y">
+                    {filteredClasses.map((cls) => (
+                      <motion.tr
+                        key={cls.id}
+                        variants={itemVariants}
+                        className="group hover:bg-muted/40 transition-colors cursor-pointer"
+                        onClick={() => openDetailModal(cls)}
                       >
-                        <AvatarFallback className="text-xs">
-                          {getInitials(enrollment.student.user.name)}
-                        </AvatarFallback>
-                      </Avatar>
+                        <td className="px-6 py-4 font-medium">{cls.name}</td>
+                        <td className="px-6 py-4 text-muted-foreground font-mono">
+                          {cls.code}
+                        </td>
+                        <td className="px-6 py-4">{cls.teacher?.user.name}</td>
+                        <td className="px-6 py-4">
+                          <Badge variant="outline">{cls.level}</Badge>
+                        </td>
+                        <td className="px-6 py-4 text-muted-foreground">
+                          {cls.currentEnrollment} / {cls.capacity}
+                        </td>
+                        <td className="px-6 py-4">
+                          <Badge
+                            className={
+                              cls.isActive
+                                ? "bg-green-100 text-green-700"
+                                : "bg-gray-100 text-gray-700"
+                            }
+                          >
+                            {cls.isActive ? "Active" : "Inactive"}
+                          </Badge>
+                        </td>
+                        <td className="px-6 py-4 text-right">
+                          <ChevronRight className="h-4 w-4 ml-auto text-muted-foreground" />
+                        </td>
+                      </motion.tr>
                     ))}
-                    {cls.enrollments.length > 5 && (
-                      <Avatar className="border-2 border-white">
-                        <AvatarFallback className="text-xs bg-gray-100">
-                          +{cls.enrollments.length - 5}
-                        </AvatarFallback>
-                      </Avatar>
-                    )}
-                  </div>
-                </div>
-
-                {/* Actions */}
-                <div className="flex space-x-2">
-                  <Button variant="outline" size="sm" className="flex-1">
-                    <Users className="mr-2 h-4 w-4" />
-                    Manage Students
-                  </Button>
-                  <Button variant="outline" size="sm" className="flex-1">
-                    <Calendar className="mr-2 h-4 w-4" />
-                    Schedule
-                  </Button>
-                </div>
+                  </tbody>
+                </table>
               </div>
             </CardContent>
           </Card>
-        ))}
-      </div>
-
-      {filteredClasses.length === 0 && (
-        <Card>
-          <CardContent className="p-12 text-center">
-            <BookOpen className="mx-auto h-12 w-12 text-gray-300" />
-            <h3 className="mt-4 text-lg font-semibold">No classes found</h3>
-            <p className="mt-2 text-gray-500">
-              {searchQuery
-                ? "Try adjusting your search query"
-                : "Create your first class"}
-            </p>
-            <Button
-              className="mt-4 bg-gradient-primary gap-2"
-              onClick={() => setIsCreateDialogOpen(true)}
-            >
-              <Plus className="h-4 w-4" />
-              Create Class
-            </Button>
-          </CardContent>
-        </Card>
+        </motion.div>
       )}
-    </div>
+
+      {/* --- ADD MODAL (Create Only) --- */}
+      <AnimatePresence>
+        {isAddModalOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+          >
+            <motion.div
+              initial={{ scale: 0.95 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0.95 }}
+              className="bg-background w-full max-w-lg rounded-2xl shadow-2xl border p-6"
+            >
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-xl font-bold">Create New Class</h2>
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  onClick={() => setIsAddModalOpen(false)}
+                >
+                  <X className="h-5 w-5" />
+                </Button>
+              </div>
+              <div className="grid gap-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-1">
+                    <Label>Class Name</Label>
+                    <Input
+                      value={formData.name}
+                      onChange={(e) =>
+                        setFormData({ ...formData, name: e.target.value })
+                      }
+                      placeholder="e.g. Quran Memorization"
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <Label>Class Code</Label>
+                    <Input
+                      value={formData.code}
+                      onChange={(e) =>
+                        setFormData({ ...formData, code: e.target.value })
+                      }
+                      placeholder="e.g. QRN-101"
+                    />
+                  </div>
+                </div>
+                <div className="space-y-1">
+                  <Label>Description</Label>
+                  <Input
+                    value={formData.description}
+                    onChange={(e) =>
+                      setFormData({ ...formData, description: e.target.value })
+                    }
+                  />
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-1">
+                    <Label>Level</Label>
+                    <Select
+                      value={formData.level}
+                      onValueChange={(v) =>
+                        setFormData({ ...formData, level: v })
+                      }
+                    >
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="Beginner">Beginner</SelectItem>
+                        <SelectItem value="Intermediate">
+                          Intermediate
+                        </SelectItem>
+                        <SelectItem value="Advanced">Advanced</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-1">
+                    <Label>Capacity</Label>
+                    <Input
+                      type="number"
+                      value={formData.capacity}
+                      onChange={(e) =>
+                        setFormData({ ...formData, capacity: e.target.value })
+                      }
+                    />
+                  </div>
+                </div>
+                <div className="space-y-1">
+                  <Label>Assign Teacher</Label>
+                  <Select
+                    value={formData.teacherId}
+                    onValueChange={(v) =>
+                      setFormData({ ...formData, teacherId: v })
+                    }
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select Teacher" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {teachers.map((t) => (
+                        <SelectItem key={t.id} value={t.id}>
+                          {t.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-1">
+                    <Label>Start Date</Label>
+                    <Input
+                      type="date"
+                      value={formData.startDate}
+                      onChange={(e) =>
+                        setFormData({ ...formData, startDate: e.target.value })
+                      }
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <Label>End Date</Label>
+                    <Input
+                      type="date"
+                      value={formData.endDate}
+                      onChange={(e) =>
+                        setFormData({ ...formData, endDate: e.target.value })
+                      }
+                    />
+                  </div>
+                </div>
+                <Button
+                  className="w-full mt-4 bg-gradient-to-r from-purple-600 to-indigo-600 text-white"
+                  onClick={handleCreateOrUpdate}
+                  disabled={isLoading}
+                >
+                  {isLoading ? (
+                    <Loader2 className="animate-spin mr-2" />
+                  ) : (
+                    "Create Class"
+                  )}
+                </Button>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* --- DETAIL / EDIT MODAL (The "Next Level" View) --- */}
+      <AnimatePresence>
+        {isDetailOpen && selectedClass && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+            onClick={() => setIsDetailOpen(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.95 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0.95 }}
+              onClick={(e) => e.stopPropagation()}
+              className="bg-background w-full max-w-4xl h-[85vh] rounded-2xl shadow-2xl border overflow-hidden flex flex-col"
+            >
+              {/* Header */}
+              <div className="h-32 bg-gradient-to-r from-purple-600 to-indigo-700 p-6 flex justify-between items-start text-white shrink-0">
+                <div className="flex gap-4 items-center">
+                  <div className="h-16 w-16 bg-white/10 backdrop-blur-sm rounded-xl flex items-center justify-center text-3xl font-bold border border-white/20">
+                    {selectedClass.name.charAt(0)}
+                  </div>
+                  <div>
+                    <h2 className="text-2xl font-bold">{selectedClass.name}</h2>
+                    <div className="flex items-center gap-3 mt-1 opacity-90">
+                      <Badge
+                        variant="outline"
+                        className="text-white border-white/30 bg-white/10 hover:bg-white/20 cursor-pointer"
+                        onClick={() => copyCode(selectedClass.code)}
+                      >
+                        {selectedClass.code} <Copy className="ml-1.5 h-3 w-3" />
+                      </Badge>
+                      <span className="text-sm border-l border-white/30 pl-3">
+                        {selectedClass.level}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <div className="flex gap-2">
+                  <Button
+                    size="sm"
+                    variant="secondary"
+                    className="bg-white/20 text-white hover:bg-white/30 border-0"
+                    onClick={() => setIsEditing(!isEditing)}
+                  >
+                    {isEditing ? "View Mode" : "Edit Class"}
+                  </Button>
+                  <Button
+                    size="icon"
+                    variant="ghost"
+                    className="text-white hover:bg-white/20"
+                    onClick={() => setIsDetailOpen(false)}
+                  >
+                    <X className="h-5 w-5" />
+                  </Button>
+                </div>
+              </div>
+
+              {/* Tabs / Content */}
+              <div className="flex-1 overflow-y-auto bg-muted/10 p-6">
+                {isEditing ? (
+                  <div className="max-w-xl mx-auto space-y-4">
+                    {/* EDIT FORM (Reusing logic for brevity) */}
+                    <div className="space-y-1">
+                      <Label>Name</Label>
+                      <Input
+                        value={formData.name}
+                        onChange={(e) =>
+                          setFormData({ ...formData, name: e.target.value })
+                        }
+                      />
+                    </div>
+                    <div className="space-y-1">
+                      <Label>Description</Label>
+                      <Input
+                        value={formData.description}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            description: e.target.value,
+                          })
+                        }
+                      />
+                    </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-1">
+                        <Label>Capacity</Label>
+                        <Input
+                          type="number"
+                          value={formData.capacity}
+                          onChange={(e) =>
+                            setFormData({
+                              ...formData,
+                              capacity: e.target.value,
+                            })
+                          }
+                        />
+                      </div>
+                      <div className="space-y-1">
+                        <Label>Teacher</Label>
+                        <Select
+                          value={formData.teacherId}
+                          onValueChange={(v) =>
+                            setFormData({ ...formData, teacherId: v })
+                          }
+                        >
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {teachers.map((t) => (
+                              <SelectItem key={t.id} value={t.id}>
+                                {t.name}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                    </div>
+                    <Button
+                      className="w-full bg-green-600 hover:bg-green-700"
+                      onClick={handleCreateOrUpdate}
+                      disabled={isLoading}
+                    >
+                      {isLoading ? (
+                        <Loader2 className="animate-spin" />
+                      ) : (
+                        "Save Changes"
+                      )}
+                    </Button>
+                    <div className="pt-4 border-t mt-4 flex justify-between items-center">
+                      <span className="text-sm text-muted-foreground">
+                        Danger Zone
+                      </span>
+                      <Button
+                        variant="destructive"
+                        size="sm"
+                        onClick={() => handleDelete(selectedClass.id)}
+                      >
+                        Delete Class
+                      </Button>
+                    </div>
+                  </div>
+                ) : (
+                  <Tabs
+                    defaultValue="overview"
+                    className="w-full h-full flex flex-col"
+                  >
+                    <TabsList className="w-full justify-start border-b rounded-none bg-transparent p-0 mb-6 h-auto">
+                      <TabsTrigger
+                        value="overview"
+                        className="rounded-none border-b-2 border-transparent data-[state=active]:border-purple-600 data-[state=active]:bg-transparent px-4 py-2"
+                      >
+                        Overview
+                      </TabsTrigger>
+                      <TabsTrigger
+                        value="schedule"
+                        className="rounded-none border-b-2 border-transparent data-[state=active]:border-purple-600 data-[state=active]:bg-transparent px-4 py-2"
+                      >
+                        Schedule
+                      </TabsTrigger>
+                      <TabsTrigger
+                        value="students"
+                        className="rounded-none border-b-2 border-transparent data-[state=active]:border-purple-600 data-[state=active]:bg-transparent px-4 py-2"
+                      >
+                        Students ({selectedClass.currentEnrollment})
+                      </TabsTrigger>
+                    </TabsList>
+
+                    <TabsContent value="overview" className="mt-0">
+                      <div className="grid gap-6 md:grid-cols-2">
+                        <Card>
+                          <CardContent className="p-6">
+                            <h3 className="font-semibold mb-4 flex items-center gap-2">
+                              <GraduationCap className="h-4 w-4 text-purple-600" />{" "}
+                              Instructor
+                            </h3>
+                            <div className="flex items-center gap-4">
+                              <Avatar className="h-14 w-14">
+                                <AvatarImage
+                                  src={selectedClass.teacher?.user.image}
+                                />
+                                <AvatarFallback>
+                                  {getInitials(
+                                    selectedClass.teacher?.user.name || "T"
+                                  )}
+                                </AvatarFallback>
+                              </Avatar>
+                              <div>
+                                <p className="font-bold text-lg">
+                                  {selectedClass.teacher?.user.name ||
+                                    "Unassigned"}
+                                </p>
+                                <p className="text-sm text-muted-foreground">
+                                  Head Teacher
+                                </p>
+                              </div>
+                            </div>
+                          </CardContent>
+                        </Card>
+                        <Card>
+                          <CardContent className="p-6">
+                            <h3 className="font-semibold mb-4 flex items-center gap-2">
+                              <Users className="h-4 w-4 text-emerald-600" />{" "}
+                              Enrollment
+                            </h3>
+                            <div className="space-y-2">
+                              <div className="flex justify-between text-sm">
+                                <span>Occupancy</span>
+                                <span className="font-bold">
+                                  {selectedClass.currentEnrollment} /{" "}
+                                  {selectedClass.capacity}
+                                </span>
+                              </div>
+                              <Progress
+                                value={
+                                  (selectedClass.currentEnrollment /
+                                    selectedClass.capacity) *
+                                  100
+                                }
+                                className="h-3"
+                                indicatorClassName={getCapacityColor(
+                                  selectedClass.currentEnrollment,
+                                  selectedClass.capacity
+                                )}
+                              />
+                              <p className="text-xs text-muted-foreground pt-1">
+                                Academic Year: {selectedClass.academicYear}
+                              </p>
+                            </div>
+                          </CardContent>
+                        </Card>
+                        <Card className="md:col-span-2">
+                          <CardContent className="p-6">
+                            <h3 className="font-semibold mb-2">Description</h3>
+                            <p className="text-sm text-muted-foreground leading-relaxed">
+                              {selectedClass.description ||
+                                "No description provided."}
+                            </p>
+                          </CardContent>
+                        </Card>
+                      </div>
+                    </TabsContent>
+
+                    <TabsContent value="schedule">
+                      <div className="text-center py-12 text-muted-foreground bg-muted/30 rounded-xl border border-dashed">
+                        <Calendar className="h-10 w-10 mx-auto mb-3 opacity-20" />
+                        <p>No schedule configured yet.</p>
+                        <Button variant="link" className="mt-2">
+                          Configure Schedule
+                        </Button>
+                      </div>
+                    </TabsContent>
+
+                    <TabsContent value="students">
+                      <div className="text-center py-12 text-muted-foreground bg-muted/30 rounded-xl border border-dashed">
+                        <Users className="h-10 w-10 mx-auto mb-3 opacity-20" />
+                        <p>No students enrolled yet.</p>
+                      </div>
+                    </TabsContent>
+                  </Tabs>
+                )}
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
   );
 }

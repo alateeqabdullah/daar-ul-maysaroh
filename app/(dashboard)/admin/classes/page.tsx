@@ -1,101 +1,70 @@
-// src/app/(dashboard)/admin/classes/page.tsx
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import ClassManagementClient from "@/components/admin/class-management-client";
 
+export const metadata = {
+  title: "Class Management | Admin",
+  description: "Manage academic classes and schedules",
+};
+
 export default async function ClassManagementPage() {
   const session = await auth();
-
-  if (!session) {
-    redirect("/login");
-  }
-
-  if (!["SUPER_ADMIN", "ADMIN"].includes(session.user.role)) {
+  if (!session) redirect("/login");
+  if (!["SUPER_ADMIN", "ADMIN"].includes(session.user.role))
     redirect("/dashboard");
-  }
-
-  // Initialize default data structure
-  let data = {
-    classes: [],
-    teachers: [],
-    subjects: [],
-    stats: {
-      totalClasses: 0,
-      activeClasses: 0,
-      totalStudents: 0,
-      totalTeachers: 0,
-    },
-  };
 
   try {
-    const [classes, teachers, subjects] = await Promise.all([
+    const [classesRaw, teachersRaw] = await Promise.all([
       prisma.class.findMany({
         include: {
           teacher: {
-            include: {
-              user: true,
-            },
+            include: { user: { select: { name: true, image: true } } },
           },
-          enrollments: {
-            include: {
-              student: {
-                include: {
-                  user: true,
-                },
-              },
-            },
-          },
-          subjects: true,
+          _count: { select: { enrollments: true } }, // More efficient than fetching all enrollments
           schedules: true,
         },
         orderBy: { createdAt: "desc" },
       }),
       prisma.teacher.findMany({
-        include: {
-          user: true,
-        },
-        where: {
-          isAvailable: true,
-        },
-      }),
-      prisma.subject.findMany({
-        include: {
-          teacher: {
-            include: {
-              user: true,
-            },
-          },
-        },
+        where: { isAvailable: true },
+        include: { user: { select: { name: true, image: true } } },
       }),
     ]);
 
-    // Serialize data and calculate stats inside the try block
-    data = {
-      classes: JSON.parse(JSON.stringify(classes)),
-      teachers: JSON.parse(JSON.stringify(teachers)),
-      subjects: JSON.parse(JSON.stringify(subjects)),
-      stats: {
-        totalClasses: classes.length,
-        activeClasses: classes.filter((c) => c.isActive).length,
-        totalStudents: classes.reduce(
-          (sum, c) => sum + (c.enrollments?.length || 0),
-          0
-        ),
-        totalTeachers: teachers.length,
-      },
-    };
-  } catch (error) {
-    console.error("Error loading classes:", error);
-    // data remains at default values defined above
-  }
+    // Optimize Serialization
+    const classes = classesRaw.map((c) => ({
+      ...c,
+      createdAt: c.createdAt.toISOString(),
+      updatedAt: c.updatedAt.toISOString(),
+      startDate: c.startDate?.toISOString() || null,
+      endDate: c.endDate?.toISOString() || null,
+      currentEnrollment: c._count.enrollments, // Flatten count
+    }));
 
-  return (
-    <ClassManagementClient
-      initialClasses={data.classes}
-      teachers={data.teachers}
-      subjects={data.subjects}
-      stats={data.stats}
-    />
-  );
+    const teachers = teachersRaw.map((t) => ({
+      id: t.id,
+      name: t.user.name,
+      image: t.user.image,
+    }));
+
+    // Calculate Stats
+    const stats = {
+      totalClasses: classes.length,
+      activeClasses: classes.filter((c) => c.isActive).length,
+      totalStudents: classes.reduce((sum, c) => sum + c.currentEnrollment, 0),
+      totalTeachers: teachers.length,
+    };
+
+    return (
+      <ClassManagementClient
+        initialClasses={classes}
+        teachers={teachers}
+        stats={stats}
+      />
+    );
+  } catch (error) {
+    console.error("Class Page Error:", error);
+    return <div>Error loading classes. Please refresh.</div>;
+  }
 }

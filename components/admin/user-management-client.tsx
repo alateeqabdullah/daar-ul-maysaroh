@@ -347,7 +347,7 @@ export default function UserManagementClient({
       {/* HEADER */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-400 bg-clip-text text-transparent">
+          <h1 className="text-3xl font-bold tracking-tight bg-linear-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-400 bg-clip-text text-transparent">
             User Management
           </h1>
           <p className="text-muted-foreground mt-1">
@@ -364,7 +364,7 @@ export default function UserManagementClient({
             <Download className="h-4 w-4" /> Export
           </Button>
           <Button
-            className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white gap-2 shadow-lg shadow-purple-900/20 hover:scale-105 transition-all"
+            className="bg-linear-to-r from-purple-600 to-indigo-600 text-white gap-2 shadow-lg shadow-purple-900/20 hover:scale-105 transition-all"
             onClick={() => {
               setFormData({ name: "", email: "", role: "STUDENT", phone: "" });
               setIsAddUserOpen(true);
@@ -385,13 +385,13 @@ export default function UserManagementClient({
             <Card className="border-none shadow-sm bg-white/50 backdrop-blur-sm dark:bg-slate-900/50 hover:shadow-md transition-all overflow-hidden relative">
               {/* Pattern Background */}
               <div
-                className={`absolute top-0 right-0 w-16 h-16 bg-gradient-to-br ${stat.color} opacity-10 rounded-bl-full`}
+                className={`absolute top-0 right-0 w-16 h-16 bg-linear-to-br ${stat.color} opacity-10 rounded-bl-full`}
               />
 
               <CardContent className="p-4 flex flex-col justify-between h-full relative z-10">
                 <div className="flex justify-between items-start mb-2">
                   <div
-                    className={`p-2 rounded-xl bg-gradient-to-br ${stat.color} text-white ${stat.shadow} shadow-lg`}
+                    className={`p-2 rounded-xl bg-linear-to-br ${stat.color} text-white ${stat.shadow} shadow-lg`}
                   >
                     <stat.icon className="h-5 w-5" />
                   </div>
@@ -492,7 +492,7 @@ export default function UserManagementClient({
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-3">
                           <Avatar className="h-9 w-9 border-2 border-white dark:border-slate-800 shadow-sm">
-                            <AvatarFallback className="bg-gradient-to-br from-indigo-500 to-purple-600 text-white font-bold text-xs">
+                            <AvatarFallback className="bg-linear-to-br from-indigo-500 to-purple-600 text-white font-bold text-xs">
                               {getInitials(user.name)}
                             </AvatarFallback>
                           </Avatar>
@@ -657,7 +657,7 @@ export default function UserManagementClient({
                   </Select>
                 </div>
                 <Button
-                  className="w-full mt-4 bg-gradient-to-r from-purple-600 to-indigo-600 text-white"
+                  className="w-full mt-4 bg-linear-to-r from-purple-600 to-indigo-600 text-white"
                   onClick={handleAddUser}
                   disabled={isActionLoading}
                 >
@@ -692,7 +692,7 @@ export default function UserManagementClient({
               className="bg-background w-full max-w-lg rounded-2xl shadow-2xl overflow-hidden border"
             >
               {/* Header */}
-              <div className="relative h-24 bg-gradient-to-r from-purple-600 to-blue-600">
+              <div className="relative h-24 bg-linear-to-r from-purple-600 to-blue-600">
                 <div className="absolute top-4 right-4 flex gap-2">
                   <Button
                     size="sm"
