@@ -1,169 +1,135 @@
-// src/app/(dashboard)/admin/financial/page.tsx
 import { redirect } from "next/navigation";
-import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import FinancialManagementClient from "@/components/admin/financial-management-client";
+import { auth } from "@/lib/auth";
+import { Prisma } from "@/app/generated/prisma/client";
 
-interface PageProps {
-  searchParams: Promise<{
-    page?: string;
-    limit?: string;
-    status?: string;
-    month?: string;
-    year?: string;
-  }>;
-}
+export const metadata = {
+  title: "Financials | Admin",
+  description: "Track revenue, invoices, and payments",
+};
 
 export default async function FinancialManagementPage({
   searchParams,
-}: PageProps) {
+}: {
+  searchParams: Promise<{
+    page?: string;
+    search?: string;
+    status?: string;
+    month?: string;
+  }>;
+}) {
   const session = await auth();
-
-  if (!session) {
-    redirect("/login");
-  }
-
-  if (!["SUPER_ADMIN", "ADMIN"].includes(session.user.role)) {
+  if (!session) redirect("/login");
+  if (!["SUPER_ADMIN", "ADMIN"].includes(session.user.role))
     redirect("/dashboard");
-  }
 
-  // Await searchParams for Next.js 15 compatibility
   const params = await searchParams;
   const page = parseInt(params.page || "1");
-  const limit = parseInt(params.limit || "20");
-  const status = params.status;
-  const month = params.month;
-  const year = params.year || new Date().getFullYear().toString();
-
+  const limit = 15;
   const skip = (page - 1) * limit;
 
-  const where: any = {};
-
-  if (status && status !== "ALL") {
-    where.status = status;
-  }
-
-  if (month) {
-    const m = parseInt(month);
-    const y = parseInt(year);
-    // Safer date range logic: 1st of current month to 1st of next month
-    where.paidAt = {
-      gte: new Date(y, m - 1, 1),
-      lt: new Date(m === 12 ? y + 1 : y, m === 12 ? 0 : m, 1),
-    };
-  }
-
-  // Default data structure
-  let data = {
-    payments: [],
-    pagination: {
-      page,
-      limit,
-      total: 0,
-      pages: 0,
-    },
-    stats: {
-      totalRevenue: 0,
-      pendingPayments: 0,
-      completedPayments: 0,
-      thisMonthRevenue: 0,
-      lastMonthRevenue: 0,
-    },
+  // --- Filter Logic ---
+  const where: Prisma.PaymentWhereInput = {
+    ...(params.status &&
+      params.status !== "ALL" && { status: params.status as any }),
+    ...(params.search && {
+      OR: [
+        { invoiceNumber: { contains: params.search, mode: "insensitive" } },
+        {
+          student: {
+            user: { name: { contains: params.search, mode: "insensitive" } },
+          },
+        },
+        {
+          parent: {
+            user: { name: { contains: params.search, mode: "insensitive" } },
+          },
+        },
+      ],
+    }),
   };
 
   try {
-    const [
-      payments,
-      total,
-      totalRevenue,
-      pendingPayments,
-      completedPayments,
-      thisMonthRevenue,
-      lastMonthRevenue,
-    ] = await Promise.all([
+    const now = new Date();
+    const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+    const startOfLastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+    const endOfLastMonth = new Date(now.getFullYear(), now.getMonth(), 0);
+
+    const [paymentsRaw, total, statsRaw] = await Promise.all([
+      // 1. Payments List
       prisma.payment.findMany({
         where,
         include: {
-          student: { include: { user: true } },
-          parent: { include: { user: true } },
+          student: {
+            include: {
+              user: { select: { name: true, image: true, email: true } },
+            },
+          },
+          parent: {
+            include: {
+              user: { select: { name: true, image: true, email: true } },
+            },
+          },
         },
         orderBy: { createdAt: "desc" },
         skip,
         take: limit,
       }),
+      // 2. Total Count
       prisma.payment.count({ where }),
-      // Total revenue
-      prisma.payment.aggregate({
-        where: { status: "COMPLETED" },
-        _sum: { amount: true },
-      }),
-      // Pending payments
-      prisma.payment.count({
-        where: { status: "PENDING" },
-      }),
-      // Completed payments
-      prisma.payment.count({
-        where: { status: "COMPLETED" },
-      }),
-      // This month revenue
-      prisma.payment.aggregate({
-        where: {
-          status: "COMPLETED",
-          paidAt: {
-            gte: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
-            lt: new Date(
-              new Date().getFullYear(),
-              new Date().getMonth() + 1,
-              1
-            ),
+      // 3. Financial Stats
+      Promise.all([
+        prisma.payment.aggregate({
+          _sum: { amount: true },
+          where: { status: "COMPLETED" },
+        }),
+        prisma.payment.aggregate({
+          _sum: { amount: true },
+          where: { status: "PENDING" },
+        }),
+        prisma.payment.aggregate({
+          _sum: { amount: true },
+          where: { status: "COMPLETED", paidAt: { gte: startOfMonth } },
+        }),
+        prisma.payment.aggregate({
+          _sum: { amount: true },
+          where: {
+            status: "COMPLETED",
+            paidAt: { gte: startOfLastMonth, lte: endOfLastMonth },
           },
-        },
-        _sum: { amount: true },
-      }),
-      // Last month revenue
-      prisma.payment.aggregate({
-        where: {
-          status: "COMPLETED",
-          paidAt: {
-            gte: new Date(
-              new Date().getFullYear(),
-              new Date().getMonth() - 1,
-              1
-            ),
-            lt: new Date(new Date().getFullYear(), new Date().getMonth(), 1),
-          },
-        },
-        _sum: { amount: true },
-      }),
+        }),
+      ]),
     ]);
 
-    data = {
-      payments: JSON.parse(JSON.stringify(payments)),
-      pagination: {
-        page,
-        limit,
-        total,
-        pages: Math.ceil(total / limit),
-      },
-      stats: {
-        totalRevenue: Number(totalRevenue._sum.amount) || 0,
-        pendingPayments,
-        completedPayments,
-        thisMonthRevenue: Number(thisMonthRevenue._sum.amount) || 0,
-        lastMonthRevenue: Number(lastMonthRevenue._sum.amount) || 0,
-      },
-    };
-  } catch (error) {
-    console.error("Error loading financial data:", error);
-    // Uses initialized default 'data'
-  }
+    // Serialize
+    const payments = paymentsRaw.map((p) => ({
+      ...p,
+      paidAt: p.paidAt?.toISOString() || null,
+      dueDate: p.dueDate?.toISOString() || null,
+      createdAt: p.createdAt.toISOString(),
+      userName: p.student?.user.name || p.parent?.user.name || "Unknown",
+      userImage: p.student?.user.image || p.parent?.user.image,
+      userEmail: p.student?.user.email || p.parent?.user.email,
+      userRole: p.student ? "Student" : "Parent",
+    }));
 
-  return (
-    <FinancialManagementClient
-      initialPayments={data.payments}
-      pagination={data.pagination}
-      filters={{ status, month, year }}
-      stats={data.stats}
-    />
-  );
+    const stats = {
+      totalRevenue: statsRaw[0]._sum.amount || 0,
+      pendingAmount: statsRaw[1]._sum.amount || 0,
+      thisMonthRevenue: statsRaw[2]._sum.amount || 0,
+      lastMonthRevenue: statsRaw[3]._sum.amount || 0,
+    };
+
+    return (
+      <FinancialManagementClient
+        initialPayments={payments}
+        stats={stats}
+        pagination={{ page, total, limit, pages: Math.ceil(total / limit) }}
+      />
+    );
+  } catch (error) {
+    console.error("Financial Page Error:", error);
+    return <div>Error loading financial data.</div>;
+  }
 }

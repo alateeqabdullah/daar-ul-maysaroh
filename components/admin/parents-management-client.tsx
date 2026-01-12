@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -25,6 +25,8 @@ import {
   CheckCircle,
   Ban,
   GraduationCap,
+  ChevronRight,
+  MoreHorizontal,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -40,7 +42,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
-import { getInitials } from "@/lib/utils";
+import { getInitials, cn } from "@/lib/utils";
 import { Counter } from "@/components/admin/dashboard-ui";
 
 // --- ANIMATION ---
@@ -85,15 +87,16 @@ export default function ParentsManagementClient({
     address: "",
   });
 
-  // Filter Logic
-  const filteredParents = parents.filter((p) => {
+  // Filter Logic (Memoized for performance)
+  const filteredParents = useMemo(() => {
     const term = searchQuery.toLowerCase();
-    return (
-      p.user.name.toLowerCase().includes(term) ||
-      p.user.email.toLowerCase().includes(term) ||
-      p.user.phone?.toLowerCase().includes(term)
+    return parents.filter(
+      (p) =>
+        p.user.name.toLowerCase().includes(term) ||
+        p.user.email.toLowerCase().includes(term) ||
+        p.user.phone?.toLowerCase().includes(term)
     );
-  });
+  }, [parents, searchQuery]);
 
   // --- ACTIONS ---
   const handleCreateOrUpdate = async () => {
@@ -151,13 +154,15 @@ export default function ParentsManagementClient({
     userId: string,
     newStatus: string
   ) => {
+    // Optimistic Update
     setParents((prev) =>
       prev.map((p) =>
         p.id === parentId ? { ...p, user: { ...p.user, status: newStatus } } : p
       )
     );
+
     try {
-      await fetch("/api/admin/users/manage", {
+      const res = await fetch("/api/admin/users/manage", {
         method: "POST",
         body: JSON.stringify({
           action: "UPDATE_STATUS",
@@ -165,15 +170,19 @@ export default function ParentsManagementClient({
           data: { status: newStatus },
         }),
       });
+      if (!res.ok) throw new Error();
       toast.success(`Parent marked as ${newStatus}`);
     } catch {
       toast.error("Failed to update status");
-      router.refresh();
+      router.refresh(); // Revert
     }
   };
 
   const handleDelete = async (parentId: string, userId: string) => {
-    if (!confirm("Delete parent? usage history will be lost.")) return;
+    if (
+      !confirm("Delete parent? This removes user access and unlinks children.")
+    )
+      return;
     setParents((prev) => prev.filter((p) => p.id !== parentId));
     setIsDetailOpen(false);
     try {
@@ -186,6 +195,40 @@ export default function ParentsManagementClient({
       toast.error("Delete failed");
       router.refresh();
     }
+  };
+
+  const handleExport = () => {
+    const headers = [
+      "Name",
+      "Email",
+      "Phone",
+      "Occupation",
+      "Kids",
+      "Status",
+      "Joined",
+    ];
+    const rows = parents.map((p) => [
+      `"${p.user.name}"`,
+      p.user.email,
+      p.user.phone || "-",
+      p.occupation || "-",
+      p.studentsCount,
+      p.user.status,
+      new Date(p.user.createdAt).toLocaleDateString(),
+    ]);
+    const csvContent =
+      "data:text/csv;charset=utf-8," +
+      [headers.join(","), ...rows.map((e) => e.join(","))].join("\n");
+    const link = document.createElement("a");
+    link.setAttribute("href", encodeURI(csvContent));
+    link.setAttribute(
+      "download",
+      `parents_export_${new Date().toISOString().split("T")[0]}.csv`
+    );
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    toast.success("Export downloaded");
   };
 
   // --- HELPERS ---
@@ -223,23 +266,23 @@ export default function ParentsManagementClient({
       label: "Total Parents",
       value: stats.totalParents,
       icon: Users,
-      color: "from-emerald-500 to-green-600",
+      color: "from-emerald-500 to-teal-500",
       shadow: "shadow-emerald-500/20",
     },
     {
       label: "Linked Students",
       value: stats.linkedStudents,
       icon: GraduationCap,
-      color: "from-blue-500 to-cyan-500",
+      color: "from-blue-500 to-indigo-500",
       shadow: "shadow-blue-500/20",
     },
     {
-      label: "Fees Pending",
+      label: "Fees Due",
       value: "12",
       icon: Wallet,
       color: "from-amber-500 to-orange-500",
       shadow: "shadow-amber-500/20",
-    }, // Mock data for now
+    }, // Mock data
     {
       label: "Suspended",
       value: stats.suspended,
@@ -289,7 +332,7 @@ export default function ParentsManagementClient({
               <ListIcon className="h-4 w-4" />
             </Button>
           </div>
-          <Button variant="outline">
+          <Button variant="outline" onClick={handleExport}>
             <Download className="h-4 w-4 mr-2" /> Export
           </Button>
           <Button
@@ -377,7 +420,7 @@ export default function ParentsManagementClient({
                   <div className="relative mb-4">
                     <Avatar className="h-24 w-24 border-4 border-white dark:border-slate-900 shadow-lg">
                       <AvatarImage src={p.user.image} />
-                      <AvatarFallback className="text-2xl bg-gradient-to-br from-emerald-50 to-emerald-100 text-emerald-600">
+                      <AvatarFallback className="text-2xl bg-gradient-to-br from-emerald-50 to-teal-100 text-teal-600">
                         {getInitials(p.user.name)}
                       </AvatarFallback>
                     </Avatar>
@@ -469,7 +512,7 @@ export default function ParentsManagementClient({
                       >
                         <td className="px-6 py-4">
                           <div className="flex items-center gap-3">
-                            <Avatar className="h-8 w-8">
+                            <Avatar className="h-9 w-9">
                               <AvatarImage src={p.user.image} />
                               <AvatarFallback>
                                 {getInitials(p.user.name)}
@@ -478,7 +521,7 @@ export default function ParentsManagementClient({
                             <div>
                               <p className="font-medium">{p.user.name}</p>
                               <p className="text-xs text-muted-foreground">
-                                {p.occupation}
+                                {p.occupation || "Guardian"}
                               </p>
                             </div>
                           </div>
@@ -509,7 +552,7 @@ export default function ParentsManagementClient({
                           <DropdownMenu>
                             <DropdownMenuTrigger asChild>
                               <Button size="icon" variant="ghost">
-                                <MoreVertical className="h-4 w-4" />
+                                <MoreHorizontal className="h-4 w-4" />
                               </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">

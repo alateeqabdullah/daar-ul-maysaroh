@@ -1,45 +1,35 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { motion, AnimatePresence } from "framer-motion";
 import {
-  Calendar,
-  Clock,
+  Search,
   Plus,
+  MoreVertical,
+  Edit,
   Trash2,
+  Calendar,
+  Download,
+  Clock,
   Video,
   MapPin,
-  ChevronLeft,
-  ChevronRight,
-  Download,
-  Search,
-  AlertTriangle,
-  CheckCircle2,
+  MonitorPlay,
+  Loader2,
   X,
-  Filter,
-  Info,
-  Layers,
-  Settings2,
-  MoreHorizontal,
+  BookOpen,
 } from "lucide-react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
   Select,
   SelectContent,
@@ -48,461 +38,571 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
-import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
-import { cn } from "@/lib/utils";
+import { getInitials } from "@/lib/utils";
+import { Counter } from "@/components/admin/dashboard-ui";
 
-// --- Types & Constants ---
-
-const DAYS = [
-  { id: 0, name: "Sunday", short: "Sun" },
-  { id: 1, name: "Monday", short: "Mon" },
-  { id: 2, name: "Tuesday", short: "Tue" },
-  { id: 3, name: "Wednesday", short: "Wed" },
-  { id: 4, name: "Thursday", short: "Thu" },
-  { id: 5, name: "Friday", short: "Fri" },
-  { id: 6, name: "Saturday", short: "Sat" },
-];
-
-const TIME_SLOTS = Array.from(
-  { length: 15 },
-  (_, i) => `${(i + 7).toString().padStart(2, "0")}:00`
-);
-
-// --- Logic Helpers ---
-
-const checkOverlap = (
-  s1Start: string,
-  s1End: string,
-  s2Start: string,
-  s2End: string
-) => {
-  return s1Start < s2End && s2Start < s1End;
+// --- ANIMATION ---
+const containerVariants = {
+  hidden: { opacity: 0 },
+  show: { opacity: 1, transition: { staggerChildren: 0.05 } },
+};
+const itemVariants = {
+  hidden: { y: 20, opacity: 0 },
+  show: { y: 0, opacity: 1, transition: { type: "spring", stiffness: 50 } },
 };
 
-// --- Main Component ---
+interface Props {
+  initialSchedules: any[];
+  classes: any[];
+  teachers: any[];
+  stats: any; // Server stats (used as fallback/initial)
+  filters: any; // URL params
+}
 
 export default function ScheduleManagementClient({
-  initialClasses,
-  scheduleByDay: initialSchedules,
-}: any) {
-  // State
+  initialSchedules,
+  classes,
+  teachers,
+  filters,
+}: Props) {
+  const router = useRouter();
   const [schedules, setSchedules] = useState(initialSchedules);
-  const [currentDate, setCurrentDate] = useState(new Date());
-  const [searchQuery, setSearchQuery] = useState("");
-  const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  // New Schedule State
-  const [newSchedule, setNewSchedule] = useState({
-    classId: "",
-    dayOfWeek: new Date().getDay(),
-    startTime: "09:00",
-    endTime: "10:00",
-    isLive: true,
-    meetingPlatform: "ZOOM",
-    physicalLocation: "",
-    isRecurring: true,
+  // 1. Initialize State from URL Filters
+  const [selectedDay, setSelectedDay] = useState(() => {
+    // If URL has a specific day, use it. Otherwise use Today.
+    if (filters?.day && filters.day !== "all") return filters.day;
+    return new Date().getDay().toString();
   });
 
-  // --- Memoized Values ---
+  const [searchQuery, setSearchQuery] = useState(filters?.search || "");
 
-  const weekDates = useMemo(() => {
-    const start = new Date(currentDate);
-    start.setDate(start.getDate() - start.getDay());
-    return Array.from({ length: 7 }, (_, i) => {
-      const d = new Date(start);
-      d.setDate(d.getDate() + i);
-      return d;
-    });
-  }, [currentDate]);
+  // Modals
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [selectedSchedule, setSelectedSchedule] = useState<any>(null);
+  const [isEditing, setIsEditing] = useState(false);
 
-  // Conflict Detection Engine
-  const conflicts = useMemo(() => {
-    const foundConflicts: Record<string, boolean> = {};
+  // Form
+  const [formData, setFormData] = useState({
+    classId: "",
+    dayOfWeek: "0",
+    startTime: "09:00",
+    endTime: "10:00",
+    isOnline: true,
+    meetingUrl: "",
+    meetingPlatform: "ZOOM",
+  });
 
-    Object.keys(schedules).forEach((dayId) => {
-      const daySessions = schedules[dayId] || [];
-      daySessions.forEach((s1: any) => {
-        daySessions.forEach((s2: any) => {
-          if (s1.id === s2.id) return;
+  // --- DYNAMIC STATS CALCULATION ---
+  // Calculates stats on the fly so they update when you add/delete items
+  const dynamicStats = useMemo(() => {
+    const totalSessions = schedules.length;
+    const onlineSessions = schedules.filter((s) => s.isOnline).length;
+    const uniqueClasses = new Set(schedules.map((s) => s.classId)).size;
 
-          const overlaps = checkOverlap(
-            s1.startTime,
-            s1.endTime,
-            s2.startTime,
-            s2.endTime
-          );
+    // Calculate Busiest Day
+    const dayCounts = [0, 0, 0, 0, 0, 0, 0];
+    schedules.forEach((s) => dayCounts[s.dayOfWeek]++);
+    const maxSessions = Math.max(...dayCounts);
+    const busiestDayIndex = dayCounts.indexOf(maxSessions);
+    const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
-          // Conflict: Same Location or Same Teacher (if teacherId exists)
-          const sameLocation =
-            !s1.isLive &&
-            !s2.isLive &&
-            s1.physicalLocation === s2.physicalLocation;
-
-          if (overlaps && sameLocation) {
-            foundConflicts[s1.id] = true;
-            foundConflicts[s2.id] = true;
-          }
-        });
-      });
-    });
-    return foundConflicts;
+    return {
+      totalSessions,
+      onlineSessions,
+      uniqueClasses,
+      busiestDay: days[busiestDayIndex],
+    };
   }, [schedules]);
 
-  // --- Handlers ---
+  // --- FILTERING ---
+  const days = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ];
 
-  const handleCreate = async () => {
-    if (!newSchedule.classId) return toast.error("Select a class first");
+  const filteredSchedules = useMemo(() => {
+    return schedules.filter((s) => {
+      const matchesDay = s.dayOfWeek.toString() === selectedDay;
+      const matchesSearch =
+        s.class.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        s.class.teacher.user.name
+          .toLowerCase()
+          .includes(searchQuery.toLowerCase());
+      return matchesDay && matchesSearch;
+    });
+  }, [schedules, selectedDay, searchQuery]);
+
+  // --- ACTIONS ---
+  const handleCreateOrUpdate = async () => {
+    if (!formData.classId || !formData.startTime || !formData.endTime) {
+      return toast.error("Class and Time are required");
+    }
     setIsLoading(true);
+
     try {
-      const res = await fetch("/api/admin/schedules", {
+      const res = await fetch("/api/admin/schedule/manage", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(newSchedule),
+        body: JSON.stringify({
+          action: isEditing ? "UPDATE" : "CREATE",
+          scheduleId: selectedSchedule?.id,
+          data: formData,
+        }),
       });
-      const data = await res.json();
-      if (!res.ok) throw new Error(data.error);
 
-      setSchedules((prev: any) => ({
-        ...prev,
-        [newSchedule.dayOfWeek]: [
-          ...(prev[newSchedule.dayOfWeek] || []),
-          data.schedule,
-        ],
-      }));
-      setIsCreateDialogOpen(false);
-      toast.success("Schedule successfully created");
-    } catch (err: any) {
-      toast.error(err.message);
+      const result = await res.json();
+      if (!res.ok) throw new Error(result.error);
+
+      if (isEditing) {
+        setSchedules((prev) =>
+          prev.map((s) =>
+            s.id === selectedSchedule.id ? { ...s, ...result.schedule } : s
+          )
+        );
+        toast.success("Schedule updated");
+      } else {
+        setSchedules([...schedules, result.schedule]);
+        toast.success("Session added");
+      }
+      setIsAddModalOpen(false);
+      resetForm();
+    } catch (error: any) {
+      toast.error(error.message || "Failed");
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleDelete = async (id: string, day: number) => {
+  const handleDelete = async (scheduleId: string) => {
+    if (!confirm("Delete this session?")) return;
+    const previousSchedules = [...schedules];
+    setSchedules((prev) => prev.filter((s) => s.id !== scheduleId));
+
     try {
-      const res = await fetch(`/api/admin/schedules/${id}`, {
-        method: "DELETE",
+      const res = await fetch("/api/admin/schedule/manage", {
+        method: "POST",
+        body: JSON.stringify({ action: "DELETE", scheduleId }),
       });
       if (!res.ok) throw new Error();
-      setSchedules((prev: any) => ({
-        ...prev,
-        [day]: prev[day].filter((s: any) => s.id !== id),
-      }));
-      toast.success("Entry removed");
+      toast.success("Session removed");
     } catch {
-      toast.error("Failed to delete");
+      setSchedules(previousSchedules); // Revert
+      toast.error("Delete failed");
     }
   };
 
-  return (
-    <div className="space-y-6 max-w-[1600px] mx-auto p-4">
-      {/* 1. Dashboard Header */}
-      <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 bg-white dark:bg-slate-900 p-6 rounded-2xl border shadow-sm">
-        <div className="space-y-1">
-          <h1 className="text-2xl font-bold tracking-tight">
-            Academic Scheduler
-          </h1>
-          <div className="flex items-center gap-4 text-sm text-muted-foreground">
-            <span className="flex items-center gap-1">
-              <CheckCircle2 className="h-4 w-4 text-emerald-500" /> Conflict
-              Detection Active
-            </span>
-            <span className="flex items-center gap-1">
-              <Layers className="h-4 w-4 text-indigo-500" />{" "}
-              {Object.values(schedules).flat().length} Total Sessions
-            </span>
-          </div>
-        </div>
+  const handleDayChange = (index: string) => {
+    setSelectedDay(index);
+    // Optional: Update URL without refreshing page for bookmarking
+    const params = new URLSearchParams(window.location.search);
+    params.set("day", index);
+    router.replace(`?${params.toString()}`, { scroll: false });
+  };
 
-        <div className="flex flex-wrap items-center gap-3">
-          <div className="flex items-center bg-muted rounded-xl p-1 shadow-inner">
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => {
-                const d = new Date(currentDate);
-                d.setDate(d.getDate() - 7);
-                setCurrentDate(d);
-              }}
-            >
-              <ChevronLeft className="h-4 w-4" />
-            </Button>
-            <span className="px-4 text-sm font-bold min-w-[140px] text-center">
-              {weekDates[0].toLocaleDateString(undefined, {
-                month: "short",
-                day: "numeric",
-              })}{" "}
-              -{" "}
-              {weekDates[6].toLocaleDateString(undefined, {
-                month: "short",
-                day: "numeric",
-              })}
-            </span>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => {
-                const d = new Date(currentDate);
-                d.setDate(d.getDate() + 7);
-                setCurrentDate(d);
-              }}
-            >
-              <ChevronRight className="h-4 w-4" />
-            </Button>
-          </div>
+  // --- HELPERS ---
+  const resetForm = () => {
+    setFormData({
+      classId: "",
+      dayOfWeek: selectedDay,
+      startTime: "09:00",
+      endTime: "10:00",
+      isOnline: true,
+      meetingUrl: "",
+      meetingPlatform: "ZOOM",
+    });
+    setIsEditing(false);
+  };
+
+  const openEdit = (s: any) => {
+    setSelectedSchedule(s);
+    setFormData({
+      classId: s.classId,
+      dayOfWeek: s.dayOfWeek.toString(),
+      startTime: s.startTime,
+      endTime: s.endTime,
+      isOnline: s.isOnline,
+      meetingUrl: s.meetingUrl || "",
+      meetingPlatform: s.meetingPlatform || "ZOOM",
+    });
+    setIsEditing(true);
+    setIsAddModalOpen(true);
+  };
+
+  const formatTime = (time: string) => {
+    const [h, m] = time.split(":");
+    const hour = parseInt(h);
+    const ampm = hour >= 12 ? "PM" : "AM";
+    const hour12 = hour % 12 || 12;
+    return `${hour12}:${m} ${ampm}`;
+  };
+
+  const statCards = [
+    {
+      label: "Total Sessions",
+      value: dynamicStats.totalSessions,
+      icon: Calendar,
+      color: "from-blue-500 to-cyan-500",
+      shadow: "shadow-blue-500/20",
+    },
+    {
+      label: "Online",
+      value: dynamicStats.onlineSessions,
+      icon: Video,
+      color: "from-purple-500 to-pink-500",
+      shadow: "shadow-purple-500/20",
+    },
+    {
+      label: "Active Classes",
+      value: dynamicStats.uniqueClasses,
+      icon: BookOpen,
+      color: "from-emerald-500 to-green-500",
+      shadow: "shadow-emerald-500/20",
+    },
+    {
+      label: "Busiest Day",
+      value: dynamicStats.busiestDay,
+      icon: Clock,
+      color: "from-amber-400 to-orange-500",
+      shadow: "shadow-amber-500/20",
+      isText: true,
+    },
+  ];
+
+  return (
+    <motion.div
+      variants={containerVariants}
+      initial="hidden"
+      animate="show"
+      className="space-y-8 pb-10"
+    >
+      {/* HEADER */}
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-400 bg-clip-text text-transparent">
+            Schedule
+          </h1>
+          <p className="text-muted-foreground mt-1">
+            Manage weekly timetables and sessions
+          </p>
+        </div>
+        <div className="flex gap-2">
           <Button variant="outline">
             <Download className="h-4 w-4 mr-2" /> Export
           </Button>
-          <Dialog
-            open={isCreateDialogOpen}
-            onOpenChange={setIsCreateDialogOpen}
+          <Button
+            className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-md hover:scale-105 transition-all"
+            onClick={() => {
+              resetForm();
+              setIsAddModalOpen(true);
+            }}
           >
-            <DialogTrigger asChild>
-              <Button className="bg-indigo-600 hover:bg-indigo-700">
-                <Plus className="h-4 w-4 mr-2" /> Add Session
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="max-w-md">
-              <DialogHeader>
-                <DialogTitle>New Schedule Entry</DialogTitle>
-              </DialogHeader>
-              <div className="space-y-4 py-4">
-                <div className="space-y-2">
-                  <Label>Assign Class</Label>
+            <Plus className="h-4 w-4 mr-2" /> Add Session
+          </Button>
+        </div>
+      </div>
+
+      {/* STATS */}
+      <motion.div
+        variants={containerVariants}
+        className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4"
+      >
+        {statCards.map((stat) => (
+          <motion.div key={stat.label} variants={itemVariants}>
+            <Card className="border-none shadow-sm bg-white/50 backdrop-blur-sm dark:bg-slate-900/50 hover:shadow-md transition-all relative overflow-hidden">
+              <div
+                className={`absolute top-0 right-0 w-20 h-20 bg-gradient-to-br ${stat.color} opacity-10 rounded-bl-full`}
+              />
+              <CardContent className="p-6 relative z-10 flex items-center justify-between">
+                <div>
+                  <p className="text-xs font-semibold text-muted-foreground uppercase">
+                    {stat.label}
+                  </p>
+                  <div className="text-2xl font-bold mt-2">
+                    {stat.isText ? stat.value : <Counter value={stat.value} />}
+                  </div>
+                </div>
+                <div
+                  className={`p-3 rounded-xl bg-gradient-to-br ${stat.color} text-white ${stat.shadow} shadow-lg`}
+                >
+                  <stat.icon className="h-6 w-6" />
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+        ))}
+      </motion.div>
+
+      {/* TABS & SEARCH */}
+      <div className="space-y-4">
+        <div className="flex items-center gap-4 bg-white/60 dark:bg-slate-900/60 backdrop-blur-md p-2 rounded-xl border shadow-sm overflow-x-auto">
+          {days.map((day, index) => (
+            <button
+              key={day}
+              onClick={() => handleDayChange(index.toString())}
+              className={`px-4 py-2 rounded-lg text-sm font-medium transition-all whitespace-nowrap ${
+                selectedDay === index.toString()
+                  ? "bg-white dark:bg-slate-800 text-purple-600 shadow-sm"
+                  : "text-muted-foreground hover:bg-white/50"
+              }`}
+            >
+              {day}
+            </button>
+          ))}
+        </div>
+
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder="Search classes or teachers..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-9 bg-white/50 dark:bg-slate-900/50 border-0 shadow-sm"
+          />
+        </div>
+      </div>
+
+      {/* SCHEDULE GRID */}
+      <motion.div variants={containerVariants} className="space-y-4">
+        {filteredSchedules.length === 0 ? (
+          <div className="text-center py-20 bg-muted/20 rounded-xl border border-dashed">
+            <Calendar className="h-10 w-10 mx-auto mb-3 opacity-20" />
+            <p className="text-muted-foreground">
+              No sessions scheduled for {days[parseInt(selectedDay)]}.
+            </p>
+          </div>
+        ) : (
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {filteredSchedules.map((s) => (
+              <motion.div key={s.id} variants={itemVariants} layoutId={s.id}>
+                <Card className="group h-full border hover:border-purple-300 dark:hover:border-purple-800 transition-all hover:shadow-lg bg-card">
+                  <CardContent className="p-5 flex flex-col h-full">
+                    {/* Time Header */}
+                    <div className="flex justify-between items-start mb-4">
+                      <div className="flex items-center gap-2 text-sm font-bold text-purple-600 bg-purple-50 dark:bg-purple-900/20 px-3 py-1 rounded-full">
+                        <Clock className="h-3.5 w-3.5" />
+                        {formatTime(s.startTime)} - {formatTime(s.endTime)}
+                      </div>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button
+                            size="icon"
+                            variant="ghost"
+                            className="h-8 w-8 -mr-2"
+                          >
+                            <MoreVertical className="h-4 w-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem onClick={() => openEdit(s)}>
+                            <Edit className="mr-2 h-4 w-4" /> Edit
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() => handleDelete(s.id)}
+                            className="text-red-600"
+                          >
+                            <Trash2 className="mr-2 h-4 w-4" /> Delete
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </div>
+
+                    {/* Class Info */}
+                    <h3 className="font-bold text-lg mb-1">{s.class.name}</h3>
+                    <p className="text-xs text-muted-foreground font-mono mb-4">
+                      {s.class.code}
+                    </p>
+
+                    {/* Meta */}
+                    <div className="space-y-2 mb-4">
+                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                        <Avatar className="h-6 w-6">
+                          <AvatarImage src={s.class.teacher.user.image} />
+                          <AvatarFallback>T</AvatarFallback>
+                        </Avatar>
+                        <span>{s.class.teacher.user.name}</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-sm">
+                        {s.isOnline ? (
+                          <span className="flex items-center gap-2 text-blue-600 bg-blue-50 px-2 py-1 rounded text-xs font-medium">
+                            <Video className="h-3 w-3" /> Online
+                          </span>
+                        ) : (
+                          <span className="flex items-center gap-2 text-amber-600 bg-amber-50 px-2 py-1 rounded text-xs font-medium">
+                            <MapPin className="h-3 w-3" /> On Campus
+                          </span>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Action */}
+                    {s.meetingUrl && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="w-full mt-auto gap-2"
+                        onClick={() => window.open(s.meetingUrl, "_blank")}
+                      >
+                        <MonitorPlay className="h-3.5 w-3.5" /> Join Meeting
+                      </Button>
+                    )}
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
+        )}
+      </motion.div>
+
+      {/* --- ADD/EDIT MODAL --- */}
+      <AnimatePresence>
+        {isAddModalOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+          >
+            <motion.div
+              initial={{ scale: 0.95 }}
+              animate={{ scale: 1 }}
+              exit={{ scale: 0.95 }}
+              className="bg-background w-full max-w-lg rounded-2xl shadow-2xl border p-6"
+            >
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-xl font-bold">
+                  {isEditing ? "Edit Session" : "Add Session"}
+                </h2>
+                <Button
+                  size="icon"
+                  variant="ghost"
+                  onClick={() => setIsAddModalOpen(false)}
+                >
+                  <X className="h-5 w-5" />
+                </Button>
+              </div>
+              <div className="grid gap-4">
+                <div className="space-y-1">
+                  <Label>Class</Label>
                   <Select
+                    value={formData.classId}
                     onValueChange={(v) =>
-                      setNewSchedule({ ...newSchedule, classId: v })
+                      setFormData({ ...formData, classId: v })
                     }
                   >
                     <SelectTrigger>
-                      <SelectValue placeholder="Search class..." />
+                      <SelectValue placeholder="Select Class" />
                     </SelectTrigger>
                     <SelectContent>
-                      {initialClasses.map((c: any) => (
+                      {classes.map((c) => (
                         <SelectItem key={c.id} value={c.id}>
-                          {c.name}
+                          {c.name} ({c.code})
                         </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
                 </div>
+
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label>Start</Label>
-                    <Input
-                      type="time"
-                      value={newSchedule.startTime}
-                      onChange={(e) =>
-                        setNewSchedule({
-                          ...newSchedule,
-                          startTime: e.target.value,
-                        })
+                  <div className="space-y-1">
+                    <Label>Day</Label>
+                    <Select
+                      value={formData.dayOfWeek}
+                      onValueChange={(v) =>
+                        setFormData({ ...formData, dayOfWeek: v })
                       }
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label>End</Label>
-                    <Input
-                      type="time"
-                      value={newSchedule.endTime}
-                      onChange={(e) =>
-                        setNewSchedule({
-                          ...newSchedule,
-                          endTime: e.target.value,
-                        })
-                      }
-                    />
-                  </div>
-                </div>
-                <div className="flex items-center justify-between p-3 border rounded-xl bg-muted/30">
-                  <div className="text-sm font-medium">
-                    Remote/Virtual Class
-                  </div>
-                  <Switch
-                    checked={newSchedule.isLive}
-                    onCheckedChange={(v) =>
-                      setNewSchedule({ ...newSchedule, isLive: v })
-                    }
-                  />
-                </div>
-                {newSchedule.isLive ? (
-                  <Input
-                    placeholder="Meeting URL (Optional)"
-                    onChange={(e) =>
-                      setNewSchedule({
-                        ...newSchedule,
-                        physicalLocation: e.target.value,
-                      })
-                    }
-                  />
-                ) : (
-                  <Input
-                    placeholder="Classroom Number (e.g. Room 101)"
-                    onChange={(e) =>
-                      setNewSchedule({
-                        ...newSchedule,
-                        physicalLocation: e.target.value,
-                      })
-                    }
-                  />
-                )}
-              </div>
-              <DialogFooter>
-                <Button
-                  onClick={handleCreate}
-                  disabled={isLoading}
-                  className="w-full"
-                >
-                  {isLoading ? "Processing..." : "Confirm Schedule"}
-                </Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
-        </div>
-      </div>
-
-      {/* 2. Grid UI */}
-      <div className="bg-card rounded-2xl border shadow-xl overflow-hidden">
-        {/* Search Bar Container */}
-        <div className="p-4 border-b bg-muted/10 flex items-center gap-4">
-          <div className="relative flex-1 max-w-sm">
-            <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input
-              placeholder="Search by class name..."
-              className="pl-9 bg-background shadow-none border-none focus-visible:ring-1"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
-          </div>
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => setSearchQuery("")}
-            className={!searchQuery ? "hidden" : ""}
-          >
-            Clear
-          </Button>
-        </div>
-
-        <div className="relative overflow-x-auto">
-          <div className="grid grid-cols-8 border-b bg-muted/20">
-            <div className="p-4 text-[10px] font-black uppercase text-muted-foreground tracking-widest border-r">
-              Timeline
-            </div>
-            {DAYS.map((day, i) => (
-              <div
-                key={day.id}
-                className={cn(
-                  "p-4 text-center border-r last:border-r-0",
-                  new Date().getDay() === day.id &&
-                    "bg-indigo-50/50 dark:bg-indigo-900/10"
-                )}
-              >
-                <span className="block text-xs font-bold text-muted-foreground uppercase">
-                  {day.short}
-                </span>
-                <span
-                  className={cn(
-                    "text-xl font-black mt-1 inline-block h-8 w-8 leading-8 rounded-full",
-                    new Date().getDate() === weekDates[i].getDate() &&
-                      "bg-indigo-600 text-white"
-                  )}
-                >
-                  {weekDates[i].getDate()}
-                </span>
-              </div>
-            ))}
-          </div>
-
-          <div className="max-h-[70vh] overflow-y-auto custom-scrollbar">
-            {TIME_SLOTS.map((time) => (
-              <div
-                key={time}
-                className="grid grid-cols-8 border-b last:border-b-0 hover:bg-muted/5 transition-colors group/row min-h-[120px]"
-              >
-                <div className="p-4 text-xs font-mono font-medium text-muted-foreground border-r bg-card sticky left-0 z-10">
-                  {time}
-                </div>
-                {DAYS.map((day) => {
-                  const daySessions = (schedules[day.id] || []).filter((s) => {
-                    const matchesTime = s.startTime.startsWith(
-                      time.split(":")[0]
-                    );
-                    const matchesSearch = s.class?.name
-                      ?.toLowerCase()
-                      .includes(searchQuery.toLowerCase());
-                    return matchesTime && (searchQuery ? matchesSearch : true);
-                  });
-
-                  return (
-                    <div
-                      key={day.id}
-                      className="p-2 border-r last:border-r-0 relative overflow-hidden flex flex-col gap-2"
                     >
-                      {daySessions.map((session: any) => {
-                        const hasConflict = conflicts[session.id];
-                        return (
-                          <div
-                            key={session.id}
-                            className={cn(
-                              "group/card relative p-3 rounded-xl border-l-4 shadow-sm transition-all hover:scale-[1.02] cursor-default",
-                              session.isLive
-                                ? "bg-blue-50/50 border-l-blue-500 border-blue-100"
-                                : "bg-emerald-50/50 border-l-emerald-500 border-emerald-100",
-                              hasConflict &&
-                                "bg-red-50 border-red-200 border-l-red-600 animate-in fade-in zoom-in duration-300"
-                            )}
-                          >
-                            {hasConflict && (
-                              <div className="absolute top-1 right-1 flex items-center gap-1 text-[10px] font-bold text-red-600 bg-red-100 px-1.5 py-0.5 rounded-full">
-                                <AlertTriangle className="h-3 w-3" /> Conflict
-                              </div>
-                            )}
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {days.map((d, i) => (
+                          <SelectItem key={i} value={i.toString()}>
+                            {d}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-1">
+                    <Label>Platform</Label>
+                    <Select
+                      value={formData.meetingPlatform}
+                      onValueChange={(v) =>
+                        setFormData({ ...formData, meetingPlatform: v })
+                      }
+                    >
+                      <SelectTrigger>
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="ZOOM">Zoom</SelectItem>
+                        <SelectItem value="GOOGLE_MEET">Google Meet</SelectItem>
+                        <SelectItem value="OTHER">Physical</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
 
-                            <div className="flex justify-between items-start mb-2 pr-4">
-                              <h4 className="font-bold text-sm leading-tight text-slate-900 dark:text-slate-100">
-                                {session.class?.name}
-                              </h4>
-                              <button
-                                onClick={() => handleDelete(session.id, day.id)}
-                                className="opacity-0 group-hover/card:opacity-100 p-1 text-slate-400 hover:text-red-500 transition-opacity"
-                              >
-                                <X className="h-3 w-3" />
-                              </button>
-                            </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-1">
+                    <Label>Start Time</Label>
+                    <Input
+                      type="time"
+                      value={formData.startTime}
+                      onChange={(e) =>
+                        setFormData({ ...formData, startTime: e.target.value })
+                      }
+                    />
+                  </div>
+                  <div className="space-y-1">
+                    <Label>End Time</Label>
+                    <Input
+                      type="time"
+                      value={formData.endTime}
+                      onChange={(e) =>
+                        setFormData({ ...formData, endTime: e.target.value })
+                      }
+                    />
+                  </div>
+                </div>
 
-                            <div className="space-y-1 text-[10px] font-medium text-muted-foreground">
-                              <div className="flex items-center gap-1.5">
-                                <Clock className="h-3 w-3 opacity-60" />{" "}
-                                {session.startTime} - {session.endTime}
-                              </div>
-                              <div className="flex items-center gap-1.5">
-                                {session.isLive ? (
-                                  <Video className="h-3 w-3 text-blue-500" />
-                                ) : (
-                                  <MapPin className="h-3 w-3 text-emerald-500" />
-                                )}
-                                <span className="truncate">
-                                  {session.isLive
-                                    ? session.meetingPlatform
-                                    : session.physicalLocation ||
-                                      "No Room Assigned"}
-                                </span>
-                              </div>
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  );
-                })}
+                <div className="space-y-1">
+                  <Label>Meeting URL (Optional)</Label>
+                  <Input
+                    value={formData.meetingUrl}
+                    onChange={(e) =>
+                      setFormData({ ...formData, meetingUrl: e.target.value })
+                    }
+                    placeholder="https://zoom.us/..."
+                  />
+                </div>
+
+                <Button
+                  className="w-full mt-4 bg-indigo-600 hover:bg-indigo-700 text-white"
+                  onClick={handleCreateOrUpdate}
+                  disabled={isLoading}
+                >
+                  {isLoading ? (
+                    <Loader2 className="animate-spin mr-2" />
+                  ) : isEditing ? (
+                    "Save Changes"
+                  ) : (
+                    "Add Session"
+                  )}
+                </Button>
               </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </motion.div>
   );
 }

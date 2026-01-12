@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -25,6 +25,8 @@ import {
   Copy,
   ChevronRight,
   User,
+  Mail,
+  Shield,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -48,10 +50,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { toast } from "sonner";
-import { getInitials } from "@/lib/utils";
+import { getInitials, cn } from "@/lib/utils";
 import { Counter } from "@/components/admin/dashboard-ui";
 
-// --- ANIMATION VARIANTS ---
+// --- ANIMATION ---
 const containerVariants = {
   hidden: { opacity: 0 },
   show: { opacity: 1, transition: { staggerChildren: 0.05 } },
@@ -75,19 +77,23 @@ export default function ClassManagementClient({
   const router = useRouter();
   const [classes, setClasses] = useState(initialClasses);
   const [isLoading, setIsLoading] = useState(false);
-
-  // View State
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+
+  // Filters
   const [searchQuery, setSearchQuery] = useState("");
   const [filterLevel, setFilterLevel] = useState("ALL");
 
-  // Modals
+  // Modals & Details
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const [selectedClass, setSelectedClass] = useState<any>(null); // For View/Edit
-  const [isDetailOpen, setIsDetailOpen] = useState(false); // Controls Detail Modal
-  const [isEditing, setIsEditing] = useState(false); // Controls Edit Mode inside Modal
+  const [selectedClass, setSelectedClass] = useState<any>(null);
+  const [isDetailOpen, setIsDetailOpen] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
 
-  // Form
+  // Extended Data (Students List)
+  const [classStudents, setClassStudents] = useState<any[]>([]);
+  const [isLoadingDetails, setIsLoadingDetails] = useState(false);
+
+  // Form Data
   const [formData, setFormData] = useState({
     name: "",
     code: "",
@@ -110,6 +116,27 @@ export default function ClassManagementClient({
   });
 
   // --- ACTIONS ---
+
+  // Fetch Class Students on Demand
+  const fetchClassDetails = async (classId: string) => {
+    setIsLoadingDetails(true);
+    setClassStudents([]); // Clear prev
+    try {
+      // We can reuse the student API with a filter or create a specific endpoint
+      // For now, let's assume we fetch from the students API filtering by class
+      const res = await fetch(`/api/admin/students/manage?classId=${classId}`); // Note: You might need to adjust your existing API to handle GET or use a new route
+      // Simpler approach for this demo: Pass 'enrolled students' if available or create a small API action
+      // Let's implement a quick fetcher if the API doesn't exist yet:
+      // const data = await res.json();
+      // setClassStudents(data.students);
+      setIsLoadingDetails(false); // Placeholder
+    } catch (error) {
+      console.error("Failed to load class students");
+    } finally {
+      setIsLoadingDetails(false);
+    }
+  };
+
   const handleCreateOrUpdate = async () => {
     if (!formData.name || !formData.code || !formData.teacherId) {
       return toast.error("Please fill required fields");
@@ -134,9 +161,9 @@ export default function ClassManagementClient({
         setClasses((prev) =>
           prev.map((c) => (c.id === selectedClass.id ? result.class : c))
         );
-        setSelectedClass(result.class); // Update the open modal
+        setSelectedClass(result.class);
         toast.success("Class updated");
-        setIsEditing(false); // Exit edit mode but keep modal open
+        setIsEditing(false);
       } else {
         setClasses([result.class, ...classes]);
         toast.success("Class created");
@@ -176,9 +203,10 @@ export default function ClassManagementClient({
   };
 
   const handleDelete = async (classId: string) => {
-    if (!confirm("Delete this class? This cannot be undone.")) return;
+    if (!confirm("Delete this class? All enrollments will be affected."))
+      return;
     setClasses((prev) => prev.filter((c) => c.id !== classId));
-    setIsDetailOpen(false); // Close modal if open
+    setIsDetailOpen(false);
     try {
       await fetch("/api/admin/classes/manage", {
         method: "POST",
@@ -218,7 +246,6 @@ export default function ClassManagementClient({
 
   const openDetailModal = (c: any) => {
     setSelectedClass(c);
-    // Pre-fill form data in case they switch to Edit mode
     setFormData({
       name: c.name,
       code: c.code,
@@ -233,6 +260,7 @@ export default function ClassManagementClient({
     });
     setIsDetailOpen(true);
     setIsEditing(false);
+    // fetchClassDetails(c.id); // Uncomment when API is ready
   };
 
   const getCapacityColor = (current: number, max: number) => {
@@ -313,11 +341,14 @@ export default function ClassManagementClient({
               <ListIcon className="h-4 w-4" />
             </Button>
           </div>
+          <Button variant="outline">
+            <Download className="h-4 w-4 mr-2" /> Export
+          </Button>
           <Button
             className="bg-gradient-to-r from-purple-600 to-indigo-600 text-white shadow-md hover:scale-105 transition-all gap-2"
             onClick={openAddModal}
           >
-            <Plus className="h-4 w-4" /> Add Class
+            <Plus className="h-4 w-4 mr-2" /> Add Class
           </Button>
         </div>
       </div>
@@ -333,7 +364,7 @@ export default function ClassManagementClient({
               <div
                 className={`absolute top-0 right-0 w-20 h-20 bg-gradient-to-br ${stat.color} opacity-10 rounded-bl-full`}
               />
-              <CardContent className="p-5 relative z-10 flex items-center justify-between">
+              <CardContent className="p-6 relative z-10 flex items-center justify-between">
                 <div>
                   <p className="text-xs font-semibold text-muted-foreground uppercase">
                     {stat.label}
@@ -343,9 +374,9 @@ export default function ClassManagementClient({
                   </div>
                 </div>
                 <div
-                  className={`p-2.5 rounded-xl bg-gradient-to-br ${stat.color} text-white ${stat.shadow} shadow-lg`}
+                  className={`p-3 rounded-xl bg-gradient-to-br ${stat.color} text-white ${stat.shadow} shadow-lg`}
                 >
-                  <stat.icon className="h-5 w-5" />
+                  <stat.icon className="h-6 w-6" />
                 </div>
               </CardContent>
             </Card>
@@ -380,7 +411,7 @@ export default function ClassManagementClient({
         </Select>
       </motion.div>
 
-      {/* --- CONTENT AREA (Grid or List) --- */}
+      {/* GRID VIEW */}
       {viewMode === "grid" ? (
         <motion.div
           variants={containerVariants}
@@ -400,11 +431,10 @@ export default function ClassManagementClient({
                 }`}
               >
                 <CardContent className="p-0">
-                  {/* Decorative Header */}
                   <div className="h-20 bg-gradient-to-r from-purple-100 to-indigo-100 dark:from-purple-900/30 dark:to-indigo-900/30 relative p-4 flex justify-between items-start">
                     <Badge
                       variant="secondary"
-                      className="bg-white/90 dark:bg-black/50 backdrop-blur-sm shadow-sm"
+                      className="bg-white/90 dark:bg-black/50 backdrop-blur-sm shadow-sm font-mono"
                     >
                       {cls.code}
                     </Badge>
@@ -414,9 +444,7 @@ export default function ClassManagementClient({
                       {cls.isActive ? "Active" : "Inactive"}
                     </Badge>
                   </div>
-
                   <div className="p-6 pt-2">
-                    {/* Floating Avatar */}
                     <div className="-mt-10 mb-3 flex justify-between items-end">
                       <div className="flex items-end gap-2">
                         <Avatar className="h-14 w-14 border-4 border-white dark:border-slate-950 shadow-md">
@@ -435,12 +463,9 @@ export default function ClassManagementClient({
                         </div>
                       </div>
                     </div>
-
                     <h3 className="font-bold text-lg leading-tight mb-2 group-hover:text-purple-600 transition-colors">
                       {cls.name}
                     </h3>
-
-                    {/* Progress Bar */}
                     <div className="space-y-1.5 mb-4">
                       <div className="flex justify-between text-xs font-medium">
                         <span className="text-muted-foreground">Capacity</span>
@@ -460,7 +485,6 @@ export default function ClassManagementClient({
                         )}
                       />
                     </div>
-
                     <div className="flex items-center justify-between text-xs text-muted-foreground bg-muted/50 p-2.5 rounded-lg">
                       <div className="flex items-center gap-1.5">
                         <Layers className="h-3.5 w-3.5" /> {cls.level}
@@ -485,27 +509,13 @@ export default function ClassManagementClient({
                 <table className="w-full text-sm">
                   <thead className="bg-muted/30 border-b">
                     <tr>
-                      <th className="px-6 py-4 text-left font-semibold">
-                        Class Name
-                      </th>
-                      <th className="px-6 py-4 text-left font-semibold">
-                        Code
-                      </th>
-                      <th className="px-6 py-4 text-left font-semibold">
-                        Instructor
-                      </th>
-                      <th className="px-6 py-4 text-left font-semibold">
-                        Level
-                      </th>
-                      <th className="px-6 py-4 text-left font-semibold">
-                        Capacity
-                      </th>
-                      <th className="px-6 py-4 text-left font-semibold">
-                        Status
-                      </th>
-                      <th className="px-6 py-4 text-right font-semibold">
-                        Action
-                      </th>
+                      <th className="px-6 py-4 text-left">Class Name</th>
+                      <th className="px-6 py-4 text-left">Code</th>
+                      <th className="px-6 py-4 text-left">Instructor</th>
+                      <th className="px-6 py-4 text-left">Level</th>
+                      <th className="px-6 py-4 text-left">Capacity</th>
+                      <th className="px-6 py-4 text-left">Status</th>
+                      <th className="px-6 py-4 text-right">Action</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y">
@@ -551,7 +561,7 @@ export default function ClassManagementClient({
         </motion.div>
       )}
 
-      {/* --- ADD MODAL (Create Only) --- */}
+      {/* --- ADD MODAL --- */}
       <AnimatePresence>
         {isAddModalOpen && (
           <motion.div
@@ -564,7 +574,7 @@ export default function ClassManagementClient({
               initial={{ scale: 0.95 }}
               animate={{ scale: 1 }}
               exit={{ scale: 0.95 }}
-              className="bg-background w-full max-w-lg rounded-2xl shadow-2xl border p-6"
+              className="bg-background w-full max-w-lg rounded-2xl shadow-2xl border p-6 max-h-[90vh] overflow-y-auto"
             >
               <div className="flex justify-between items-center mb-6">
                 <h2 className="text-xl font-bold">Create New Class</h2>
@@ -699,7 +709,7 @@ export default function ClassManagementClient({
         )}
       </AnimatePresence>
 
-      {/* --- DETAIL / EDIT MODAL (The "Next Level" View) --- */}
+      {/* --- DETAIL MODAL --- */}
       <AnimatePresence>
         {isDetailOpen && selectedClass && (
           <motion.div
@@ -758,11 +768,10 @@ export default function ClassManagementClient({
                 </div>
               </div>
 
-              {/* Tabs / Content */}
+              {/* Tabs */}
               <div className="flex-1 overflow-y-auto bg-muted/10 p-6">
                 {isEditing ? (
                   <div className="max-w-xl mx-auto space-y-4">
-                    {/* EDIT FORM (Reusing logic for brevity) */}
                     <div className="space-y-1">
                       <Label>Name</Label>
                       <Input
@@ -851,19 +860,19 @@ export default function ClassManagementClient({
                     <TabsList className="w-full justify-start border-b rounded-none bg-transparent p-0 mb-6 h-auto">
                       <TabsTrigger
                         value="overview"
-                        className="rounded-none border-b-2 border-transparent data-[state=active]:border-purple-600 data-[state=active]:bg-transparent px-4 py-2"
+                        className="rounded-none border-b-2 border-transparent data-[state=active]:border-purple-600 px-4 py-2"
                       >
                         Overview
                       </TabsTrigger>
                       <TabsTrigger
                         value="schedule"
-                        className="rounded-none border-b-2 border-transparent data-[state=active]:border-purple-600 data-[state=active]:bg-transparent px-4 py-2"
+                        className="rounded-none border-b-2 border-transparent data-[state=active]:border-purple-600 px-4 py-2"
                       >
                         Schedule
                       </TabsTrigger>
                       <TabsTrigger
                         value="students"
-                        className="rounded-none border-b-2 border-transparent data-[state=active]:border-purple-600 data-[state=active]:bg-transparent px-4 py-2"
+                        className="rounded-none border-b-2 border-transparent data-[state=active]:border-purple-600 px-4 py-2"
                       >
                         Students ({selectedClass.currentEnrollment})
                       </TabsTrigger>

@@ -1,132 +1,125 @@
-// src/app/(dashboard)/admin/grades/page.tsx
-
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import GradesManagementClient from "@/components/admin/grades-management-client";
 import { auth } from "@/lib/auth";
+import { Prisma } from "@/app/generated/prisma/client";
+
+export const metadata = {
+  title: "Grades & Results | Admin",
+  description: "Manage academic performance and assessments",
+};
 
 export default async function GradesManagementPage({
   searchParams,
 }: {
-  // Fix: searchParams is a Promise in Next.js 15
-  searchParams: Promise<{ page?: string; classId?: string }>;
+  searchParams: Promise<{ page?: string; search?: string; classId?: string }>;
 }) {
-  const session = await auth()
-
-  if (!session) {
-    redirect("/login");
-  }
-
-  if (!["SUPER_ADMIN", "ADMIN"].includes(session.user.role)) {
+  const session = await auth();
+  if (!session) redirect("/login");
+  if (!["SUPER_ADMIN", "ADMIN"].includes(session.user.role))
     redirect("/dashboard");
-  }
 
-  // Await params to comply with Next.js 15
-  await searchParams;
+  const params = await searchParams;
+  const page = parseInt(params.page || "1");
+  const limit = 15;
+  const skip = (page - 1) * limit;
 
-  // Initialize data variables outside the try block
-  let grades: any[] = [];
-  let classes: any[] = [];
-  let stats = { total: 0, average: 0, topStudents: [] as any[] };
+  // --- Filter Logic ---
+  const where: Prisma.GradeWhereInput = {
+    ...(params.classId &&
+      params.classId !== "ALL" && {
+        subject: { classId: params.classId },
+      }),
+    ...(params.search && {
+      student: {
+        user: { name: { contains: params.search, mode: "insensitive" } },
+      },
+    }),
+  };
 
   try {
-    const [gradesData, classesData] = await Promise.all([
-      prisma.grade.findMany({
-        include: {
-          student: {
-            include: {
-              user: true,
+    const [gradesRaw, total, classesRaw, aggregates, topPerformersRaw] =
+      await Promise.all([
+        // 1. Fetch Grades List
+        prisma.grade.findMany({
+          where,
+          include: {
+            student: {
+              include: { user: { select: { name: true, image: true } } },
+            },
+            subject: {
+              include: { class: { select: { name: true, code: true } } },
             },
           },
-          subject: {
-            include: {
-              class: true,
-              teacher: {
-                include: {
-                  user: true,
-                },
-              },
+          orderBy: { assessmentDate: "desc" },
+          skip,
+          take: limit,
+        }),
+
+        // 2. Count for Pagination
+        prisma.grade.count({ where }),
+
+        // 3. Classes for Dropdown
+        prisma.class.findMany({
+          where: { isActive: true },
+          select: { id: true, name: true },
+        }),
+
+        // 4. Global Stats (Aggregations)
+        prisma.grade.aggregate({
+          _avg: { score: true },
+          _count: { _all: true },
+          where: { isPublished: true },
+        }),
+
+        // 5. Top Performers (Simplified: Highest recent scores)
+        prisma.grade.findMany({
+          where: { isPublished: true },
+          orderBy: { score: "desc" },
+          take: 5,
+          include: {
+            student: {
+              include: { user: { select: { name: true, image: true } } },
             },
+            subject: { select: { name: true } },
           },
-        },
-        orderBy: {
-          assessmentDate: "desc",
-        },
-      }),
-      prisma.class.findMany({
-        include: {
-          teacher: {
-            include: {
-              user: true,
-            },
-          },
-          subjects: true,
-          enrollments: {
-            include: {
-              student: {
-                include: {
-                  user: true,
-                },
-              },
-            },
-          },
-        },
-        where: {
-          isActive: true,
-        },
-      }),
-    ]);
+        }),
+      ]);
 
-    grades = gradesData;
-    classes = classesData;
+    // Serialize Dates & Structure
+    const grades = gradesRaw.map((g) => ({
+      ...g,
+      assessmentDate: g.assessmentDate.toISOString(),
+      createdAt: g.createdAt.toISOString(),
+      studentName: g.student.user.name,
+      studentImage: g.student.user.image,
+      subjectName: g.subject.name,
+      className: g.subject.class.name,
+    }));
 
-    // Calculate grade statistics safely
-    const totalGrades = grades.length;
-    const averageScore =
-      totalGrades > 0
-        ? grades.reduce((sum, grade) => sum + Number(grade.percentage), 0) /
-          totalGrades
-        : 0;
-
-    const topStudents = grades
-      .reduce((acc: any[], grade) => {
-        const existing = acc.find((item) => item.studentId === grade.studentId);
-        if (existing) {
-          existing.total += Number(grade.percentage);
-          existing.count += 1;
-        } else {
-          acc.push({
-            studentId: grade.studentId,
-            student: grade.student,
-            total: Number(grade.percentage),
-            count: 1,
-          });
-        }
-        return acc;
-      }, [])
-      .map((item) => ({
-        ...item,
-        average: item.total / item.count,
-      }))
-      .sort((a, b) => b.average - a.average)
-      .slice(0, 5);
-
-    stats = {
-      total: totalGrades,
-      average: Math.round(averageScore),
-      topStudents: topStudents,
+    const stats = {
+      total: aggregates._count._all,
+      average: Math.round(aggregates._avg.score || 0),
+      // Map top performers for the UI
+      topStudents: topPerformersRaw.map((t) => ({
+        id: t.studentId,
+        name: t.student.user.name,
+        image: t.student.user.image,
+        score: t.score,
+        subject: t.subject.name,
+      })),
     };
-  } catch (error) {
-    console.error("Error loading grades data:", error);
-    // Variables remain at their defaults if the fetch fails
-  }
 
-  // FIX: Return JSX outside of the try/catch block
-  return (
-    <GradesManagementClient
-      initialGrades={JSON.parse(JSON.stringify(grades))}
-      classes={JSON.parse(JSON.stringify(classes))}
-      stats={JSON.parse(JSON.stringify(stats))}
-    />
-  );
+    return (
+      <GradesManagementClient
+        initialGrades={grades}
+        classes={classesRaw}
+        stats={stats}
+        pagination={{ page, total, limit, pages: Math.ceil(total / limit) }}
+      />
+    );
+  } catch (error) {
+    console.error("Grades Page Error:", error);
+    return <div>Error loading grades. Please refresh.</div>;
+  }
 }
