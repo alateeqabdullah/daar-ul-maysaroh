@@ -74,7 +74,11 @@ export const ModelName = {
   Grade: 'Grade',
   QuranProgress: 'QuranProgress',
   PrayerRecord: 'PrayerRecord',
+  Invoice: 'Invoice',
   Payment: 'Payment',
+  Donation: 'Donation',
+  Expense: 'Expense',
+  Payroll: 'Payroll',
   ClassMaterial: 'ClassMaterial',
   SubjectMaterial: 'SubjectMaterial',
   Announcement: 'Announcement',
@@ -85,7 +89,15 @@ export const ModelName = {
   Account: 'Account',
   VerificationToken: 'VerificationToken',
   SystemSetting: 'SystemSetting',
-  Event: 'Event'
+  Event: 'Event',
+  PricingPlan: 'PricingPlan',
+  PricingTier: 'PricingTier',
+  Subscription: 'Subscription',
+  ScheduledSession: 'ScheduledSession',
+  Course: 'Course',
+  CourseMaterial: 'CourseMaterial',
+  CourseAnnouncement: 'CourseAnnouncement',
+  HifzProgress: 'HifzProgress'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -187,6 +199,9 @@ export const ParentScalarFieldEnum = {
   occupation: 'occupation',
   employer: 'employer',
   maritalStatus: 'maritalStatus',
+  address: 'address',
+  emergencyContact: 'emergencyContact',
+  relationship: 'relationship',
   spouseName: 'spouseName',
   spousePhone: 'spousePhone',
   familySize: 'familySize',
@@ -548,6 +563,20 @@ export const PrayerRecordScalarFieldEnum = {
 export type PrayerRecordScalarFieldEnum = (typeof PrayerRecordScalarFieldEnum)[keyof typeof PrayerRecordScalarFieldEnum]
 
 
+export const InvoiceScalarFieldEnum = {
+  id: 'id',
+  parentId: 'parentId',
+  amount: 'amount',
+  dueDate: 'dueDate',
+  status: 'status',
+  month: 'month',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type InvoiceScalarFieldEnum = (typeof InvoiceScalarFieldEnum)[keyof typeof InvoiceScalarFieldEnum]
+
+
 export const PaymentScalarFieldEnum = {
   id: 'id',
   studentId: 'studentId',
@@ -563,6 +592,7 @@ export const PaymentScalarFieldEnum = {
   status: 'status',
   paidAt: 'paidAt',
   dueDate: 'dueDate',
+  invoiceId: 'invoiceId',
   invoiceNumber: 'invoiceNumber',
   invoiceUrl: 'invoiceUrl',
   refundedAmount: 'refundedAmount',
@@ -573,6 +603,49 @@ export const PaymentScalarFieldEnum = {
 } as const
 
 export type PaymentScalarFieldEnum = (typeof PaymentScalarFieldEnum)[keyof typeof PaymentScalarFieldEnum]
+
+
+export const DonationScalarFieldEnum = {
+  id: 'id',
+  donorName: 'donorName',
+  amount: 'amount',
+  type: 'type',
+  date: 'date',
+  notes: 'notes',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type DonationScalarFieldEnum = (typeof DonationScalarFieldEnum)[keyof typeof DonationScalarFieldEnum]
+
+
+export const ExpenseScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  amount: 'amount',
+  category: 'category',
+  date: 'date',
+  notes: 'notes',
+  recordedBy: 'recordedBy',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ExpenseScalarFieldEnum = (typeof ExpenseScalarFieldEnum)[keyof typeof ExpenseScalarFieldEnum]
+
+
+export const PayrollScalarFieldEnum = {
+  id: 'id',
+  teacherId: 'teacherId',
+  amount: 'amount',
+  month: 'month',
+  status: 'status',
+  paidAt: 'paidAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PayrollScalarFieldEnum = (typeof PayrollScalarFieldEnum)[keyof typeof PayrollScalarFieldEnum]
 
 
 export const ClassMaterialScalarFieldEnum = {
@@ -770,6 +843,185 @@ export const EventScalarFieldEnum = {
 } as const
 
 export type EventScalarFieldEnum = (typeof EventScalarFieldEnum)[keyof typeof EventScalarFieldEnum]
+
+
+export const PricingPlanScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  type: 'type',
+  category: 'category',
+  level: 'level',
+  minDuration: 'minDuration',
+  maxDuration: 'maxDuration',
+  durationStep: 'durationStep',
+  daysPerWeek: 'daysPerWeek',
+  sessionsPerWeek: 'sessionsPerWeek',
+  basePrice: 'basePrice',
+  pricePerMinute: 'pricePerMinute',
+  pricePerSession: 'pricePerSession',
+  currency: 'currency',
+  monthlyDiscount: 'monthlyDiscount',
+  quarterlyDiscount: 'quarterlyDiscount',
+  yearlyDiscount: 'yearlyDiscount',
+  features: 'features',
+  isActive: 'isActive',
+  isPublic: 'isPublic',
+  orderIndex: 'orderIndex',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PricingPlanScalarFieldEnum = (typeof PricingPlanScalarFieldEnum)[keyof typeof PricingPlanScalarFieldEnum]
+
+
+export const PricingTierScalarFieldEnum = {
+  id: 'id',
+  planId: 'planId',
+  minDuration: 'minDuration',
+  maxDuration: 'maxDuration',
+  daysPerWeek: 'daysPerWeek',
+  sessionsPerWeek: 'sessionsPerWeek',
+  pricePerSession: 'pricePerSession',
+  pricePerMonth: 'pricePerMonth',
+  isRecommended: 'isRecommended'
+} as const
+
+export type PricingTierScalarFieldEnum = (typeof PricingTierScalarFieldEnum)[keyof typeof PricingTierScalarFieldEnum]
+
+
+export const SubscriptionScalarFieldEnum = {
+  id: 'id',
+  studentId: 'studentId',
+  planId: 'planId',
+  duration: 'duration',
+  daysPerWeek: 'daysPerWeek',
+  sessionsPerWeek: 'sessionsPerWeek',
+  scheduleType: 'scheduleType',
+  teacherId: 'teacherId',
+  groupId: 'groupId',
+  basePrice: 'basePrice',
+  discount: 'discount',
+  finalPrice: 'finalPrice',
+  billingPeriod: 'billingPeriod',
+  currency: 'currency',
+  preferredDays: 'preferredDays',
+  preferredTimes: 'preferredTimes',
+  timezone: 'timezone',
+  status: 'status',
+  startDate: 'startDate',
+  endDate: 'endDate',
+  trialEndsAt: 'trialEndsAt',
+  autoRenew: 'autoRenew',
+  nextBillingAt: 'nextBillingAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type SubscriptionScalarFieldEnum = (typeof SubscriptionScalarFieldEnum)[keyof typeof SubscriptionScalarFieldEnum]
+
+
+export const ScheduledSessionScalarFieldEnum = {
+  id: 'id',
+  subscriptionId: 'subscriptionId',
+  date: 'date',
+  startTime: 'startTime',
+  endTime: 'endTime',
+  duration: 'duration',
+  teacherId: 'teacherId',
+  status: 'status',
+  meetingUrl: 'meetingUrl',
+  meetingId: 'meetingId',
+  rescheduledFrom: 'rescheduledFrom',
+  rescheduleReason: 'rescheduleReason',
+  attendanceid: 'attendanceid',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type ScheduledSessionScalarFieldEnum = (typeof ScheduledSessionScalarFieldEnum)[keyof typeof ScheduledSessionScalarFieldEnum]
+
+
+export const CourseScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  category: 'category',
+  level: 'level',
+  duration: 'duration',
+  totalLessons: 'totalLessons',
+  price: 'price',
+  currency: 'currency',
+  features: 'features',
+  requirements: 'requirements',
+  curriculum: 'curriculum',
+  schedule: 'schedule',
+  thumbnailUrl: 'thumbnailUrl',
+  promoVideoUrl: 'promoVideoUrl',
+  teacherId: 'teacherId',
+  isActive: 'isActive',
+  isPublic: 'isPublic',
+  isFeatured: 'isFeatured',
+  viewCount: 'viewCount',
+  rating: 'rating',
+  totalRatings: 'totalRatings',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type CourseScalarFieldEnum = (typeof CourseScalarFieldEnum)[keyof typeof CourseScalarFieldEnum]
+
+
+export const CourseMaterialScalarFieldEnum = {
+  id: 'id',
+  courseId: 'courseId',
+  title: 'title',
+  description: 'description',
+  type: 'type',
+  fileUrl: 'fileUrl',
+  fileSize: 'fileSize',
+  fileType: 'fileType',
+  chapter: 'chapter',
+  lessonNumber: 'lessonNumber',
+  isFree: 'isFree',
+  orderIndex: 'orderIndex',
+  downloadCount: 'downloadCount',
+  viewCount: 'viewCount',
+  createdAt: 'createdAt'
+} as const
+
+export type CourseMaterialScalarFieldEnum = (typeof CourseMaterialScalarFieldEnum)[keyof typeof CourseMaterialScalarFieldEnum]
+
+
+export const CourseAnnouncementScalarFieldEnum = {
+  id: 'id',
+  courseId: 'courseId',
+  title: 'title',
+  content: 'content',
+  priority: 'priority',
+  createdById: 'createdById',
+  attachments: 'attachments',
+  createdAt: 'createdAt'
+} as const
+
+export type CourseAnnouncementScalarFieldEnum = (typeof CourseAnnouncementScalarFieldEnum)[keyof typeof CourseAnnouncementScalarFieldEnum]
+
+
+export const HifzProgressScalarFieldEnum = {
+  id: 'id',
+  studentId: 'studentId',
+  date: 'date',
+  surah: 'surah',
+  startAyah: 'startAyah',
+  endAyah: 'endAyah',
+  status: 'status',
+  mistakes: 'mistakes',
+  comments: 'comments',
+  teacherId: 'teacherId',
+  createdAt: 'createdAt'
+} as const
+
+export type HifzProgressScalarFieldEnum = (typeof HifzProgressScalarFieldEnum)[keyof typeof HifzProgressScalarFieldEnum]
 
 
 export const SortOrder = {

@@ -40,6 +40,9 @@ export type ParentMinAggregateOutputType = {
   occupation: string | null
   employer: string | null
   maritalStatus: $Enums.MaritalStatus | null
+  address: string | null
+  emergencyContact: string | null
+  relationship: string | null
   spouseName: string | null
   spousePhone: string | null
   familySize: number | null
@@ -53,6 +56,9 @@ export type ParentMaxAggregateOutputType = {
   occupation: string | null
   employer: string | null
   maritalStatus: $Enums.MaritalStatus | null
+  address: string | null
+  emergencyContact: string | null
+  relationship: string | null
   spouseName: string | null
   spousePhone: string | null
   familySize: number | null
@@ -66,6 +72,9 @@ export type ParentCountAggregateOutputType = {
   occupation: number
   employer: number
   maritalStatus: number
+  address: number
+  emergencyContact: number
+  relationship: number
   spouseName: number
   spousePhone: number
   familySize: number
@@ -89,6 +98,9 @@ export type ParentMinAggregateInputType = {
   occupation?: true
   employer?: true
   maritalStatus?: true
+  address?: true
+  emergencyContact?: true
+  relationship?: true
   spouseName?: true
   spousePhone?: true
   familySize?: true
@@ -102,6 +114,9 @@ export type ParentMaxAggregateInputType = {
   occupation?: true
   employer?: true
   maritalStatus?: true
+  address?: true
+  emergencyContact?: true
+  relationship?: true
   spouseName?: true
   spousePhone?: true
   familySize?: true
@@ -115,6 +130,9 @@ export type ParentCountAggregateInputType = {
   occupation?: true
   employer?: true
   maritalStatus?: true
+  address?: true
+  emergencyContact?: true
+  relationship?: true
   spouseName?: true
   spousePhone?: true
   familySize?: true
@@ -215,6 +233,9 @@ export type ParentGroupByOutputType = {
   occupation: string | null
   employer: string | null
   maritalStatus: $Enums.MaritalStatus | null
+  address: string | null
+  emergencyContact: string | null
+  relationship: string | null
   spouseName: string | null
   spousePhone: string | null
   familySize: number | null
@@ -251,6 +272,9 @@ export type ParentWhereInput = {
   occupation?: Prisma.StringNullableFilter<"Parent"> | string | null
   employer?: Prisma.StringNullableFilter<"Parent"> | string | null
   maritalStatus?: Prisma.EnumMaritalStatusNullableFilter<"Parent"> | $Enums.MaritalStatus | null
+  address?: Prisma.StringNullableFilter<"Parent"> | string | null
+  emergencyContact?: Prisma.StringNullableFilter<"Parent"> | string | null
+  relationship?: Prisma.StringNullableFilter<"Parent"> | string | null
   spouseName?: Prisma.StringNullableFilter<"Parent"> | string | null
   spousePhone?: Prisma.StringNullableFilter<"Parent"> | string | null
   familySize?: Prisma.IntNullableFilter<"Parent"> | number | null
@@ -259,6 +283,7 @@ export type ParentWhereInput = {
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   students?: Prisma.StudentListRelationFilter
   payments?: Prisma.PaymentListRelationFilter
+  invoices?: Prisma.InvoiceListRelationFilter
 }
 
 export type ParentOrderByWithRelationInput = {
@@ -267,6 +292,9 @@ export type ParentOrderByWithRelationInput = {
   occupation?: Prisma.SortOrderInput | Prisma.SortOrder
   employer?: Prisma.SortOrderInput | Prisma.SortOrder
   maritalStatus?: Prisma.SortOrderInput | Prisma.SortOrder
+  address?: Prisma.SortOrderInput | Prisma.SortOrder
+  emergencyContact?: Prisma.SortOrderInput | Prisma.SortOrder
+  relationship?: Prisma.SortOrderInput | Prisma.SortOrder
   spouseName?: Prisma.SortOrderInput | Prisma.SortOrder
   spousePhone?: Prisma.SortOrderInput | Prisma.SortOrder
   familySize?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -275,6 +303,7 @@ export type ParentOrderByWithRelationInput = {
   user?: Prisma.UserOrderByWithRelationInput
   students?: Prisma.StudentOrderByRelationAggregateInput
   payments?: Prisma.PaymentOrderByRelationAggregateInput
+  invoices?: Prisma.InvoiceOrderByRelationAggregateInput
 }
 
 export type ParentWhereUniqueInput = Prisma.AtLeast<{
@@ -286,6 +315,9 @@ export type ParentWhereUniqueInput = Prisma.AtLeast<{
   occupation?: Prisma.StringNullableFilter<"Parent"> | string | null
   employer?: Prisma.StringNullableFilter<"Parent"> | string | null
   maritalStatus?: Prisma.EnumMaritalStatusNullableFilter<"Parent"> | $Enums.MaritalStatus | null
+  address?: Prisma.StringNullableFilter<"Parent"> | string | null
+  emergencyContact?: Prisma.StringNullableFilter<"Parent"> | string | null
+  relationship?: Prisma.StringNullableFilter<"Parent"> | string | null
   spouseName?: Prisma.StringNullableFilter<"Parent"> | string | null
   spousePhone?: Prisma.StringNullableFilter<"Parent"> | string | null
   familySize?: Prisma.IntNullableFilter<"Parent"> | number | null
@@ -294,6 +326,7 @@ export type ParentWhereUniqueInput = Prisma.AtLeast<{
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   students?: Prisma.StudentListRelationFilter
   payments?: Prisma.PaymentListRelationFilter
+  invoices?: Prisma.InvoiceListRelationFilter
 }, "id" | "userId">
 
 export type ParentOrderByWithAggregationInput = {
@@ -302,6 +335,9 @@ export type ParentOrderByWithAggregationInput = {
   occupation?: Prisma.SortOrderInput | Prisma.SortOrder
   employer?: Prisma.SortOrderInput | Prisma.SortOrder
   maritalStatus?: Prisma.SortOrderInput | Prisma.SortOrder
+  address?: Prisma.SortOrderInput | Prisma.SortOrder
+  emergencyContact?: Prisma.SortOrderInput | Prisma.SortOrder
+  relationship?: Prisma.SortOrderInput | Prisma.SortOrder
   spouseName?: Prisma.SortOrderInput | Prisma.SortOrder
   spousePhone?: Prisma.SortOrderInput | Prisma.SortOrder
   familySize?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -323,6 +359,9 @@ export type ParentScalarWhereWithAggregatesInput = {
   occupation?: Prisma.StringNullableWithAggregatesFilter<"Parent"> | string | null
   employer?: Prisma.StringNullableWithAggregatesFilter<"Parent"> | string | null
   maritalStatus?: Prisma.EnumMaritalStatusNullableWithAggregatesFilter<"Parent"> | $Enums.MaritalStatus | null
+  address?: Prisma.StringNullableWithAggregatesFilter<"Parent"> | string | null
+  emergencyContact?: Prisma.StringNullableWithAggregatesFilter<"Parent"> | string | null
+  relationship?: Prisma.StringNullableWithAggregatesFilter<"Parent"> | string | null
   spouseName?: Prisma.StringNullableWithAggregatesFilter<"Parent"> | string | null
   spousePhone?: Prisma.StringNullableWithAggregatesFilter<"Parent"> | string | null
   familySize?: Prisma.IntNullableWithAggregatesFilter<"Parent"> | number | null
@@ -335,6 +374,9 @@ export type ParentCreateInput = {
   occupation?: string | null
   employer?: string | null
   maritalStatus?: $Enums.MaritalStatus | null
+  address?: string | null
+  emergencyContact?: string | null
+  relationship?: string | null
   spouseName?: string | null
   spousePhone?: string | null
   familySize?: number | null
@@ -343,6 +385,7 @@ export type ParentCreateInput = {
   user: Prisma.UserCreateNestedOneWithoutParentProfileInput
   students?: Prisma.StudentCreateNestedManyWithoutParentInput
   payments?: Prisma.PaymentCreateNestedManyWithoutParentInput
+  invoices?: Prisma.InvoiceCreateNestedManyWithoutParentInput
 }
 
 export type ParentUncheckedCreateInput = {
@@ -351,6 +394,9 @@ export type ParentUncheckedCreateInput = {
   occupation?: string | null
   employer?: string | null
   maritalStatus?: $Enums.MaritalStatus | null
+  address?: string | null
+  emergencyContact?: string | null
+  relationship?: string | null
   spouseName?: string | null
   spousePhone?: string | null
   familySize?: number | null
@@ -358,6 +404,7 @@ export type ParentUncheckedCreateInput = {
   updatedAt?: Date | string
   students?: Prisma.StudentUncheckedCreateNestedManyWithoutParentInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutParentInput
+  invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutParentInput
 }
 
 export type ParentUpdateInput = {
@@ -365,6 +412,9 @@ export type ParentUpdateInput = {
   occupation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   employer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   maritalStatus?: Prisma.NullableEnumMaritalStatusFieldUpdateOperationsInput | $Enums.MaritalStatus | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContact?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  relationship?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   spouseName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   spousePhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   familySize?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -373,6 +423,7 @@ export type ParentUpdateInput = {
   user?: Prisma.UserUpdateOneRequiredWithoutParentProfileNestedInput
   students?: Prisma.StudentUpdateManyWithoutParentNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutParentNestedInput
+  invoices?: Prisma.InvoiceUpdateManyWithoutParentNestedInput
 }
 
 export type ParentUncheckedUpdateInput = {
@@ -381,6 +432,9 @@ export type ParentUncheckedUpdateInput = {
   occupation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   employer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   maritalStatus?: Prisma.NullableEnumMaritalStatusFieldUpdateOperationsInput | $Enums.MaritalStatus | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContact?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  relationship?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   spouseName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   spousePhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   familySize?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -388,6 +442,7 @@ export type ParentUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   students?: Prisma.StudentUncheckedUpdateManyWithoutParentNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutParentNestedInput
+  invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutParentNestedInput
 }
 
 export type ParentCreateManyInput = {
@@ -396,6 +451,9 @@ export type ParentCreateManyInput = {
   occupation?: string | null
   employer?: string | null
   maritalStatus?: $Enums.MaritalStatus | null
+  address?: string | null
+  emergencyContact?: string | null
+  relationship?: string | null
   spouseName?: string | null
   spousePhone?: string | null
   familySize?: number | null
@@ -408,6 +466,9 @@ export type ParentUpdateManyMutationInput = {
   occupation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   employer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   maritalStatus?: Prisma.NullableEnumMaritalStatusFieldUpdateOperationsInput | $Enums.MaritalStatus | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContact?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  relationship?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   spouseName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   spousePhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   familySize?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -421,6 +482,9 @@ export type ParentUncheckedUpdateManyInput = {
   occupation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   employer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   maritalStatus?: Prisma.NullableEnumMaritalStatusFieldUpdateOperationsInput | $Enums.MaritalStatus | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContact?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  relationship?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   spouseName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   spousePhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   familySize?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -439,6 +503,9 @@ export type ParentCountOrderByAggregateInput = {
   occupation?: Prisma.SortOrder
   employer?: Prisma.SortOrder
   maritalStatus?: Prisma.SortOrder
+  address?: Prisma.SortOrder
+  emergencyContact?: Prisma.SortOrder
+  relationship?: Prisma.SortOrder
   spouseName?: Prisma.SortOrder
   spousePhone?: Prisma.SortOrder
   familySize?: Prisma.SortOrder
@@ -456,6 +523,9 @@ export type ParentMaxOrderByAggregateInput = {
   occupation?: Prisma.SortOrder
   employer?: Prisma.SortOrder
   maritalStatus?: Prisma.SortOrder
+  address?: Prisma.SortOrder
+  emergencyContact?: Prisma.SortOrder
+  relationship?: Prisma.SortOrder
   spouseName?: Prisma.SortOrder
   spousePhone?: Prisma.SortOrder
   familySize?: Prisma.SortOrder
@@ -469,6 +539,9 @@ export type ParentMinOrderByAggregateInput = {
   occupation?: Prisma.SortOrder
   employer?: Prisma.SortOrder
   maritalStatus?: Prisma.SortOrder
+  address?: Prisma.SortOrder
+  emergencyContact?: Prisma.SortOrder
+  relationship?: Prisma.SortOrder
   spouseName?: Prisma.SortOrder
   spousePhone?: Prisma.SortOrder
   familySize?: Prisma.SortOrder
@@ -478,6 +551,11 @@ export type ParentMinOrderByAggregateInput = {
 
 export type ParentSumOrderByAggregateInput = {
   familySize?: Prisma.SortOrder
+}
+
+export type ParentScalarRelationFilter = {
+  is?: Prisma.ParentWhereInput
+  isNot?: Prisma.ParentWhereInput
 }
 
 export type ParentCreateNestedOneWithoutUserInput = {
@@ -532,6 +610,20 @@ export type NullableEnumMaritalStatusFieldUpdateOperationsInput = {
   set?: $Enums.MaritalStatus | null
 }
 
+export type ParentCreateNestedOneWithoutInvoicesInput = {
+  create?: Prisma.XOR<Prisma.ParentCreateWithoutInvoicesInput, Prisma.ParentUncheckedCreateWithoutInvoicesInput>
+  connectOrCreate?: Prisma.ParentCreateOrConnectWithoutInvoicesInput
+  connect?: Prisma.ParentWhereUniqueInput
+}
+
+export type ParentUpdateOneRequiredWithoutInvoicesNestedInput = {
+  create?: Prisma.XOR<Prisma.ParentCreateWithoutInvoicesInput, Prisma.ParentUncheckedCreateWithoutInvoicesInput>
+  connectOrCreate?: Prisma.ParentCreateOrConnectWithoutInvoicesInput
+  upsert?: Prisma.ParentUpsertWithoutInvoicesInput
+  connect?: Prisma.ParentWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.ParentUpdateToOneWithWhereWithoutInvoicesInput, Prisma.ParentUpdateWithoutInvoicesInput>, Prisma.ParentUncheckedUpdateWithoutInvoicesInput>
+}
+
 export type ParentCreateNestedOneWithoutPaymentsInput = {
   create?: Prisma.XOR<Prisma.ParentCreateWithoutPaymentsInput, Prisma.ParentUncheckedCreateWithoutPaymentsInput>
   connectOrCreate?: Prisma.ParentCreateOrConnectWithoutPaymentsInput
@@ -553,6 +645,9 @@ export type ParentCreateWithoutUserInput = {
   occupation?: string | null
   employer?: string | null
   maritalStatus?: $Enums.MaritalStatus | null
+  address?: string | null
+  emergencyContact?: string | null
+  relationship?: string | null
   spouseName?: string | null
   spousePhone?: string | null
   familySize?: number | null
@@ -560,6 +655,7 @@ export type ParentCreateWithoutUserInput = {
   updatedAt?: Date | string
   students?: Prisma.StudentCreateNestedManyWithoutParentInput
   payments?: Prisma.PaymentCreateNestedManyWithoutParentInput
+  invoices?: Prisma.InvoiceCreateNestedManyWithoutParentInput
 }
 
 export type ParentUncheckedCreateWithoutUserInput = {
@@ -567,6 +663,9 @@ export type ParentUncheckedCreateWithoutUserInput = {
   occupation?: string | null
   employer?: string | null
   maritalStatus?: $Enums.MaritalStatus | null
+  address?: string | null
+  emergencyContact?: string | null
+  relationship?: string | null
   spouseName?: string | null
   spousePhone?: string | null
   familySize?: number | null
@@ -574,6 +673,7 @@ export type ParentUncheckedCreateWithoutUserInput = {
   updatedAt?: Date | string
   students?: Prisma.StudentUncheckedCreateNestedManyWithoutParentInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutParentInput
+  invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutParentInput
 }
 
 export type ParentCreateOrConnectWithoutUserInput = {
@@ -597,6 +697,9 @@ export type ParentUpdateWithoutUserInput = {
   occupation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   employer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   maritalStatus?: Prisma.NullableEnumMaritalStatusFieldUpdateOperationsInput | $Enums.MaritalStatus | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContact?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  relationship?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   spouseName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   spousePhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   familySize?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -604,6 +707,7 @@ export type ParentUpdateWithoutUserInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   students?: Prisma.StudentUpdateManyWithoutParentNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutParentNestedInput
+  invoices?: Prisma.InvoiceUpdateManyWithoutParentNestedInput
 }
 
 export type ParentUncheckedUpdateWithoutUserInput = {
@@ -611,6 +715,9 @@ export type ParentUncheckedUpdateWithoutUserInput = {
   occupation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   employer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   maritalStatus?: Prisma.NullableEnumMaritalStatusFieldUpdateOperationsInput | $Enums.MaritalStatus | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContact?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  relationship?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   spouseName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   spousePhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   familySize?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -618,6 +725,7 @@ export type ParentUncheckedUpdateWithoutUserInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   students?: Prisma.StudentUncheckedUpdateManyWithoutParentNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutParentNestedInput
+  invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutParentNestedInput
 }
 
 export type ParentCreateWithoutStudentsInput = {
@@ -625,6 +733,9 @@ export type ParentCreateWithoutStudentsInput = {
   occupation?: string | null
   employer?: string | null
   maritalStatus?: $Enums.MaritalStatus | null
+  address?: string | null
+  emergencyContact?: string | null
+  relationship?: string | null
   spouseName?: string | null
   spousePhone?: string | null
   familySize?: number | null
@@ -632,6 +743,7 @@ export type ParentCreateWithoutStudentsInput = {
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutParentProfileInput
   payments?: Prisma.PaymentCreateNestedManyWithoutParentInput
+  invoices?: Prisma.InvoiceCreateNestedManyWithoutParentInput
 }
 
 export type ParentUncheckedCreateWithoutStudentsInput = {
@@ -640,12 +752,16 @@ export type ParentUncheckedCreateWithoutStudentsInput = {
   occupation?: string | null
   employer?: string | null
   maritalStatus?: $Enums.MaritalStatus | null
+  address?: string | null
+  emergencyContact?: string | null
+  relationship?: string | null
   spouseName?: string | null
   spousePhone?: string | null
   familySize?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutParentInput
+  invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutParentInput
 }
 
 export type ParentCreateOrConnectWithoutStudentsInput = {
@@ -669,6 +785,9 @@ export type ParentUpdateWithoutStudentsInput = {
   occupation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   employer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   maritalStatus?: Prisma.NullableEnumMaritalStatusFieldUpdateOperationsInput | $Enums.MaritalStatus | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContact?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  relationship?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   spouseName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   spousePhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   familySize?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -676,6 +795,7 @@ export type ParentUpdateWithoutStudentsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutParentProfileNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutParentNestedInput
+  invoices?: Prisma.InvoiceUpdateManyWithoutParentNestedInput
 }
 
 export type ParentUncheckedUpdateWithoutStudentsInput = {
@@ -684,11 +804,103 @@ export type ParentUncheckedUpdateWithoutStudentsInput = {
   occupation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   employer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   maritalStatus?: Prisma.NullableEnumMaritalStatusFieldUpdateOperationsInput | $Enums.MaritalStatus | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContact?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  relationship?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   spouseName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   spousePhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   familySize?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutParentNestedInput
+  invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutParentNestedInput
+}
+
+export type ParentCreateWithoutInvoicesInput = {
+  id?: string
+  occupation?: string | null
+  employer?: string | null
+  maritalStatus?: $Enums.MaritalStatus | null
+  address?: string | null
+  emergencyContact?: string | null
+  relationship?: string | null
+  spouseName?: string | null
+  spousePhone?: string | null
+  familySize?: number | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutParentProfileInput
+  students?: Prisma.StudentCreateNestedManyWithoutParentInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutParentInput
+}
+
+export type ParentUncheckedCreateWithoutInvoicesInput = {
+  id?: string
+  userId: string
+  occupation?: string | null
+  employer?: string | null
+  maritalStatus?: $Enums.MaritalStatus | null
+  address?: string | null
+  emergencyContact?: string | null
+  relationship?: string | null
+  spouseName?: string | null
+  spousePhone?: string | null
+  familySize?: number | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  students?: Prisma.StudentUncheckedCreateNestedManyWithoutParentInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutParentInput
+}
+
+export type ParentCreateOrConnectWithoutInvoicesInput = {
+  where: Prisma.ParentWhereUniqueInput
+  create: Prisma.XOR<Prisma.ParentCreateWithoutInvoicesInput, Prisma.ParentUncheckedCreateWithoutInvoicesInput>
+}
+
+export type ParentUpsertWithoutInvoicesInput = {
+  update: Prisma.XOR<Prisma.ParentUpdateWithoutInvoicesInput, Prisma.ParentUncheckedUpdateWithoutInvoicesInput>
+  create: Prisma.XOR<Prisma.ParentCreateWithoutInvoicesInput, Prisma.ParentUncheckedCreateWithoutInvoicesInput>
+  where?: Prisma.ParentWhereInput
+}
+
+export type ParentUpdateToOneWithWhereWithoutInvoicesInput = {
+  where?: Prisma.ParentWhereInput
+  data: Prisma.XOR<Prisma.ParentUpdateWithoutInvoicesInput, Prisma.ParentUncheckedUpdateWithoutInvoicesInput>
+}
+
+export type ParentUpdateWithoutInvoicesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  occupation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  employer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maritalStatus?: Prisma.NullableEnumMaritalStatusFieldUpdateOperationsInput | $Enums.MaritalStatus | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContact?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  relationship?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  spouseName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  spousePhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  familySize?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutParentProfileNestedInput
+  students?: Prisma.StudentUpdateManyWithoutParentNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutParentNestedInput
+}
+
+export type ParentUncheckedUpdateWithoutInvoicesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  occupation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  employer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  maritalStatus?: Prisma.NullableEnumMaritalStatusFieldUpdateOperationsInput | $Enums.MaritalStatus | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContact?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  relationship?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  spouseName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  spousePhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  familySize?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  students?: Prisma.StudentUncheckedUpdateManyWithoutParentNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutParentNestedInput
 }
 
@@ -697,6 +909,9 @@ export type ParentCreateWithoutPaymentsInput = {
   occupation?: string | null
   employer?: string | null
   maritalStatus?: $Enums.MaritalStatus | null
+  address?: string | null
+  emergencyContact?: string | null
+  relationship?: string | null
   spouseName?: string | null
   spousePhone?: string | null
   familySize?: number | null
@@ -704,6 +919,7 @@ export type ParentCreateWithoutPaymentsInput = {
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutParentProfileInput
   students?: Prisma.StudentCreateNestedManyWithoutParentInput
+  invoices?: Prisma.InvoiceCreateNestedManyWithoutParentInput
 }
 
 export type ParentUncheckedCreateWithoutPaymentsInput = {
@@ -712,12 +928,16 @@ export type ParentUncheckedCreateWithoutPaymentsInput = {
   occupation?: string | null
   employer?: string | null
   maritalStatus?: $Enums.MaritalStatus | null
+  address?: string | null
+  emergencyContact?: string | null
+  relationship?: string | null
   spouseName?: string | null
   spousePhone?: string | null
   familySize?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
   students?: Prisma.StudentUncheckedCreateNestedManyWithoutParentInput
+  invoices?: Prisma.InvoiceUncheckedCreateNestedManyWithoutParentInput
 }
 
 export type ParentCreateOrConnectWithoutPaymentsInput = {
@@ -741,6 +961,9 @@ export type ParentUpdateWithoutPaymentsInput = {
   occupation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   employer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   maritalStatus?: Prisma.NullableEnumMaritalStatusFieldUpdateOperationsInput | $Enums.MaritalStatus | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContact?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  relationship?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   spouseName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   spousePhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   familySize?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
@@ -748,6 +971,7 @@ export type ParentUpdateWithoutPaymentsInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutParentProfileNestedInput
   students?: Prisma.StudentUpdateManyWithoutParentNestedInput
+  invoices?: Prisma.InvoiceUpdateManyWithoutParentNestedInput
 }
 
 export type ParentUncheckedUpdateWithoutPaymentsInput = {
@@ -756,12 +980,16 @@ export type ParentUncheckedUpdateWithoutPaymentsInput = {
   occupation?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   employer?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   maritalStatus?: Prisma.NullableEnumMaritalStatusFieldUpdateOperationsInput | $Enums.MaritalStatus | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContact?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  relationship?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   spouseName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   spousePhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   familySize?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   students?: Prisma.StudentUncheckedUpdateManyWithoutParentNestedInput
+  invoices?: Prisma.InvoiceUncheckedUpdateManyWithoutParentNestedInput
 }
 
 
@@ -772,11 +1000,13 @@ export type ParentUncheckedUpdateWithoutPaymentsInput = {
 export type ParentCountOutputType = {
   students: number
   payments: number
+  invoices: number
 }
 
 export type ParentCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   students?: boolean | ParentCountOutputTypeCountStudentsArgs
   payments?: boolean | ParentCountOutputTypeCountPaymentsArgs
+  invoices?: boolean | ParentCountOutputTypeCountInvoicesArgs
 }
 
 /**
@@ -803,6 +1033,13 @@ export type ParentCountOutputTypeCountPaymentsArgs<ExtArgs extends runtime.Types
   where?: Prisma.PaymentWhereInput
 }
 
+/**
+ * ParentCountOutputType without action
+ */
+export type ParentCountOutputTypeCountInvoicesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.InvoiceWhereInput
+}
+
 
 export type ParentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -810,6 +1047,9 @@ export type ParentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   occupation?: boolean
   employer?: boolean
   maritalStatus?: boolean
+  address?: boolean
+  emergencyContact?: boolean
+  relationship?: boolean
   spouseName?: boolean
   spousePhone?: boolean
   familySize?: boolean
@@ -818,6 +1058,7 @@ export type ParentSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   students?: boolean | Prisma.Parent$studentsArgs<ExtArgs>
   payments?: boolean | Prisma.Parent$paymentsArgs<ExtArgs>
+  invoices?: boolean | Prisma.Parent$invoicesArgs<ExtArgs>
   _count?: boolean | Prisma.ParentCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["parent"]>
 
@@ -827,6 +1068,9 @@ export type ParentSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   occupation?: boolean
   employer?: boolean
   maritalStatus?: boolean
+  address?: boolean
+  emergencyContact?: boolean
+  relationship?: boolean
   spouseName?: boolean
   spousePhone?: boolean
   familySize?: boolean
@@ -841,6 +1085,9 @@ export type ParentSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   occupation?: boolean
   employer?: boolean
   maritalStatus?: boolean
+  address?: boolean
+  emergencyContact?: boolean
+  relationship?: boolean
   spouseName?: boolean
   spousePhone?: boolean
   familySize?: boolean
@@ -855,6 +1102,9 @@ export type ParentSelectScalar = {
   occupation?: boolean
   employer?: boolean
   maritalStatus?: boolean
+  address?: boolean
+  emergencyContact?: boolean
+  relationship?: boolean
   spouseName?: boolean
   spousePhone?: boolean
   familySize?: boolean
@@ -862,11 +1112,12 @@ export type ParentSelectScalar = {
   updatedAt?: boolean
 }
 
-export type ParentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "occupation" | "employer" | "maritalStatus" | "spouseName" | "spousePhone" | "familySize" | "createdAt" | "updatedAt", ExtArgs["result"]["parent"]>
+export type ParentOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "occupation" | "employer" | "maritalStatus" | "address" | "emergencyContact" | "relationship" | "spouseName" | "spousePhone" | "familySize" | "createdAt" | "updatedAt", ExtArgs["result"]["parent"]>
 export type ParentInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   students?: boolean | Prisma.Parent$studentsArgs<ExtArgs>
   payments?: boolean | Prisma.Parent$paymentsArgs<ExtArgs>
+  invoices?: boolean | Prisma.Parent$invoicesArgs<ExtArgs>
   _count?: boolean | Prisma.ParentCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type ParentIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -882,6 +1133,7 @@ export type $ParentPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     user: Prisma.$UserPayload<ExtArgs>
     students: Prisma.$StudentPayload<ExtArgs>[]
     payments: Prisma.$PaymentPayload<ExtArgs>[]
+    invoices: Prisma.$InvoicePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -889,6 +1141,9 @@ export type $ParentPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     occupation: string | null
     employer: string | null
     maritalStatus: $Enums.MaritalStatus | null
+    address: string | null
+    emergencyContact: string | null
+    relationship: string | null
     spouseName: string | null
     spousePhone: string | null
     familySize: number | null
@@ -1291,6 +1546,7 @@ export interface Prisma__ParentClient<T, Null = never, ExtArgs extends runtime.T
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   students<T extends Prisma.Parent$studentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Parent$studentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StudentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   payments<T extends Prisma.Parent$paymentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Parent$paymentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  invoices<T extends Prisma.Parent$invoicesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Parent$invoicesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InvoicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1325,6 +1581,9 @@ export interface ParentFieldRefs {
   readonly occupation: Prisma.FieldRef<"Parent", 'String'>
   readonly employer: Prisma.FieldRef<"Parent", 'String'>
   readonly maritalStatus: Prisma.FieldRef<"Parent", 'MaritalStatus'>
+  readonly address: Prisma.FieldRef<"Parent", 'String'>
+  readonly emergencyContact: Prisma.FieldRef<"Parent", 'String'>
+  readonly relationship: Prisma.FieldRef<"Parent", 'String'>
   readonly spouseName: Prisma.FieldRef<"Parent", 'String'>
   readonly spousePhone: Prisma.FieldRef<"Parent", 'String'>
   readonly familySize: Prisma.FieldRef<"Parent", 'Int'>
@@ -1771,6 +2030,30 @@ export type Parent$paymentsArgs<ExtArgs extends runtime.Types.Extensions.Interna
   take?: number
   skip?: number
   distinct?: Prisma.PaymentScalarFieldEnum | Prisma.PaymentScalarFieldEnum[]
+}
+
+/**
+ * Parent.invoices
+ */
+export type Parent$invoicesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Invoice
+   */
+  select?: Prisma.InvoiceSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Invoice
+   */
+  omit?: Prisma.InvoiceOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.InvoiceInclude<ExtArgs> | null
+  where?: Prisma.InvoiceWhereInput
+  orderBy?: Prisma.InvoiceOrderByWithRelationInput | Prisma.InvoiceOrderByWithRelationInput[]
+  cursor?: Prisma.InvoiceWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.InvoiceScalarFieldEnum | Prisma.InvoiceScalarFieldEnum[]
 }
 
 /**

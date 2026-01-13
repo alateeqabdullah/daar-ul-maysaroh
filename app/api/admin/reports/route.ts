@@ -1,109 +1,138 @@
-// src/app/api/admin/reports/route.ts
-import { NextRequest, NextResponse } from "next/server";
-import { auth } from "@/lib/auth";
+import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { startOfDay, subDays, startOfYear } from "date-fns";
+import { auth } from "@/lib/auth";
 
-export async function GET(request: NextRequest) {
+export async function GET(req: Request) {
   try {
     const session = await auth();
-
-    // 1. Authorization
-    if (!session || !["SUPER_ADMIN", "ADMIN"].includes(session.user.role)) {
+    // 1. Security Check
+    if (!session || !["ADMIN", "SUPER_ADMIN"].includes(session.user.role)) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { searchParams } = new URL(request.url);
-    const range = searchParams.get("range") || "30d"; // 7d, 30d, 90d, 1y
-    const type = searchParams.get("type") || "OVERVIEW";
+    // 2. Parse Query Params
+    const { searchParams } = new URL(req.url);
+    const range = searchParams.get("range") || "30d"; // Default 30 days
+    const type = searchParams.get("type") || "stats"; // 'stats' or 'export'
 
-    // 2. Calculate Date Range
-    let startDate = startOfDay(subDays(new Date(), 30));
-    if (range === "7d") startDate = startOfDay(subDays(new Date(), 7));
-    if (range === "90d") startDate = startOfDay(subDays(new Date(), 90));
-    if (range === "1y") startDate = startOfYear(new Date());
+    // 3. Calculate Date Range
+    const now = new Date();
+    let startDate = new Date();
 
-    // 3. Conditional Data Fetching based on Report Type
-    const [
-      studentStats,
-      attendanceStats,
-      financialStats,
-      teacherStats,
-      recentActivities,
-    ] = await Promise.all([
-      // Gender breakdown
-      prisma.student.groupBy({
-        by: ["gender"],
-        _count: true,
-      }),
-      // Attendance status in range
-      prisma.attendance.groupBy({
-        by: ["status"],
-        where: { date: { gte: startDate } },
-        _count: true,
-      }),
-      // Financial aggregates
-      prisma.payment.aggregate({
-        where: {
-          status: "COMPLETED",
-          paidAt: { gte: startDate },
+    switch (range) {
+      case "7d":
+        startDate.setDate(now.getDate() - 7);
+        break;
+      case "30d":
+        startDate.setDate(now.getDate() - 30);
+        break;
+      case "90d":
+        startDate.setDate(now.getDate() - 90);
+        break;
+      case "1y":
+        startDate.setFullYear(now.getFullYear() - 1);
+        break;
+      case "all":
+        startDate = new Date(0);
+        break; // Beginning of time
+      default:
+        startDate.setDate(now.getDate() - 30);
+    }
+
+    // =========================================================
+    // SCENARIO A: FETCH STATS (For Charts/Dashboard)
+    // =========================================================
+    if (type === "stats") {
+      const [payments, attendance, newStudents] = await Promise.all([
+        // Financials in range
+        prisma.payment.aggregate({
+          where: {
+            status: "COMPLETED",
+            createdAt: { gte: startDate },
+          },
+          _sum: { amount: true },
+          _count: true,
+        }),
+        // Attendance in range
+        prisma.attendance.groupBy({
+          by: ["status"],
+          where: { date: { gte: startDate } },
+          _count: true,
+        }),
+        // Student Growth (for a chart)
+        prisma.user.count({
+          where: {
+            role: "STUDENT",
+            createdAt: { gte: startDate },
+          },
+        }),
+      ]);
+
+      return NextResponse.json({
+        financial: {
+          revenue: payments._sum.amount || 0,
+          transactions: payments._count,
         },
-        _sum: { amount: true },
-        _avg: { amount: true },
-        _count: true,
-      }),
-      // Teacher availability
-      prisma.teacher.groupBy({
-        by: ["isAvailable"],
-        _count: true,
-      }),
-      // Latest users
-      prisma.user.findMany({
-        where: { createdAt: { gte: startDate } },
-        select: {
-          id: true,
-          name: true,
-          role: true,
-          createdAt: true,
+        attendance: {
+          present: attendance.find((a) => a.status === "PRESENT")?._count || 0,
+          absent: attendance.find((a) => a.status === "ABSENT")?._count || 0,
+          late: attendance.find((a) => a.status === "LATE")?._count || 0,
         },
-        orderBy: { createdAt: "desc" },
-        take: 20,
-      }),
-    ]);
+        growth: {
+          newStudents,
+        },
+      });
+    }
 
-    // 4. Format for the Client
-    const reportsData = {
-      studentStats: {
-        total: studentStats.reduce((sum, stat) => sum + stat._count, 0),
-        male: studentStats.find((s) => s.gender === "MALE")?._count || 0,
-        female: studentStats.find((s) => s.gender === "FEMALE")?._count || 0,
-      },
-      attendanceStats: {
-        present:
-          attendanceStats.find((a) => a.status === "PRESENT")?._count || 0,
-        absent: attendanceStats.find((a) => a.status === "ABSENT")?._count || 0,
-        late: attendanceStats.find((a) => a.status === "LATE")?._count || 0,
-      },
-      financialStats: {
-        total: Number(financialStats._sum.amount) || 0,
-        average: Number(financialStats._avg.amount) || 0,
-        count: financialStats._count,
-      },
-      teacherStats: {
-        available:
-          teacherStats.find((t) => t.isAvailable === true)?._count || 0,
-        unavailable:
-          teacherStats.find((t) => t.isAvailable === false)?._count || 0,
-      },
-      recentActivities,
-    };
+    // =========================================================
+    // SCENARIO B: EXPORT DATA (For CSV Download)
+    // =========================================================
+    if (type === "export") {
+      // Fetch comprehensive data for export
+      const [students, payments, attendanceLogs] = await Promise.all([
+        prisma.student.findMany({
+          select: {
+            studentId: true,
+            user: { select: { name: true, email: true } },
+            currentClass: { select: { name: true } },
+          },
+        }),
+        prisma.payment.findMany({
+          where: { createdAt: { gte: startDate } },
+          select: {
+            invoiceNumber: true,
+            amount: true,
+            status: true,
+            createdAt: true,
+            student: { select: { user: { select: { name: true } } } },
+          },
+        }),
+        prisma.attendance.findMany({
+          where: { date: { gte: startDate } },
+          select: {
+            date: true,
+            status: true,
+            student: { select: { user: { select: { name: true } } } },
+          },
+        }),
+      ]);
 
-    return NextResponse.json(reportsData);
-  } catch (error) {
-    console.error("[REPORTS_GET_ERROR]:", error);
-    return NextResponse.json(
-      { error: "Internal Server Error" },
-      { status: 500 }
-    );
+      return NextResponse.json({
+        students,
+        payments: payments.map((p) => ({
+          ...p,
+          createdAt: p.createdAt.toISOString(),
+        })),
+        attendance: attendanceLogs.map((a) => ({
+          ...a,
+          date: a.date.toISOString(),
+        })),
+      });
+    }
+
+    return NextResponse.json({ error: "Invalid type" }, { status: 400 });
+  } catch (error: any) {
+    console.error("Reports API Error:", error);
+    return NextResponse.json({ error: "Server Error" }, { status: 500 });
   }
 }

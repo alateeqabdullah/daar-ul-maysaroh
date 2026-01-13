@@ -1,8 +1,12 @@
-// src/app/(dashboard)/admin/settings/page.tsx
 import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import SystemSettingsClient from "@/components/admin/system-settings-client";
+
+export const metadata = {
+  title: "System Settings | Admin",
+  description: "Configure global application settings",
+};
 
 export default async function SystemSettingsPage() {
   const session = await auth();
@@ -18,7 +22,7 @@ export default async function SystemSettingsPage() {
     return acc;
   }, {} as Record<string, string>);
 
-  // Helper to convert DB strings to booleans
+  // Helper to convert DB strings to booleans safely
   const toBool = (val: string | undefined, fallback: boolean) =>
     val === undefined ? fallback : val === "true";
 
@@ -30,21 +34,18 @@ export default async function SystemSettingsPage() {
     contactEmail: settingsMap.contactEmail || "admin@example.com",
     contactPhone: settingsMap.contactPhone || "",
     timezone: settingsMap.timezone || "UTC",
-    dateFormat: settingsMap.dateFormat || "MM/DD/YYYY",
     language: settingsMap.language || "en",
 
-    // Email (Optional fields)
-    smtpHost: settingsMap.smtpHost,
-    smtpPort: settingsMap.smtpPort,
-    smtpUsername: settingsMap.smtpUsername,
-    emailFrom: settingsMap.emailFrom,
+    // Email / SMTP (Sensitive)
+    smtpHost: settingsMap.smtpHost || "",
+    smtpPort: settingsMap.smtpPort || "587",
+    emailFrom: settingsMap.emailFrom || "noreply@madrasahpro.com",
 
-    // Notifications (Must be boolean)
+    // Notifications
     emailNotifications: toBool(settingsMap.emailNotifications, true),
     pushNotifications: toBool(settingsMap.pushNotifications, false),
     newUserAlerts: toBool(settingsMap.newUserAlerts, true),
     paymentAlerts: toBool(settingsMap.paymentAlerts, true),
-    attendanceAlerts: toBool(settingsMap.attendanceAlerts, true),
 
     // Security
     requireEmailVerification: toBool(
@@ -56,21 +57,18 @@ export default async function SystemSettingsPage() {
     maxLoginAttempts: settingsMap.maxLoginAttempts || "5",
 
     // Academic
-    academicYear: settingsMap.academicYear || "2023-2024",
+    academicYear:
+      settingsMap.academicYear || new Date().getFullYear().toString(),
     defaultClassCapacity: settingsMap.defaultClassCapacity || "25",
     attendanceThreshold: settingsMap.attendanceThreshold || "80",
-    gradingScale: settingsMap.gradingScale || "percentage",
 
     // Financial
     currency: settingsMap.currency || "USD",
-    paymentGateway: settingsMap.paymentGateway || "stripe",
     taxRate: settingsMap.taxRate || "0",
     lateFeeAmount: settingsMap.lateFeeAmount || "0",
-    lateFeeDays: settingsMap.lateFeeDays || "7",
 
     // Status
     maintenanceMode: toBool(settingsMap.maintenanceMode, false),
-    requireApproval: toBool(settingsMap.requireApproval, true),
     enableRegistration: toBool(settingsMap.enableRegistration, true),
   };
 

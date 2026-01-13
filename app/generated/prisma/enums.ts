@@ -264,6 +264,30 @@ export const CongregationType = {
 export type CongregationType = (typeof CongregationType)[keyof typeof CongregationType]
 
 
+export const DonationType = {
+  ZAKAT: 'ZAKAT',
+  SADAQAH: 'SADAQAH',
+  BUILDING_FUND: 'BUILDING_FUND',
+  SPONSORSHIP: 'SPONSORSHIP',
+  OTHER: 'OTHER'
+} as const
+
+export type DonationType = (typeof DonationType)[keyof typeof DonationType]
+
+
+export const ExpenseCategory = {
+  SALARY: 'SALARY',
+  RENT: 'RENT',
+  UTILITIES: 'UTILITIES',
+  MAINTENANCE: 'MAINTENANCE',
+  SUPPLIES: 'SUPPLIES',
+  SOFTWARE: 'SOFTWARE',
+  OTHER: 'OTHER'
+} as const
+
+export type ExpenseCategory = (typeof ExpenseCategory)[keyof typeof ExpenseCategory]
+
+
 export const PaymentMethod = {
   CREDIT_CARD: 'CREDIT_CARD',
   DEBIT_CARD: 'DEBIT_CARD',
@@ -417,3 +441,86 @@ export const EventType = {
 } as const
 
 export type EventType = (typeof EventType)[keyof typeof EventType]
+
+
+export const PlanType = {
+  ONE_ON_ONE: 'ONE_ON_ONE',
+  GROUP: 'GROUP',
+  CLASS: 'CLASS',
+  CUSTOM: 'CUSTOM'
+} as const
+
+export type PlanType = (typeof PlanType)[keyof typeof PlanType]
+
+
+export const PlanCategory = {
+  QURAN: 'QURAN',
+  TAJWEED: 'TAJWEED',
+  ARABIC: 'ARABIC',
+  FIQH: 'FIQH',
+  AQEEDAH: 'AQEEDAH',
+  SEERAH: 'SEERAH',
+  HADITH: 'HADITH',
+  GENERAL: 'GENERAL'
+} as const
+
+export type PlanCategory = (typeof PlanCategory)[keyof typeof PlanCategory]
+
+
+export const BillingPeriod = {
+  MONTHLY: 'MONTHLY',
+  QUARTERLY: 'QUARTERLY',
+  YEARLY: 'YEARLY',
+  LIFETIME: 'LIFETIME'
+} as const
+
+export type BillingPeriod = (typeof BillingPeriod)[keyof typeof BillingPeriod]
+
+
+export const SubscriptionStatus = {
+  PENDING: 'PENDING',
+  ACTIVE: 'ACTIVE',
+  PAUSED: 'PAUSED',
+  CANCELLED: 'CANCELLED',
+  EXPIRED: 'EXPIRED',
+  TRIAL: 'TRIAL'
+} as const
+
+export type SubscriptionStatus = (typeof SubscriptionStatus)[keyof typeof SubscriptionStatus]
+
+
+export const SessionStatus = {
+  SCHEDULED: 'SCHEDULED',
+  COMPLETED: 'COMPLETED',
+  CANCELLED: 'CANCELLED',
+  RESCHEDULED: 'RESCHEDULED',
+  NO_SHOW: 'NO_SHOW'
+} as const
+
+export type SessionStatus = (typeof SessionStatus)[keyof typeof SessionStatus]
+
+
+export const CourseCategory = {
+  QURAN: 'QURAN',
+  TAJWEED: 'TAJWEED',
+  ARABIC: 'ARABIC',
+  FIQH: 'FIQH',
+  AQEEDAH: 'AQEEDAH',
+  SEERAH: 'SEERAH',
+  HADITH: 'HADITH',
+  AKHLAQ: 'AKHLAQ',
+  ISLAMIC_HISTORY: 'ISLAMIC_HISTORY',
+  OTHER: 'OTHER'
+} as const
+
+export type CourseCategory = (typeof CourseCategory)[keyof typeof CourseCategory]
+
+
+export const HifzStatus = {
+  PASS: 'PASS',
+  NEEDS_PRACTICE: 'NEEDS_PRACTICE',
+  FAIL: 'FAIL',
+  EXCELLENT: 'EXCELLENT'
+} as const
+
+export type HifzStatus = (typeof HifzStatus)[keyof typeof HifzStatus]

@@ -133,10 +133,30 @@ export type QuranProgress = Prisma.QuranProgressModel
  */
 export type PrayerRecord = Prisma.PrayerRecordModel
 /**
+ * Model Invoice
+ * 
+ */
+export type Invoice = Prisma.InvoiceModel
+/**
  * Model Payment
  * 
  */
 export type Payment = Prisma.PaymentModel
+/**
+ * Model Donation
+ * 
+ */
+export type Donation = Prisma.DonationModel
+/**
+ * Model Expense
+ * 
+ */
+export type Expense = Prisma.ExpenseModel
+/**
+ * Model Payroll
+ * 
+ */
+export type Payroll = Prisma.PayrollModel
 /**
  * Model ClassMaterial
  * 
@@ -192,3 +212,43 @@ export type SystemSetting = Prisma.SystemSettingModel
  * 
  */
 export type Event = Prisma.EventModel
+/**
+ * Model PricingPlan
+ * 
+ */
+export type PricingPlan = Prisma.PricingPlanModel
+/**
+ * Model PricingTier
+ * 
+ */
+export type PricingTier = Prisma.PricingTierModel
+/**
+ * Model Subscription
+ * 
+ */
+export type Subscription = Prisma.SubscriptionModel
+/**
+ * Model ScheduledSession
+ * 
+ */
+export type ScheduledSession = Prisma.ScheduledSessionModel
+/**
+ * Model Course
+ * 
+ */
+export type Course = Prisma.CourseModel
+/**
+ * Model CourseMaterial
+ * 
+ */
+export type CourseMaterial = Prisma.CourseMaterialModel
+/**
+ * Model CourseAnnouncement
+ * 
+ */
+export type CourseAnnouncement = Prisma.CourseAnnouncementModel
+/**
+ * Model HifzProgress
+ * 
+ */
+export type HifzProgress = Prisma.HifzProgressModel

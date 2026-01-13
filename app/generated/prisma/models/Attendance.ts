@@ -234,6 +234,7 @@ export type AttendanceWhereInput = {
   class?: Prisma.XOR<Prisma.ClassScalarRelationFilter, Prisma.ClassWhereInput>
   schedule?: Prisma.XOR<Prisma.ClassScheduleScalarRelationFilter, Prisma.ClassScheduleWhereInput>
   teachers?: Prisma.TeacherListRelationFilter
+  scheduledSessions?: Prisma.ScheduledSessionListRelationFilter
 }
 
 export type AttendanceOrderByWithRelationInput = {
@@ -252,6 +253,7 @@ export type AttendanceOrderByWithRelationInput = {
   class?: Prisma.ClassOrderByWithRelationInput
   schedule?: Prisma.ClassScheduleOrderByWithRelationInput
   teachers?: Prisma.TeacherOrderByRelationAggregateInput
+  scheduledSessions?: Prisma.ScheduledSessionOrderByRelationAggregateInput
 }
 
 export type AttendanceWhereUniqueInput = Prisma.AtLeast<{
@@ -274,6 +276,7 @@ export type AttendanceWhereUniqueInput = Prisma.AtLeast<{
   class?: Prisma.XOR<Prisma.ClassScalarRelationFilter, Prisma.ClassWhereInput>
   schedule?: Prisma.XOR<Prisma.ClassScheduleScalarRelationFilter, Prisma.ClassScheduleWhereInput>
   teachers?: Prisma.TeacherListRelationFilter
+  scheduledSessions?: Prisma.ScheduledSessionListRelationFilter
 }, "id" | "studentId_scheduleId_date">
 
 export type AttendanceOrderByWithAggregationInput = {
@@ -323,6 +326,7 @@ export type AttendanceCreateInput = {
   class: Prisma.ClassCreateNestedOneWithoutAttendancesInput
   schedule: Prisma.ClassScheduleCreateNestedOneWithoutAttendancesInput
   teachers?: Prisma.TeacherCreateNestedManyWithoutAssignedAttendanceInput
+  scheduledSessions?: Prisma.ScheduledSessionCreateNestedManyWithoutAttendanceInput
 }
 
 export type AttendanceUncheckedCreateInput = {
@@ -338,6 +342,7 @@ export type AttendanceUncheckedCreateInput = {
   arrivalTime?: Date | string | null
   departureTime?: Date | string | null
   teachers?: Prisma.TeacherUncheckedCreateNestedManyWithoutAssignedAttendanceInput
+  scheduledSessions?: Prisma.ScheduledSessionUncheckedCreateNestedManyWithoutAttendanceInput
 }
 
 export type AttendanceUpdateInput = {
@@ -353,6 +358,7 @@ export type AttendanceUpdateInput = {
   class?: Prisma.ClassUpdateOneRequiredWithoutAttendancesNestedInput
   schedule?: Prisma.ClassScheduleUpdateOneRequiredWithoutAttendancesNestedInput
   teachers?: Prisma.TeacherUpdateManyWithoutAssignedAttendanceNestedInput
+  scheduledSessions?: Prisma.ScheduledSessionUpdateManyWithoutAttendanceNestedInput
 }
 
 export type AttendanceUncheckedUpdateInput = {
@@ -368,6 +374,7 @@ export type AttendanceUncheckedUpdateInput = {
   arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   departureTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   teachers?: Prisma.TeacherUncheckedUpdateManyWithoutAssignedAttendanceNestedInput
+  scheduledSessions?: Prisma.ScheduledSessionUncheckedUpdateManyWithoutAttendanceNestedInput
 }
 
 export type AttendanceCreateManyInput = {
@@ -465,6 +472,11 @@ export type AttendanceMinOrderByAggregateInput = {
   remarks?: Prisma.SortOrder
   arrivalTime?: Prisma.SortOrder
   departureTime?: Prisma.SortOrder
+}
+
+export type AttendanceNullableScalarRelationFilter = {
+  is?: Prisma.AttendanceWhereInput | null
+  isNot?: Prisma.AttendanceWhereInput | null
 }
 
 export type AttendanceCreateNestedManyWithoutStudentInput = {
@@ -635,6 +647,22 @@ export type EnumAttendanceStatusFieldUpdateOperationsInput = {
   set?: $Enums.AttendanceStatus
 }
 
+export type AttendanceCreateNestedOneWithoutScheduledSessionsInput = {
+  create?: Prisma.XOR<Prisma.AttendanceCreateWithoutScheduledSessionsInput, Prisma.AttendanceUncheckedCreateWithoutScheduledSessionsInput>
+  connectOrCreate?: Prisma.AttendanceCreateOrConnectWithoutScheduledSessionsInput
+  connect?: Prisma.AttendanceWhereUniqueInput
+}
+
+export type AttendanceUpdateOneWithoutScheduledSessionsNestedInput = {
+  create?: Prisma.XOR<Prisma.AttendanceCreateWithoutScheduledSessionsInput, Prisma.AttendanceUncheckedCreateWithoutScheduledSessionsInput>
+  connectOrCreate?: Prisma.AttendanceCreateOrConnectWithoutScheduledSessionsInput
+  upsert?: Prisma.AttendanceUpsertWithoutScheduledSessionsInput
+  disconnect?: Prisma.AttendanceWhereInput | boolean
+  delete?: Prisma.AttendanceWhereInput | boolean
+  connect?: Prisma.AttendanceWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.AttendanceUpdateToOneWithWhereWithoutScheduledSessionsInput, Prisma.AttendanceUpdateWithoutScheduledSessionsInput>, Prisma.AttendanceUncheckedUpdateWithoutScheduledSessionsInput>
+}
+
 export type AttendanceCreateWithoutStudentInput = {
   id?: string
   date: Date | string
@@ -647,6 +675,7 @@ export type AttendanceCreateWithoutStudentInput = {
   class: Prisma.ClassCreateNestedOneWithoutAttendancesInput
   schedule: Prisma.ClassScheduleCreateNestedOneWithoutAttendancesInput
   teachers?: Prisma.TeacherCreateNestedManyWithoutAssignedAttendanceInput
+  scheduledSessions?: Prisma.ScheduledSessionCreateNestedManyWithoutAttendanceInput
 }
 
 export type AttendanceUncheckedCreateWithoutStudentInput = {
@@ -661,6 +690,7 @@ export type AttendanceUncheckedCreateWithoutStudentInput = {
   arrivalTime?: Date | string | null
   departureTime?: Date | string | null
   teachers?: Prisma.TeacherUncheckedCreateNestedManyWithoutAssignedAttendanceInput
+  scheduledSessions?: Prisma.ScheduledSessionUncheckedCreateNestedManyWithoutAttendanceInput
 }
 
 export type AttendanceCreateOrConnectWithoutStudentInput = {
@@ -718,6 +748,7 @@ export type AttendanceCreateWithoutTeachersInput = {
   student: Prisma.StudentCreateNestedOneWithoutAttendanceInput
   class: Prisma.ClassCreateNestedOneWithoutAttendancesInput
   schedule: Prisma.ClassScheduleCreateNestedOneWithoutAttendancesInput
+  scheduledSessions?: Prisma.ScheduledSessionCreateNestedManyWithoutAttendanceInput
 }
 
 export type AttendanceUncheckedCreateWithoutTeachersInput = {
@@ -732,6 +763,7 @@ export type AttendanceUncheckedCreateWithoutTeachersInput = {
   remarks?: string | null
   arrivalTime?: Date | string | null
   departureTime?: Date | string | null
+  scheduledSessions?: Prisma.ScheduledSessionUncheckedCreateNestedManyWithoutAttendanceInput
 }
 
 export type AttendanceCreateOrConnectWithoutTeachersInput = {
@@ -767,6 +799,7 @@ export type AttendanceCreateWithoutClassInput = {
   student: Prisma.StudentCreateNestedOneWithoutAttendanceInput
   schedule: Prisma.ClassScheduleCreateNestedOneWithoutAttendancesInput
   teachers?: Prisma.TeacherCreateNestedManyWithoutAssignedAttendanceInput
+  scheduledSessions?: Prisma.ScheduledSessionCreateNestedManyWithoutAttendanceInput
 }
 
 export type AttendanceUncheckedCreateWithoutClassInput = {
@@ -781,6 +814,7 @@ export type AttendanceUncheckedCreateWithoutClassInput = {
   arrivalTime?: Date | string | null
   departureTime?: Date | string | null
   teachers?: Prisma.TeacherUncheckedCreateNestedManyWithoutAssignedAttendanceInput
+  scheduledSessions?: Prisma.ScheduledSessionUncheckedCreateNestedManyWithoutAttendanceInput
 }
 
 export type AttendanceCreateOrConnectWithoutClassInput = {
@@ -821,6 +855,7 @@ export type AttendanceCreateWithoutScheduleInput = {
   student: Prisma.StudentCreateNestedOneWithoutAttendanceInput
   class: Prisma.ClassCreateNestedOneWithoutAttendancesInput
   teachers?: Prisma.TeacherCreateNestedManyWithoutAssignedAttendanceInput
+  scheduledSessions?: Prisma.ScheduledSessionCreateNestedManyWithoutAttendanceInput
 }
 
 export type AttendanceUncheckedCreateWithoutScheduleInput = {
@@ -835,6 +870,7 @@ export type AttendanceUncheckedCreateWithoutScheduleInput = {
   arrivalTime?: Date | string | null
   departureTime?: Date | string | null
   teachers?: Prisma.TeacherUncheckedCreateNestedManyWithoutAssignedAttendanceInput
+  scheduledSessions?: Prisma.ScheduledSessionUncheckedCreateNestedManyWithoutAttendanceInput
 }
 
 export type AttendanceCreateOrConnectWithoutScheduleInput = {
@@ -863,6 +899,82 @@ export type AttendanceUpdateManyWithWhereWithoutScheduleInput = {
   data: Prisma.XOR<Prisma.AttendanceUpdateManyMutationInput, Prisma.AttendanceUncheckedUpdateManyWithoutScheduleInput>
 }
 
+export type AttendanceCreateWithoutScheduledSessionsInput = {
+  id?: string
+  date: Date | string
+  status?: $Enums.AttendanceStatus
+  markedBy?: string | null
+  markedAt?: Date | string | null
+  remarks?: string | null
+  arrivalTime?: Date | string | null
+  departureTime?: Date | string | null
+  student: Prisma.StudentCreateNestedOneWithoutAttendanceInput
+  class: Prisma.ClassCreateNestedOneWithoutAttendancesInput
+  schedule: Prisma.ClassScheduleCreateNestedOneWithoutAttendancesInput
+  teachers?: Prisma.TeacherCreateNestedManyWithoutAssignedAttendanceInput
+}
+
+export type AttendanceUncheckedCreateWithoutScheduledSessionsInput = {
+  id?: string
+  studentId: string
+  classId: string
+  scheduleId: string
+  date: Date | string
+  status?: $Enums.AttendanceStatus
+  markedBy?: string | null
+  markedAt?: Date | string | null
+  remarks?: string | null
+  arrivalTime?: Date | string | null
+  departureTime?: Date | string | null
+  teachers?: Prisma.TeacherUncheckedCreateNestedManyWithoutAssignedAttendanceInput
+}
+
+export type AttendanceCreateOrConnectWithoutScheduledSessionsInput = {
+  where: Prisma.AttendanceWhereUniqueInput
+  create: Prisma.XOR<Prisma.AttendanceCreateWithoutScheduledSessionsInput, Prisma.AttendanceUncheckedCreateWithoutScheduledSessionsInput>
+}
+
+export type AttendanceUpsertWithoutScheduledSessionsInput = {
+  update: Prisma.XOR<Prisma.AttendanceUpdateWithoutScheduledSessionsInput, Prisma.AttendanceUncheckedUpdateWithoutScheduledSessionsInput>
+  create: Prisma.XOR<Prisma.AttendanceCreateWithoutScheduledSessionsInput, Prisma.AttendanceUncheckedCreateWithoutScheduledSessionsInput>
+  where?: Prisma.AttendanceWhereInput
+}
+
+export type AttendanceUpdateToOneWithWhereWithoutScheduledSessionsInput = {
+  where?: Prisma.AttendanceWhereInput
+  data: Prisma.XOR<Prisma.AttendanceUpdateWithoutScheduledSessionsInput, Prisma.AttendanceUncheckedUpdateWithoutScheduledSessionsInput>
+}
+
+export type AttendanceUpdateWithoutScheduledSessionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
+  markedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  markedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  departureTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  student?: Prisma.StudentUpdateOneRequiredWithoutAttendanceNestedInput
+  class?: Prisma.ClassUpdateOneRequiredWithoutAttendancesNestedInput
+  schedule?: Prisma.ClassScheduleUpdateOneRequiredWithoutAttendancesNestedInput
+  teachers?: Prisma.TeacherUpdateManyWithoutAssignedAttendanceNestedInput
+}
+
+export type AttendanceUncheckedUpdateWithoutScheduledSessionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  studentId?: Prisma.StringFieldUpdateOperationsInput | string
+  classId?: Prisma.StringFieldUpdateOperationsInput | string
+  scheduleId?: Prisma.StringFieldUpdateOperationsInput | string
+  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  status?: Prisma.EnumAttendanceStatusFieldUpdateOperationsInput | $Enums.AttendanceStatus
+  markedBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  markedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  departureTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  teachers?: Prisma.TeacherUncheckedUpdateManyWithoutAssignedAttendanceNestedInput
+}
+
 export type AttendanceCreateManyStudentInput = {
   id?: string
   classId: string
@@ -888,6 +1000,7 @@ export type AttendanceUpdateWithoutStudentInput = {
   class?: Prisma.ClassUpdateOneRequiredWithoutAttendancesNestedInput
   schedule?: Prisma.ClassScheduleUpdateOneRequiredWithoutAttendancesNestedInput
   teachers?: Prisma.TeacherUpdateManyWithoutAssignedAttendanceNestedInput
+  scheduledSessions?: Prisma.ScheduledSessionUpdateManyWithoutAttendanceNestedInput
 }
 
 export type AttendanceUncheckedUpdateWithoutStudentInput = {
@@ -902,6 +1015,7 @@ export type AttendanceUncheckedUpdateWithoutStudentInput = {
   arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   departureTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   teachers?: Prisma.TeacherUncheckedUpdateManyWithoutAssignedAttendanceNestedInput
+  scheduledSessions?: Prisma.ScheduledSessionUncheckedUpdateManyWithoutAttendanceNestedInput
 }
 
 export type AttendanceUncheckedUpdateManyWithoutStudentInput = {
@@ -929,6 +1043,7 @@ export type AttendanceUpdateWithoutTeachersInput = {
   student?: Prisma.StudentUpdateOneRequiredWithoutAttendanceNestedInput
   class?: Prisma.ClassUpdateOneRequiredWithoutAttendancesNestedInput
   schedule?: Prisma.ClassScheduleUpdateOneRequiredWithoutAttendancesNestedInput
+  scheduledSessions?: Prisma.ScheduledSessionUpdateManyWithoutAttendanceNestedInput
 }
 
 export type AttendanceUncheckedUpdateWithoutTeachersInput = {
@@ -943,6 +1058,7 @@ export type AttendanceUncheckedUpdateWithoutTeachersInput = {
   remarks?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   departureTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  scheduledSessions?: Prisma.ScheduledSessionUncheckedUpdateManyWithoutAttendanceNestedInput
 }
 
 export type AttendanceUncheckedUpdateManyWithoutTeachersInput = {
@@ -984,6 +1100,7 @@ export type AttendanceUpdateWithoutClassInput = {
   student?: Prisma.StudentUpdateOneRequiredWithoutAttendanceNestedInput
   schedule?: Prisma.ClassScheduleUpdateOneRequiredWithoutAttendancesNestedInput
   teachers?: Prisma.TeacherUpdateManyWithoutAssignedAttendanceNestedInput
+  scheduledSessions?: Prisma.ScheduledSessionUpdateManyWithoutAttendanceNestedInput
 }
 
 export type AttendanceUncheckedUpdateWithoutClassInput = {
@@ -998,6 +1115,7 @@ export type AttendanceUncheckedUpdateWithoutClassInput = {
   arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   departureTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   teachers?: Prisma.TeacherUncheckedUpdateManyWithoutAssignedAttendanceNestedInput
+  scheduledSessions?: Prisma.ScheduledSessionUncheckedUpdateManyWithoutAttendanceNestedInput
 }
 
 export type AttendanceUncheckedUpdateManyWithoutClassInput = {
@@ -1038,6 +1156,7 @@ export type AttendanceUpdateWithoutScheduleInput = {
   student?: Prisma.StudentUpdateOneRequiredWithoutAttendanceNestedInput
   class?: Prisma.ClassUpdateOneRequiredWithoutAttendancesNestedInput
   teachers?: Prisma.TeacherUpdateManyWithoutAssignedAttendanceNestedInput
+  scheduledSessions?: Prisma.ScheduledSessionUpdateManyWithoutAttendanceNestedInput
 }
 
 export type AttendanceUncheckedUpdateWithoutScheduleInput = {
@@ -1052,6 +1171,7 @@ export type AttendanceUncheckedUpdateWithoutScheduleInput = {
   arrivalTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   departureTime?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   teachers?: Prisma.TeacherUncheckedUpdateManyWithoutAssignedAttendanceNestedInput
+  scheduledSessions?: Prisma.ScheduledSessionUncheckedUpdateManyWithoutAttendanceNestedInput
 }
 
 export type AttendanceUncheckedUpdateManyWithoutScheduleInput = {
@@ -1074,10 +1194,12 @@ export type AttendanceUncheckedUpdateManyWithoutScheduleInput = {
 
 export type AttendanceCountOutputType = {
   teachers: number
+  scheduledSessions: number
 }
 
 export type AttendanceCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   teachers?: boolean | AttendanceCountOutputTypeCountTeachersArgs
+  scheduledSessions?: boolean | AttendanceCountOutputTypeCountScheduledSessionsArgs
 }
 
 /**
@@ -1097,6 +1219,13 @@ export type AttendanceCountOutputTypeCountTeachersArgs<ExtArgs extends runtime.T
   where?: Prisma.TeacherWhereInput
 }
 
+/**
+ * AttendanceCountOutputType without action
+ */
+export type AttendanceCountOutputTypeCountScheduledSessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.ScheduledSessionWhereInput
+}
+
 
 export type AttendanceSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1114,6 +1243,7 @@ export type AttendanceSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   class?: boolean | Prisma.ClassDefaultArgs<ExtArgs>
   schedule?: boolean | Prisma.ClassScheduleDefaultArgs<ExtArgs>
   teachers?: boolean | Prisma.Attendance$teachersArgs<ExtArgs>
+  scheduledSessions?: boolean | Prisma.Attendance$scheduledSessionsArgs<ExtArgs>
   _count?: boolean | Prisma.AttendanceCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["attendance"]>
 
@@ -1171,6 +1301,7 @@ export type AttendanceInclude<ExtArgs extends runtime.Types.Extensions.InternalA
   class?: boolean | Prisma.ClassDefaultArgs<ExtArgs>
   schedule?: boolean | Prisma.ClassScheduleDefaultArgs<ExtArgs>
   teachers?: boolean | Prisma.Attendance$teachersArgs<ExtArgs>
+  scheduledSessions?: boolean | Prisma.Attendance$scheduledSessionsArgs<ExtArgs>
   _count?: boolean | Prisma.AttendanceCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type AttendanceIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1191,6 +1322,7 @@ export type $AttendancePayload<ExtArgs extends runtime.Types.Extensions.Internal
     class: Prisma.$ClassPayload<ExtArgs>
     schedule: Prisma.$ClassSchedulePayload<ExtArgs>
     teachers: Prisma.$TeacherPayload<ExtArgs>[]
+    scheduledSessions: Prisma.$ScheduledSessionPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1602,6 +1734,7 @@ export interface Prisma__AttendanceClient<T, Null = never, ExtArgs extends runti
   class<T extends Prisma.ClassDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ClassDefaultArgs<ExtArgs>>): Prisma.Prisma__ClassClient<runtime.Types.Result.GetResult<Prisma.$ClassPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   schedule<T extends Prisma.ClassScheduleDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ClassScheduleDefaultArgs<ExtArgs>>): Prisma.Prisma__ClassScheduleClient<runtime.Types.Result.GetResult<Prisma.$ClassSchedulePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   teachers<T extends Prisma.Attendance$teachersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Attendance$teachersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$TeacherPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  scheduledSessions<T extends Prisma.Attendance$scheduledSessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Attendance$scheduledSessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ScheduledSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2059,6 +2192,30 @@ export type Attendance$teachersArgs<ExtArgs extends runtime.Types.Extensions.Int
   take?: number
   skip?: number
   distinct?: Prisma.TeacherScalarFieldEnum | Prisma.TeacherScalarFieldEnum[]
+}
+
+/**
+ * Attendance.scheduledSessions
+ */
+export type Attendance$scheduledSessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the ScheduledSession
+   */
+  select?: Prisma.ScheduledSessionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the ScheduledSession
+   */
+  omit?: Prisma.ScheduledSessionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ScheduledSessionInclude<ExtArgs> | null
+  where?: Prisma.ScheduledSessionWhereInput
+  orderBy?: Prisma.ScheduledSessionOrderByWithRelationInput | Prisma.ScheduledSessionOrderByWithRelationInput[]
+  cursor?: Prisma.ScheduledSessionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.ScheduledSessionScalarFieldEnum | Prisma.ScheduledSessionScalarFieldEnum[]
 }
 
 /**

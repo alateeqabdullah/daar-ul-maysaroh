@@ -356,6 +356,7 @@ export type UserWhereInput = {
   subjectMaterials?: Prisma.SubjectMaterialListRelationFilter
   announcements?: Prisma.AnnouncementListRelationFilter
   events?: Prisma.EventListRelationFilter
+  courseAnnouncements?: Prisma.CourseAnnouncementListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -399,6 +400,7 @@ export type UserOrderByWithRelationInput = {
   subjectMaterials?: Prisma.SubjectMaterialOrderByRelationAggregateInput
   announcements?: Prisma.AnnouncementOrderByRelationAggregateInput
   events?: Prisma.EventOrderByRelationAggregateInput
+  courseAnnouncements?: Prisma.CourseAnnouncementOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -445,6 +447,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   subjectMaterials?: Prisma.SubjectMaterialListRelationFilter
   announcements?: Prisma.AnnouncementListRelationFilter
   events?: Prisma.EventListRelationFilter
+  courseAnnouncements?: Prisma.CourseAnnouncementListRelationFilter
 }, "id" | "email">
 
 export type UserOrderByWithAggregationInput = {
@@ -541,6 +544,7 @@ export type UserCreateInput = {
   subjectMaterials?: Prisma.SubjectMaterialCreateNestedManyWithoutUploadedByInput
   announcements?: Prisma.AnnouncementCreateNestedManyWithoutCreatedByInput
   events?: Prisma.EventCreateNestedManyWithoutOrganizedByInput
+  courseAnnouncements?: Prisma.CourseAnnouncementCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -583,6 +587,7 @@ export type UserUncheckedCreateInput = {
   subjectMaterials?: Prisma.SubjectMaterialUncheckedCreateNestedManyWithoutUploadedByInput
   announcements?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutCreatedByInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutOrganizedByInput
+  courseAnnouncements?: Prisma.CourseAnnouncementUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUpdateInput = {
@@ -625,6 +630,7 @@ export type UserUpdateInput = {
   subjectMaterials?: Prisma.SubjectMaterialUpdateManyWithoutUploadedByNestedInput
   announcements?: Prisma.AnnouncementUpdateManyWithoutCreatedByNestedInput
   events?: Prisma.EventUpdateManyWithoutOrganizedByNestedInput
+  courseAnnouncements?: Prisma.CourseAnnouncementUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -667,6 +673,7 @@ export type UserUncheckedUpdateInput = {
   subjectMaterials?: Prisma.SubjectMaterialUncheckedUpdateManyWithoutUploadedByNestedInput
   announcements?: Prisma.AnnouncementUncheckedUpdateManyWithoutCreatedByNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutOrganizedByNestedInput
+  courseAnnouncements?: Prisma.CourseAnnouncementUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -1204,6 +1211,20 @@ export type UserUpdateOneRequiredWithoutEventsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutEventsInput, Prisma.UserUpdateWithoutEventsInput>, Prisma.UserUncheckedUpdateWithoutEventsInput>
 }
 
+export type UserCreateNestedOneWithoutCourseAnnouncementsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCourseAnnouncementsInput, Prisma.UserUncheckedCreateWithoutCourseAnnouncementsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCourseAnnouncementsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutCourseAnnouncementsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutCourseAnnouncementsInput, Prisma.UserUncheckedCreateWithoutCourseAnnouncementsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutCourseAnnouncementsInput
+  upsert?: Prisma.UserUpsertWithoutCourseAnnouncementsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutCourseAnnouncementsInput, Prisma.UserUpdateWithoutCourseAnnouncementsInput>, Prisma.UserUncheckedUpdateWithoutCourseAnnouncementsInput>
+}
+
 export type UserCreateWithoutApprovedUsersInput = {
   id?: string
   email: string
@@ -1243,6 +1264,7 @@ export type UserCreateWithoutApprovedUsersInput = {
   subjectMaterials?: Prisma.SubjectMaterialCreateNestedManyWithoutUploadedByInput
   announcements?: Prisma.AnnouncementCreateNestedManyWithoutCreatedByInput
   events?: Prisma.EventCreateNestedManyWithoutOrganizedByInput
+  courseAnnouncements?: Prisma.CourseAnnouncementCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateWithoutApprovedUsersInput = {
@@ -1284,6 +1306,7 @@ export type UserUncheckedCreateWithoutApprovedUsersInput = {
   subjectMaterials?: Prisma.SubjectMaterialUncheckedCreateNestedManyWithoutUploadedByInput
   announcements?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutCreatedByInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutOrganizedByInput
+  courseAnnouncements?: Prisma.CourseAnnouncementUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserCreateOrConnectWithoutApprovedUsersInput = {
@@ -1330,6 +1353,7 @@ export type UserCreateWithoutApprovedByInput = {
   subjectMaterials?: Prisma.SubjectMaterialCreateNestedManyWithoutUploadedByInput
   announcements?: Prisma.AnnouncementCreateNestedManyWithoutCreatedByInput
   events?: Prisma.EventCreateNestedManyWithoutOrganizedByInput
+  courseAnnouncements?: Prisma.CourseAnnouncementCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateWithoutApprovedByInput = {
@@ -1371,6 +1395,7 @@ export type UserUncheckedCreateWithoutApprovedByInput = {
   subjectMaterials?: Prisma.SubjectMaterialUncheckedCreateNestedManyWithoutUploadedByInput
   announcements?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutCreatedByInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutOrganizedByInput
+  courseAnnouncements?: Prisma.CourseAnnouncementUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserCreateOrConnectWithoutApprovedByInput = {
@@ -1433,6 +1458,7 @@ export type UserUpdateWithoutApprovedUsersInput = {
   subjectMaterials?: Prisma.SubjectMaterialUpdateManyWithoutUploadedByNestedInput
   announcements?: Prisma.AnnouncementUpdateManyWithoutCreatedByNestedInput
   events?: Prisma.EventUpdateManyWithoutOrganizedByNestedInput
+  courseAnnouncements?: Prisma.CourseAnnouncementUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutApprovedUsersInput = {
@@ -1474,6 +1500,7 @@ export type UserUncheckedUpdateWithoutApprovedUsersInput = {
   subjectMaterials?: Prisma.SubjectMaterialUncheckedUpdateManyWithoutUploadedByNestedInput
   announcements?: Prisma.AnnouncementUncheckedUpdateManyWithoutCreatedByNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutOrganizedByNestedInput
+  courseAnnouncements?: Prisma.CourseAnnouncementUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUpsertWithWhereUniqueWithoutApprovedByInput = {
@@ -1557,6 +1584,7 @@ export type UserCreateWithoutStudentProfileInput = {
   subjectMaterials?: Prisma.SubjectMaterialCreateNestedManyWithoutUploadedByInput
   announcements?: Prisma.AnnouncementCreateNestedManyWithoutCreatedByInput
   events?: Prisma.EventCreateNestedManyWithoutOrganizedByInput
+  courseAnnouncements?: Prisma.CourseAnnouncementCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateWithoutStudentProfileInput = {
@@ -1598,6 +1626,7 @@ export type UserUncheckedCreateWithoutStudentProfileInput = {
   subjectMaterials?: Prisma.SubjectMaterialUncheckedCreateNestedManyWithoutUploadedByInput
   announcements?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutCreatedByInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutOrganizedByInput
+  courseAnnouncements?: Prisma.CourseAnnouncementUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserCreateOrConnectWithoutStudentProfileInput = {
@@ -1655,6 +1684,7 @@ export type UserUpdateWithoutStudentProfileInput = {
   subjectMaterials?: Prisma.SubjectMaterialUpdateManyWithoutUploadedByNestedInput
   announcements?: Prisma.AnnouncementUpdateManyWithoutCreatedByNestedInput
   events?: Prisma.EventUpdateManyWithoutOrganizedByNestedInput
+  courseAnnouncements?: Prisma.CourseAnnouncementUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutStudentProfileInput = {
@@ -1696,6 +1726,7 @@ export type UserUncheckedUpdateWithoutStudentProfileInput = {
   subjectMaterials?: Prisma.SubjectMaterialUncheckedUpdateManyWithoutUploadedByNestedInput
   announcements?: Prisma.AnnouncementUncheckedUpdateManyWithoutCreatedByNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutOrganizedByNestedInput
+  courseAnnouncements?: Prisma.CourseAnnouncementUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserCreateWithoutTeacherProfileInput = {
@@ -1737,6 +1768,7 @@ export type UserCreateWithoutTeacherProfileInput = {
   subjectMaterials?: Prisma.SubjectMaterialCreateNestedManyWithoutUploadedByInput
   announcements?: Prisma.AnnouncementCreateNestedManyWithoutCreatedByInput
   events?: Prisma.EventCreateNestedManyWithoutOrganizedByInput
+  courseAnnouncements?: Prisma.CourseAnnouncementCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateWithoutTeacherProfileInput = {
@@ -1778,6 +1810,7 @@ export type UserUncheckedCreateWithoutTeacherProfileInput = {
   subjectMaterials?: Prisma.SubjectMaterialUncheckedCreateNestedManyWithoutUploadedByInput
   announcements?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutCreatedByInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutOrganizedByInput
+  courseAnnouncements?: Prisma.CourseAnnouncementUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserCreateOrConnectWithoutTeacherProfileInput = {
@@ -1835,6 +1868,7 @@ export type UserUpdateWithoutTeacherProfileInput = {
   subjectMaterials?: Prisma.SubjectMaterialUpdateManyWithoutUploadedByNestedInput
   announcements?: Prisma.AnnouncementUpdateManyWithoutCreatedByNestedInput
   events?: Prisma.EventUpdateManyWithoutOrganizedByNestedInput
+  courseAnnouncements?: Prisma.CourseAnnouncementUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTeacherProfileInput = {
@@ -1876,6 +1910,7 @@ export type UserUncheckedUpdateWithoutTeacherProfileInput = {
   subjectMaterials?: Prisma.SubjectMaterialUncheckedUpdateManyWithoutUploadedByNestedInput
   announcements?: Prisma.AnnouncementUncheckedUpdateManyWithoutCreatedByNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutOrganizedByNestedInput
+  courseAnnouncements?: Prisma.CourseAnnouncementUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserCreateWithoutParentProfileInput = {
@@ -1917,6 +1952,7 @@ export type UserCreateWithoutParentProfileInput = {
   subjectMaterials?: Prisma.SubjectMaterialCreateNestedManyWithoutUploadedByInput
   announcements?: Prisma.AnnouncementCreateNestedManyWithoutCreatedByInput
   events?: Prisma.EventCreateNestedManyWithoutOrganizedByInput
+  courseAnnouncements?: Prisma.CourseAnnouncementCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateWithoutParentProfileInput = {
@@ -1958,6 +1994,7 @@ export type UserUncheckedCreateWithoutParentProfileInput = {
   subjectMaterials?: Prisma.SubjectMaterialUncheckedCreateNestedManyWithoutUploadedByInput
   announcements?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutCreatedByInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutOrganizedByInput
+  courseAnnouncements?: Prisma.CourseAnnouncementUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserCreateOrConnectWithoutParentProfileInput = {
@@ -2015,6 +2052,7 @@ export type UserUpdateWithoutParentProfileInput = {
   subjectMaterials?: Prisma.SubjectMaterialUpdateManyWithoutUploadedByNestedInput
   announcements?: Prisma.AnnouncementUpdateManyWithoutCreatedByNestedInput
   events?: Prisma.EventUpdateManyWithoutOrganizedByNestedInput
+  courseAnnouncements?: Prisma.CourseAnnouncementUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutParentProfileInput = {
@@ -2056,6 +2094,7 @@ export type UserUncheckedUpdateWithoutParentProfileInput = {
   subjectMaterials?: Prisma.SubjectMaterialUncheckedUpdateManyWithoutUploadedByNestedInput
   announcements?: Prisma.AnnouncementUncheckedUpdateManyWithoutCreatedByNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutOrganizedByNestedInput
+  courseAnnouncements?: Prisma.CourseAnnouncementUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserCreateWithoutAdminProfileInput = {
@@ -2097,6 +2136,7 @@ export type UserCreateWithoutAdminProfileInput = {
   subjectMaterials?: Prisma.SubjectMaterialCreateNestedManyWithoutUploadedByInput
   announcements?: Prisma.AnnouncementCreateNestedManyWithoutCreatedByInput
   events?: Prisma.EventCreateNestedManyWithoutOrganizedByInput
+  courseAnnouncements?: Prisma.CourseAnnouncementCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateWithoutAdminProfileInput = {
@@ -2138,6 +2178,7 @@ export type UserUncheckedCreateWithoutAdminProfileInput = {
   subjectMaterials?: Prisma.SubjectMaterialUncheckedCreateNestedManyWithoutUploadedByInput
   announcements?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutCreatedByInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutOrganizedByInput
+  courseAnnouncements?: Prisma.CourseAnnouncementUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserCreateOrConnectWithoutAdminProfileInput = {
@@ -2195,6 +2236,7 @@ export type UserUpdateWithoutAdminProfileInput = {
   subjectMaterials?: Prisma.SubjectMaterialUpdateManyWithoutUploadedByNestedInput
   announcements?: Prisma.AnnouncementUpdateManyWithoutCreatedByNestedInput
   events?: Prisma.EventUpdateManyWithoutOrganizedByNestedInput
+  courseAnnouncements?: Prisma.CourseAnnouncementUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAdminProfileInput = {
@@ -2236,6 +2278,7 @@ export type UserUncheckedUpdateWithoutAdminProfileInput = {
   subjectMaterials?: Prisma.SubjectMaterialUncheckedUpdateManyWithoutUploadedByNestedInput
   announcements?: Prisma.AnnouncementUncheckedUpdateManyWithoutCreatedByNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutOrganizedByNestedInput
+  courseAnnouncements?: Prisma.CourseAnnouncementUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserCreateWithoutCreatedClassesInput = {
@@ -2277,6 +2320,7 @@ export type UserCreateWithoutCreatedClassesInput = {
   subjectMaterials?: Prisma.SubjectMaterialCreateNestedManyWithoutUploadedByInput
   announcements?: Prisma.AnnouncementCreateNestedManyWithoutCreatedByInput
   events?: Prisma.EventCreateNestedManyWithoutOrganizedByInput
+  courseAnnouncements?: Prisma.CourseAnnouncementCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateWithoutCreatedClassesInput = {
@@ -2318,6 +2362,7 @@ export type UserUncheckedCreateWithoutCreatedClassesInput = {
   subjectMaterials?: Prisma.SubjectMaterialUncheckedCreateNestedManyWithoutUploadedByInput
   announcements?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutCreatedByInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutOrganizedByInput
+  courseAnnouncements?: Prisma.CourseAnnouncementUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserCreateOrConnectWithoutCreatedClassesInput = {
@@ -2375,6 +2420,7 @@ export type UserUpdateWithoutCreatedClassesInput = {
   subjectMaterials?: Prisma.SubjectMaterialUpdateManyWithoutUploadedByNestedInput
   announcements?: Prisma.AnnouncementUpdateManyWithoutCreatedByNestedInput
   events?: Prisma.EventUpdateManyWithoutOrganizedByNestedInput
+  courseAnnouncements?: Prisma.CourseAnnouncementUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutCreatedClassesInput = {
@@ -2416,6 +2462,7 @@ export type UserUncheckedUpdateWithoutCreatedClassesInput = {
   subjectMaterials?: Prisma.SubjectMaterialUncheckedUpdateManyWithoutUploadedByNestedInput
   announcements?: Prisma.AnnouncementUncheckedUpdateManyWithoutCreatedByNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutOrganizedByNestedInput
+  courseAnnouncements?: Prisma.CourseAnnouncementUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserCreateWithoutGroupAnnouncementsInput = {
@@ -2457,6 +2504,7 @@ export type UserCreateWithoutGroupAnnouncementsInput = {
   subjectMaterials?: Prisma.SubjectMaterialCreateNestedManyWithoutUploadedByInput
   announcements?: Prisma.AnnouncementCreateNestedManyWithoutCreatedByInput
   events?: Prisma.EventCreateNestedManyWithoutOrganizedByInput
+  courseAnnouncements?: Prisma.CourseAnnouncementCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateWithoutGroupAnnouncementsInput = {
@@ -2498,6 +2546,7 @@ export type UserUncheckedCreateWithoutGroupAnnouncementsInput = {
   subjectMaterials?: Prisma.SubjectMaterialUncheckedCreateNestedManyWithoutUploadedByInput
   announcements?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutCreatedByInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutOrganizedByInput
+  courseAnnouncements?: Prisma.CourseAnnouncementUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserCreateOrConnectWithoutGroupAnnouncementsInput = {
@@ -2555,6 +2604,7 @@ export type UserUpdateWithoutGroupAnnouncementsInput = {
   subjectMaterials?: Prisma.SubjectMaterialUpdateManyWithoutUploadedByNestedInput
   announcements?: Prisma.AnnouncementUpdateManyWithoutCreatedByNestedInput
   events?: Prisma.EventUpdateManyWithoutOrganizedByNestedInput
+  courseAnnouncements?: Prisma.CourseAnnouncementUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutGroupAnnouncementsInput = {
@@ -2596,6 +2646,7 @@ export type UserUncheckedUpdateWithoutGroupAnnouncementsInput = {
   subjectMaterials?: Prisma.SubjectMaterialUncheckedUpdateManyWithoutUploadedByNestedInput
   announcements?: Prisma.AnnouncementUncheckedUpdateManyWithoutCreatedByNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutOrganizedByNestedInput
+  courseAnnouncements?: Prisma.CourseAnnouncementUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserCreateWithoutGroupAssignmentsInput = {
@@ -2637,6 +2688,7 @@ export type UserCreateWithoutGroupAssignmentsInput = {
   subjectMaterials?: Prisma.SubjectMaterialCreateNestedManyWithoutUploadedByInput
   announcements?: Prisma.AnnouncementCreateNestedManyWithoutCreatedByInput
   events?: Prisma.EventCreateNestedManyWithoutOrganizedByInput
+  courseAnnouncements?: Prisma.CourseAnnouncementCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateWithoutGroupAssignmentsInput = {
@@ -2678,6 +2730,7 @@ export type UserUncheckedCreateWithoutGroupAssignmentsInput = {
   subjectMaterials?: Prisma.SubjectMaterialUncheckedCreateNestedManyWithoutUploadedByInput
   announcements?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutCreatedByInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutOrganizedByInput
+  courseAnnouncements?: Prisma.CourseAnnouncementUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserCreateOrConnectWithoutGroupAssignmentsInput = {
@@ -2735,6 +2788,7 @@ export type UserUpdateWithoutGroupAssignmentsInput = {
   subjectMaterials?: Prisma.SubjectMaterialUpdateManyWithoutUploadedByNestedInput
   announcements?: Prisma.AnnouncementUpdateManyWithoutCreatedByNestedInput
   events?: Prisma.EventUpdateManyWithoutOrganizedByNestedInput
+  courseAnnouncements?: Prisma.CourseAnnouncementUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutGroupAssignmentsInput = {
@@ -2776,6 +2830,7 @@ export type UserUncheckedUpdateWithoutGroupAssignmentsInput = {
   subjectMaterials?: Prisma.SubjectMaterialUncheckedUpdateManyWithoutUploadedByNestedInput
   announcements?: Prisma.AnnouncementUncheckedUpdateManyWithoutCreatedByNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutOrganizedByNestedInput
+  courseAnnouncements?: Prisma.CourseAnnouncementUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserCreateWithoutAssignmentsInput = {
@@ -2817,6 +2872,7 @@ export type UserCreateWithoutAssignmentsInput = {
   subjectMaterials?: Prisma.SubjectMaterialCreateNestedManyWithoutUploadedByInput
   announcements?: Prisma.AnnouncementCreateNestedManyWithoutCreatedByInput
   events?: Prisma.EventCreateNestedManyWithoutOrganizedByInput
+  courseAnnouncements?: Prisma.CourseAnnouncementCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateWithoutAssignmentsInput = {
@@ -2858,6 +2914,7 @@ export type UserUncheckedCreateWithoutAssignmentsInput = {
   subjectMaterials?: Prisma.SubjectMaterialUncheckedCreateNestedManyWithoutUploadedByInput
   announcements?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutCreatedByInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutOrganizedByInput
+  courseAnnouncements?: Prisma.CourseAnnouncementUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserCreateOrConnectWithoutAssignmentsInput = {
@@ -2915,6 +2972,7 @@ export type UserUpdateWithoutAssignmentsInput = {
   subjectMaterials?: Prisma.SubjectMaterialUpdateManyWithoutUploadedByNestedInput
   announcements?: Prisma.AnnouncementUpdateManyWithoutCreatedByNestedInput
   events?: Prisma.EventUpdateManyWithoutOrganizedByNestedInput
+  courseAnnouncements?: Prisma.CourseAnnouncementUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAssignmentsInput = {
@@ -2956,6 +3014,7 @@ export type UserUncheckedUpdateWithoutAssignmentsInput = {
   subjectMaterials?: Prisma.SubjectMaterialUncheckedUpdateManyWithoutUploadedByNestedInput
   announcements?: Prisma.AnnouncementUncheckedUpdateManyWithoutCreatedByNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutOrganizedByNestedInput
+  courseAnnouncements?: Prisma.CourseAnnouncementUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserCreateWithoutClassMaterialsInput = {
@@ -2997,6 +3056,7 @@ export type UserCreateWithoutClassMaterialsInput = {
   subjectMaterials?: Prisma.SubjectMaterialCreateNestedManyWithoutUploadedByInput
   announcements?: Prisma.AnnouncementCreateNestedManyWithoutCreatedByInput
   events?: Prisma.EventCreateNestedManyWithoutOrganizedByInput
+  courseAnnouncements?: Prisma.CourseAnnouncementCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateWithoutClassMaterialsInput = {
@@ -3038,6 +3098,7 @@ export type UserUncheckedCreateWithoutClassMaterialsInput = {
   subjectMaterials?: Prisma.SubjectMaterialUncheckedCreateNestedManyWithoutUploadedByInput
   announcements?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutCreatedByInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutOrganizedByInput
+  courseAnnouncements?: Prisma.CourseAnnouncementUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserCreateOrConnectWithoutClassMaterialsInput = {
@@ -3095,6 +3156,7 @@ export type UserUpdateWithoutClassMaterialsInput = {
   subjectMaterials?: Prisma.SubjectMaterialUpdateManyWithoutUploadedByNestedInput
   announcements?: Prisma.AnnouncementUpdateManyWithoutCreatedByNestedInput
   events?: Prisma.EventUpdateManyWithoutOrganizedByNestedInput
+  courseAnnouncements?: Prisma.CourseAnnouncementUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutClassMaterialsInput = {
@@ -3136,6 +3198,7 @@ export type UserUncheckedUpdateWithoutClassMaterialsInput = {
   subjectMaterials?: Prisma.SubjectMaterialUncheckedUpdateManyWithoutUploadedByNestedInput
   announcements?: Prisma.AnnouncementUncheckedUpdateManyWithoutCreatedByNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutOrganizedByNestedInput
+  courseAnnouncements?: Prisma.CourseAnnouncementUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserCreateWithoutSubjectMaterialsInput = {
@@ -3177,6 +3240,7 @@ export type UserCreateWithoutSubjectMaterialsInput = {
   classMaterials?: Prisma.ClassMaterialCreateNestedManyWithoutUploadedByInput
   announcements?: Prisma.AnnouncementCreateNestedManyWithoutCreatedByInput
   events?: Prisma.EventCreateNestedManyWithoutOrganizedByInput
+  courseAnnouncements?: Prisma.CourseAnnouncementCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateWithoutSubjectMaterialsInput = {
@@ -3218,6 +3282,7 @@ export type UserUncheckedCreateWithoutSubjectMaterialsInput = {
   classMaterials?: Prisma.ClassMaterialUncheckedCreateNestedManyWithoutUploadedByInput
   announcements?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutCreatedByInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutOrganizedByInput
+  courseAnnouncements?: Prisma.CourseAnnouncementUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserCreateOrConnectWithoutSubjectMaterialsInput = {
@@ -3275,6 +3340,7 @@ export type UserUpdateWithoutSubjectMaterialsInput = {
   classMaterials?: Prisma.ClassMaterialUpdateManyWithoutUploadedByNestedInput
   announcements?: Prisma.AnnouncementUpdateManyWithoutCreatedByNestedInput
   events?: Prisma.EventUpdateManyWithoutOrganizedByNestedInput
+  courseAnnouncements?: Prisma.CourseAnnouncementUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSubjectMaterialsInput = {
@@ -3316,6 +3382,7 @@ export type UserUncheckedUpdateWithoutSubjectMaterialsInput = {
   classMaterials?: Prisma.ClassMaterialUncheckedUpdateManyWithoutUploadedByNestedInput
   announcements?: Prisma.AnnouncementUncheckedUpdateManyWithoutCreatedByNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutOrganizedByNestedInput
+  courseAnnouncements?: Prisma.CourseAnnouncementUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserCreateWithoutAnnouncementsInput = {
@@ -3357,6 +3424,7 @@ export type UserCreateWithoutAnnouncementsInput = {
   classMaterials?: Prisma.ClassMaterialCreateNestedManyWithoutUploadedByInput
   subjectMaterials?: Prisma.SubjectMaterialCreateNestedManyWithoutUploadedByInput
   events?: Prisma.EventCreateNestedManyWithoutOrganizedByInput
+  courseAnnouncements?: Prisma.CourseAnnouncementCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateWithoutAnnouncementsInput = {
@@ -3398,6 +3466,7 @@ export type UserUncheckedCreateWithoutAnnouncementsInput = {
   classMaterials?: Prisma.ClassMaterialUncheckedCreateNestedManyWithoutUploadedByInput
   subjectMaterials?: Prisma.SubjectMaterialUncheckedCreateNestedManyWithoutUploadedByInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutOrganizedByInput
+  courseAnnouncements?: Prisma.CourseAnnouncementUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserCreateOrConnectWithoutAnnouncementsInput = {
@@ -3455,6 +3524,7 @@ export type UserUpdateWithoutAnnouncementsInput = {
   classMaterials?: Prisma.ClassMaterialUpdateManyWithoutUploadedByNestedInput
   subjectMaterials?: Prisma.SubjectMaterialUpdateManyWithoutUploadedByNestedInput
   events?: Prisma.EventUpdateManyWithoutOrganizedByNestedInput
+  courseAnnouncements?: Prisma.CourseAnnouncementUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAnnouncementsInput = {
@@ -3496,6 +3566,7 @@ export type UserUncheckedUpdateWithoutAnnouncementsInput = {
   classMaterials?: Prisma.ClassMaterialUncheckedUpdateManyWithoutUploadedByNestedInput
   subjectMaterials?: Prisma.SubjectMaterialUncheckedUpdateManyWithoutUploadedByNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutOrganizedByNestedInput
+  courseAnnouncements?: Prisma.CourseAnnouncementUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserCreateWithoutSentMessagesInput = {
@@ -3537,6 +3608,7 @@ export type UserCreateWithoutSentMessagesInput = {
   subjectMaterials?: Prisma.SubjectMaterialCreateNestedManyWithoutUploadedByInput
   announcements?: Prisma.AnnouncementCreateNestedManyWithoutCreatedByInput
   events?: Prisma.EventCreateNestedManyWithoutOrganizedByInput
+  courseAnnouncements?: Prisma.CourseAnnouncementCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateWithoutSentMessagesInput = {
@@ -3578,6 +3650,7 @@ export type UserUncheckedCreateWithoutSentMessagesInput = {
   subjectMaterials?: Prisma.SubjectMaterialUncheckedCreateNestedManyWithoutUploadedByInput
   announcements?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutCreatedByInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutOrganizedByInput
+  courseAnnouncements?: Prisma.CourseAnnouncementUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserCreateOrConnectWithoutSentMessagesInput = {
@@ -3624,6 +3697,7 @@ export type UserCreateWithoutReceivedMessagesInput = {
   subjectMaterials?: Prisma.SubjectMaterialCreateNestedManyWithoutUploadedByInput
   announcements?: Prisma.AnnouncementCreateNestedManyWithoutCreatedByInput
   events?: Prisma.EventCreateNestedManyWithoutOrganizedByInput
+  courseAnnouncements?: Prisma.CourseAnnouncementCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateWithoutReceivedMessagesInput = {
@@ -3665,6 +3739,7 @@ export type UserUncheckedCreateWithoutReceivedMessagesInput = {
   subjectMaterials?: Prisma.SubjectMaterialUncheckedCreateNestedManyWithoutUploadedByInput
   announcements?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutCreatedByInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutOrganizedByInput
+  courseAnnouncements?: Prisma.CourseAnnouncementUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserCreateOrConnectWithoutReceivedMessagesInput = {
@@ -3722,6 +3797,7 @@ export type UserUpdateWithoutSentMessagesInput = {
   subjectMaterials?: Prisma.SubjectMaterialUpdateManyWithoutUploadedByNestedInput
   announcements?: Prisma.AnnouncementUpdateManyWithoutCreatedByNestedInput
   events?: Prisma.EventUpdateManyWithoutOrganizedByNestedInput
+  courseAnnouncements?: Prisma.CourseAnnouncementUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSentMessagesInput = {
@@ -3763,6 +3839,7 @@ export type UserUncheckedUpdateWithoutSentMessagesInput = {
   subjectMaterials?: Prisma.SubjectMaterialUncheckedUpdateManyWithoutUploadedByNestedInput
   announcements?: Prisma.AnnouncementUncheckedUpdateManyWithoutCreatedByNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutOrganizedByNestedInput
+  courseAnnouncements?: Prisma.CourseAnnouncementUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUpsertWithoutReceivedMessagesInput = {
@@ -3815,6 +3892,7 @@ export type UserUpdateWithoutReceivedMessagesInput = {
   subjectMaterials?: Prisma.SubjectMaterialUpdateManyWithoutUploadedByNestedInput
   announcements?: Prisma.AnnouncementUpdateManyWithoutCreatedByNestedInput
   events?: Prisma.EventUpdateManyWithoutOrganizedByNestedInput
+  courseAnnouncements?: Prisma.CourseAnnouncementUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutReceivedMessagesInput = {
@@ -3856,6 +3934,7 @@ export type UserUncheckedUpdateWithoutReceivedMessagesInput = {
   subjectMaterials?: Prisma.SubjectMaterialUncheckedUpdateManyWithoutUploadedByNestedInput
   announcements?: Prisma.AnnouncementUncheckedUpdateManyWithoutCreatedByNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutOrganizedByNestedInput
+  courseAnnouncements?: Prisma.CourseAnnouncementUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserCreateWithoutNotificationsInput = {
@@ -3897,6 +3976,7 @@ export type UserCreateWithoutNotificationsInput = {
   subjectMaterials?: Prisma.SubjectMaterialCreateNestedManyWithoutUploadedByInput
   announcements?: Prisma.AnnouncementCreateNestedManyWithoutCreatedByInput
   events?: Prisma.EventCreateNestedManyWithoutOrganizedByInput
+  courseAnnouncements?: Prisma.CourseAnnouncementCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateWithoutNotificationsInput = {
@@ -3938,6 +4018,7 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   subjectMaterials?: Prisma.SubjectMaterialUncheckedCreateNestedManyWithoutUploadedByInput
   announcements?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutCreatedByInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutOrganizedByInput
+  courseAnnouncements?: Prisma.CourseAnnouncementUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserCreateOrConnectWithoutNotificationsInput = {
@@ -3995,6 +4076,7 @@ export type UserUpdateWithoutNotificationsInput = {
   subjectMaterials?: Prisma.SubjectMaterialUpdateManyWithoutUploadedByNestedInput
   announcements?: Prisma.AnnouncementUpdateManyWithoutCreatedByNestedInput
   events?: Prisma.EventUpdateManyWithoutOrganizedByNestedInput
+  courseAnnouncements?: Prisma.CourseAnnouncementUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutNotificationsInput = {
@@ -4036,6 +4118,7 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   subjectMaterials?: Prisma.SubjectMaterialUncheckedUpdateManyWithoutUploadedByNestedInput
   announcements?: Prisma.AnnouncementUncheckedUpdateManyWithoutCreatedByNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutOrganizedByNestedInput
+  courseAnnouncements?: Prisma.CourseAnnouncementUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserCreateWithoutSessionsInput = {
@@ -4077,6 +4160,7 @@ export type UserCreateWithoutSessionsInput = {
   subjectMaterials?: Prisma.SubjectMaterialCreateNestedManyWithoutUploadedByInput
   announcements?: Prisma.AnnouncementCreateNestedManyWithoutCreatedByInput
   events?: Prisma.EventCreateNestedManyWithoutOrganizedByInput
+  courseAnnouncements?: Prisma.CourseAnnouncementCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateWithoutSessionsInput = {
@@ -4118,6 +4202,7 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   subjectMaterials?: Prisma.SubjectMaterialUncheckedCreateNestedManyWithoutUploadedByInput
   announcements?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutCreatedByInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutOrganizedByInput
+  courseAnnouncements?: Prisma.CourseAnnouncementUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserCreateOrConnectWithoutSessionsInput = {
@@ -4175,6 +4260,7 @@ export type UserUpdateWithoutSessionsInput = {
   subjectMaterials?: Prisma.SubjectMaterialUpdateManyWithoutUploadedByNestedInput
   announcements?: Prisma.AnnouncementUpdateManyWithoutCreatedByNestedInput
   events?: Prisma.EventUpdateManyWithoutOrganizedByNestedInput
+  courseAnnouncements?: Prisma.CourseAnnouncementUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -4216,6 +4302,7 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   subjectMaterials?: Prisma.SubjectMaterialUncheckedUpdateManyWithoutUploadedByNestedInput
   announcements?: Prisma.AnnouncementUncheckedUpdateManyWithoutCreatedByNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutOrganizedByNestedInput
+  courseAnnouncements?: Prisma.CourseAnnouncementUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserCreateWithoutAccountsInput = {
@@ -4257,6 +4344,7 @@ export type UserCreateWithoutAccountsInput = {
   subjectMaterials?: Prisma.SubjectMaterialCreateNestedManyWithoutUploadedByInput
   announcements?: Prisma.AnnouncementCreateNestedManyWithoutCreatedByInput
   events?: Prisma.EventCreateNestedManyWithoutOrganizedByInput
+  courseAnnouncements?: Prisma.CourseAnnouncementCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateWithoutAccountsInput = {
@@ -4298,6 +4386,7 @@ export type UserUncheckedCreateWithoutAccountsInput = {
   subjectMaterials?: Prisma.SubjectMaterialUncheckedCreateNestedManyWithoutUploadedByInput
   announcements?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutCreatedByInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutOrganizedByInput
+  courseAnnouncements?: Prisma.CourseAnnouncementUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserCreateOrConnectWithoutAccountsInput = {
@@ -4355,6 +4444,7 @@ export type UserUpdateWithoutAccountsInput = {
   subjectMaterials?: Prisma.SubjectMaterialUpdateManyWithoutUploadedByNestedInput
   announcements?: Prisma.AnnouncementUpdateManyWithoutCreatedByNestedInput
   events?: Prisma.EventUpdateManyWithoutOrganizedByNestedInput
+  courseAnnouncements?: Prisma.CourseAnnouncementUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutAccountsInput = {
@@ -4396,6 +4486,7 @@ export type UserUncheckedUpdateWithoutAccountsInput = {
   subjectMaterials?: Prisma.SubjectMaterialUncheckedUpdateManyWithoutUploadedByNestedInput
   announcements?: Prisma.AnnouncementUncheckedUpdateManyWithoutCreatedByNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutOrganizedByNestedInput
+  courseAnnouncements?: Prisma.CourseAnnouncementUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserCreateWithoutVerificationTokensInput = {
@@ -4437,6 +4528,7 @@ export type UserCreateWithoutVerificationTokensInput = {
   subjectMaterials?: Prisma.SubjectMaterialCreateNestedManyWithoutUploadedByInput
   announcements?: Prisma.AnnouncementCreateNestedManyWithoutCreatedByInput
   events?: Prisma.EventCreateNestedManyWithoutOrganizedByInput
+  courseAnnouncements?: Prisma.CourseAnnouncementCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateWithoutVerificationTokensInput = {
@@ -4478,6 +4570,7 @@ export type UserUncheckedCreateWithoutVerificationTokensInput = {
   subjectMaterials?: Prisma.SubjectMaterialUncheckedCreateNestedManyWithoutUploadedByInput
   announcements?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutCreatedByInput
   events?: Prisma.EventUncheckedCreateNestedManyWithoutOrganizedByInput
+  courseAnnouncements?: Prisma.CourseAnnouncementUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserCreateOrConnectWithoutVerificationTokensInput = {
@@ -4540,6 +4633,7 @@ export type UserCreateWithoutEventsInput = {
   classMaterials?: Prisma.ClassMaterialCreateNestedManyWithoutUploadedByInput
   subjectMaterials?: Prisma.SubjectMaterialCreateNestedManyWithoutUploadedByInput
   announcements?: Prisma.AnnouncementCreateNestedManyWithoutCreatedByInput
+  courseAnnouncements?: Prisma.CourseAnnouncementCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserUncheckedCreateWithoutEventsInput = {
@@ -4581,6 +4675,7 @@ export type UserUncheckedCreateWithoutEventsInput = {
   classMaterials?: Prisma.ClassMaterialUncheckedCreateNestedManyWithoutUploadedByInput
   subjectMaterials?: Prisma.SubjectMaterialUncheckedCreateNestedManyWithoutUploadedByInput
   announcements?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutCreatedByInput
+  courseAnnouncements?: Prisma.CourseAnnouncementUncheckedCreateNestedManyWithoutCreatedByInput
 }
 
 export type UserCreateOrConnectWithoutEventsInput = {
@@ -4638,6 +4733,7 @@ export type UserUpdateWithoutEventsInput = {
   classMaterials?: Prisma.ClassMaterialUpdateManyWithoutUploadedByNestedInput
   subjectMaterials?: Prisma.SubjectMaterialUpdateManyWithoutUploadedByNestedInput
   announcements?: Prisma.AnnouncementUpdateManyWithoutCreatedByNestedInput
+  courseAnnouncements?: Prisma.CourseAnnouncementUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutEventsInput = {
@@ -4679,6 +4775,191 @@ export type UserUncheckedUpdateWithoutEventsInput = {
   classMaterials?: Prisma.ClassMaterialUncheckedUpdateManyWithoutUploadedByNestedInput
   subjectMaterials?: Prisma.SubjectMaterialUncheckedUpdateManyWithoutUploadedByNestedInput
   announcements?: Prisma.AnnouncementUncheckedUpdateManyWithoutCreatedByNestedInput
+  courseAnnouncements?: Prisma.CourseAnnouncementUncheckedUpdateManyWithoutCreatedByNestedInput
+}
+
+export type UserCreateWithoutCourseAnnouncementsInput = {
+  id?: string
+  email: string
+  password?: string | null
+  name: string
+  phone?: string | null
+  image?: string | null
+  role?: $Enums.UserRole
+  status?: $Enums.UserStatus
+  emailVerified?: Date | string | null
+  phoneVerified?: boolean
+  language?: string
+  timezone?: string
+  approvedAt?: Date | string | null
+  rejectionReason?: string | null
+  lastLogin?: Date | string | null
+  loginCount?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  isActive?: boolean
+  approvedBy?: Prisma.UserCreateNestedOneWithoutApprovedUsersInput
+  studentProfile?: Prisma.StudentCreateNestedOneWithoutUserInput
+  teacherProfile?: Prisma.TeacherCreateNestedOneWithoutUserInput
+  parentProfile?: Prisma.ParentCreateNestedOneWithoutUserInput
+  adminProfile?: Prisma.AdminProfileCreateNestedOneWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  verificationTokens?: Prisma.VerificationTokenCreateNestedManyWithoutUsersInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  sentMessages?: Prisma.MessageCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.MessageCreateNestedManyWithoutReceiverInput
+  createdClasses?: Prisma.ClassCreateNestedManyWithoutCreatedByInput
+  approvedUsers?: Prisma.UserCreateNestedManyWithoutApprovedByInput
+  groupAnnouncements?: Prisma.GroupAnnouncementCreateNestedManyWithoutCreatedByInput
+  groupAssignments?: Prisma.GroupAssignmentCreateNestedManyWithoutCreatedByInput
+  assignments?: Prisma.AssignmentCreateNestedManyWithoutCreatedByInput
+  classMaterials?: Prisma.ClassMaterialCreateNestedManyWithoutUploadedByInput
+  subjectMaterials?: Prisma.SubjectMaterialCreateNestedManyWithoutUploadedByInput
+  announcements?: Prisma.AnnouncementCreateNestedManyWithoutCreatedByInput
+  events?: Prisma.EventCreateNestedManyWithoutOrganizedByInput
+}
+
+export type UserUncheckedCreateWithoutCourseAnnouncementsInput = {
+  id?: string
+  email: string
+  password?: string | null
+  name: string
+  phone?: string | null
+  image?: string | null
+  role?: $Enums.UserRole
+  status?: $Enums.UserStatus
+  emailVerified?: Date | string | null
+  phoneVerified?: boolean
+  language?: string
+  timezone?: string
+  approvedAt?: Date | string | null
+  approvedById?: string | null
+  rejectionReason?: string | null
+  lastLogin?: Date | string | null
+  loginCount?: number
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  isActive?: boolean
+  studentProfile?: Prisma.StudentUncheckedCreateNestedOneWithoutUserInput
+  teacherProfile?: Prisma.TeacherUncheckedCreateNestedOneWithoutUserInput
+  parentProfile?: Prisma.ParentUncheckedCreateNestedOneWithoutUserInput
+  adminProfile?: Prisma.AdminProfileUncheckedCreateNestedOneWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  verificationTokens?: Prisma.VerificationTokenUncheckedCreateNestedManyWithoutUsersInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  sentMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutSenderInput
+  receivedMessages?: Prisma.MessageUncheckedCreateNestedManyWithoutReceiverInput
+  createdClasses?: Prisma.ClassUncheckedCreateNestedManyWithoutCreatedByInput
+  approvedUsers?: Prisma.UserUncheckedCreateNestedManyWithoutApprovedByInput
+  groupAnnouncements?: Prisma.GroupAnnouncementUncheckedCreateNestedManyWithoutCreatedByInput
+  groupAssignments?: Prisma.GroupAssignmentUncheckedCreateNestedManyWithoutCreatedByInput
+  assignments?: Prisma.AssignmentUncheckedCreateNestedManyWithoutCreatedByInput
+  classMaterials?: Prisma.ClassMaterialUncheckedCreateNestedManyWithoutUploadedByInput
+  subjectMaterials?: Prisma.SubjectMaterialUncheckedCreateNestedManyWithoutUploadedByInput
+  announcements?: Prisma.AnnouncementUncheckedCreateNestedManyWithoutCreatedByInput
+  events?: Prisma.EventUncheckedCreateNestedManyWithoutOrganizedByInput
+}
+
+export type UserCreateOrConnectWithoutCourseAnnouncementsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutCourseAnnouncementsInput, Prisma.UserUncheckedCreateWithoutCourseAnnouncementsInput>
+}
+
+export type UserUpsertWithoutCourseAnnouncementsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutCourseAnnouncementsInput, Prisma.UserUncheckedUpdateWithoutCourseAnnouncementsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutCourseAnnouncementsInput, Prisma.UserUncheckedCreateWithoutCourseAnnouncementsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutCourseAnnouncementsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutCourseAnnouncementsInput, Prisma.UserUncheckedUpdateWithoutCourseAnnouncementsInput>
+}
+
+export type UserUpdateWithoutCourseAnnouncementsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  language?: Prisma.StringFieldUpdateOperationsInput | string
+  timezone?: Prisma.StringFieldUpdateOperationsInput | string
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  loginCount?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  approvedBy?: Prisma.UserUpdateOneWithoutApprovedUsersNestedInput
+  studentProfile?: Prisma.StudentUpdateOneWithoutUserNestedInput
+  teacherProfile?: Prisma.TeacherUpdateOneWithoutUserNestedInput
+  parentProfile?: Prisma.ParentUpdateOneWithoutUserNestedInput
+  adminProfile?: Prisma.AdminProfileUpdateOneWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  verificationTokens?: Prisma.VerificationTokenUpdateManyWithoutUsersNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  sentMessages?: Prisma.MessageUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.MessageUpdateManyWithoutReceiverNestedInput
+  createdClasses?: Prisma.ClassUpdateManyWithoutCreatedByNestedInput
+  approvedUsers?: Prisma.UserUpdateManyWithoutApprovedByNestedInput
+  groupAnnouncements?: Prisma.GroupAnnouncementUpdateManyWithoutCreatedByNestedInput
+  groupAssignments?: Prisma.GroupAssignmentUpdateManyWithoutCreatedByNestedInput
+  assignments?: Prisma.AssignmentUpdateManyWithoutCreatedByNestedInput
+  classMaterials?: Prisma.ClassMaterialUpdateManyWithoutUploadedByNestedInput
+  subjectMaterials?: Prisma.SubjectMaterialUpdateManyWithoutUploadedByNestedInput
+  announcements?: Prisma.AnnouncementUpdateManyWithoutCreatedByNestedInput
+  events?: Prisma.EventUpdateManyWithoutOrganizedByNestedInput
+}
+
+export type UserUncheckedUpdateWithoutCourseAnnouncementsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  password?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  phoneVerified?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  language?: Prisma.StringFieldUpdateOperationsInput | string
+  timezone?: Prisma.StringFieldUpdateOperationsInput | string
+  approvedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  approvedById?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rejectionReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  lastLogin?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  loginCount?: Prisma.IntFieldUpdateOperationsInput | number
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  isActive?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  studentProfile?: Prisma.StudentUncheckedUpdateOneWithoutUserNestedInput
+  teacherProfile?: Prisma.TeacherUncheckedUpdateOneWithoutUserNestedInput
+  parentProfile?: Prisma.ParentUncheckedUpdateOneWithoutUserNestedInput
+  adminProfile?: Prisma.AdminProfileUncheckedUpdateOneWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  verificationTokens?: Prisma.VerificationTokenUncheckedUpdateManyWithoutUsersNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  sentMessages?: Prisma.MessageUncheckedUpdateManyWithoutSenderNestedInput
+  receivedMessages?: Prisma.MessageUncheckedUpdateManyWithoutReceiverNestedInput
+  createdClasses?: Prisma.ClassUncheckedUpdateManyWithoutCreatedByNestedInput
+  approvedUsers?: Prisma.UserUncheckedUpdateManyWithoutApprovedByNestedInput
+  groupAnnouncements?: Prisma.GroupAnnouncementUncheckedUpdateManyWithoutCreatedByNestedInput
+  groupAssignments?: Prisma.GroupAssignmentUncheckedUpdateManyWithoutCreatedByNestedInput
+  assignments?: Prisma.AssignmentUncheckedUpdateManyWithoutCreatedByNestedInput
+  classMaterials?: Prisma.ClassMaterialUncheckedUpdateManyWithoutUploadedByNestedInput
+  subjectMaterials?: Prisma.SubjectMaterialUncheckedUpdateManyWithoutUploadedByNestedInput
+  announcements?: Prisma.AnnouncementUncheckedUpdateManyWithoutCreatedByNestedInput
+  events?: Prisma.EventUncheckedUpdateManyWithoutOrganizedByNestedInput
 }
 
 export type UserCreateManyApprovedByInput = {
@@ -4742,6 +5023,7 @@ export type UserUpdateWithoutApprovedByInput = {
   subjectMaterials?: Prisma.SubjectMaterialUpdateManyWithoutUploadedByNestedInput
   announcements?: Prisma.AnnouncementUpdateManyWithoutCreatedByNestedInput
   events?: Prisma.EventUpdateManyWithoutOrganizedByNestedInput
+  courseAnnouncements?: Prisma.CourseAnnouncementUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutApprovedByInput = {
@@ -4783,6 +5065,7 @@ export type UserUncheckedUpdateWithoutApprovedByInput = {
   subjectMaterials?: Prisma.SubjectMaterialUncheckedUpdateManyWithoutUploadedByNestedInput
   announcements?: Prisma.AnnouncementUncheckedUpdateManyWithoutCreatedByNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutOrganizedByNestedInput
+  courseAnnouncements?: Prisma.CourseAnnouncementUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateManyWithoutApprovedByInput = {
@@ -4846,6 +5129,7 @@ export type UserUpdateWithoutVerificationTokensInput = {
   subjectMaterials?: Prisma.SubjectMaterialUpdateManyWithoutUploadedByNestedInput
   announcements?: Prisma.AnnouncementUpdateManyWithoutCreatedByNestedInput
   events?: Prisma.EventUpdateManyWithoutOrganizedByNestedInput
+  courseAnnouncements?: Prisma.CourseAnnouncementUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateWithoutVerificationTokensInput = {
@@ -4887,6 +5171,7 @@ export type UserUncheckedUpdateWithoutVerificationTokensInput = {
   subjectMaterials?: Prisma.SubjectMaterialUncheckedUpdateManyWithoutUploadedByNestedInput
   announcements?: Prisma.AnnouncementUncheckedUpdateManyWithoutCreatedByNestedInput
   events?: Prisma.EventUncheckedUpdateManyWithoutOrganizedByNestedInput
+  courseAnnouncements?: Prisma.CourseAnnouncementUncheckedUpdateManyWithoutCreatedByNestedInput
 }
 
 export type UserUncheckedUpdateManyWithoutVerificationTokensInput = {
@@ -4933,6 +5218,7 @@ export type UserCountOutputType = {
   subjectMaterials: number
   announcements: number
   events: number
+  courseAnnouncements: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -4951,6 +5237,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   subjectMaterials?: boolean | UserCountOutputTypeCountSubjectMaterialsArgs
   announcements?: boolean | UserCountOutputTypeCountAnnouncementsArgs
   events?: boolean | UserCountOutputTypeCountEventsArgs
+  courseAnnouncements?: boolean | UserCountOutputTypeCountCourseAnnouncementsArgs
 }
 
 /**
@@ -5068,6 +5355,13 @@ export type UserCountOutputTypeCountEventsArgs<ExtArgs extends runtime.Types.Ext
   where?: Prisma.EventWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountCourseAnnouncementsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CourseAnnouncementWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -5110,6 +5404,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   subjectMaterials?: boolean | Prisma.User$subjectMaterialsArgs<ExtArgs>
   announcements?: boolean | Prisma.User$announcementsArgs<ExtArgs>
   events?: boolean | Prisma.User$eventsArgs<ExtArgs>
+  courseAnnouncements?: boolean | Prisma.User$courseAnnouncementsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -5206,6 +5501,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   subjectMaterials?: boolean | Prisma.User$subjectMaterialsArgs<ExtArgs>
   announcements?: boolean | Prisma.User$announcementsArgs<ExtArgs>
   events?: boolean | Prisma.User$eventsArgs<ExtArgs>
+  courseAnnouncements?: boolean | Prisma.User$courseAnnouncementsArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -5238,6 +5534,7 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     subjectMaterials: Prisma.$SubjectMaterialPayload<ExtArgs>[]
     announcements: Prisma.$AnnouncementPayload<ExtArgs>[]
     events: Prisma.$EventPayload<ExtArgs>[]
+    courseAnnouncements: Prisma.$CourseAnnouncementPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -5674,6 +5971,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   subjectMaterials<T extends Prisma.User$subjectMaterialsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$subjectMaterialsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SubjectMaterialPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   announcements<T extends Prisma.User$announcementsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$announcementsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AnnouncementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   events<T extends Prisma.User$eventsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$eventsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EventPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  courseAnnouncements<T extends Prisma.User$courseAnnouncementsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$courseAnnouncementsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CourseAnnouncementPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -6571,6 +6869,30 @@ export type User$eventsArgs<ExtArgs extends runtime.Types.Extensions.InternalArg
   take?: number
   skip?: number
   distinct?: Prisma.EventScalarFieldEnum | Prisma.EventScalarFieldEnum[]
+}
+
+/**
+ * User.courseAnnouncements
+ */
+export type User$courseAnnouncementsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CourseAnnouncement
+   */
+  select?: Prisma.CourseAnnouncementSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CourseAnnouncement
+   */
+  omit?: Prisma.CourseAnnouncementOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CourseAnnouncementInclude<ExtArgs> | null
+  where?: Prisma.CourseAnnouncementWhereInput
+  orderBy?: Prisma.CourseAnnouncementOrderByWithRelationInput | Prisma.CourseAnnouncementOrderByWithRelationInput[]
+  cursor?: Prisma.CourseAnnouncementWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CourseAnnouncementScalarFieldEnum | Prisma.CourseAnnouncementScalarFieldEnum[]
 }
 
 /**
