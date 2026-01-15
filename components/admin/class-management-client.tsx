@@ -444,7 +444,7 @@ export default function ClassManagementClient({
                       {cls.isActive ? "Active" : "Inactive"}
                     </Badge>
                   </div>
-                  <div className="p-6 pt-2">
+                  <div className="p-6 pt-6">
                     <div className="-mt-10 mb-3 flex justify-between items-end">
                       <div className="flex items-end gap-2">
                         <Avatar className="h-14 w-14 border-4 border-white dark:border-slate-950 shadow-md">
@@ -453,7 +453,7 @@ export default function ClassManagementClient({
                             {getInitials(cls.teacher?.user.name || "T")}
                           </AvatarFallback>
                         </Avatar>
-                        <div className="mb-1">
+                        <div className="mt-1">
                           <p className="text-xs text-muted-foreground font-medium">
                             Instructor
                           </p>

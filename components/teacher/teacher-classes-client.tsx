@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Search,
@@ -13,6 +14,8 @@ import {
   Plus,
   Loader2,
   X,
+  MapPin,
+  Video,
 } from "lucide-react";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -30,7 +33,6 @@ import { Label } from "@/components/ui/label";
 import { getInitials, cn } from "@/lib/utils";
 import { toast } from "sonner";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 
 // --- ANIMATION ---
 const containerVariants = {
@@ -42,6 +44,7 @@ const itemVariants = {
   show: { y: 0, opacity: 1 },
 };
 
+// Visual Gradients for Cards
 const GRADIENTS = [
   "from-blue-600 to-indigo-600",
   "from-emerald-600 to-teal-600",
@@ -70,6 +73,8 @@ interface Props {
 export default function TeacherClassesClient({ classes }: Props) {
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
+
+  // Request Modal State
   const [isRequestOpen, setIsRequestOpen] = useState(false);
   const [requestData, setRequestData] = useState({
     className: "",
@@ -257,8 +262,14 @@ export default function TeacherClassesClient({ classes }: Props) {
                             <MoreVertical className="h-4 w-4 outline-none" />
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end">
-                            <DropdownMenuItem>View Details</DropdownMenuItem>
-                            <DropdownMenuItem>Mark Attendance</DropdownMenuItem>
+                            <DropdownMenuItem
+                              onClick={() =>
+                                router.push(`/teacher/classes/${cls.id}`)
+                              }
+                            >
+                              View Details
+                            </DropdownMenuItem>
+                            <DropdownMenuItem>View Roster</DropdownMenuItem>
                           </DropdownMenuContent>
                         </DropdownMenu>
                       </div>
