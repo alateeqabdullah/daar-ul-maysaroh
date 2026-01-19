@@ -20,20 +20,20 @@ export default async function TeacherAttendancePage({
   const params = await searchParams;
   const dateStr = params.date || new Date().toISOString().split("T")[0];
   const targetDate = new Date(dateStr);
-
+  
   // 1. Get Teacher Profile
   const dbUser = await prisma.user.findUnique({
     where: { email: session.user.email },
-    include: {
-      teacherProfile: {
-        include: {
-          classes: {
-            where: { isActive: true },
-            select: { id: true, name: true, code: true },
-          },
-        },
-      },
-    },
+    include: { 
+      teacherProfile: { 
+        include: { 
+          classes: { 
+            where: { isActive: true }, 
+            select: { id: true, name: true, code: true } 
+          } 
+        } 
+      } 
+    }
   });
 
   if (!dbUser?.teacherProfile) redirect("/dashboard");
@@ -41,9 +41,9 @@ export default async function TeacherAttendancePage({
 
   // 2. Determine Active Class
   const selectedClassId = params.classId || classes[0]?.id;
-
+  
   let students: any[] = [];
-  const attendanceMap: Record<string, unknown> = {};
+  let attendanceMap: Record<string, any> = {};
   let scheduleId: string | null = null;
   let sessionDetails = null;
 
@@ -51,15 +51,12 @@ export default async function TeacherAttendancePage({
     // A. Find Schedule for this day (Is there a class today?)
     const dayOfWeek = targetDate.getDay();
     const schedule = await prisma.classSchedule.findFirst({
-      where: { classId: selectedClassId, dayOfWeek },
+      where: { classId: selectedClassId, dayOfWeek }
     });
     scheduleId = schedule?.id || null;
-
+    
     if (schedule) {
-      sessionDetails = {
-        startTime: schedule.startTime,
-        endTime: schedule.endTime,
-      };
+      sessionDetails = { startTime: schedule.startTime, endTime: schedule.endTime };
     }
 
     // B. Fetch Enrolled Students
@@ -68,24 +65,18 @@ export default async function TeacherAttendancePage({
       include: {
         enrollments: {
           where: { status: "ACTIVE" },
-          include: {
-            student: {
-              include: {
-                user: { select: { id: true, name: true, image: true } },
-              },
-            },
-          },
-          orderBy: { student: { user: { name: "asc" } } },
-        },
-      },
+          include: { student: { include: { user: { select: { id: true, name: true, image: true } } } } },
+          orderBy: { student: { user: { name: 'asc' } } }
+        }
+      }
     });
 
     if (classData) {
-      students = classData.enrollments.map((e) => ({
+      students = classData.enrollments.map(e => ({
         studentId: e.student.id,
         name: e.student.user.name,
         image: e.student.user.image,
-        studentCode: e.student.studentId,
+        studentCode: e.student.studentId
       }));
     }
 
@@ -93,20 +84,17 @@ export default async function TeacherAttendancePage({
     const records = await prisma.attendance.findMany({
       where: {
         classId: selectedClassId,
-        date: { gte: startOfDay(targetDate), lte: endOfDay(targetDate) },
-      },
+        date: { gte: startOfDay(targetDate), lte: endOfDay(targetDate) }
+      }
     });
 
-    records.forEach((r) => {
-      attendanceMap[r.studentId] = {
-        status: r.status,
-        remarks: r.remarks || "",
-      };
+    records.forEach(r => {
+      attendanceMap[r.studentId] = { status: r.status, remarks: r.remarks || "" };
     });
   }
 
   return (
-    <TeacherAttendanceClient
+    <TeacherAttendanceClient 
       classes={classes}
       students={students}
       initialAttendance={attendanceMap}

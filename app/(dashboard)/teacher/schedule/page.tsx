@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import TeacherScheduleClient from "@/components/teacher/teacher-schedule-client";
+import { TeacherScheduleItem, TeacherClassOption, ScheduleStats } from "@/types/teacher";
 
 export const metadata = {
   title: "My Schedule | Teacher",
@@ -10,37 +11,66 @@ export const metadata = {
 
 export default async function TeacherSchedulePage() {
   const session = await auth();
-
   if (!session?.user?.email) redirect("/login");
-  if (session.user.role !== "TEACHER") redirect("/dashboard");
 
-  // 1. Get Teacher ID
-  const user = await prisma.user.findUnique({
+  const dbUser = await prisma.user.findUnique({
     where: { email: session.user.email },
-    include: { teacherProfile: true },
+    select: { teacherProfile: { select: { id: true } } },
   });
 
-  if (!user?.teacherProfile) return <div>Profile not found.</div>;
+  if (!dbUser?.teacherProfile) return <div className="p-8">Teacher profile not found.</div>;
 
-  // 2. Fetch Schedule & Classes
-  const schedules = await prisma.classSchedule.findMany({
+  // 1. Fetch Schedule
+  const schedulesRaw = await prisma.classSchedule.findMany({
     where: {
-      class: { teacherId: user.teacherProfile.id },
+      class: { teacherId: dbUser.teacherProfile.id, isActive: true },
     },
     include: {
       class: {
-        select: { id: true, name: true, code: true, level: true },
+        select: { 
+          id: true, name: true, code: true, level: true,
+          _count: { select: { enrollments: true } }
+        },
       },
     },
     orderBy: [{ dayOfWeek: "asc" }, { startTime: "asc" }],
   });
 
-  // Serialize
-  const serializedSchedules = schedules.map((s) => ({
-    ...s,
-    createdAt: s.createdAt.toISOString(),
-    updatedAt: s.updatedAt.toISOString(),
+  // 2. Fetch Classes (For Dropdown)
+  const classesRaw = await prisma.class.findMany({
+    where: { teacherId: dbUser.teacherProfile.id, isActive: true },
+    select: { id: true, name: true, code: true }
+  });
+
+  // 3. Serialize
+  const schedules: TeacherScheduleItem[] = schedulesRaw.map((s) => ({
+    id: s.id,
+    dayOfWeek: s.dayOfWeek,
+    startTime: s.startTime,
+    endTime: s.endTime,
+    isLive: s.isLive,
+    meetingUrl: s.meetingUrl,
+    meetingPlatform: s.meetingPlatform,
+    className: s.class.name,
+    classCode: s.class.code,
+    classLevel: s.class.level,
+    studentCount: s.class._count.enrollments,
   }));
 
-  return <TeacherScheduleClient schedules={serializedSchedules} />;
+  const classOptions: TeacherClassOption[] = classesRaw;
+
+  // 4. Calculate Stats
+  const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  const dayCounts = [0, 0, 0, 0, 0, 0, 0];
+  schedules.forEach(s => dayCounts[s.dayOfWeek]++);
+  const busiestIndex = dayCounts.indexOf(Math.max(...dayCounts));
+
+  const stats: ScheduleStats = {
+    totalSessions: schedules.length,
+    onlineSessions: schedules.filter(s => s.isLive).length,
+    uniqueClasses: new Set(schedules.map(s => s.className)).size,
+    busiestDay: days[busiestIndex]
+  };
+
+  return <TeacherScheduleClient schedules={schedules} classes={classOptions} stats={stats} />;
 }

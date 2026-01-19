@@ -15,13 +15,34 @@ export default async function TeacherAssignmentsPage() {
   // 1. Get Teacher Profile
   const dbUser = await prisma.user.findUnique({
     where: { email: session.user.email },
-    include: { teacherProfile: { include: { classes: { select: { id: true, name: true, subjects: true } } } } }
+    include: { 
+      teacherProfile: { 
+        include: { 
+          classes: { 
+            where: { isActive: true },
+            select: { id: true, name: true, subjects: true } 
+          } 
+        } 
+      } 
+    }
   });
 
-  if (!dbUser?.teacherProfile) redirect("/dashboard");
+  // FIX: Explicit check to prevent TypeScript error
+  if (!dbUser || !dbUser.teacherProfile) {
+    redirect("/dashboard"); // Or show an error page
+  }
 
+  // Now TypeScript knows dbUser.teacherProfile is defined
   const teacherId = dbUser.teacherProfile.id;
   const classes = dbUser.teacherProfile.classes;
+  
+  // Flatten subjects for the dropdown
+  // We need a list of all subjects available to this teacher across all classes
+  const subjects = classes.flatMap(c => c.subjects.map(s => ({
+    id: s.id,
+    name: s.name,
+    classId: c.id
+  })));
 
   // 2. Fetch Assignments
   const assignmentsRaw = await prisma.assignment.findMany({
@@ -46,7 +67,6 @@ export default async function TeacherAssignmentsPage() {
     className: a.subject.class.name,
     classCode: a.subject.class.code,
     submissionCount: a._count.submissions,
-    // Calculate status dynamically based on due date
     status: new Date(a.dueDate) < new Date() ? "OVERDUE" : "ACTIVE"
   }));
 
@@ -62,7 +82,9 @@ export default async function TeacherAssignmentsPage() {
     <TeacherAssignmentsClient 
       initialAssignments={assignments}
       classes={classes}
+      subjects={subjects}
       stats={stats}
+      pagination={{}} // Placeholder if you add pagination later
     />
   );
 }

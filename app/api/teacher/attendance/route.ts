@@ -20,20 +20,20 @@ export async function POST(req: Request) {
 
     // Transaction: Upsert every record
     await prisma.$transaction(
-      records.map((r: any) =>
+      records.map((r: any) => 
         prisma.attendance.upsert({
           where: {
             studentId_scheduleId_date: {
               studentId: r.studentId,
               scheduleId: scheduleId || "adhoc", // Fallback if schema allows
-              date: targetDate,
-            },
+              date: targetDate
+            }
           },
           update: {
             status: r.status,
             remarks: r.remarks,
             markedAt: new Date(),
-            markedBy: session.user.id,
+            markedBy: session.user.id
           },
           create: {
             classId,
@@ -43,13 +43,14 @@ export async function POST(req: Request) {
             status: r.status,
             remarks: r.remarks,
             markedBy: session.user.id,
-            markedAt: new Date(),
-          },
+            markedAt: new Date()
+          }
         })
       )
     );
 
     return NextResponse.json({ success: true });
+
   } catch (error: any) {
     console.error("Attendance API Error:", error);
     return NextResponse.json({ error: "Failed to save" }, { status: 500 });
