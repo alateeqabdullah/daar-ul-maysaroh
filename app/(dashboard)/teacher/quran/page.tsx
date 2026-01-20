@@ -99,7 +99,7 @@ export default async function QuranPage() {
     startAyah: l.startAyah,
     endAyah: l.endAyah,
     mistakes: l.mistakes,
-    // @ts-ignore - Prisma Enum vs String safety
+    
     rating: l.status,
     date: l.createdAt.toISOString()
   }));

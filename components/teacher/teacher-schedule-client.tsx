@@ -5,7 +5,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   Calendar, Clock, MapPin, Video, MonitorPlay, 
   Download, Plus, Trash2, LayoutGrid, Layers, BookOpen,
-  Loader2, X, CheckCircle
+  Loader2, X, CheckCircle,
+  Users
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
