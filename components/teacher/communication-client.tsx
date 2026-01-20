@@ -41,7 +41,11 @@ import { Textarea } from "@/components/ui/textarea"; // NEW: For multi-line chat
 
 // Utilities
 import { getInitials, cn } from "@/lib/utils";
-import { Conversation, ChatMessage, ChatUser } from "@/types/communication";
+import {
+  Conversation,
+  ChatMessage,
+  ChatUser,
+} from "@/types/(dashboard)/teacher/communication";
 import { toast } from "sonner";
 import { format } from "date-fns";
 import { ScrollArea } from "@radix-ui/react-scroll-area";
@@ -124,7 +128,7 @@ export default function CommunicationClient({
 
   const filteredContacts = useMemo(() => {
     return contacts.filter((c) =>
-      c.name.toLowerCase().includes(newChatQuery.toLowerCase())
+      c.name.toLowerCase().includes(newChatQuery.toLowerCase()),
     );
   }, [contacts, newChatQuery]);
 
@@ -156,7 +160,7 @@ export default function CommunicationClient({
       setIsLoading(true);
       try {
         const res = await fetch(
-          `/api/teacher/communication?userId=${selectedChat.id}`
+          `/api/teacher/communication?userId=${selectedChat.id}`,
         );
         if (res.ok) {
           const data = await res.json();
@@ -166,14 +170,14 @@ export default function CommunicationClient({
           window.history.pushState(
             null,
             "",
-            `/teacher/communication?userId=${selectedChat.id}`
+            `/teacher/communication?userId=${selectedChat.id}`,
           );
 
           // Mark read locally
           setConversations((prev) =>
             prev.map((c) =>
-              c.id === selectedChat.id ? { ...c, unreadCount: 0 } : c
-            )
+              c.id === selectedChat.id ? { ...c, unreadCount: 0 } : c,
+            ),
           );
 
           // API Mark Read
@@ -282,7 +286,7 @@ export default function CommunicationClient({
         variants={sidebarVariants}
         className={cn(
           "flex flex-col gap-4 w-full md:w-[380px] shrink-0 bg-white/60 dark:bg-slate-900/60 backdrop-blur-xl border border-white/20 dark:border-slate-800 rounded-3xl shadow-xl overflow-hidden transition-all duration-300",
-          selectedChat ? "hidden md:flex" : "flex"
+          selectedChat ? "hidden md:flex" : "flex",
         )}
       >
         {/* Sidebar Header */}
@@ -350,7 +354,7 @@ export default function CommunicationClient({
                   "flex items-center gap-4 p-3 rounded-2xl cursor-pointer transition-all duration-200 group border border-transparent",
                   selectedChat?.id === chat.id
                     ? "bg-indigo-600 shadow-lg shadow-indigo-500/20 border-indigo-500"
-                    : "hover:bg-white hover:shadow-sm dark:hover:bg-slate-800"
+                    : "hover:bg-white hover:shadow-sm dark:hover:bg-slate-800",
                 )}
               >
                 <div className="relative">
@@ -361,7 +365,7 @@ export default function CommunicationClient({
                         "text-sm font-bold",
                         selectedChat?.id === chat.id
                           ? "text-indigo-700 bg-white"
-                          : "bg-indigo-50 text-indigo-600"
+                          : "bg-indigo-50 text-indigo-600",
                       )}
                     >
                       {getInitials(chat.user.name)}
@@ -380,7 +384,7 @@ export default function CommunicationClient({
                         "font-bold text-sm truncate",
                         selectedChat?.id === chat.id
                           ? "text-white"
-                          : "text-slate-900 dark:text-white"
+                          : "text-slate-900 dark:text-white",
                       )}
                     >
                       {chat.user.name}
@@ -390,7 +394,7 @@ export default function CommunicationClient({
                         "text-[10px]",
                         selectedChat?.id === chat.id
                           ? "text-indigo-200"
-                          : "text-slate-400"
+                          : "text-slate-400",
                       )}
                     >
                       {chat.timestamp
@@ -406,7 +410,7 @@ export default function CommunicationClient({
                         : "text-slate-500",
                       chat.unreadCount > 0 &&
                         selectedChat?.id !== chat.id &&
-                        "font-bold text-slate-800 dark:text-slate-200"
+                        "font-bold text-slate-800 dark:text-slate-200",
                     )}
                   >
                     {chat.user.role === "PARENT" && (
@@ -461,7 +465,10 @@ export default function CommunicationClient({
                 <div>
                   <h3 className="font-bold text-slate-900 dark:text-white flex items-center gap-2">
                     {selectedChat.user.name}
-                    <Badge variant="secondary" className="text-[9px] h-4 px-1.5">
+                    <Badge
+                      variant="secondary"
+                      className="text-[9px] h-4 px-1.5"
+                    >
                       {selectedChat.user.role}
                     </Badge>
                   </h3>
@@ -531,7 +538,7 @@ export default function CommunicationClient({
                         animate="visible"
                         className={cn(
                           "flex w-full",
-                          isMe ? "justify-end" : "justify-start"
+                          isMe ? "justify-end" : "justify-start",
                         )}
                       >
                         <div
@@ -539,7 +546,7 @@ export default function CommunicationClient({
                             "max-w-[75%] p-3 px-4 rounded-2xl text-sm shadow-sm relative group transition-all",
                             isMe
                               ? "bg-linear-to-br from-indigo-600 to-purple-600 text-white rounded-tr-sm"
-                              : "bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 text-slate-700 dark:text-slate-200 rounded-tl-sm"
+                              : "bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 text-slate-700 dark:text-slate-200 rounded-tl-sm",
                           )}
                         >
                           <p className="leading-relaxed whitespace-pre-wrap">
@@ -548,7 +555,7 @@ export default function CommunicationClient({
                           <div
                             className={cn(
                               "text-[10px] mt-1 flex justify-end gap-1 items-center opacity-70",
-                              isMe ? "text-indigo-100" : "text-slate-400"
+                              isMe ? "text-indigo-100" : "text-slate-400",
                             )}
                           >
                             {format(new Date(msg.createdAt), "h:mm a")}

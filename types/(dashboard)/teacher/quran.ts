@@ -26,6 +26,7 @@ export interface QuranLog {
   mistakes: number;
   rating: "EXCELLENT" | "PASS" | "NEEDS_PRACTICE" | "FAIL";
   date: string; // ISO String
+  comments? : string | null;
 }
 
 export interface QuranStats {

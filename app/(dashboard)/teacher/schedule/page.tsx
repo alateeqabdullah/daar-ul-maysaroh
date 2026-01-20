@@ -2,7 +2,11 @@ import { redirect } from "next/navigation";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import TeacherScheduleClient from "@/components/teacher/teacher-schedule-client";
-import { TeacherScheduleItem, TeacherClassOption, ScheduleStats } from "@/types/teacher";
+import {
+  TeacherScheduleItem,
+  TeacherClassOption,
+  ScheduleStats,
+} from "@/types/(dashboard)/teacher/teacher";
 
 export const metadata = {
   title: "My Schedule | Teacher",
@@ -18,7 +22,8 @@ export default async function TeacherSchedulePage() {
     select: { teacherProfile: { select: { id: true } } },
   });
 
-  if (!dbUser?.teacherProfile) return <div className="p-8">Teacher profile not found.</div>;
+  if (!dbUser?.teacherProfile)
+    return <div className="p-8">Teacher profile not found.</div>;
 
   // 1. Fetch Schedule
   const schedulesRaw = await prisma.classSchedule.findMany({
@@ -27,9 +32,12 @@ export default async function TeacherSchedulePage() {
     },
     include: {
       class: {
-        select: { 
-          id: true, name: true, code: true, level: true,
-          _count: { select: { enrollments: true } }
+        select: {
+          id: true,
+          name: true,
+          code: true,
+          level: true,
+          _count: { select: { enrollments: true } },
         },
       },
     },
@@ -39,7 +47,7 @@ export default async function TeacherSchedulePage() {
   // 2. Fetch Classes (For Dropdown)
   const classesRaw = await prisma.class.findMany({
     where: { teacherId: dbUser.teacherProfile.id, isActive: true },
-    select: { id: true, name: true, code: true }
+    select: { id: true, name: true, code: true },
   });
 
   // 3. Serialize
@@ -62,15 +70,21 @@ export default async function TeacherSchedulePage() {
   // 4. Calculate Stats
   const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
   const dayCounts = [0, 0, 0, 0, 0, 0, 0];
-  schedules.forEach(s => dayCounts[s.dayOfWeek]++);
+  schedules.forEach((s) => dayCounts[s.dayOfWeek]++);
   const busiestIndex = dayCounts.indexOf(Math.max(...dayCounts));
 
   const stats: ScheduleStats = {
     totalSessions: schedules.length,
-    onlineSessions: schedules.filter(s => s.isLive).length,
-    uniqueClasses: new Set(schedules.map(s => s.className)).size,
-    busiestDay: days[busiestIndex]
+    onlineSessions: schedules.filter((s) => s.isLive).length,
+    uniqueClasses: new Set(schedules.map((s) => s.className)).size,
+    busiestDay: days[busiestIndex],
   };
 
-  return <TeacherScheduleClient schedules={schedules} classes={classOptions} stats={stats} />;
+  return (
+    <TeacherScheduleClient
+      schedules={schedules}
+      classes={classOptions}
+      stats={stats}
+    />
+  );
 }
