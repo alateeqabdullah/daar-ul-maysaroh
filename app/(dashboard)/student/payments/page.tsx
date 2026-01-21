@@ -14,7 +14,8 @@ import {
   Download,
   Repeat,
   AlertCircle,
-  TrendingUp
+  TrendingUp,
+  Plus
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -22,7 +23,7 @@ import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { formatCurrency, formatDate } from "@/lib/utils"
 import { toast } from "sonner"
-import PaymentModal from "@/components/payment/payment-modal"
+// import PaymentModal from "@/components/payment/payment-modal"
 
 interface Payment {
   id: string
@@ -407,11 +408,11 @@ export default function PaymentsPage() {
       </Card>
 
       {/* Payment Modal */}
-      <PaymentModal
+      {/* <PaymentModal
         open={paymentModalOpen}
         onOpenChange={setPaymentModalOpen}
         onSuccess={handlePaymentSuccess}
-      />
+      /> */}
     </div>
   )
 }
