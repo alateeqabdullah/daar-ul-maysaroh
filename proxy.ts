@@ -97,104 +97,132 @@
 
 
 
-
-
-
-
-
-
-
-
-
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { auth } from "@/lib/auth";
+
+// 1. Configuration Constants
+const ROLE_DASHBOARDS: Record<string, string> = {
+  SUPER_ADMIN: "/admin",
+  ADMIN: "/admin",
+  TEACHER: "/teacher",
+  STUDENT: "/student",
+  PARENT: "/parent",
+  SUPPORT: "/support",
+};
+
+const PUBLIC_ROUTES = [
+  "/",
+  "/about",
+  "/contact",
+  "/courses",
+  "/pricing",
+  "/teachers",
+  "/faq",
+];
+const AUTH_ROUTES = [
+  "/login",
+  "/register",
+  "/forgot-password",
+  "/reset-password",
+];
 
 export default async function proxy(request: NextRequest) {
   const session = await auth();
   const { pathname } = request.nextUrl;
 
-  // 1. Define Route Categories
-  // Auth Routes: Accessible only when NOT logged in.
-  const isAuthRoute =
-    pathname === "/login" ||
-    pathname === "/register" ||
-    pathname.startsWith("/forgot-password") ||
-    pathname.startsWith("/reset-password");
+  // Helper: Get dashboard based on role
+  const getDashboard = (role: string) => ROLE_DASHBOARDS[role] || "/dashboard";
 
-  // Pending Route: The "waiting room" for unapproved users.
+  // 2. Identify Route Type
+  const isAuthRoute = AUTH_ROUTES.some((route) => pathname.startsWith(route));
+  const isPublicRoute = PUBLIC_ROUTES.some(
+    (route) => pathname === route || pathname.startsWith(route),
+  );
   const isPendingRoute = pathname.startsWith("/pending");
+  const isStatusRoute = pathname.startsWith("/account-status");
 
-  // Public Routes: Accessible to everyone regardless of status.
-  const isPublicRoute =
-    pathname === "/" ||
-    pathname.startsWith("/about") ||
-    pathname.startsWith("/contact");
-
-  // 2. Handle Logic for Users who are NOT logged in
+  // 3. Logic for Unauthenticated Users
   if (!session) {
-    // Redirect to login if trying to access protected content
     if (!isAuthRoute && !isPublicRoute) {
       const callbackUrl = encodeURIComponent(pathname);
       return NextResponse.redirect(
-        new URL(`/login?callbackUrl=${callbackUrl}`, request.url)
+        new URL(`/login?callbackUrl=${callbackUrl}`, request.url),
       );
     }
     return NextResponse.next();
   }
 
-  // 3. Handle Logic for Logged-In Users
+  // 4. Logic for Authenticated Users
   const user = session.user;
-  const userRole = user?.role || "";
+  const userRole = user?.role || "STUDENT";
+  const userStatus = user?.status || "PENDING";
 
-  // If logged in, don't allow access to Login/Register/Forgot-Password
+  // 4a. Redirect away from Auth routes (Login/Register) if already logged in
   if (isAuthRoute) {
-    return NextResponse.redirect(new URL("/dashboard", request.url));
+    return NextResponse.redirect(new URL(getDashboard(userRole), request.url));
   }
 
-  // 4. Handle Approval Status (The "Waiting Room")
-  // Force non-approved users to the pending page
-  if (user.status !== "APPROVED" && !isPendingRoute) {
+  // 4b. Handle Account Status (Real-World Security)
+  if (userStatus === "SUSPENDED" || userStatus === "DEACTIVATED") {
+    if (pathname !== "/account-status/suspended") {
+      return NextResponse.redirect(
+        new URL("/account-status/suspended", request.url),
+      );
+    }
+    return NextResponse.next();
+  }
+
+  if (userStatus === "REJECTED") {
+    if (pathname !== "/account-status/rejected") {
+      return NextResponse.redirect(
+        new URL("/account-status/rejected", request.url),
+      );
+    }
+    return NextResponse.next();
+  }
+
+  // 4c. Handle Pending Approval (The Waiting Room)
+  if (userStatus === "PENDING" && !isPendingRoute && !isPublicRoute) {
     return NextResponse.redirect(new URL("/pending", request.url));
   }
 
-  // Prevent approved users from seeing the pending page
-  if (user.status === "APPROVED" && isPendingRoute) {
-    return NextResponse.redirect(new URL("/dashboard", request.url));
+  // 4d. Prevent Approved users from seeing the Pending page
+  if (userStatus === "APPROVED" && isPendingRoute) {
+    return NextResponse.redirect(new URL(getDashboard(userRole), request.url));
   }
 
-  // 5. Role-Based Access Control (RBAC)
-  const roleRoutes = [
-    { prefix: "/admin", allowed: ["SUPER_ADMIN", "ADMIN"] },
-    { prefix: "/teacher", allowed: ["TEACHER"] },
-    { prefix: "/student", allowed: ["STUDENT"] },
-    { prefix: "/parent", allowed: ["PARENT"] },
+  // 5. Elite Role-Based Access Control (RBAC)
+  const roleProtectedRoutes = [
+    { path: "/admin", allowed: ["SUPER_ADMIN", "ADMIN"] },
+    { path: "/teacher", allowed: ["TEACHER"] },
+    { path: "/student", allowed: ["STUDENT"] },
+    { path: "/parent", allowed: ["PARENT"] },
   ];
 
-  for (const route of roleRoutes) {
-    if (
-      pathname.startsWith(route.prefix) &&
-      !route.allowed.includes(userRole)
-    ) {
-      // If user is in the wrong area, send them back to their specific dashboard
-      return NextResponse.redirect(new URL("/dashboard", request.url));
+  for (const route of roleProtectedRoutes) {
+    if (pathname.startsWith(route.path)) {
+      if (!route.allowed.includes(userRole)) {
+        // Redirect to their proper dashboard if they try to "peep" into other roles
+        return NextResponse.redirect(
+          new URL(getDashboard(userRole), request.url),
+        );
+      }
     }
   }
 
   return NextResponse.next();
 }
 
-// Config to filter out internal Next.js files and static assets
 export const config = {
   matcher: [
     /*
-     * Match all request paths except for the ones starting with:
+     * Match all request paths except:
      * - api (internal API routes)
      * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * - public (any public images/assets)
+     * - _next/image (image optimization)
+     * - favicon.ico, sitemap.xml, robots.txt
      */
-    "/((?!api|_next/static|_next/image|favicon.ico|public).*)",
+    "/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|public).*)",
   ],
 };

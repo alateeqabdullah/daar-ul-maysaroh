@@ -1,39 +1,32 @@
-// src/app/layout.tsx - ROOT LAYOUT
 import type { Metadata } from "next";
-
-import { Amiri, Inter, Noto_Sans_Arabic } from "next/font/google";
+import {
+  Inter,
+  Noto_Sans_Arabic,
+  Amiri,
+  Playfair_Display,
+} from "next/font/google";
 import "./globals.css";
-import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { AuthProvider } from "@/components/providers/auth-provider";
+import { Toaster } from "sonner";
+import { Header } from "@/components/layoutt/header";
 
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-});
-
-const notoSansArabic = Noto_Sans_Arabic({
-  subsets: ["arabic"],
-  variable: "--font-arabic",
-});
-
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
+const noto = Noto_Sans_Arabic({ subsets: ["arabic"], variable: "--font-noto" });
 const amiri = Amiri({
-  subsets: ["arabic"],
   weight: ["400", "700"],
+  subsets: ["arabic"],
   variable: "--font-quran",
+});
+const playfair = Playfair_Display({
+  subsets: ["latin"],
+  variable: "--font-heading",
 });
 
 export const metadata: Metadata = {
-  title: "Daar-Ul-Maysaroh Institute - Quran Memorization Institute ",
+  title: "Al-Maysaroh Institute | Online Quranic Excellence",
   description:
-    "Comprehensive management system for online madrasahs with Quran tracking, attendance, grades, and more.",
-  keywords: [
-    "madrasah",
-    "islamic education",
-    "quran",
-    "online learning",
-    "management system",
-  ],
+    "Preserving the sacred tradition of Quranic recitation through scholarly excellence.",
 };
 
 export default function RootLayout({
@@ -42,20 +35,15 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" dir="ltr" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning>
       <body
-     
-        className={`${inter.variable} ${notoSansArabic.variable} ${amiri.variable} font-sans antialiased`}
+        className={`${inter.variable} ${noto.variable} ${amiri.variable} ${playfair.variable} font-sans antialiased`}
       >
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="light"
-          enableSystem
-          disableTransitionOnChange
-        >
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <AuthProvider>
+            <Header />
             {children}
-            <Toaster />
+            <Toaster position="top-center" richColors />
           </AuthProvider>
         </ThemeProvider>
       </body>

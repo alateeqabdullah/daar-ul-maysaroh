@@ -9,12 +9,10 @@ import {
   ChevronDown,
   Sun,
   Moon,
-  Search,
   LogOut,
   LayoutDashboard,
   Menu,
   X,
-  ArrowRight,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
