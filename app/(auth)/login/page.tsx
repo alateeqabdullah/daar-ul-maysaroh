@@ -40,10 +40,8 @@ const loginSchema = z.object({
 
 type LoginFormData = z.infer<typeof loginSchema>;
 
-<<<<<<< HEAD
-=======
 
->>>>>>> 5a5d906 (Fresh start on Zorin Lite)
+
 function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
