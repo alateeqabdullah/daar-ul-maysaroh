@@ -41,7 +41,6 @@ export default function RootLayout({
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
           <AuthProvider>
-            <Header />
             {children}
             <Toaster position="top-center" richColors />
           </AuthProvider>

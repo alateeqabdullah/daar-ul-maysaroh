@@ -71,3 +71,87 @@ export async function POST(req: Request) {
     return new NextResponse("Internal Server Error", { status: 500 });
   }
 }
+
+
+
+
+
+
+
+{
+  /* 
+  
+  import { NextResponse } from "next/server";
+import { auth } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
+
+export async function POST(req: Request) {
+  try {
+    const session = await auth();
+    if (!session?.user)
+      return new NextResponse("Unauthorized", { status: 401 });
+
+    const { planId, paymentMethod, customSetup } = await req.json();
+
+    // 1. Transactional Creation
+    const result = await prisma.$transaction(async (tx) => {
+      // Find or Create Student Profile
+      const student = await tx.student.upsert({
+        where: { userId: session.user.id },
+        update: {},
+        create: {
+          userId: session.user.id,
+          academicYear: "2026",
+          gender: "MALE", // Default to be updated in profile
+        },
+      });
+
+      // Create Pending Subscription
+      const subscription = await tx.subscription.create({
+        data: {
+          studentId: student.id,
+          planId: planId,
+          status: "PENDING",
+          duration: customSetup.duration,
+          daysPerWeek: customSetup.frequency,
+          sessionsPerWeek: customSetup.frequency,
+          basePrice: customSetup.total,
+          finalPrice: customSetup.total,
+        },
+      });
+
+      // Create Pending Payment record
+      const payment = await tx.payment.create({
+        data: {
+          studentId: student.id,
+          amount: customSetup.total,
+          description: `Enrollment for ${customSetup.discipline}`,
+          paymentMethod: paymentMethod, // BANK_TRANSFER or CREDIT_CARD
+          paymentGateway: paymentMethod === "CREDIT_CARD" ? "STRIPE" : "MANUAL",
+          status: "PENDING",
+        },
+      });
+
+      return { subscription, payment };
+    });
+
+    // 2. Logic: Where to send the student?
+    if (paymentMethod === "CREDIT_CARD") {
+      // Return Stripe URL logic here
+      return NextResponse.json({ url: "/checkout/stripe" });
+    }
+
+    // Manual Transfer Path
+    return NextResponse.json({
+      success: true,
+      redirectUrl: `/admissions/bursar-memo?paymentId=${result.payment.id}`,
+    });
+  } catch (error) {
+    console.error(error);
+    return new NextResponse("Internal Error", { status: 500 });
+  }
+}
+
+  
+  */
+}

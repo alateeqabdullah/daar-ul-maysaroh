@@ -21,9 +21,9 @@ export default function AboutPage() {
                 <span className="text-primary-700 italic">Sanctuary.</span>
               </h1>
               <p className="text-2xl text-muted-foreground font-medium leading-relaxed">
-                Al-Maysaroh Institute bridges the gap between the classical
+               {` Al-Maysaroh Institute bridges the gap between the classical
                 scholarly rigor of Al-Azhar and the 21st-century digital world.
-                We don't just teach books; we preserve the light of the Quran.
+                We don't just teach books; we preserve the light of the Quran.`}
               </p>
               <div className="grid grid-cols-2 gap-6">
                 <div className="space-y-2">
@@ -56,7 +56,7 @@ export default function AboutPage() {
               <div className="text-center space-y-6">
                 <Lightbulb className="w-12 h-12 text-gold mx-auto" />
                 <p className="text-3xl font-heading italic text-balance leading-snug">
-                  "A generation that carries the Word, and lives its Light."
+                 {` "A generation that carries the Word, and lives its Light."`}
                 </p>
               </div>
             </div>
