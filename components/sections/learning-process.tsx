@@ -1,100 +1,91 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { BookOpen, UserCheck, Target, Award } from "lucide-react";
+import { Reveal } from "@/components/shared/section-animation";
+import {
+  UserCheck,
+  BookOpen,
+  GraduationCap,
+  Award,
+  ArrowRight,
+} from "lucide-react";
+import { cn } from "@/lib/utils";
 
-const steps = [
+const STEPS = [
   {
-    step: "01",
-    icon: BookOpen,
-    title: "Free Trial Class",
-    description:
-      "Start with a free trial to experience our teaching methodology",
-  },
-  {
-    step: "02",
+    title: "Scholarly Assessment",
+    desc: "Every student begins with a private 1-on-1 assessment by our Dean to evaluate makharij and hifz level.",
     icon: UserCheck,
-    title: "Choose Your Teacher",
-    description: "Select from certified teachers based on your learning goals",
+    tag: "Tashkhis",
   },
   {
-    step: "03",
-    icon: Target,
-    title: "Personalized Plan",
-    description:
-      "Get a customized learning plan tailored to your level and objectives",
+    title: "Scholar Matching",
+    desc: "Based on your assessment, the Scholarly Council assigns a teacher best suited to your recitation style.",
+    icon: BookOpen,
+    tag: "Tawfiq",
   },
   {
-    step: "04",
+    title: "Guided Majlis",
+    desc: "Enter your private digital sanctuary for live sessions. Every ayah is tracked with precision in your portal.",
+    icon: GraduationCap,
+    tag: "Tarbiyah",
+  },
+  {
+    title: "Ijazah Certification",
+    desc: "Undergo the final exam (Ikhtibar) to receive your verified Sanad and certification of excellence.",
     icon: Award,
-    title: "Start Learning",
-    description:
-      "Begin your Quran journey with regular classes and progress tracking",
+    tag: "Ijazah",
   },
 ];
 
 export function LearningProcess() {
   return (
-    <section className="py-20 bg-muted/30">
-      <div className="container mx-auto px-4 lg:px-6">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          className="text-center mb-16"
-        >
-          <h2 className="text-3xl lg:text-4xl font-heading font-bold mb-4">
-            Start Your <span className="text-primary">Quran Journey</span> in 4
-            Steps
-          </h2>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Simple process to begin learning Quran with expert guidance
-          </p>
-        </motion.div>
-
-        <div className="grid lg:grid-cols-4 gap-8">
-          {steps.map((step, index) => (
-            <motion.div
-              key={step.step}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.2 }}
-              className="text-center relative"
-            >
-              {/* Connecting Line */}
-              {index < steps.length - 1 && (
-                <div className="hidden lg:block absolute top-12 left-1/2 w-full h-0.5 bg-primary/20 -z-10" />
-              )}
-
-              <div className="w-20 h-20 bg-primary text-primary-foreground rounded-full flex items-center justify-center mx-auto mb-6 text-2xl font-bold relative">
-                {step.step}
-                <div className="absolute -inset-4 bg-primary/20 rounded-full animate-ping" />
-              </div>
-
-              <div className="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mx-auto mb-4">
-                <step.icon className="w-6 h-6 text-primary" />
-              </div>
-
-              <h3 className="text-xl font-heading font-bold mb-3">
-                {step.title}
-              </h3>
-              <p className="text-muted-foreground">{step.description}</p>
-            </motion.div>
-          ))}
+    <section className="py-32 relative overflow-hidden bg-muted/10">
+      <div className="container mx-auto px-6">
+        <div className="max-w-4xl mb-24">
+          <Reveal>
+            <h2 className="text-5xl lg:text-7xl font-black tracking-tighter font-heading leading-tight mb-6">
+              The Scholarly <br />
+              <span className="text-primary-700 italic">Path.</span>
+            </h2>
+            <p className="text-xl text-muted-foreground font-medium max-w-xl">
+             {` Our standardized curriculum ensures a disciplined progression from
+              the basics of phonetics to the mastery of the Ten Qira'at.`}
+            </p>
+          </Reveal>
         </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.8 }}
-          className="text-center mt-12"
-        >
-          <button className="bg-primary text-primary-foreground px-8 py-4 rounded-lg hover:bg-primary/90 transition-colors font-semibold text-lg">
-            Start Free Trial
-          </button>
-          <p className="text-sm text-muted-foreground mt-4">
-            No credit card required • 30-minute session with certified teacher
-          </p>
-        </motion.div>
+        <div className="relative grid md:grid-cols-2 lg:grid-cols-4 gap-12">
+          {/* Connector Line (Desktop) */}
+          <div className="hidden lg:block absolute top-12 left-0 w-full h-px bg-gradient-to-r from-transparent via-primary-700/20 to-transparent -z-10" />
+
+          {STEPS.map((step, i) => (
+            <Reveal key={step.title} delay={i * 0.1}>
+              <div className="group space-y-6">
+                <div className="relative">
+                  <div className="w-20 h-20 rounded-[2rem] bg-white dark:bg-slate-900 border-2 border-primary-100 flex items-center justify-center shadow-xl group-hover:border-primary-700 transition-all duration-500 relative z-10">
+                    <step.icon className="w-8 h-8 text-primary-700" />
+                  </div>
+                  <div className="absolute -top-2 -left-2 w-24 h-24 bg-primary-700/5 blur-xl rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <span className="absolute -right-4 top-0 text-6xl font-black text-primary-700/5 pointer-events-none">
+                    0{i + 1}
+                  </span>
+                </div>
+
+                <div className="space-y-2">
+                  <p className="text-[10px] font-black text-gold uppercase tracking-[0.3em]">
+                    {step.tag}
+                  </p>
+                  <h3 className="text-xl font-black uppercase tracking-tight">
+                    {step.title}
+                  </h3>
+                  <p className="text-sm text-muted-foreground font-medium leading-relaxed">
+                    {step.desc}
+                  </p>
+                </div>
+              </div>
+            </Reveal>
+          ))}
+        </div>
       </div>
     </section>
   );

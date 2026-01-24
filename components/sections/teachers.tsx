@@ -1,352 +1,93 @@
 "use client";
 
-import { motion } from "framer-motion";
-import {
-  Star,
-  Award,
-  Users,
-  Clock,
-  MessageCircle,
-  BookOpen,
-} from "lucide-react";
+import { Reveal } from "@/components/shared/section-animation";
+import { GraduationCap, Verified, ShieldCheck, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useTeachers } from "@/hooks/use-courses";
 import Link from "next/link";
-import { cn } from "@/lib/utils";
+
+const PREVIEW_TEACHERS = [
+  {
+    name: "Sheikh Dr. Ahmad Al-Maysari",
+    rank: "Dean of Faculty",
+    credentials: "PhD Al-Azhar, Ijazah in 10 Qira'at",
+    philosophy: "Preserving the trust of the Divine Word.",
+  },
+  {
+    name: "Ustadha Fatima Zahra",
+    rank: "Head of Female Hifz",
+    credentials: "Verified Sanad in Hafs 'an 'Asim",
+    philosophy: "Nurturing hearts through the Quranic Sunnah.",
+  },
+];
 
 export function Teachers() {
-  const { teachers, isLoading } = useTeachers();
-
-  const featuredTeachers = teachers.slice(0, 3); // Show only 3 featured teachers on homepage
-
-  if (isLoading) {
-    return (
-      <section id="teachers" className="py-20 bg-background">
-        <div className="container mx-auto px-4 lg:px-6">
-          <div className="text-center">
-            <div className="animate-pulse">Loading teachers...</div>
-          </div>
-        </div>
-      </section>
-    );
-  }
-
   return (
-    <section
-      id="teachers"
-      className="py-20 bg-gradient-to-br from-background to-muted/50"
-    >
-      <div className="container mx-auto px-4 lg:px-6">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="text-center mb-16"
-        >
-          <div className="inline-flex items-center px-4 py-2 bg-primary/10 text-primary rounded-full text-sm font-medium mb-4">
-            <Award className="w-4 h-4 mr-2" />
-            Certified Educators
+    <section className="py-32 bg-background relative overflow-hidden">
+      <div className="container mx-auto px-6">
+        <div className="flex flex-col lg:flex-row justify-between items-end gap-8 mb-24">
+          <div className="max-w-2xl space-y-6">
+            <Reveal>
+              <div className="inline-flex items-center gap-2 text-gold font-black text-[10px] uppercase tracking-[0.3em]">
+                <ShieldCheck className="w-4 h-4" /> Unbroken Scholarly Lineage
+              </div>
+              <h2 className="text-6xl lg:text-8xl font-black tracking-tighter font-heading leading-tight">
+                Carriers of <br />
+                <span className="text-primary-700 italic">The Sanad.</span>
+              </h2>
+            </Reveal>
           </div>
-          <h2 className="text-3xl lg:text-4xl font-heading font-bold mb-4">
-            Learn from{" "}
-            <span className="text-primary">Expert Quran Teachers</span>
-          </h2>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Our certified teachers bring years of experience and traditional
-            Islamic knowledge to guide you in your Quranic journey.
-          </p>
-        </motion.div>
+          <Reveal delay={0.2}>
+            <Link href="/teachers">
+              <Button
+                variant="outline"
+                className="h-16 px-10 rounded-2xl border-2 font-black text-xs tracking-widest uppercase hover:bg-primary-700 hover:text-white transition-all"
+              >
+                View Full Faculty <ArrowRight className="ml-2 w-4 h-4" />
+              </Button>
+            </Link>
+          </Reveal>
+        </div>
 
-        {/* Teachers Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-          {featuredTeachers.map((teacher, index) => (
-            <motion.div
-              key={teacher.id}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: index * 0.2 }}
-              whileHover={{ y: -5 }}
-              className="group relative bg-card rounded-2xl border shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden"
-            >
-              {/* Background Pattern */}
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-accent/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-
-              {/* Teacher Card */}
-              <div className="relative p-6 space-y-4">
-                {/* Header */}
-                <div className="flex items-start justify-between">
-                  <div className="flex items-center space-x-4">
-                    <div className="relative">
-                      <div className="w-16 h-16 bg-gradient-to-br from-primary to-accent rounded-2xl flex items-center justify-center text-white font-semibold text-lg">
-                        {teacher.name
-                          .split(" ")
-                          .map((n) => n[0])
-                          .join("")}
-                      </div>
-                      <div className="absolute -bottom-1 -right-1 w-6 h-6 bg-green-500 rounded-full border-2 border-card flex items-center justify-center">
-                        <div className="w-2 h-2 bg-white rounded-full" />
-                      </div>
+        <div className="grid md:grid-cols-2 gap-12">
+          {PREVIEW_TEACHERS.map((t, i) => (
+            <Reveal key={t.name} delay={i * 0.1}>
+              <div className="institutional-card p-1 lg:p-12 relative group bg-card hover:border-primary-700/50 transition-all duration-700">
+                <div className="flex flex-col md:flex-row gap-8 items-start">
+                  {/* Portrait Placeholder */}
+                  <div className="w-full md:w-40 h-56 bg-muted/50 rounded-2xl overflow-hidden relative border border-border group-hover:border-primary-700/20">
+                    <div className="absolute inset-0 flex items-center justify-center opacity-10">
+                      <GraduationCap className="w-12 h-12" />
                     </div>
+                  </div>
+
+                  <div className="flex-1 space-y-4">
                     <div>
-                      <h3 className="font-heading font-bold text-lg text-card-foreground">
-                        {teacher.name}
+                      <h3 className="text-2xl font-black tracking-tight group-hover:text-primary-700 transition-colors uppercase">
+                        {t.name}
                       </h3>
-                      <p className="text-sm text-muted-foreground">
-                        {teacher.qualification}
+                      <p className="text-primary-700 font-black text-[9px] uppercase tracking-[0.2em] mt-1">
+                        {t.rank}
                       </p>
                     </div>
+                    <p className="text-sm font-bold text-muted-foreground">
+                      {t.credentials}
+                    </p>
+                    <p className="text-xs italic font-medium text-muted-foreground opacity-80 leading-relaxed">
+                      "{t.philosophy}"
+                    </p>
+                    <div className="pt-4 flex items-center gap-2">
+                      <Verified className="w-4 h-4 text-accent" />
+                      <span className="text-[8px] font-black uppercase tracking-widest text-accent">
+                        Ijazah Verified
+                      </span>
+                    </div>
                   </div>
                 </div>
-
-                {/* Specialization */}
-                <div className="flex flex-wrap gap-2">
-                  {(Array.isArray(teacher.specialization) ? teacher.specialization : [])
-    .slice(0, 2)
-    .map((specialty, idx) => (
-                    <span
-                      key={idx}
-                      className="px-3 py-1 bg-primary/10 text-primary rounded-full text-xs font-medium"
-                    >
-                      {specialty}
-                    </span>
-                  ))}
-                  {teacher.specialization.length > 2 && (
-                    <span className="px-3 py-1 bg-muted text-muted-foreground rounded-full text-xs font-medium">
-                      +{teacher.specialization.length - 2} more
-                    </span>
-                  )}
-                </div>
-
-                {/* Stats */}
-                <div className="grid grid-cols-3 gap-4 py-3 border-y">
-                  <div className="text-center">
-                    <div className="flex items-center justify-center space-x-1 text-sm text-muted-foreground mb-1">
-                      <Users className="w-4 h-4" />
-                      <span>Students</span>
-                    </div>
-                    <div className="font-bold text-card-foreground">50+</div>
-                  </div>
-                  <div className="text-center">
-                    <div className="flex items-center justify-center space-x-1 text-sm text-muted-foreground mb-1">
-                      <Clock className="w-4 h-4" />
-                      <span>Experience</span>
-                    </div>
-                    <div className="font-bold text-card-foreground">
-                      {teacher.experience}
-                    </div>
-                  </div>
-                  <div className="text-center">
-                    <div className="flex items-center justify-center space-x-1 text-sm text-muted-foreground mb-1">
-                      <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                      <span>Rating</span>
-                    </div>
-                    <div className="font-bold text-card-foreground">4.9</div>
-                  </div>
-                </div>
-
-                {/* Bio Excerpt */}
-                <p className="text-sm text-muted-foreground line-clamp-2">
-                  {teacher.bio}
-                </p>
-
-                {/* CTA */}
-                <Button className="w-full group/btn" asChild>
-                  <Link href={`/teachers#teacher-${teacher.id}`}>
-                    <MessageCircle className="w-4 h-4 mr-2 group-hover/btn:scale-110 transition-transform" />
-                    View Profile
-                  </Link>
-                </Button>
               </div>
-            </motion.div>
+            </Reveal>
           ))}
         </div>
-
-        {/* CTA Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
-          className="text-center"
-        >
-          <div className="bg-gradient-to-r from-primary/5 to-accent/5 rounded-2xl p-8 border">
-            <h3 className="text-2xl font-heading font-bold mb-4">
-              Ready to Start Learning?
-            </h3>
-            <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
-              Join hundreds of students who are already learning Quran with our
-              certified teachers. Start your journey today with a free trial
-              class.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" asChild>
-                <Link href="/teachers">
-                  <BookOpen className="w-5 h-5 mr-2" />
-                  Meet All Teachers
-                </Link>
-              </Button>
-              <Button variant="outline" size="lg" asChild>
-                <Link href="/auth/signup">Start Free Trial</Link>
-              </Button>
-            </div>
-          </div>
-        </motion.div>
       </div>
     </section>
   );
 }
-
-// // 📄 src/components/sections/teachers.tsx
-// "use client";
-
-// import { motion } from "framer-motion";
-// import { GraduationCap, Award, Clock, Users } from "lucide-react";
-// import { Button } from "../ui/button";
-// import Link from "next/link";
-
-// const teachers = [
-//   {
-//     id: "1",
-//     name: "Shaykh Ahmed Al-Mansouri",
-//     qualification: "Ijazah in Hafs & Shubah, Al-Azhar Certified",
-//     specialization: "Quran Memorization & Advanced Tajweed",
-//     experience: "15+ Years in Hifz Teaching",
-//     bio: "Expert in Quranic sciences with multiple Ijazah chains. Specialized in one-on-one Hifz programs with over 50 students who completed memorization under his guidance.",
-//     expertise: ["Hifz Program", "Ijazah", "Advanced Tajweed"],
-//   },
-//   {
-//     id: "2",
-//     name: "Ustadha Fatima Khan",
-//     qualification: "Ijazah in Qiraat, Islamic University Graduate",
-//     specialization: "Quran Recitation & Tajweed",
-//     experience: "10+ Years in Quran Teaching",
-//     bio: "Specialized in teaching children and beginners with modern methodologies. Expert in making Quran learning enjoyable and effective through personalized one-on-one sessions.",
-//     expertise: ["Nazrah", "Basic Tajweed", "Children Education"],
-//   },
-//   {
-//     id: "3",
-//     name: "Shaykh Omar Abdul Hakim",
-//     qualification: "M.A. Quranic Studies, Certified Qari",
-//     specialization: "Quranic Arabic & Tafsir",
-//     experience: "12+ Years Teaching Experience",
-//     bio: "Focuses on helping students understand Quran in its original language. Expert in Arabic grammar and Quranic vocabulary with practical teaching approach.",
-//     expertise: ["Quranic Arabic", "Tafsir", "Translation"],
-//   },
-// ];
-
-// export function Teachers() {
-//   return (
-//     <section id="teachers" className="py-20 bg-background">
-//       <div className="container mx-auto px-4 lg:px-6">
-//         <motion.div
-//           initial={{ opacity: 0, y: 30 }}
-//           whileInView={{ opacity: 1, y: 0 }}
-//           transition={{ duration: 0.8 }}
-//           className="text-center mb-16"
-//         >
-//           <h2 className="text-3xl lg:text-4xl font-heading font-bold mb-4">
-//             Meet Our <span className="text-primary">Qualified Teachers</span>
-//           </h2>
-//           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-//             Learn from certified Huffaz and Islamic scholars with years of
-//             teaching experience
-//           </p>
-//         </motion.div>
-
-//         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-//           {teachers.map((teacher, index) => (
-//             <motion.div
-//               key={teacher.id}
-//               initial={{ opacity: 0, y: 30 }}
-//               whileInView={{ opacity: 1, y: 0 }}
-//               transition={{ duration: 0.6, delay: index * 0.2 }}
-//               whileHover={{ y: -5 }}
-//               className="bg-card rounded-xl border shadow-sm hover:shadow-md transition-all duration-300 p-6 text-center"
-//             >
-//               <div className="space-y-4">
-//                 {/* Teacher Avatar */}
-//                 <div className="w-20 h-20 bg-gradient-to-br from-primary to-accent rounded-full mx-auto mb-4 flex items-center justify-center">
-//                   <Users className="w-8 h-8 text-white" />
-//                 </div>
-
-//                 {/* Teacher Info */}
-//                 <div>
-//                   <h3 className="text-xl font-bold text-card-foreground mb-1">
-//                     {teacher.name}
-//                   </h3>
-//                   <p className="text-primary font-medium text-sm mb-3">
-//                     {teacher.specialization}
-//                   </p>
-//                 </div>
-
-//                 {/* Qualifications */}
-//                 <div className="space-y-3">
-//                   <div className="flex items-center justify-center space-x-2 text-sm">
-//                     <GraduationCap className="w-4 h-4 text-primary flex-shrink-0" />
-//                     <span className="text-card-foreground">
-//                       {teacher.qualification}
-//                     </span>
-//                   </div>
-//                   <div className="flex items-center justify-center space-x-2 text-sm">
-//                     <Clock className="w-4 h-4 text-primary flex-shrink-0" />
-//                     <span className="text-card-foreground">
-//                       {teacher.experience}
-//                     </span>
-//                   </div>
-//                   <div className="flex items-center justify-center space-x-2 text-sm">
-//                     <Award className="w-4 h-4 text-primary flex-shrink-0" />
-//                     <span className="text-card-foreground">
-//                       Certified Instructor
-//                     </span>
-//                   </div>
-//                 </div>
-
-//                 {/* Bio */}
-//                 <div className="pt-4 border-t">
-//                   <p className="text-sm text-muted-foreground leading-relaxed">
-//                     {teacher.bio}
-//                   </p>
-//                 </div>
-
-//                 {/* Expertise Tags */}
-//                 <div className="pt-3">
-//                   <div className="flex flex-wrap justify-center gap-2">
-//                     {teacher.expertise.map((skill) => (
-//                       <span
-//                         key={skill}
-//                         className="px-2 py-1 bg-primary/10 text-primary rounded text-xs font-medium"
-//                       >
-//                         {skill}
-//                       </span>
-//                     ))}
-//                   </div>
-//                 </div>
-
-//                 {/* CTA */}
-//                 <button className="w-full mt-4 py-2 px-4 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors font-medium">
-//                   Book Trial Class
-//                 </button>
-//               </div>
-//             </motion.div>
-//           ))}
-//         </div>
-
-//         {/* CTA Section */}
-//         <motion.div
-//           initial={{ opacity: 0, y: 30 }}
-//           whileInView={{ opacity: 1, y: 0 }}
-//           transition={{ duration: 0.8, delay: 0.4 }}
-//           className="text-center mt-12"
-//         >
-//           <p className="text-muted-foreground mb-6">
-//             All our teachers are carefully selected and undergo rigorous
-//             training
-//           </p>
-//           <Button variant="outline" size="lg" asChild>
-//             <Link href="#contact">Meet More Teachers</Link>
-//           </Button>
-//         </motion.div>
-//       </div>
-//     </section>
-//   );
-// }

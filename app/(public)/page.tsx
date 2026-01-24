@@ -17,12 +17,12 @@ export default function HomePage() {
       <TrustIndicators />
       <QuranicVerse />
       <Features />
-      <Courses />
+      {/* <Courses /> */}
       <LearningProcess />
       <Teachers />
       <Stats />
       <Testimonials />
-      <PaymentPlansWithStripe />
+      {/* <PaymentPlansWithStripe /> */}
       <Contact />
     </main>
   );

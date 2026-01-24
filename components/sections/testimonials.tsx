@@ -1,316 +1,113 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Quote, Star, Play } from "lucide-react";
-import { useState } from "react";
+import { Reveal } from "@/components/shared/section-animation";
+import { Quote, Star, MapPin, GraduationCap, CheckCircle2 } from "lucide-react";
 
-const testimonials = [
+const TESTIMONIALS = [
   {
-    id: 1,
-    name: "Ahmed Rahman",
-    age: 35,
-    course: "Hifz Program",
+    name: "Zaid Al-Hussaini",
+    location: "London, UK",
+    program: "Hifz Itqan Program",
+    scholar: "Sheikh Dr. Ahmad Al-Maysari",
+    milestone: "Completed 15 Juz with Ijazah preparation",
     content:
-      "Alhamdulillah, I completed my Hifz in 2.5 years with Shaykh Ahmed. The personalized attention and flexible scheduling made it possible while working full-time.",
-    duration: "2.5 Years",
-    achievement: "Completed Hifz with Ijazah",
-    rating: 5,
-    video: true,
+      "The Al-Maysaroh method changed my relationship with the Quran. It wasn't just about memorizing pages; it was about the science of Mutashabihat and correcting makharij I didn't even know were flawed. The 1-on-1 attention is unparalleled.",
+    image: null,
   },
   {
-    id: 2,
-    name: "Maryam Johnson",
-    age: 8,
-    course: "Quran Recitation",
+    name: "Sarah Benjamin",
+    location: "Toronto, Canada",
+    program: "Tajweed Mastery",
+    scholar: "Ustadha Fatima Zahra",
+    milestone: "Mastery of Al-Jazariyyah Phonetics",
     content:
-      "The one-on-one sessions helped me learn so quickly! My teacher was so patient and made Quran learning fun. I can now read Quran fluently.",
-    duration: "6 Months",
-    achievement: "Completed Juz 30",
-    rating: 5,
-    video: false,
+      "As a convert, finding a school that balances traditional scholarly rigor with modern English pedagogical clarity was difficult. Al-Maysaroh provided a sanctuary where I could learn the sacred sciences at a professional academic level.",
+    image: null,
   },
   {
-    id: 3,
-    name: "Brother Omar",
-    age: 42,
-    course: "Advanced Tajweed",
+    name: "Omar Faridi",
+    location: "Doha, Qatar",
+    program: "Classical Arabic",
+    scholar: "Sheikh Omar Al-Farooq",
+    milestone: "Ability to translate 80% of Juz Amma directly",
     content:
-      "My recitation improved dramatically with one-on-one correction. I finally understand the proper rules and can recite with confidence in prayers.",
-    duration: "1 Year",
-    achievement: "Tajweed Certification",
-    rating: 5,
-    video: true,
-  },
-  {
-    id: 4,
-    name: "Sister Fatima",
-    age: 28,
-    course: "Quranic Arabic",
-    content:
-      "Learning Arabic to understand Quran directly has been life-changing. The teachers are knowledgeable and make complex concepts easy to understand.",
-    duration: "8 Months",
-    achievement: "Arabic Proficiency",
-    rating: 5,
-    video: false,
+      "Studying Nahw and Sarf here is like being in a physical classroom in Cairo or Madinah. The portal makes it so easy to track my progress, and my teacher is a true carrier of the Sanad.",
+    image: null,
   },
 ];
 
 export function Testimonials() {
-  const [selectedVideo, setSelectedVideo] = useState<string | null>(null);
-
   return (
-    <section id="testimonials" className="py-20 bg-muted/30">
-      <div className="container mx-auto px-4 lg:px-6">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          className="text-center mb-16"
-        >
-          <h2 className="text-3xl lg:text-4xl font-heading font-bold mb-4">
-            What Our <span className="text-primary">Students Say</span>
-          </h2>
-          <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-            Real experiences from students who transformed their Quran learning
-            journey with us
-          </p>
-        </motion.div>
+    <section className="py-32 bg-muted/10 relative overflow-hidden">
+      {/* Visual Artifacts */}
+      <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-primary-700/20 to-transparent" />
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-8">
-          {testimonials.map((testimonial, index) => (
-            <motion.div
-              key={testimonial.id}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
-              whileHover={{ y: -5 }}
-              className="bg-card rounded-xl border shadow-sm hover:shadow-md transition-all duration-300 p-6 relative"
-            >
-              {/* Quote Icon */}
-              <Quote className="w-8 h-8 text-primary/20 absolute top-4 right-4" />
-
-              {/* Stars */}
-              <div className="flex space-x-1 mb-4">
-                {[...Array(testimonial.rating)].map((_, i) => (
-                  <Star key={i} className="w-4 h-4 fill-accent text-accent" />
-                ))}
-              </div>
-
-              {/* Video Thumbnail */}
-              {testimonial.video && (
-                <div className="relative mb-4 rounded-lg overflow-hidden bg-gradient-to-br from-primary/10 to-accent/10 aspect-video flex items-center justify-center cursor-pointer group">
-                  <div className="text-center">
-                    <div className="w-12 h-12 bg-white/90 rounded-full flex items-center justify-center mx-auto mb-2 group-hover:scale-110 transition-transform">
-                      <Play className="w-6 h-6 text-primary" />
-                    </div>
-                    <p className="text-sm text-muted-foreground">
-                      Watch Video Testimonial
-                    </p>
-                  </div>
-                </div>
-              )}
-
-              {/* Content */}
-              <p className="text-card-foreground mb-6 leading-relaxed">
-                `{testimonial.content}`
-              </p>
-
-              {/* Student Info */}
-              <div className="border-t pt-4">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h4 className="font-semibold text-card-foreground">
-                      {testimonial.name}
-                    </h4>
-                    <p className="text-sm text-muted-foreground">
-                      {testimonial.age} years • {testimonial.course}
-                    </p>
-                    <div className="flex items-center space-x-2 mt-1">
-                      <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">
-                        {testimonial.achievement}
-                      </span>
-                    </div>
-                  </div>
-                  <div className="flex items-center space-x-1 text-sm text-muted-foreground">
-                    <span>{testimonial.duration}</span>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          ))}
+      <div className="container mx-auto px-6">
+        <div className="max-w-4xl mb-24">
+          <Reveal>
+            <div className="inline-flex items-center gap-2 text-gold font-black text-[10px] uppercase tracking-[0.3em] mb-6">
+              <Star className="w-4 h-4 fill-current" /> Voices of the Eternal
+              Journey
+            </div>
+            <h2 className="text-6xl lg:text-8xl font-black tracking-tighter font-heading leading-tight">
+              Scholarly <br />
+              <span className="text-primary-700 italic">Success.</span>
+            </h2>
+            <p className="text-xl text-muted-foreground font-medium max-w-xl border-l-4 border-primary-700 pl-6 mt-6">
+              Hear from the noble students who have traversed the Al-Maysaroh
+              path, from foundational phonetics to verified Ijazah.
+            </p>
+          </Reveal>
         </div>
 
-        {/* CTA Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.4 }}
-          className="mt-16 text-center"
-        >
-          <div className="bg-gradient-to-r from-primary to-accent rounded-2xl p-8 text-white">
-            <h3 className="text-2xl lg:text-3xl font-heading font-bold mb-4">
-              Ready to Start Your Quran Journey?
-            </h3>
-            <p className="text-primary-foreground/90 mb-6 max-w-2xl mx-auto">
-              Join hundreds of satisfied students who have transformed their
-              relationship with Quran through our personalized teaching
-              approach.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button className="bg-white text-primary px-8 py-3 rounded-lg hover:bg-white/90 transition-colors font-semibold">
-                Start Free Trial
-              </button>
-              <button className="border border-white text-white px-8 py-3 rounded-lg hover:bg-white/10 transition-colors font-semibold">
-                View All Courses
-              </button>
-            </div>
-          </div>
-        </motion.div>
+        <div className="grid lg:grid-cols-3 gap-10">
+          {TESTIMONIALS.map((t, i) => (
+            <Reveal key={t.name} delay={i * 0.1}>
+              <div className="institutional-card p-10 h-full flex flex-col bg-white dark:bg-slate-900 group hover:shadow-primary-700/10 transition-all duration-700">
+                <div className="flex items-center justify-between mb-8">
+                  <Quote className="w-10 h-10 text-primary-700/20" />
+                  <div className="flex gap-1">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className="w-3 h-3 fill-gold text-gold" />
+                    ))}
+                  </div>
+                </div>
+
+                <p className="text-lg font-medium leading-relaxed italic text-foreground/80 mb-10 flex-grow">
+                 {` "${t.content}"`}
+                </p>
+
+                <div className="pt-8 border-t border-border/50 space-y-6">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-xl bg-primary-700/10 flex items-center justify-center font-black text-primary-700">
+                      {t.name.charAt(0)}
+                    </div>
+                    <div>
+                      <h4 className="font-black uppercase tracking-tight text-sm">
+                        {t.name}
+                      </h4>
+                      <p className="text-[10px] font-bold text-muted-foreground flex items-center gap-1">
+                        <MapPin className="w-3 h-3" /> {t.location}
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="space-y-2 bg-muted/30 p-4 rounded-2xl">
+                    <div className="flex items-center gap-2 text-[9px] font-black uppercase tracking-widest text-primary-700">
+                      <GraduationCap className="w-3.5 h-3.5" /> Program:{" "}
+                      {t.program}
+                    </div>
+                    <div className="flex items-center gap-2 text-[9px] font-black uppercase tracking-widest text-accent">
+                      <CheckCircle2 className="w-3.5 h-3.5" /> {t.milestone}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </Reveal>
+          ))}
+        </div>
       </div>
     </section>
   );
 }
-
-
-// // 📄 src/components/sections/testimonials.tsx
-// "use client";
-
-// import { motion } from "framer-motion";
-// import { Quote, Star, Calendar } from "lucide-react";
-
-// const testimonials = [
-//   {
-//     id: "1",
-//     name: "Maryam Johnson",
-//     age: 8,
-//     course: "Quran Recitation",
-//     content:
-//       "The one-on-one sessions helped me learn so quickly! My teacher was so patient and made Quran learning fun. I can now read Surah Al-Fatihah perfectly.",
-//     duration: "6 Months",
-//     achievement: "Completed Juz 30",
-//   },
-//   {
-//     id: "2",
-//     name: "Brother Ahmed Rahman",
-//     age: 35,
-//     course: "Hifz Program",
-//     content:
-//       "Alhamdulillah, I completed my Hifz in 2.5 years with Shaykh Ahmed. The personalized attention and consistent motivation made all the difference in my journey.",
-//     duration: "2.5 Years",
-//     achievement: "Completed Hifz with Ijazah",
-//   },
-//   {
-//     id: "3",
-//     name: "Sister Aisha Mohammed",
-//     age: 28,
-//     course: "Advanced Tajweed",
-//     content:
-//       "My recitation improved dramatically with one-on-one correction. I can now recite with proper Tajweed rules and understand the meaning behind the verses.",
-//     duration: "1 Year",
-//     achievement: "Tajweed Certification",
-//   },
-// ];
-
-// export function Testimonials() {
-//   return (
-//     <section id="testimonials" className="py-20 bg-muted/30">
-//       <div className="container mx-auto px-4 lg:px-6">
-//         <motion.div
-//           initial={{ opacity: 0, y: 30 }}
-//           whileInView={{ opacity: 1, y: 0 }}
-//           transition={{ duration: 0.8 }}
-//           className="text-center mb-16"
-//         >
-//           <h2 className="text-3xl lg:text-4xl font-heading font-bold mb-4">
-//             What Our <span className="text-primary">Students Say</span>
-//           </h2>
-//           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-//             Real experiences from our students and their families
-//           </p>
-//         </motion.div>
-
-//         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-//           {testimonials.map((testimonial, index) => (
-//             <motion.div
-//               key={testimonial.id}
-//               initial={{ opacity: 0, y: 30 }}
-//               whileInView={{ opacity: 1, y: 0 }}
-//               transition={{ duration: 0.6, delay: index * 0.1 }}
-//               whileHover={{ y: -5 }}
-//               className="bg-card rounded-xl border shadow-sm hover:shadow-md transition-all duration-300 p-6 relative"
-//             >
-//               {/* Quote Icon */}
-//               <Quote className="w-8 h-8 text-primary/20 absolute top-4 right-4" />
-
-//               {/* Stars */}
-//               <div className="flex space-x-1 mb-4">
-//                 {[...Array(5)].map((_, i) => (
-//                   <Star key={i} className="w-4 h-4 fill-accent text-accent" />
-//                 ))}
-//               </div>
-
-//               {/* Content */}
-//               <p className="text-card-foreground mb-6 leading-relaxed">
-//                {` "${testimonial.content}"`}
-//               </p>
-
-//               {/* Student Info */}
-//               <div className="border-t pt-4">
-//                 <div className="flex items-center justify-between">
-//                   <div>
-//                     <h4 className="font-semibold text-card-foreground">
-//                       {testimonial.name}
-//                     </h4>
-//                     <p className="text-sm text-muted-foreground">
-//                       {testimonial.age} years • {testimonial.course}
-//                     </p>
-//                   </div>
-//                   <div className="flex items-center space-x-1 text-sm text-muted-foreground">
-//                     <Calendar className="w-4 h-4" />
-//                     <span>{testimonial.duration}</span>
-//                   </div>
-//                 </div>
-
-//                 {/* Achievement */}
-//                 <div className="mt-2">
-//                   <span className="inline-block px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">
-//                     {testimonial.achievement}
-//                   </span>
-//                 </div>
-//               </div>
-//             </motion.div>
-//           ))}
-//         </div>
-
-//         {/* Additional Stats */}
-//         <motion.div
-//           initial={{ opacity: 0, y: 30 }}
-//           whileInView={{ opacity: 1, y: 0 }}
-//           transition={{ duration: 0.8, delay: 0.4 }}
-//           className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto"
-//         >
-//           {[
-//             { number: "98%", label: "Satisfaction Rate" },
-//             { number: "2,500+", label: "Students Enrolled" },
-//             { number: "25+", label: "Countries" },
-//             { number: "24/7", label: "Support" },
-//           ].map((stat, index) => (
-//             <div key={stat.label} className="text-center">
-//               <motion.div
-//                 initial={{ scale: 0 }}
-//                 whileInView={{ scale: 1 }}
-//                 transition={{ duration: 0.5, delay: index * 0.1 + 0.6 }}
-//                 className="text-3xl lg:text-4xl font-bold text-primary mb-2"
-//               >
-//                 {stat.number}
-//               </motion.div>
-//               <div className="text-sm text-muted-foreground font-medium">
-//                 {stat.label}
-//               </div>
-//             </div>
-//           ))}
-//         </motion.div>
-//       </div>
-//     </section>
-//   );
-// }

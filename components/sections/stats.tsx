@@ -1,130 +1,41 @@
 "use client";
 
-import { motion } from "framer-motion";
-import { useInView } from "framer-motion";
-import { useRef } from "react";
+import { Reveal } from "@/components/shared/section-animation";
+import { Globe, Users, BookMarked, Award } from "lucide-react";
 
-const stats = [
-  { number: 500, suffix: "+", label: "Students Enrolled" },
-  { number: 98, suffix: "%", label: "Success Rate" },
-  { number: 15, suffix: "+", label: "Countries" },
-  { number: 1000, suffix: "+", label: "Classes Monthly" },
-  { number: 24, suffix: "/7", label: "Support" },
-  { number: 4.9, suffix: "/5", label: "Average Rating" },
+const STATS = [
+  { label: "Noble Students", value: "500+", icon: Users },
+  { label: "Global Nations", value: "50+", icon: Globe },
+  { label: "Sanad Scholars", value: "24+", icon: Award },
+  { label: "Surahs Completed", value: "12k+", icon: BookMarked },
 ];
 
 export function Stats() {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { once: true, margin: "-100px" });
-
   return (
-    <section
-      ref={ref}
-      className="py-20 bg-gradient-to-br from-primary to-accent text-white"
-    >
-      <div className="container mx-auto px-4 lg:px-6">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          className="text-center mb-16"
-        >
-          <h2 className="text-3xl lg:text-4xl font-heading font-bold mb-4">
-            Trusted by Muslims Worldwide
-          </h2>
-          <p className="text-xl text-primary-foreground/90 max-w-2xl mx-auto">
-            Join our growing community of Quran learners achieving their Islamic
-            education goals
-          </p>
-        </motion.div>
+    <section className="py-24 bg-slate-950 text-white relative overflow-hidden">
+      <div className="absolute inset-0 opacity-5 bg-[url('/islamic-pattern.svg')] pointer-events-none" />
 
-        <div className="grid grid-cols-2 lg:grid-cols-6 gap-8">
-          {stats.map((stat, index) => (
-            <motion.div
-              key={stat.label}
-              initial={{ opacity: 0, scale: 0.5 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              transition={{ delay: index * 0.1 }}
-              className="text-center"
-            >
-              <div className="text-3xl lg:text-4xl font-bold mb-2">
-                {isInView ? stat.number : 0}
-                {stat.suffix}
+      <div className="container mx-auto px-6 relative z-10">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-12">
+          {STATS.map((stat, i) => (
+            <Reveal key={stat.label} delay={i * 0.1}>
+              <div className="text-center space-y-4 group">
+                <div className="w-16 h-16 rounded-2xl bg-primary-700/20 border border-primary-700/30 flex items-center justify-center mx-auto group-hover:scale-110 transition-transform shadow-2xl">
+                  <stat.icon className="w-7 h-7 text-primary-400" />
+                </div>
+                <div>
+                  <div className="text-5xl font-black tracking-tighter text-white mb-1">
+                    {stat.value}
+                  </div>
+                  <p className="text-[10px] font-black uppercase tracking-[0.3em] text-primary-400 opacity-60">
+                    {stat.label}
+                  </p>
+                </div>
               </div>
-              <div className="text-sm text-primary-foreground/80 font-medium">
-                {stat.label}
-              </div>
-            </motion.div>
+            </Reveal>
           ))}
         </div>
       </div>
     </section>
   );
 }
-
-
-
-// // 📄 src/components/sections/stats.tsx
-// "use client";
-
-// import { motion } from "framer-motion";
-// import { Users, Award, Globe, Clock } from "lucide-react";
-
-// const stats = [
-//   {
-//     icon: Users,
-//     label: "Active Students",
-//     value: "2,500+",
-//     description: "Learning Quran daily",
-//   },
-//   {
-//     icon: Award,
-//     label: "Success Rate",
-//     value: "98%",
-//     description: "Student satisfaction",
-//   },
-//   {
-//     icon: Globe,
-//     label: "Countries",
-//     value: "25+",
-//     description: "Worldwide reach",
-//   },
-//   {
-//     icon: Clock,
-//     label: "Support",
-//     value: "24/7",
-//     description: "Always available",
-//   },
-// ];
-
-// export function Stats() {
-//   return (
-//     <section className="py-16 bg-muted/30">
-//       <div className="container mx-auto px-4 lg:px-6">
-//         <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
-//           {stats.map((stat, index) => (
-//             <motion.div
-//               key={stat.label}
-//               initial={{ opacity: 0, y: 20 }}
-//               whileInView={{ opacity: 1, y: 0 }}
-//               transition={{ delay: index * 0.1 }}
-//               className="text-center"
-//             >
-//               <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-//                 <stat.icon className="w-8 h-8 text-primary" />
-//               </div>
-//               <div className="text-3xl lg:text-4xl font-bold text-foreground mb-2">
-//                 {stat.value}
-//               </div>
-//               <div className="font-semibold text-foreground mb-1">
-//                 {stat.label}
-//               </div>
-//               <div className="text-sm text-muted-foreground">
-//                 {stat.description}
-//               </div>
-//             </motion.div>
-//           ))}
-//         </div>
-//       </div>
-//     </section>
-//   );
-// }

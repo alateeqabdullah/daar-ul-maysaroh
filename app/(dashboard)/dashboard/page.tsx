@@ -46,7 +46,7 @@ export default async function AdminDashboardPage({
   }
 
   if (!['SUPER_ADMIN', 'ADMIN'].includes(session.user.role)) {
-    redirect('/dashboard')
+    redirect('/')
   }
 
   // Comply with Next.js 15

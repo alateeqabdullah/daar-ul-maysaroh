@@ -1,54 +1,51 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Shield, CheckCircle, Clock, Users } from "lucide-react";
+import { ShieldCheck, Landmark, Award, ScrollText } from "lucide-react";
 
-const trustItems = [
+const TRUST_SEALS = [
   {
-    icon: Shield,
-    title: "Certified Teachers",
-    description:
-      "All teachers are certified with Ijazah and years of experience",
+    icon: ShieldCheck,
+    label: "Ijazah Authenticated",
+    sub: "Verified Sanad Chains",
   },
   {
-    icon: CheckCircle,
-    title: "Quality Guarantee",
-    description: "14-day satisfaction guarantee with full refund option",
+    icon: Landmark,
+    label: "Global Council",
+    sub: "Al-Azhar Affiliated Faculty",
   },
+  { icon: Award, label: "Premium Pedagogy", sub: "1-on-1 Academic Focus" },
   {
-    icon: Clock,
-    title: "Flexible Scheduling",
-    description: "Learn at your own pace with 24/7 class scheduling",
-  },
-  {
-    icon: Users,
-    title: "Global Community",
-    description: "Join 500+ students from 15+ countries worldwide",
+    icon: ScrollText,
+    label: "Traditional Science",
+    sub: "Classical Tajweed Poem Study",
   },
 ];
 
 export function TrustIndicators() {
   return (
-    <section className="py-16 bg-muted/30">
-      <div className="container mx-auto px-4 lg:px-6">
+    <section className="py-12 border-y border-border/50 bg-muted/20 relative overflow-hidden">
+      <div className="container mx-auto px-6">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
-          {trustItems.map((item, index) => (
+          {TRUST_SEALS.map((seal, i) => (
             <motion.div
-              key={item.title}
-              initial={{ opacity: 0, y: 20 }}
+              key={i}
+              initial={{ opacity: 0, y: 10 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.1 }}
-              className="text-center"
+              transition={{ delay: i * 0.1 }}
+              className="flex items-center gap-4 group"
             >
-              <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                <item.icon className="w-8 h-8 text-primary" />
+              <div className="w-12 h-12 rounded-xl bg-background border flex items-center justify-center shadow-sm group-hover:border-primary-700 transition-colors">
+                <seal.icon className="w-6 h-6 text-primary-700" />
               </div>
-              <h3 className="font-heading font-bold text-lg mb-2">
-                {item.title}
-              </h3>
-              <p className="text-sm text-muted-foreground">
-                {item.description}
-              </p>
+              <div>
+                <p className="text-[10px] font-black uppercase tracking-[0.2em] text-primary-700">
+                  {seal.label}
+                </p>
+                <p className="text-xs font-bold text-muted-foreground opacity-60 uppercase">
+                  {seal.sub}
+                </p>
+              </div>
             </motion.div>
           ))}
         </div>
