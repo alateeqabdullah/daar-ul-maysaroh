@@ -31,26 +31,21 @@ import {
   Crown,
   Bell,
   CheckCircle,
-  Building,
-  CreditCard,
+  ChevronDown,
+  Home,
   ChartBar,
+  FileBarChart,
+  School,
+  Network,
+  CreditCard,
+  Banknote,
+  BarChart,
   Library,
   Target,
   Award,
-  BarChart,
-  Clock,
-  Banknote,
-  FileBarChart,
-  School,
-  Home,
-  ChevronDown,
-  Plus,
-  Briefcase,
   Shield,
-  Globe,
   Database,
   Cpu,
-  Network,
   UserPlus,
 } from "lucide-react";
 import { cn, getInitials } from "@/lib/utils";
@@ -65,7 +60,6 @@ interface NavigationItem {
   href: string;
   icon: React.ComponentType<{ className?: string }>;
   badge?: string | number;
-  description?: string;
 }
 
 interface NavigationGroup {
@@ -89,7 +83,7 @@ const adminNavigation: NavigationGroup[] = [
     title: "Overview",
     icon: LayoutDashboard,
     items: [
-      { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
+      { name: "Dashboard", href: "/admin", icon: Home },
       { name: "Analytics", href: "/admin/analytics", icon: ChartBar },
       { name: "Reports", href: "/admin/reports", icon: FileBarChart },
     ],
@@ -102,17 +96,17 @@ const adminNavigation: NavigationGroup[] = [
         name: "User Approval",
         href: "/admin/approvals",
         icon: UserCheck,
-        badge: "5",
+        badge: 5,
       },
       { name: "All Users", href: "/admin/users", icon: Users },
       { name: "Teachers", href: "/admin/teachers", icon: GraduationCap },
       { name: "Students", href: "/admin/students", icon: UserIcon },
       { name: "Parents", href: "/admin/parents", icon: Users2 },
-      { name: "Student Groups", href: "/admin/groups", icon: Network },
+      { name: "Groups", href: "/admin/groups", icon: Network },
     ],
   },
   {
-    title: "Academic Management",
+    title: "Academic",
     icon: BookOpen,
     items: [
       { name: "Classes", href: "/admin/classes", icon: School },
@@ -125,7 +119,7 @@ const adminNavigation: NavigationGroup[] = [
     ],
   },
   {
-    title: "Financial Operations",
+    title: "Financial",
     icon: Wallet,
     items: [
       {
@@ -135,21 +129,17 @@ const adminNavigation: NavigationGroup[] = [
       },
       { name: "Payments", href: "/admin/financial/payments", icon: Banknote },
       { name: "Invoices", href: "/admin/financial/invoices", icon: FileText },
-      {
-        name: "Financial Reports",
-        href: "/admin/financial/reports",
-        icon: BarChart,
-      },
+      { name: "Reports", href: "/admin/financial/reports", icon: BarChart },
     ],
   },
   {
-    title: "System Administration",
+    title: "System",
     icon: Settings,
     items: [
-      { name: "System Settings", href: "/admin/settings", icon: Settings },
+      { name: "Settings", href: "/admin/settings", icon: Settings },
       { name: "Security", href: "/admin/security", icon: Shield },
       { name: "Backup", href: "/admin/backup", icon: Database },
-      { name: "API Management", href: "/admin/api", icon: Cpu },
+      { name: "API", href: "/admin/api", icon: Cpu },
     ],
   },
 ];
@@ -159,7 +149,7 @@ const teacherNavigation: NavigationGroup[] = [
     title: "Teaching",
     icon: BookOpen,
     items: [
-      { name: "Dashboard", href: "/teacher", icon: LayoutDashboard },
+      { name: "Dashboard", href: "/teacher", icon: Home },
       { name: "My Classes", href: "/teacher/classes", icon: School },
       { name: "Students", href: "/teacher/students", icon: Users },
       { name: "Attendance", href: "/teacher/attendance", icon: CheckCircle },
@@ -168,7 +158,7 @@ const teacherNavigation: NavigationGroup[] = [
     ],
   },
   {
-    title: "Planning & Resources",
+    title: "Planning",
     icon: Calendar,
     items: [
       { name: "Schedule", href: "/teacher/schedule", icon: Calendar },
@@ -183,7 +173,7 @@ const teacherNavigation: NavigationGroup[] = [
     items: [
       { name: "Messages", href: "/teacher/communication", icon: MessageSquare },
       { name: "Announcements", href: "/teacher/announcements", icon: Bell },
-      { name: "Parent Meetings", href: "/teacher/meetings", icon: Users2 },
+      { name: "Meetings", href: "/teacher/meetings", icon: Users2 },
     ],
   },
   {
@@ -198,7 +188,7 @@ const teacherNavigation: NavigationGroup[] = [
 ];
 
 const studentNavigation: NavigationItem[] = [
-  { name: "Dashboard", href: "/student", icon: LayoutDashboard },
+  { name: "Dashboard", href: "/student", icon: Home },
   { name: "My Classes", href: "/student/classes", icon: School },
   { name: "Schedule", href: "/student/schedule", icon: Calendar },
   { name: "Assignments", href: "/student/assignments", icon: FileText },
@@ -210,7 +200,7 @@ const studentNavigation: NavigationItem[] = [
 ];
 
 const parentNavigation: NavigationItem[] = [
-  { name: "Dashboard", href: "/parent", icon: LayoutDashboard },
+  { name: "Dashboard", href: "/parent", icon: Home },
   { name: "My Children", href: "/parent/children", icon: Users },
   { name: "Progress Reports", href: "/parent/progress", icon: TrendingUp },
   { name: "Attendance", href: "/parent/attendance", icon: CheckCircle },
@@ -234,10 +224,32 @@ export default function DashboardSidebar({ user }: SidebarProps) {
 
   useEffect(() => {
     setMounted(true);
+    // Auto-open on desktop
     if (window.innerWidth >= 1024) {
       setOpen(true);
     }
   }, [setOpen]);
+
+  // Close sidebar when clicking outside on mobile
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const sidebar = document.querySelector("aside");
+      const target = event.target as HTMLElement;
+
+      if (
+        isOpen &&
+        window.innerWidth < 1024 &&
+        sidebar &&
+        !sidebar.contains(target) &&
+        !target.closest('button[aria-label="Toggle Sidebar"]')
+      ) {
+        setOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [isOpen, setOpen]);
 
   const getNavigation = (): NavigationGroup[] | NavigationItem[] => {
     switch (user.role) {
@@ -322,36 +334,39 @@ export default function DashboardSidebar({ user }: SidebarProps) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            onClick={() => setOpen(false)}
             className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 lg:hidden"
+            onClick={() => setOpen(false)}
           />
         )}
       </AnimatePresence>
 
       {/* Sidebar Container */}
       <motion.aside
-        initial={{ x: "-100%" }}
-        animate={{ x: isOpen ? 0 : "-100%" }}
+        initial={false}
+        animate={{
+          x: isOpen ? 0 : "-100%",
+        }}
         transition={{ type: "spring", damping: 30, stiffness: 300 }}
         className={cn(
           "fixed inset-y-0 left-0 z-50 w-80 flex flex-col",
-          "lg:sticky lg:top-0 lg:h-screen lg:z-40 lg:translate-x-0",
-          "bg-gradient-to-b from-background via-background/95 to-background/90",
-          "border-r border-border/30",
-          "shadow-2xl shadow-black/5 dark:shadow-white/5",
+          "lg:fixed lg:inset-y-0 lg:left-0 lg:z-40 lg:translate-x-0",
+          "bg-background border-r border-border/30 shadow-2xl",
         )}
+        style={{
+          transform: "none", // Let Framer Motion control
+        }}
       >
-        {/* --- HEADER: Logo --- */}
-        <div className="flex h-20 shrink-0 items-center justify-between px-6 border-b border-border/30">
-          <Link href="/dashboard" className="flex items-center space-x-3 group">
-            <div className="w-11 h-11 bg-gradient-to-br from-primary-600 to-primary-800 rounded-xl flex items-center justify-center shadow-lg shadow-primary-500/20 group-hover:shadow-primary-500/30 transition-all duration-300">
-              <BookOpen className="h-5 w-5 text-white" />
+        {/* Header */}
+        <div className="flex h-16 items-center justify-between px-6 border-b border-border/30">
+          <Link href="/dashboard" className="flex items-center gap-3 group">
+            <div className="w-9 h-9 bg-gradient-to-br from-primary-600 to-primary-800 rounded-xl flex items-center justify-center shadow-lg">
+              <BookOpen className="h-4 w-4 text-white" />
             </div>
             <div className="flex flex-col">
-              <h1 className="text-lg font-black tracking-tight leading-none">
+              <h1 className="text-base font-black tracking-tight leading-none">
                 AL-MAYSAROH
               </h1>
-              <p className="text-[9px] text-primary-600 dark:text-primary-400 font-bold tracking-[0.3em] uppercase">
+              <p className="text-[9px] text-primary-600 dark:text-primary-400 font-bold tracking-wider uppercase">
                 Education
               </p>
             </div>
@@ -359,23 +374,23 @@ export default function DashboardSidebar({ user }: SidebarProps) {
           <Button
             variant="ghost"
             size="icon"
-            className="lg:hidden rounded-xl hover:bg-primary-50 dark:hover:bg-primary-900/30 transition-all duration-300"
+            className="lg:hidden rounded-xl hover:bg-primary-50 dark:hover:bg-primary-900/30"
             onClick={() => setOpen(false)}
           >
             <X className="h-4 w-4" />
           </Button>
         </div>
 
-        {/* --- USER PROFILE --- */}
+        {/* User Profile */}
         <div className="px-4 py-3">
-          <div className="rounded-2xl bg-gradient-to-br from-primary-500/5 to-primary-600/5 dark:from-primary-900/20 dark:to-primary-800/20 p-3 border border-primary-200/20 dark:border-primary-800/20 backdrop-blur-sm">
+          <div className="rounded-xl bg-gradient-to-br from-primary-50 to-primary-100 dark:from-primary-900/20 dark:to-primary-800/20 p-3 border border-primary-200/20">
             <div className="flex items-center gap-3">
               <div className="relative">
-                <Avatar className="h-11 w-11 border-2 border-primary-500/20">
+                <Avatar className="h-10 w-10 border border-primary-500/20">
                   <AvatarImage src={user.image || undefined} alt={user.name} />
                   <AvatarFallback
                     className={cn(
-                      "text-white font-bold text-sm",
+                      "text-white font-bold text-xs",
                       getRoleColor(),
                     )}
                   >
@@ -383,9 +398,9 @@ export default function DashboardSidebar({ user }: SidebarProps) {
                   </AvatarFallback>
                 </Avatar>
                 {user.role === "SUPER_ADMIN" && (
-                  <Crown className="absolute -top-1 -right-1 h-3.5 w-3.5 text-amber-500 fill-amber-500" />
+                  <Crown className="absolute -top-1 -right-1 h-3 w-3 text-amber-500 fill-amber-500" />
                 )}
-                <div className="absolute -bottom-0.5 -right-0.5 h-2.5 w-2.5 rounded-full border-2 border-background bg-gradient-to-r from-emerald-400 to-teal-500" />
+                <div className="absolute -bottom-0.5 -right-0.5 h-2 w-2 rounded-full border-2 border-background bg-gradient-to-r from-emerald-400 to-teal-500" />
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm font-bold text-foreground truncate">
@@ -407,23 +422,23 @@ export default function DashboardSidebar({ user }: SidebarProps) {
           </div>
         </div>
 
-        {/* --- NAVIGATION --- */}
+        {/* Navigation - Scrollable */}
         <div className="flex-1 overflow-y-auto px-3 py-2 custom-scrollbar">
-          {/* Quick Stats */}
+          {/* Stats (Admin Only) */}
           {(user.role === "SUPER_ADMIN" || user.role === "ADMIN") && (
             <div className="mb-4 px-3">
               <div className="grid grid-cols-2 gap-2">
-                <div className="rounded-xl bg-gradient-to-br from-emerald-500/10 to-teal-500/10 p-3 border border-emerald-200/20 dark:border-emerald-800/20">
-                  <p className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 uppercase">
+                <div className="rounded-lg bg-gradient-to-br from-emerald-500/10 to-teal-500/10 p-2.5 border border-emerald-200/20">
+                  <p className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400">
                     Active
                   </p>
-                  <p className="text-lg font-black text-foreground">142</p>
+                  <p className="text-base font-black text-foreground">142</p>
                 </div>
-                <div className="rounded-xl bg-gradient-to-br from-amber-500/10 to-orange-500/10 p-3 border border-amber-200/20 dark:border-amber-800/20">
-                  <p className="text-[10px] font-bold text-amber-600 dark:text-amber-400 uppercase">
+                <div className="rounded-lg bg-gradient-to-br from-amber-500/10 to-orange-500/10 p-2.5 border border-amber-200/20">
+                  <p className="text-[10px] font-bold text-amber-600 dark:text-amber-400">
                     Pending
                   </p>
-                  <p className="text-lg font-black text-foreground">5</p>
+                  <p className="text-base font-black text-foreground">5</p>
                 </div>
               </div>
             </div>
@@ -440,11 +455,11 @@ export default function DashboardSidebar({ user }: SidebarProps) {
                     <div key={group.title} className="space-y-1">
                       <button
                         onClick={() => toggleGroup(group.title)}
-                        className="flex items-center justify-between w-full px-3 py-2 rounded-xl hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-colors"
+                        className="flex items-center justify-between w-full px-3 py-2 rounded-lg hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-colors"
                       >
                         <div className="flex items-center gap-2">
                           <GroupIcon className="h-3.5 w-3.5 text-primary-600 dark:text-primary-400" />
-                          <span className="text-[11px] font-black uppercase tracking-wider text-muted-foreground">
+                          <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
                             {group.title}
                           </span>
                         </div>
@@ -475,9 +490,9 @@ export default function DashboardSidebar({ user }: SidebarProps) {
                                     key={item.name}
                                     href={item.href}
                                     className={cn(
-                                      "flex items-center rounded-xl px-3 py-2.5 text-sm font-medium transition-all duration-200",
+                                      "flex items-center rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200",
                                       isActive
-                                        ? "bg-gradient-to-r from-primary-500/10 to-primary-600/10 dark:from-primary-900/30 dark:to-primary-800/30 text-primary-700 dark:text-primary-400"
+                                        ? "bg-gradient-to-r from-primary-500/10 to-primary-600/10 text-primary-700 dark:text-primary-400"
                                         : "text-muted-foreground hover:text-foreground hover:bg-muted/30",
                                     )}
                                     onClick={() =>
@@ -508,7 +523,7 @@ export default function DashboardSidebar({ user }: SidebarProps) {
                     </div>
                   );
                 })
-              : // Flat navigation for students/parents
+              : // Flat navigation
                 (navigation as NavigationItem[]).map((item) => {
                   const isActive =
                     pathname === item.href ||
@@ -519,9 +534,9 @@ export default function DashboardSidebar({ user }: SidebarProps) {
                       key={item.name}
                       href={item.href}
                       className={cn(
-                        "flex items-center rounded-xl px-4 py-3 text-sm font-medium transition-all duration-200",
+                        "flex items-center rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200",
                         isActive
-                          ? "bg-gradient-to-r from-primary-500/10 to-primary-600/10 dark:from-primary-900/30 dark:to-primary-800/30 text-primary-700 dark:text-primary-400"
+                          ? "bg-gradient-to-r from-primary-500/10 to-primary-600/10 text-primary-700 dark:text-primary-400"
                           : "text-muted-foreground hover:text-foreground hover:bg-muted/30",
                       )}
                       onClick={() => window.innerWidth < 1024 && setOpen(false)}
@@ -544,7 +559,7 @@ export default function DashboardSidebar({ user }: SidebarProps) {
           {(user.role === "SUPER_ADMIN" || user.role === "ADMIN") && (
             <div className="mt-6 pt-4 border-t border-border/30">
               <div className="px-3 mb-3">
-                <h3 className="flex items-center gap-2 text-[11px] font-black uppercase tracking-wider text-muted-foreground">
+                <h3 className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-muted-foreground">
                   <Zap className="h-3 w-3 text-amber-500" /> Quick Actions
                 </h3>
               </div>
@@ -557,7 +572,7 @@ export default function DashboardSidebar({ user }: SidebarProps) {
                       window.innerWidth < 1024 && setOpen(false);
                     }}
                     className={cn(
-                      "group flex flex-col items-center justify-center rounded-xl p-3",
+                      "group flex flex-col items-center justify-center rounded-lg p-2.5",
                       "bg-gradient-to-br from-white to-white/80 dark:from-slate-900 dark:to-slate-900/80",
                       "border border-border/30 hover:border-primary-300 dark:hover:border-primary-700",
                       "transition-all duration-200 hover:scale-[1.02]",
@@ -566,11 +581,11 @@ export default function DashboardSidebar({ user }: SidebarProps) {
                   >
                     <div
                       className={cn(
-                        "w-8 h-8 rounded-lg flex items-center justify-center mb-2",
+                        "w-7 h-7 rounded-lg flex items-center justify-center mb-1.5",
                         `bg-gradient-to-br ${action.color}`,
                       )}
                     >
-                      <action.icon className="h-4 w-4 text-white" />
+                      <action.icon className="h-3.5 w-3.5 text-white" />
                     </div>
                     <span className="text-[10px] font-bold text-foreground text-center leading-tight">
                       {action.label}
@@ -582,11 +597,11 @@ export default function DashboardSidebar({ user }: SidebarProps) {
           )}
         </div>
 
-        {/* --- FOOTER --- */}
+        {/* Footer */}
         <div className="mt-auto border-t border-border/30 p-4 space-y-2">
           <Link
             href="/help"
-            className="flex items-center rounded-xl px-3 py-2.5 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-all duration-200"
+            className="flex items-center rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-colors"
             onClick={() => window.innerWidth < 1024 && setOpen(false)}
           >
             <HelpCircle className="mr-3 h-4 w-4" />
@@ -595,19 +610,19 @@ export default function DashboardSidebar({ user }: SidebarProps) {
 
           <button
             onClick={handleSignOut}
-            className="flex w-full items-center rounded-xl px-3 py-2.5 text-sm font-medium text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-500/10 transition-all duration-200"
+            className="flex w-full items-center rounded-lg px-3 py-2 text-sm font-medium text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors"
           >
             <LogOut className="mr-3 h-4 w-4" />
             <span>Sign Out</span>
           </button>
 
-          {/* Version & Status */}
+          {/* Status */}
           <div className="pt-3 mt-2 border-t border-border/30">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <div className="h-2 w-2 rounded-full bg-gradient-to-r from-emerald-400 to-teal-500 animate-pulse" />
+                <div className="h-1.5 w-1.5 rounded-full bg-gradient-to-r from-emerald-400 to-teal-500 animate-pulse" />
                 <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400">
-                  All Systems Operational
+                  Systems Operational
                 </span>
               </div>
               <Badge variant="outline" className="text-[10px] font-bold">

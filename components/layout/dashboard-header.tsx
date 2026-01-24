@@ -53,12 +53,11 @@ interface HeaderProps {
 export default function DashboardHeader({ user }: HeaderProps) {
   const pathname = usePathname();
   const { theme, setTheme } = useTheme();
-  const { toggle } = useSidebarStore();
+  const { isOpen, toggle, setOpen } = useSidebarStore(); // Get both toggle and setOpen
   const [mounted, setMounted] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const notifications = [
     {
@@ -90,14 +89,6 @@ export default function DashboardHeader({ user }: HeaderProps) {
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
-
-  useEffect(() => {
-    if (mobileMenuOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "unset";
-    }
-  }, [mobileMenuOpen]);
 
   const getBreadcrumb = () => {
     const path = pathname.split("/").filter((p) => p);
@@ -162,7 +153,7 @@ export default function DashboardHeader({ user }: HeaderProps) {
 
   return (
     <>
-      {/* HEADER - Fixed width, doesn't extend over sidebar */}
+      {/* HEADER */}
       <header
         className={cn(
           "sticky top-0 z-40 w-full border-b border-border/50 bg-background/80 backdrop-blur-xl transition-all duration-300",
@@ -173,15 +164,19 @@ export default function DashboardHeader({ user }: HeaderProps) {
           <div className="flex h-16 lg:h-20 items-center justify-between">
             {/* Left section - Menu toggle & page info */}
             <div className="flex items-center gap-4">
-              {/* Mobile menu button */}
+              {/* Mobile menu button - FIXED TOGGLE */}
               <Button
                 variant="ghost"
                 size="icon"
                 className="lg:hidden rounded-xl hover:bg-primary-50 dark:hover:bg-primary-900/40 transition-all duration-300 group"
-                onClick={toggle}
+                onClick={toggle} // Use toggle from store
                 aria-label="Toggle Sidebar"
               >
-                <Menu className="h-5 w-5 text-primary-700 dark:text-primary-400 group-hover:rotate-90 transition-transform" />
+                {isOpen ? (
+                  <X className="h-5 w-5 text-primary-700 dark:text-primary-400" />
+                ) : (
+                  <Menu className="h-5 w-5 text-primary-700 dark:text-primary-400" />
+                )}
               </Button>
 
               {/* Page info */}
