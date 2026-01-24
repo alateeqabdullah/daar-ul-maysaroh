@@ -1,529 +1,209 @@
-// "use client";
-
-// import { useState } from "react";
-// import { motion, AnimatePresence } from "framer-motion";
-// import {
-//   ChevronDown,
-//   ChevronUp,
-//   BookOpen,
-//   Users,
-//   CreditCard,
-//   Clock,
-// } from "lucide-react";
-// import Link from "next/link";
-
-// const faqCategories = [
-//   {
-//     icon: BookOpen,
-//     title: "Courses & Learning",
-//     questions: [
-//       {
-//         question: "What courses do you offer?",
-//         answer:
-//           "We offer comprehensive Quran courses including Quran Recitation (Nazrah), Quran Memorization (Hifz Program), Advanced Tajweed, Quranic Arabic, and specialized programs like Quran Competition Preparation and Ramadan Intensive courses.",
-//       },
-//       {
-//         question: "Are the classes one-on-one or group?",
-//         answer:
-//           "Most of our courses are one-on-one to ensure personalized attention. We also offer limited group courses for special programs like competition preparation and Ramadan intensives.",
-//       },
-//       {
-//         question: "What qualifications do your teachers have?",
-//         answer:
-//           "All our teachers are certified with Ijazah (teaching certification) in Quran recitation. Many have degrees from reputable Islamic universities and years of teaching experience. Each teacher is carefully vetted and trained in our teaching methodology.",
-//       },
-//       {
-//         question: "Can I choose my teacher?",
-//         answer:
-//           "Yes! During enrollment, you can select from available teachers based on their specialization, experience, and teaching style. We also provide teacher profiles to help you make an informed choice.",
-//       },
-//     ],
-//   },
-//   {
-//     icon: CreditCard,
-//     title: "Payment & Pricing",
-//     questions: [
-//       {
-//         question: "What are your payment options?",
-//         answer:
-//           "We accept major credit cards, debit cards, and online payments through secure payment gateways. We offer monthly subscription plans with flexible billing cycles.",
-//       },
-//       {
-//         question: "Is there a free trial?",
-//         answer:
-//           "Yes! We offer a free trial class so you can experience our teaching methodology and meet your potential teacher before committing to a course.",
-//       },
-//       {
-//         question: "Can I get a refund?",
-//         answer:
-//           "We offer a 14-day satisfaction guarantee. If you're not satisfied with our service within the first two weeks, you can request a full refund.",
-//       },
-//       {
-//         question: "Do you offer financial assistance?",
-//         answer:
-//           "Yes, we offer scholarships and financial aid for deserving students. Contact our support team to learn more about eligibility and application process.",
-//       },
-//     ],
-//   },
-//   {
-//     icon: Clock,
-//     title: "Schedule & Timing",
-//     questions: [
-//       {
-//         question: "How flexible is the schedule?",
-//         answer:
-//           "Very flexible! You can schedule classes at times that work for you, including evenings and weekends. Our platform supports multiple time zones to accommodate international students.",
-//       },
-//       {
-//         question: "What if I miss a class?",
-//         answer:
-//           "We understand life happens. You can reschedule classes with at least 24 hours notice. We allow up to 2 reschedules per month to ensure flexibility while maintaining learning consistency.",
-//       },
-//       {
-//         question: "How long are the class sessions?",
-//         answer:
-//           "Class durations vary by course: Recitation classes are 45 minutes, Hifz program sessions are 60 minutes, and group courses are 90 minutes. All sessions are designed for optimal learning retention.",
-//       },
-//       {
-//         question: "Do you offer intensive programs?",
-//         answer:
-//           "Yes! We offer Ramadan intensive programs and summer crash courses for students who want to accelerate their learning. These are typically group-based with more frequent sessions.",
-//       },
-//     ],
-//   },
-//   {
-//     icon: Users,
-//     title: "Technical & Support",
-//     questions: [
-//       {
-//         question: "What equipment do I need?",
-//         answer:
-//           "You need a computer or tablet with webcam, microphone, and stable internet connection. We recommend using headphones for better audio quality. Our platform works on all modern browsers.",
-//       },
-//       {
-//         question: "How do online classes work?",
-//         answer:
-//           "Classes are conducted through our secure video platform. You'll get a personalized classroom with interactive whiteboard, document sharing, and real-time feedback tools. All sessions are recorded for your review.",
-//       },
-//       {
-//         question: "What if I have technical issues?",
-//         answer:
-//           "Our technical support team is available 24/7 to help with any issues. We also provide pre-class technical checks and have detailed troubleshooting guides for common problems.",
-//       },
-//       {
-//         question: "Is the platform mobile-friendly?",
-//         answer:
-//           "Yes! Our platform works seamlessly on smartphones and tablets. You can attend classes, submit assignments, and track your progress from any device.",
-//       },
-//     ],
-//   },
-// ];
-
-// export default function FAQPage() {
-//   const [openCategory, setOpenCategory] = useState(0);
-//   const [openQuestions, setOpenQuestions] = useState<number[]>([]);
-
-//   const toggleQuestion = (index: number) => {
-//     setOpenQuestions((prev) =>
-//       prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index]
-//     );
-//   };
-
-//   return (
-//     <div className="min-h-screen bg-background pt-16">
-//       {/* Hero Section */}
-//       <section className="bg-gradient-to-br from-primary to-accent text-white py-20">
-//         <div className="container mx-auto px-4 lg:px-6 text-center">
-//           <motion.h1
-//             initial={{ opacity: 0, y: 20 }}
-//             animate={{ opacity: 1, y: 0 }}
-//             className="text-4xl lg:text-6xl font-heading font-bold mb-6"
-//           >
-//             Frequently Asked Questions
-//           </motion.h1>
-//           <motion.p
-//             initial={{ opacity: 0, y: 20 }}
-//             animate={{ opacity: 1, y: 0 }}
-//             transition={{ delay: 0.1 }}
-//             className="text-xl lg:text-2xl text-primary-foreground/90 max-w-4xl mx-auto"
-//           >
-//             Find answers to common questions about our Quran courses and
-//             learning platform.
-//           </motion.p>
-//         </div>
-//       </section>
-
-//       <section className="py-20">
-//         <div className="container mx-auto px-4 lg:px-6">
-//           {/* Category Tabs */}
-//           <div className="flex flex-wrap justify-center gap-4 mb-12">
-//             {faqCategories.map((category, index) => (
-//               <motion.button
-//                 key={category.title}
-//                 initial={{ opacity: 0, y: 20 }}
-//                 whileInView={{ opacity: 1, y: 0 }}
-//                 transition={{ delay: index * 0.1 }}
-//                 onClick={() => setOpenCategory(index)}
-//                 className={`flex items-center space-x-2 px-6 py-3 rounded-full border transition-all duration-200 ${
-//                   openCategory === index
-//                     ? "bg-primary text-primary-foreground border-primary"
-//                     : "bg-card text-card-foreground border-border hover:border-primary/50"
-//                 }`}
-//               >
-//                 <category.icon className="w-4 h-4" />
-//                 <span className="font-medium">{category.title}</span>
-//               </motion.button>
-//             ))}
-//           </div>
-
-//           {/* FAQ Content */}
-//           <div className="max-w-4xl mx-auto">
-//             <motion.div
-//               key={openCategory}
-//               initial={{ opacity: 0, y: 20 }}
-//               animate={{ opacity: 1, y: 0 }}
-//               className="space-y-4"
-//             >
-//               {faqCategories[openCategory].questions.map((item, index) => (
-//                 <motion.div
-//                   key={index}
-//                   initial={{ opacity: 0, x: -20 }}
-//                   whileInView={{ opacity: 1, x: 0 }}
-//                   transition={{ delay: index * 0.1 }}
-//                   className="bg-card border border-border rounded-xl shadow-sm"
-//                 >
-//                   <button
-//                     onClick={() => toggleQuestion(index)}
-//                     className="w-full flex items-center justify-between p-6 text-left hover:bg-muted/50 transition-colors"
-//                   >
-//                     <span className="font-semibold text-lg text-card-foreground pr-4">
-//                       {item.question}
-//                     </span>
-//                     {openQuestions.includes(index) ? (
-//                       <ChevronUp className="w-5 h-5 text-muted-foreground flex-shrink-0" />
-//                     ) : (
-//                       <ChevronDown className="w-5 h-5 text-muted-foreground flex-shrink-0" />
-//                     )}
-//                   </button>
-
-//                   <AnimatePresence>
-//                     {openQuestions.includes(index) && (
-//                       <motion.div
-//                         initial={{ opacity: 0, height: 0 }}
-//                         animate={{ opacity: 1, height: "auto" }}
-//                         exit={{ opacity: 0, height: 0 }}
-//                         transition={{ duration: 0.3 }}
-//                         className="overflow-hidden"
-//                       >
-//                         <div className="px-6 pb-6">
-//                           <p className="text-muted-foreground leading-relaxed">
-//                             {item.answer}
-//                           </p>
-//                         </div>
-//                       </motion.div>
-//                     )}
-//                   </AnimatePresence>
-//                 </motion.div>
-//               ))}
-//             </motion.div>
-//           </div>
-
-//           {/* Still Have Questions */}
-//           <motion.div
-//             initial={{ opacity: 0, y: 30 }}
-//             whileInView={{ opacity: 1, y: 0 }}
-//             className="text-center mt-16 bg-primary/5 rounded-2xl p-8 border border-primary/20"
-//           >
-//             <h3 className="text-2xl font-heading font-bold mb-4">
-//               Still have questions?
-//             </h3>
-//             <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
-//              {` Can't find the answer you're looking for? Please chat with our
-//               friendly team.`}
-//             </p>
-//             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-//               <Link
-//                 href="/contact"
-//                 className="inline-flex items-center justify-center px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors font-medium"
-//               >
-//                 Contact Support
-//               </Link>
-//               <Link
-//                 href="mailto:support@almaysaroh.com"
-//                 className="inline-flex items-center justify-center px-6 py-3 border border-primary text-primary rounded-lg hover:bg-primary hover:text-primary-foreground transition-colors font-medium"
-//               >
-//                 Email Us
-//               </Link>
-//             </div>
-//           </motion.div>
-//         </div>
-//       </section>
-//     </div>
-//   );
-// }
-
-
-
-// src/app/faq/page.tsx
 "use client";
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
+  HelpCircle,
   ChevronDown,
-  ChevronUp,
+  Search,
   BookOpen,
-  Users,
+  Landmark,
   CreditCard,
-  Clock,
+  Monitor,
+  MessageSquare,
 } from "lucide-react";
+import { Reveal } from "@/components/shared/section-animation";
+import { cn } from "@/lib/utils";
 
-const faqCategories = [
+const FAQ_DATA = [
   {
+    category: "General",
+    icon: Landmark,
+    questions: [
+      {
+        q: "What is Al-Maysaroh Institute?",
+        a: "Al-Maysaroh is a premier international institute dedicated to the preservation of the Quranic Sanad through 1-on-1 scholarly guidance and modern academic rigor.",
+      },
+      {
+        q: "Do you offer certificates?",
+        a: "Yes. We offer both 'Certificate of Completion' for standard levels and traditional 'Ijazah with Sanad' for those who master the entire Quran.",
+      },
+    ],
+  },
+  {
+    category: "Academic",
     icon: BookOpen,
-    title: "Courses & Learning",
     questions: [
       {
-        question: "What courses do you offer?",
-        answer:
-          "We offer comprehensive Quran courses including Quran Recitation (Nazrah), Quran Memorization (Hifz Program), Advanced Tajweed, Quranic Arabic, and specialized programs like Quran Competition Preparation and Ramadan Intensive courses.",
+        q: "How are teachers assigned?",
+        a: "Our Dean of Faculty personally reviews your initial assessment to match you with a scholar whose expertise and recitation style align with your goals.",
       },
       {
-        question: "Are the classes one-on-one or group?",
-        answer:
-          "Most of our courses are one-on-one to ensure personalized attention. We also offer limited group courses for special programs like competition preparation and Ramadan intensives.",
+        q: "Can I choose my scholar?",
+        a: "You can request a specific scholar through the Admissions Council Inquiry. We do our best to accommodate these requests based on availability.",
       },
       {
-        question: "What qualifications do your teachers have?",
-        answer:
-          "All our teachers are certified with Ijazah (teaching certification) in Quran recitation. Many have degrees from reputable Islamic universities and years of teaching experience. Each teacher is carefully vetted and trained in our teaching methodology.",
-      },
-      {
-        question: "Can I choose my teacher?",
-        answer:
-          "Yes! During enrollment, you can select from available teachers based on their specialization, experience, and teaching style. We also provide teacher profiles to help you make an informed choice.",
+        q: "Are the classes 1-on-1?",
+        a: "Yes, our core curriculum is exclusively 1-on-1 to ensure the student receives the undivided attention of the scholar, as per traditional methodology.",
       },
     ],
   },
   {
+    category: "Tuition & Financial",
     icon: CreditCard,
-    title: "Payment & Pricing",
     questions: [
       {
-        question: "What are your payment options?",
-        answer:
-          "We accept major credit cards, debit cards, and online payments through secure payment gateways. We offer monthly subscription plans with flexible billing cycles.",
+        q: "What payment methods do you accept?",
+        a: "We accept all major Credit/Debit cards via Stripe, as well as Bank Transfers, Western Union, and Mobile Money for global students.",
       },
       {
-        question: "Is there a free trial?",
-        answer:
-          "Yes! We offer a free trial class so you can experience our teaching methodology and meet your potential teacher before committing to a course.",
-      },
-      {
-        question: "Can I get a refund?",
-        answer:
-          "We offer a 14-day satisfaction guarantee. If you're not satisfied with our service within the first two weeks, you can request a full refund.",
-      },
-      {
-        question: "Do you offer financial assistance?",
-        answer:
-          "Yes, we offer scholarships and financial aid for deserving students. Contact our support team to learn more about eligibility and application process.",
+        q: "Do you offer financial aid?",
+        a: "Al-Maysaroh offers limited Zakat-funded grants for dedicated students of knowledge facing financial hardship. Please contact the Financial Council.",
       },
     ],
   },
   {
-    icon: Clock,
-    title: "Schedule & Timing",
+    category: "Technical",
+    icon: Monitor,
     questions: [
       {
-        question: "How flexible is the schedule?",
-        answer:
-          "Very flexible! You can schedule classes at times that work for you, including evenings and weekends. Our platform supports multiple time zones to accommodate international students.",
+        q: "What software is required for classes?",
+        a: "Classes are held via our Integrated Student Portal. You only need a stable internet connection and a modern browser (Chrome, Safari, or Firefox).",
       },
       {
-        question: "What if I miss a class?",
-        answer:
-          "We understand life happens. You can reschedule classes with at least 24 hours notice. We allow up to 2 reschedules per month to ensure flexibility while maintaining learning consistency.",
-      },
-      {
-        question: "How long are the class sessions?",
-        answer:
-          "Class durations vary by course: Recitation classes are 45 minutes, Hifz program sessions are 60 minutes, and group courses are 90 minutes. All sessions are designed for optimal learning retention.",
-      },
-      {
-        question: "Do you offer intensive programs?",
-        answer:
-          "Yes! We offer Ramadan intensive programs and summer crash courses for students who want to accelerate their learning. These are typically group-based with more frequent sessions.",
-      },
-    ],
-  },
-  {
-    icon: Users,
-    title: "Technical & Support",
-    questions: [
-      {
-        question: "What equipment do I need?",
-        answer:
-          "You need a computer or tablet with webcam, microphone, and stable internet connection. We recommend using headphones for better audio quality. Our platform works on all modern browsers.",
-      },
-      {
-        question: "How do online classes work?",
-        answer:
-          "Classes are conducted through our secure video platform. You'll get a personalized classroom with interactive whiteboard, document sharing, and real-time feedback tools. All sessions are recorded for your review.",
-      },
-      {
-        question: "What if I have technical issues?",
-        answer:
-          "Our technical support team is available 24/7 to help with any issues. We also provide pre-class technical checks and have detailed troubleshooting guides for common problems.",
-      },
-      {
-        question: "Is the platform mobile-friendly?",
-        answer:
-          "Yes! Our platform works seamlessly on smartphones and tablets. You can attend classes, submit assignments, and track your progress from any device.",
+        q: "Is there a mobile app?",
+        a: "Our portal is fully responsive for tablets and mobile phones. A dedicated iOS and Android app is currently in development for 2026.",
       },
     ],
   },
 ];
 
 export default function FAQPage() {
-  const [openCategory, setOpenCategory] = useState(0);
-  const [openQuestions, setOpenQuestions] = useState<number[]>([]);
-
-  const toggleQuestion = (index: number) => {
-    setOpenQuestions((prev) =>
-      prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index]
-    );
-  };
+  const [searchTerm, setSearchTerm] = useState("");
+  const [openIndex, setOpenIndex] = useState<string | null>(null);
 
   return (
-    <div className="min-h-screen bg-background pt-16">
-      {/* Hero Section */}
-      <section className="bg-gradient-to-br from-primary to-accent text-white py-20">
-        <div className="container mx-auto px-4 lg:px-6 text-center">
-          <motion.h1
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-4xl lg:text-6xl font-heading font-bold mb-6"
-          >
-            Frequently Asked Questions
-          </motion.h1>
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
-            className="text-xl lg:text-2xl text-primary-foreground/90 max-w-4xl mx-auto"
-          >
-            Find answers to common questions about our Quran courses and
-            learning platform.
-          </motion.p>
-        </div>
-      </section>
+    <main className="pt-40 pb-20 bg-background relative overflow-hidden">
+      <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-primary-700/5 blur-[120px] -z-10 rounded-full" />
 
-      <section className="py-20">
-        <div className="container mx-auto px-4 lg:px-6">
-          {/* Category Tabs */}
-          <div className="flex flex-wrap justify-center gap-4 mb-12">
-            {faqCategories.map((category, index) => (
-              <motion.button
-                key={category.title}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.1 }}
-                onClick={() => setOpenCategory(index)}
-                className={`flex items-center space-x-2 px-6 py-3 rounded-full border transition-all duration-200 ${
-                  openCategory === index
-                    ? "bg-primary text-primary-foreground border-primary"
-                    : "bg-card text-card-foreground border-border hover:border-primary/50"
-                }`}
-              >
-                <category.icon className="w-4 h-4" />
-                <span className="font-medium">{category.title}</span>
-              </motion.button>
-            ))}
-          </div>
-
-          {/* FAQ Content */}
-          <div className="max-w-4xl mx-auto">
-            <motion.div
-              key={openCategory}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="space-y-4"
-            >
-              {faqCategories[openCategory].questions.map((item, index) => (
-                <motion.div
-                  key={index}
-                  initial={{ opacity: 0, x: -20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.1 }}
-                  className="bg-card border border-border rounded-xl shadow-sm"
-                >
-                  <button
-                    onClick={() => toggleQuestion(index)}
-                    className="w-full flex items-center justify-between p-6 text-left hover:bg-muted/50 transition-colors"
-                  >
-                    <span className="font-semibold text-lg text-card-foreground pr-4">
-                      {item.question}
-                    </span>
-                    {openQuestions.includes(index) ? (
-                      <ChevronUp className="w-5 h-5 text-muted-foreground flex-shrink-0" />
-                    ) : (
-                      <ChevronDown className="w-5 h-5 text-muted-foreground flex-shrink-0" />
-                    )}
-                  </button>
-
-                  <AnimatePresence>
-                    {openQuestions.includes(index) && (
-                      <motion.div
-                        initial={{ opacity: 0, height: 0 }}
-                        animate={{ opacity: 1, height: "auto" }}
-                        exit={{ opacity: 0, height: 0 }}
-                        transition={{ duration: 0.3 }}
-                        className="overflow-hidden"
-                      >
-                        <div className="px-6 pb-6">
-                          <p className="text-muted-foreground leading-relaxed">
-                            {item.answer}
-                          </p>
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </motion.div>
-              ))}
-            </motion.div>
-          </div>
-
-          {/* Still Have Questions */}
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            className="text-center mt-16 bg-primary/5 rounded-2xl p-8 border border-primary/20"
-          >
-            <h3 className="text-2xl font-heading font-bold mb-4">
-              Still have questions?
-            </h3>
-            <p className="text-muted-foreground mb-6 max-w-2xl mx-auto">
-              Can't find the answer you're looking for? Please chat with our
-              friendly team.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <a
-                href="/contact"
-                className="inline-flex items-center justify-center px-6 py-3 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors font-medium"
-              >
-                Contact Support
-              </a>
-              <a
-                href="mailto:support@almaysaroh.com"
-                className="inline-flex items-center justify-center px-6 py-3 border border-primary text-primary rounded-lg hover:bg-primary hover:text-primary-foreground transition-colors font-medium"
-              >
-                Email Us
-              </a>
+      <div className="container mx-auto px-6">
+        <div className="max-w-4xl mx-auto text-center mb-20 space-y-8">
+          <Reveal>
+            <div className="w-16 h-16 bg-primary-700/10 rounded-2xl flex items-center justify-center mx-auto mb-6">
+              <HelpCircle className="text-primary-700 w-8 h-8" />
             </div>
-          </motion.div>
+            <h1 className="text-6xl lg:text-8xl font-black tracking-tighter font-heading">
+              Support & <br />{" "}
+              <span className="text-primary-700 italic">Clarity.</span>
+            </h1>
+            <p className="text-xl text-muted-foreground font-medium max-w-xl mx-auto">
+              Everything you need to know about joining the Al-Maysaroh
+              scholarly journey.
+            </p>
+          </Reveal>
+
+          {/* Search Bar */}
+          <Reveal delay={0.2}>
+            <div className="relative max-w-2xl mx-auto mt-12 group">
+              <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-muted-foreground group-focus-within:text-primary-700 transition-colors" />
+              <input
+                type="text"
+                placeholder="Search for questions (e.g. Ijazah, Payments, Zoom...)"
+                className="w-full h-18 pl-16 pr-8 rounded-[2rem] glass-surface border-2 border-transparent focus:border-primary-700/30 outline-none font-bold text-lg shadow-xl transition-all"
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
+          </Reveal>
         </div>
-      </section>
-    </div>
+
+        {/* FAQ Grid */}
+        <div className="max-w-5xl mx-auto space-y-20">
+          {FAQ_DATA.map((section, sIdx) => (
+            <div key={section.category} className="space-y-8">
+              <div className="flex items-center gap-4 border-b border-border pb-4">
+                <section.icon className="w-6 h-6 text-primary-700" />
+                <h2 className="text-xl font-black uppercase tracking-widest">
+                  {section.category}
+                </h2>
+              </div>
+
+              <div className="grid gap-4">
+                {section.questions
+                  .filter((q) =>
+                    q.q.toLowerCase().includes(searchTerm.toLowerCase()),
+                  )
+                  .map((item, qIdx) => {
+                    const id = `${sIdx}-${qIdx}`;
+                    const isOpen = openIndex === id;
+
+                    return (
+                      <div
+                        key={id}
+                        className={cn(
+                          "institutional-card transition-all duration-500 overflow-hidden",
+                          isOpen
+                            ? "border-primary-700/50 shadow-2xl"
+                            : "hover:border-primary-700/30",
+                        )}
+                      >
+                        <button
+                          onClick={() => setOpenIndex(isOpen ? null : id)}
+                          className="w-full p-8 flex items-center justify-between text-left"
+                        >
+                          <span className="text-lg font-bold tracking-tight">
+                            {item.q}
+                          </span>
+                          <ChevronDown
+                            className={cn(
+                              "w-5 h-5 text-primary-700 transition-transform duration-500",
+                              isOpen && "rotate-180",
+                            )}
+                          />
+                        </button>
+                        <AnimatePresence>
+                          {isOpen && (
+                            <motion.div
+                              initial={{ height: 0, opacity: 0 }}
+                              animate={{ height: "auto", opacity: 1 }}
+                              exit={{ height: 0, opacity: 0 }}
+                              className="px-8 pb-8"
+                            >
+                              <p className="text-muted-foreground font-medium leading-relaxed border-t pt-6">
+                                {item.a}
+                              </p>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </div>
+                    );
+                  })}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Contact CTA */}
+        <div className="mt-32 text-center">
+          <Reveal>
+            <div className="glass-surface p-12 rounded-[3rem] border inline-flex flex-col items-center space-y-6">
+              <p className="font-black uppercase tracking-widest text-xs">
+                Still have unanswered inquiries?
+              </p>
+              <h3 className="text-3xl font-black">
+                Our Support Office is Open.
+              </h3>
+              <div className="flex gap-4">
+                <button className="h-14 px-8 rounded-xl bg-primary-700 text-white font-black text-[10px] tracking-widest uppercase">
+                  Contact Admissions
+                </button>
+                <button className="h-14 px-8 rounded-xl border-2 font-black text-[10px] tracking-widest uppercase">
+                  Help Center
+                </button>
+              </div>
+            </div>
+          </Reveal>
+        </div>
+      </div>
+    </main>
   );
 }
