@@ -224,10 +224,24 @@ export default function DashboardSidebar({ user }: SidebarProps) {
 
   useEffect(() => {
     setMounted(true);
-    // Auto-open on desktop
-    if (window.innerWidth >= 1024) {
-      setOpen(true);
-    }
+
+    // Check initial screen size
+    const checkScreenSize = () => {
+      if (window.innerWidth >= 1024) {
+        // Desktop - auto open
+        setOpen(true);
+      } else {
+        // Mobile - keep closed
+        setOpen(false);
+      }
+    };
+
+    checkScreenSize();
+
+    // Update on resize
+    const handleResize = () => checkScreenSize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
   }, [setOpen]);
 
   // Close sidebar when clicking outside on mobile
