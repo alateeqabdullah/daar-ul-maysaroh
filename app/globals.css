@@ -384,3 +384,24 @@ body {
 .animate-shimmer {
   animation: shimmer 3s infinite linear;
 }
+
+
+@layer base {
+  :focus-visible {
+    outline: 2px solid hsl(var(--primary));
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+}
+
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.animate-skeleton {
+  background: linear-gradient(90deg, var(--color-muted) 25%, var(--color-muted-foreground) 50%, var(--color-muted) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite linear;
+}
