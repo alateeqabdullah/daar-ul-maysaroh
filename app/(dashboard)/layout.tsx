@@ -70,7 +70,7 @@ export default async function DashboardLayout({
               <DashboardHeader user={session.user} />
 
               {/* Main content area */}
-              <main className="pt-16 lg:pt-20">
+              <main className="pt-5">
                 <div className="mx-auto max-w-[1600px] p-4 sm:p-6 lg:p-8 lg:px-10">
                   <Suspense fallback={<DashboardSkeleton />}>
                     <PageTransition>{children}</PageTransition>
