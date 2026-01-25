@@ -105,9 +105,9 @@ export function Hero() {
           </div>
 
           <div className="space-y-6">
-            <h1 className="text-7xl md:text-8xl lg:text-9xl font-black tracking-tighter leading-[0.8] font-heading">
+            <h1 className="text-5xl md:text-6xl lg:text-7xl font-black tracking-tighter leading-[0.8] font-heading">
               Divine <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-br from-gold via-primary-700 to-primary-950 drop-shadow-sm">
+              <span className="text-transparent bg-clip-text bg-linear-to-br from-gold via-primary-700 to-primary-950 drop-shadow-sm">
                 Connection.
               </span>
             </h1>
