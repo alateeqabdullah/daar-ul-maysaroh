@@ -96,7 +96,7 @@ export function Hero() {
           <div className="relative inline-block">
             <motion.div
               whileHover={{ scale: 1.05 }}
-              className="relative z-10 inline-flex items-center gap-3 px-6 py-2.5 rounded-2xl glass-surface border-white/20 text-primary-700 text-[11px] font-black tracking-[0.3em] uppercase shadow-2xl"
+              className="relative z-10 inline-flex items-center gap-3 px-6 py-2.5 rounded-2xl glass-surface border-white/20 text-primary-700 text-[8px] md:text-[11px] font-black tracking-[0.3em] uppercase shadow-2xl"
             >
               <div className="w-2 h-2 rounded-full bg-accent animate-pulse" />
               Al-Maysaroh International Institute
