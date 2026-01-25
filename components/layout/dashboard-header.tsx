@@ -21,16 +21,11 @@ import {
   Calendar,
   FileText,
   Users,
-  Shield,
   Crown,
   Sparkles,
-  Zap,
   AlertCircle,
   CheckCircle,
   X,
-  HelpCircle,
-  BookOpen,
-  ChevronRight,
 } from "lucide-react";
 import { cn, getInitials } from "@/lib/utils";
 import { Button } from "@/components/ui/button";

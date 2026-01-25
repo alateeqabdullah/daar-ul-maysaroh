@@ -59,18 +59,19 @@ export default async function DashboardLayout({
         disableTransitionOnChange
       >
         <AuthProvider>
+          {/* Remove all flex and positioning from the outer div */}
           <div className="min-h-screen bg-background">
-            {/* Sidebar - Fixed on left edge */}
+            {/* Sidebar - Truly fixed, outside of content flow */}
             <DashboardSidebar user={session.user} />
 
-            {/* Main content - Starts AFTER sidebar */}
-            <div className="lg:ml-80">
-              {/* Header - Inside main content area, not over sidebar */}
+            {/* Main content - Must have left padding on desktop */}
+            <div className="lg:pl-80">
+              {/* Header */}
               <DashboardHeader user={session.user} />
 
-              {/* Main content */}
-              <main className="pt-5 lg:pt-5">
-                <div className="mx-auto max-w-[1600px] p-4 sm:p-6 lg:p-10">
+              {/* Main content area */}
+              <main className="pt-16 lg:pt-20">
+                <div className="mx-auto max-w-[1600px] p-4 sm:p-6 lg:p-8 lg:px-10">
                   <Suspense fallback={<DashboardSkeleton />}>
                     <PageTransition>{children}</PageTransition>
                   </Suspense>
@@ -84,6 +85,9 @@ export default async function DashboardLayout({
     </div>
   );
 }
+
+
+
 
 function DashboardSkeleton() {
   return (

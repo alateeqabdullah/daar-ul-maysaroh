@@ -1,9 +1,11 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState, useMemo, useEffect } from "react";
+import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { signOut } from "next-auth/react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useSidebarStore } from "@/store/use-sidebar-store";
 import {
   LayoutDashboard,
   Users,
@@ -12,9 +14,8 @@ import {
   Users2,
   Calendar,
   FileText,
-  TrendingUp,
+  BarChart3,
   Settings,
-  HelpCircle,
   LogOut,
   X,
   Book,
@@ -24,51 +25,43 @@ import {
   MessageSquare,
   Folder,
   PieChart,
-  ShieldCheck,
   Zap,
   ChevronRight,
-  Sparkles,
-  Crown,
-  Bell,
+  Search,
+  LifeBuoy,
+  TrendingUp,
   CheckCircle,
-  ChevronDown,
-  Home,
-  ChartBar,
-  FileBarChart,
-  School,
-  Network,
-  CreditCard,
-  Banknote,
-  BarChart,
-  Library,
-  Target,
+  Crown,
+  Sparkles,
   Award,
-  Shield,
-  Database,
-  Cpu,
-  UserPlus,
+  BarChart,
+  CreditCard,
+  Target,
 } from "lucide-react";
 import { cn, getInitials } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
-import { useSidebarStore } from "@/store/use-sidebar-store";
-import Link from "next/link";
+import { Input } from "@/components/ui/input";
 
-interface NavigationItem {
+/**
+ * ELITE NAVIGATION INTERFACE
+ */
+interface NavItem {
   name: string;
   href: string;
-  icon: React.ComponentType<{ className?: string }>;
-  badge?: string | number;
+  icon: any;
+  badge?: string;
+  description?: string;
 }
 
-interface NavigationGroup {
+interface NavSection {
   title: string;
-  icon?: React.ComponentType<{ className?: string }>;
-  items: NavigationItem[];
+  items: NavItem[];
 }
 
-interface SidebarProps {
+interface DashboardSidebarProps {
   user: {
     name: string;
     email: string;
@@ -77,213 +70,32 @@ interface SidebarProps {
   };
 }
 
-// Grouped Navigation Structure
-const adminNavigation: NavigationGroup[] = [
-  {
-    title: "Overview",
-    icon: LayoutDashboard,
-    items: [
-      { name: "Dashboard", href: "/admin", icon: Home },
-      { name: "Analytics", href: "/admin/analytics", icon: ChartBar },
-      { name: "Reports", href: "/admin/reports", icon: FileBarChart },
-    ],
-  },
-  {
-    title: "User Management",
-    icon: Users,
-    items: [
-      {
-        name: "User Approval",
-        href: "/admin/approvals",
-        icon: UserCheck,
-        badge: 5,
-      },
-      { name: "All Users", href: "/admin/users", icon: Users },
-      { name: "Teachers", href: "/admin/teachers", icon: GraduationCap },
-      { name: "Students", href: "/admin/students", icon: UserIcon },
-      { name: "Parents", href: "/admin/parents", icon: Users2 },
-      { name: "Groups", href: "/admin/groups", icon: Network },
-    ],
-  },
-  {
-    title: "Academic",
-    icon: BookOpen,
-    items: [
-      { name: "Classes", href: "/admin/classes", icon: School },
-      { name: "Schedule", href: "/admin/schedule", icon: Calendar },
-      { name: "Attendance", href: "/admin/attendance", icon: CheckCircle },
-      { name: "Assignments", href: "/admin/assignments", icon: FileText },
-      { name: "Grades", href: "/admin/grades", icon: TrendingUp },
-      { name: "Quran Progress", href: "/admin/quran", icon: Book },
-      { name: "Resources", href: "/admin/resources", icon: Library },
-    ],
-  },
-  {
-    title: "Financial",
-    icon: Wallet,
-    items: [
-      {
-        name: "Tuition Fees",
-        href: "/admin/financial/tuition",
-        icon: CreditCard,
-      },
-      { name: "Payments", href: "/admin/financial/payments", icon: Banknote },
-      { name: "Invoices", href: "/admin/financial/invoices", icon: FileText },
-      { name: "Reports", href: "/admin/financial/reports", icon: BarChart },
-    ],
-  },
-  {
-    title: "System",
-    icon: Settings,
-    items: [
-      { name: "Settings", href: "/admin/settings", icon: Settings },
-      { name: "Security", href: "/admin/security", icon: Shield },
-      { name: "Backup", href: "/admin/backup", icon: Database },
-      { name: "API", href: "/admin/api", icon: Cpu },
-    ],
-  },
-];
-
-const teacherNavigation: NavigationGroup[] = [
-  {
-    title: "Teaching",
-    icon: BookOpen,
-    items: [
-      { name: "Dashboard", href: "/teacher", icon: Home },
-      { name: "My Classes", href: "/teacher/classes", icon: School },
-      { name: "Students", href: "/teacher/students", icon: Users },
-      { name: "Attendance", href: "/teacher/attendance", icon: CheckCircle },
-      { name: "Assignments", href: "/teacher/assignments", icon: FileText },
-      { name: "Grades", href: "/teacher/grades", icon: TrendingUp },
-    ],
-  },
-  {
-    title: "Planning",
-    icon: Calendar,
-    items: [
-      { name: "Schedule", href: "/teacher/schedule", icon: Calendar },
-      { name: "Lesson Plans", href: "/teacher/lesson-plans", icon: Target },
-      { name: "Resources", href: "/teacher/resources", icon: Library },
-      { name: "Quran Progress", href: "/teacher/quran", icon: Book },
-    ],
-  },
-  {
-    title: "Communication",
-    icon: MessageSquare,
-    items: [
-      { name: "Messages", href: "/teacher/communication", icon: MessageSquare },
-      { name: "Announcements", href: "/teacher/announcements", icon: Bell },
-      { name: "Meetings", href: "/teacher/meetings", icon: Users2 },
-    ],
-  },
-  {
-    title: "Performance",
-    icon: ChartBar,
-    items: [
-      { name: "Reports", href: "/teacher/reports", icon: FileBarChart },
-      { name: "Analytics", href: "/teacher/analytics", icon: PieChart },
-      { name: "Achievements", href: "/teacher/achievements", icon: Award },
-    ],
-  },
-];
-
-const studentNavigation: NavigationItem[] = [
-  { name: "Dashboard", href: "/student", icon: Home },
-  { name: "My Classes", href: "/student/classes", icon: School },
-  { name: "Schedule", href: "/student/schedule", icon: Calendar },
-  { name: "Assignments", href: "/student/assignments", icon: FileText },
-  { name: "Grades", href: "/student/grades", icon: TrendingUp },
-  { name: "Quran Progress", href: "/student/quran", icon: Book },
-  { name: "Attendance", href: "/student/attendance", icon: CheckCircle },
-  { name: "Resources", href: "/student/resources", icon: Library },
-  { name: "Messages", href: "/student/messages", icon: MessageSquare },
-];
-
-const parentNavigation: NavigationItem[] = [
-  { name: "Dashboard", href: "/parent", icon: Home },
-  { name: "My Children", href: "/parent/children", icon: Users },
-  { name: "Progress Reports", href: "/parent/progress", icon: TrendingUp },
-  { name: "Attendance", href: "/parent/attendance", icon: CheckCircle },
-  { name: "Payments", href: "/parent/payments", icon: Wallet },
-  { name: "Messages", href: "/parent/messages", icon: MessageSquare },
-  { name: "Schedule", href: "/parent/schedule", icon: Calendar },
-  { name: "Quran Progress", href: "/parent/quran", icon: Book },
-];
-
-export default function DashboardSidebar({ user }: SidebarProps) {
+export default function DashboardSidebar({ user }: DashboardSidebarProps) {
   const { isOpen, setOpen } = useSidebarStore();
   const pathname = usePathname();
   const router = useRouter();
+  const [searchQuery, setSearchQuery] = useState("");
   const [mounted, setMounted] = useState(false);
-  const [expandedGroups, setExpandedGroups] = useState<Record<string, boolean>>(
-    {
-      Overview: true,
-      "User Management": true,
-    },
-  );
 
+  
   useEffect(() => {
     setMounted(true);
+    // Initialize sidebar state based on screen size
+    useSidebarStore.getState().initialize();
 
-    // Check initial screen size
-    const checkScreenSize = () => {
-      if (window.innerWidth >= 1024) {
-        // Desktop - auto open
-        setOpen(true);
-      } else {
-        // Mobile - keep closed
-        setOpen(false);
+    const handleResize = () => {
+      const isDesktop = window.innerWidth >= 1024;
+      const { isOpen, setOpen } = useSidebarStore.getState();
+      if (isDesktop !== isOpen) {
+        setOpen(isDesktop);
       }
     };
 
-    checkScreenSize();
-
-    // Update on resize
-    const handleResize = () => checkScreenSize();
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
-  }, [setOpen]);
+  }, []);
 
-  // Close sidebar when clicking outside on mobile
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      const sidebar = document.querySelector("aside");
-      const target = event.target as HTMLElement;
-
-      if (
-        isOpen &&
-        window.innerWidth < 1024 &&
-        sidebar &&
-        !sidebar.contains(target) &&
-        !target.closest('button[aria-label="Toggle Sidebar"]')
-      ) {
-        setOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [isOpen, setOpen]);
-
-  const getNavigation = (): NavigationGroup[] | NavigationItem[] => {
-    switch (user.role) {
-      case "SUPER_ADMIN":
-      case "ADMIN":
-        return adminNavigation;
-      case "TEACHER":
-        return teacherNavigation;
-      case "STUDENT":
-        return studentNavigation;
-      case "PARENT":
-        return parentNavigation;
-      default:
-        return [];
-    }
-  };
-
-  const navigation = getNavigation();
-  const hasGroups = Array.isArray(navigation) && navigation[0]?.items;
-
+  // Get role-specific styling
   const getRoleColor = () => {
     switch (user.role) {
       case "SUPER_ADMIN":
@@ -301,43 +113,454 @@ export default function DashboardSidebar({ user }: SidebarProps) {
     }
   };
 
-  const toggleGroup = (groupTitle: string) => {
-    setExpandedGroups((prev) => ({
-      ...prev,
-      [groupTitle]: !prev[groupTitle],
-    }));
-  };
+  // 1. COMPREHENSIVE NAVIGATION FOR ALL ROLES
+  const navigation: NavSection[] = useMemo(() => {
+    const admin = [
+      {
+        title: "Dashboard Hub",
+        items: [
+          {
+            name: "Overview",
+            href: "/admin",
+            icon: LayoutDashboard,
+            description: "System health & analytics",
+            badge: "Live",
+          },
+          {
+            name: "Approvals",
+            href: "/admin/approvals",
+            icon: UserCheck,
+            badge: "5 Pending",
+            description: "Verify new user requests",
+          },
+          {
+            name: "Users",
+            href: "/admin/users",
+            icon: Users,
+            description: "Total system users",
+          },
+        ],
+      },
+      {
+        title: "Academic Management",
+        items: [
+          {
+            name: "Class Groups",
+            href: "/admin/groups",
+            icon: Users2,
+            description: "Manage study groups",
+          },
+          {
+            name: "Curriculum",
+            href: "/admin/classes",
+            icon: BookOpen,
+            description: "Class syllabi & books",
+            badge: "New",
+          },
+          {
+            name: "Teachers",
+            href: "/admin/teachers",
+            icon: GraduationCap,
+            description: "Faculty management",
+          },
+          {
+            name: "Students",
+            href: "/admin/students",
+            icon: UserIcon,
+            description: "Student profiles",
+          },
+          {
+            name: "Attendance",
+            href: "/admin/attendance",
+            icon: CheckCircle,
+            description: "Track attendance",
+          },
+        ],
+      },
+      {
+        title: "Administrative Hub",
+        items: [
+          {
+            name: "Schedule",
+            href: "/admin/schedule",
+            icon: Calendar,
+            description: "Timetable management",
+          },
+          {
+            name: "Assignments",
+            href: "/admin/assignments",
+            icon: FileText,
+            description: "Assignments & submissions",
+          },
+          {
+            name: "Grades",
+            href: "/admin/grades",
+            icon: TrendingUp,
+            description: "Performance analytics",
+          },
+          {
+            name: "Financial",
+            href: "/admin/financial",
+            icon: Wallet,
+            badge: "Secure",
+            description: "Payment tracking",
+          },
+          {
+            name: "System Config",
+            href: "/admin/settings",
+            icon: Settings,
+            description: "System preferences",
+          },
+        ],
+      },
+      {
+        title: "Reports & Analytics",
+        items: [
+          {
+            name: "Reports",
+            href: "/admin/reports",
+            icon: PieChart,
+            description: "Generate reports",
+          },
+          {
+            name: "Parents",
+            href: "/admin/parents",
+            icon: Users,
+            description: "Parent management",
+          },
+          {
+            name: "Communication",
+            href: "/admin/communication",
+            icon: MessageSquare,
+            description: "Messaging system",
+          },
+          {
+            name: "Resources",
+            href: "/admin/resources",
+            icon: Folder,
+            description: "Learning materials",
+          },
+        ],
+      },
+    ];
+
+    const teacher = [
+      {
+        title: "Teaching Hub",
+        items: [
+          {
+            name: "My Dashboard",
+            href: "/teacher",
+            icon: LayoutDashboard,
+            description: "Teaching overview",
+            badge: "Updated",
+          },
+          {
+            name: "Active Classes",
+            href: "/teacher/classes",
+            icon: BookOpen,
+            description: "Manage classes",
+          },
+          {
+            name: "Quran Progress",
+            href: "/teacher/quran",
+            icon: Book,
+            description: "Student progress",
+          },
+        ],
+      },
+      {
+        title: "Student Management",
+        items: [
+          {
+            name: "Students",
+            href: "/teacher/students",
+            icon: Users,
+            description: "Student roster",
+          },
+          {
+            name: "Attendance",
+            href: "/teacher/attendance",
+            icon: CheckCircle,
+            description: "Daily attendance",
+          },
+          {
+            name: "Assignments",
+            href: "/teacher/assignments",
+            icon: FileText,
+            description: "Create & grade",
+          },
+          {
+            name: "Grades",
+            href: "/teacher/grades",
+            icon: TrendingUp,
+            description: "Student performance",
+          },
+        ],
+      },
+      {
+        title: "Planning & Resources",
+        items: [
+          {
+            name: "Schedule",
+            href: "/teacher/schedule",
+            icon: Calendar,
+            description: "Class schedule",
+          },
+          {
+            name: "Resources",
+            href: "/teacher/resources",
+            icon: Folder,
+            description: "Teaching materials",
+          },
+          {
+            name: "Communication",
+            href: "/teacher/communication",
+            icon: MessageSquare,
+            description: "Contact students",
+          },
+          {
+            name: "Reports",
+            href: "/teacher/reports",
+            icon: PieChart,
+            description: "Progress reports",
+          },
+        ],
+      },
+    ];
+
+    const student = [
+      {
+        title: "My Learning Hub",
+        items: [
+          {
+            name: "Dashboard",
+            href: "/student",
+            icon: LayoutDashboard,
+            description: "Learning overview",
+            badge: "New",
+          },
+          {
+            name: "My Classes",
+            href: "/student/classes",
+            icon: BookOpen,
+            description: "Enrolled classes",
+          },
+          {
+            name: "Quran Progress",
+            href: "/student/quran",
+            icon: Book,
+            description: "Memorization tracker",
+          },
+          {
+            name: "Schedule",
+            href: "/student/schedule",
+            icon: Calendar,
+            description: "Class timetable",
+          },
+        ],
+      },
+      {
+        title: "Academic Progress",
+        items: [
+          {
+            name: "Assignments",
+            href: "/student/assignments",
+            icon: FileText,
+            description: "View & submit",
+            badge: "2 Due",
+          },
+          {
+            name: "Grades",
+            href: "/student/grades",
+            icon: TrendingUp,
+            description: "Performance",
+          },
+          {
+            name: "Attendance",
+            href: "/student/attendance",
+            icon: CheckCircle,
+            description: "Attendance record",
+          },
+          {
+            name: "Resources",
+            href: "/student/resources",
+            icon: Folder,
+            description: "Study materials",
+          },
+        ],
+      },
+      {
+        title: "Achievements",
+        items: [
+          {
+            name: "Certificates",
+            href: "/student/certificates",
+            icon: Award,
+            description: "My certificates",
+          },
+          {
+            name: "Progress",
+            href: "/student/progress",
+            icon: BarChart,
+            description: "Learning analytics",
+          },
+          {
+            name: "Goals",
+            href: "/student/goals",
+            icon: Target,
+            description: "Learning objectives",
+          },
+        ],
+      },
+    ];
+
+    const parent = [
+      {
+        title: "Family Dashboard",
+        items: [
+          {
+            name: "Overview",
+            href: "/parent",
+            icon: LayoutDashboard,
+            description: "Family overview",
+            badge: "Updated",
+          },
+          {
+            name: "My Children",
+            href: "/parent/children",
+            icon: Users,
+            description: "Children profiles",
+          },
+          {
+            name: "Progress Reports",
+            href: "/parent/progress",
+            icon: TrendingUp,
+            description: "Academic progress",
+          },
+        ],
+      },
+      {
+        title: "Monitoring",
+        items: [
+          {
+            name: "Attendance",
+            href: "/parent/attendance",
+            icon: CheckCircle,
+            description: "Attendance tracking",
+          },
+          {
+            name: "Grades",
+            href: "/parent/grades",
+            icon: BarChart3,
+            description: "Academic performance",
+          },
+          {
+            name: "Assignments",
+            href: "/parent/assignments",
+            icon: FileText,
+            description: "Homework status",
+          },
+          {
+            name: "Schedule",
+            href: "/parent/schedule",
+            icon: Calendar,
+            description: "Children schedule",
+          },
+        ],
+      },
+      {
+        title: "Support",
+        items: [
+          {
+            name: "Payments",
+            href: "/parent/payments",
+            icon: CreditCard,
+            description: "Fee management",
+            badge: "1 Due",
+          },
+          {
+            name: "Messages",
+            href: "/parent/messages",
+            icon: MessageSquare,
+            description: "School communication",
+          },
+          {
+            name: "Quran Progress",
+            href: "/parent/quran",
+            icon: Book,
+            description: "Quran memorization",
+          },
+          {
+            name: "Support",
+            href: "/parent/support",
+            icon: LifeBuoy,
+            description: "Help & assistance",
+          },
+        ],
+      },
+    ];
+
+    // Return navigation based on user role
+    switch (user.role) {
+      case "SUPER_ADMIN":
+      case "ADMIN":
+        return admin;
+      case "TEACHER":
+        return teacher;
+      case "STUDENT":
+        return student;
+      case "PARENT":
+        return parent;
+      default:
+        return [];
+    }
+  }, [user.role]);
 
   const handleSignOut = async () => {
     await signOut({ callbackUrl: "/" });
   };
 
-  const quickActions = [
-    {
-      label: "New Student",
-      icon: UserPlus,
-      href: "/admin/students/create",
-      color: "from-blue-500 to-cyan-500",
+  const handleQuickAction = (path: string) => {
+    router.push(path);
+    setOpen(false);
+  };
+
+  // Animation variants
+  const sidebarVariants = {
+    closed: {
+      x: "-100%",
+      transition: {
+        type: "spring",
+        stiffness: 400,
+        damping: 40,
+      },
     },
-    {
-      label: "Create Class",
-      icon: School,
-      href: "/admin/classes/create",
-      color: "from-emerald-500 to-teal-500",
+    open: {
+      x: 0,
+      transition: {
+        type: "spring",
+        stiffness: 400,
+        damping: 40,
+      },
     },
-    {
-      label: "Generate Report",
-      icon: FileBarChart,
-      href: "/admin/reports/create",
-      color: "from-purple-500 to-pink-500",
-    },
-    {
-      label: "Collect Payment",
-      icon: CreditCard,
-      href: "/admin/financial/payments",
-      color: "from-amber-500 to-orange-500",
-    },
-  ];
+  };
+
+  // Filter navigation based on search
+  const filteredNavigation = searchQuery
+    ? navigation
+        .map((section) => ({
+          ...section,
+          items: section.items.filter(
+            (item) =>
+              item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+              item.description
+                ?.toLowerCase()
+                .includes(searchQuery.toLowerCase()),
+          ),
+        }))
+        .filter((section) => section.items.length > 0)
+    : navigation;
 
   return (
     <>
@@ -348,300 +571,372 @@ export default function DashboardSidebar({ user }: SidebarProps) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/60 backdrop-blur-sm z-40 lg:hidden"
             onClick={() => setOpen(false)}
+            className="fixed inset-0 bg-black/60 backdrop-blur-md z-40 lg:hidden"
           />
         )}
       </AnimatePresence>
 
       {/* Sidebar Container */}
       <motion.aside
-        initial={false}
-        animate={{
-          x: isOpen ? 0 : "-100%",
-        }}
-        transition={{ type: "spring", damping: 30, stiffness: 300 }}
+        variants={sidebarVariants}
+        initial="closed"
+        animate={isOpen ? "open" : "closed"}
         className={cn(
+          // Mobile: fixed, slides in/out
           "fixed inset-y-0 left-0 z-50 w-80 flex flex-col",
-          "lg:fixed lg:inset-y-0 lg:left-0 lg:z-40 lg:translate-x-0",
-          "bg-background border-r border-border/30 shadow-2xl",
+          // Desktop: fixed position, always visible
+          "lg:fixed lg:top-0 lg:left-0 lg:bottom-0 lg:z-40",
+          // Visual styling
+          "bg-background border-r border-border/50 backdrop-blur-xl",
         )}
-        style={{
-          transform: "none", // Let Framer Motion control
-        }}
+        style={{ transform: "none" }}
       >
-        {/* Header */}
-        <div className="flex h-16 items-center justify-between px-6 border-b border-border/30">
-          <Link href="/dashboard" className="flex items-center gap-3 group">
-            <div className="w-9 h-9 bg-gradient-to-br from-primary-600 to-primary-800 rounded-xl flex items-center justify-center shadow-lg">
-              <BookOpen className="h-4 w-4 text-white" />
-            </div>
+        {/* BRAND LOGO AREA - With Animation */}
+        <div className="shrink-0 flex h-24 items-center justify-between px-6 border-b border-border/50 bg-gradient-to-b from-primary-50/10 to-transparent dark:from-primary-900/5 dark:to-transparent">
+          <Link
+            href="/dashboard"
+            className="group flex items-center gap-4 outline-none"
+            onClick={() => {
+              if (window.innerWidth < 1024) {
+                setOpen(false);
+              }
+            }}
+          >
+            <motion.div
+              whileHover={{ rotate: 6, scale: 1.05 }}
+              className="w-12 h-12 bg-gradient-to-br from-primary-600 to-primary-800 rounded-2xl flex items-center justify-center shadow-xl shadow-primary-500/20"
+            >
+              <BookOpen className="h-6 w-6 text-white" />
+            </motion.div>
             <div className="flex flex-col">
-              <h1 className="text-base font-black tracking-tight leading-none">
+              <h1 className="text-xl font-black tracking-tighter leading-none">
                 AL-MAYSAROH
               </h1>
-              <p className="text-[9px] text-primary-600 dark:text-primary-400 font-bold tracking-wider uppercase">
-                Education
+              <p className="text-[10px] text-primary-700 dark:text-primary-400 font-bold tracking-[0.3em] uppercase">
+                {user.role === "STUDENT"
+                  ? "Student Portal"
+                  : user.role === "TEACHER"
+                    ? "Teacher Portal"
+                    : user.role === "PARENT"
+                      ? "Parent Portal"
+                      : "Admin Portal"}
               </p>
             </div>
           </Link>
           <Button
             variant="ghost"
             size="icon"
-            className="lg:hidden rounded-xl hover:bg-primary-50 dark:hover:bg-primary-900/30"
+            className="lg:hidden rounded-2xl hover:bg-primary-50 dark:hover:bg-primary-900/40 transition-all duration-300"
             onClick={() => setOpen(false)}
           >
-            <X className="h-4 w-4" />
+            <X className="h-5 w-5" />
           </Button>
         </div>
 
-        {/* User Profile */}
-        <div className="px-4 py-3">
-          <div className="rounded-xl bg-gradient-to-br from-primary-50 to-primary-100 dark:from-primary-900/20 dark:to-primary-800/20 p-3 border border-primary-200/20">
-            <div className="flex items-center gap-3">
-              <div className="relative">
-                <Avatar className="h-10 w-10 border border-primary-500/20">
-                  <AvatarImage src={user.image || undefined} alt={user.name} />
-                  <AvatarFallback
-                    className={cn(
-                      "text-white font-bold text-xs",
-                      getRoleColor(),
-                    )}
-                  >
-                    {getInitials(user.name)}
-                  </AvatarFallback>
-                </Avatar>
-                {user.role === "SUPER_ADMIN" && (
-                  <Crown className="absolute -top-1 -right-1 h-3 w-3 text-amber-500 fill-amber-500" />
-                )}
-                <div className="absolute -bottom-0.5 -right-0.5 h-2 w-2 rounded-full border-2 border-background bg-gradient-to-r from-emerald-400 to-teal-500" />
-              </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-bold text-foreground truncate">
-                  {user.name}
-                </p>
-                <div className="flex items-center gap-2 mt-0.5">
-                  <Badge
-                    className={cn(
-                      "text-[10px] font-bold px-2 py-0.5 border-0",
-                      getRoleColor(),
-                    )}
-                  >
-                    {user.role.replace("_", " ")}
-                  </Badge>
-                  <Sparkles className="h-3 w-3 text-amber-500" />
-                </div>
-              </div>
-            </div>
+        {/* SIDEBAR SEARCH - Enhanced */}
+        <div className="shrink-0 px-4 py-4">
+          <div className="relative group">
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground transition-colors group-focus-within:text-primary-700 dark:group-focus-within:text-primary-400" />
+            <Input
+              type="search"
+              placeholder="Search menu..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full border-border/50 bg-background/50 pl-10 text-sm focus-visible:ring-primary-700 focus-visible:border-primary-700 rounded-2xl h-10 backdrop-blur-sm"
+            />
           </div>
         </div>
 
-        {/* Navigation - Scrollable */}
-        <div className="flex-1 overflow-y-auto px-3 py-2 custom-scrollbar">
-          {/* Stats (Admin Only) */}
-          {(user.role === "SUPER_ADMIN" || user.role === "ADMIN") && (
-            <div className="mb-4 px-3">
-              <div className="grid grid-cols-2 gap-2">
-                <div className="rounded-lg bg-gradient-to-br from-emerald-500/10 to-teal-500/10 p-2.5 border border-emerald-200/20">
-                  <p className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400">
-                    Active
-                  </p>
-                  <p className="text-base font-black text-foreground">142</p>
-                </div>
-                <div className="rounded-lg bg-gradient-to-br from-amber-500/10 to-orange-500/10 p-2.5 border border-amber-200/20">
-                  <p className="text-[10px] font-bold text-amber-600 dark:text-amber-400">
-                    Pending
-                  </p>
-                  <p className="text-base font-black text-foreground">5</p>
-                </div>
-              </div>
-            </div>
-          )}
+        {/* 2. SCROLLABLE NAVIGATION AREA - FIXED */}
+        <div className="flex-1 overflow-hidden flex flex-col">
+          <div className="flex-1 overflow-y-auto px-3 py-2">
+            <div className="space-y-6">
+              {filteredNavigation.map((section, sIndex) => (
+                <div key={sIndex} className="space-y-2">
+                  <h3 className="px-3 text-[11px] font-black uppercase tracking-[0.2em] text-muted-foreground">
+                    {section.title}
+                  </h3>
+                  <div className="space-y-1">
+                    {section.items.map((item) => {
+                      const isActive =
+                        pathname === item.href ||
+                        pathname?.startsWith(`${item.href}/`);
 
-          {/* Navigation Groups */}
-          <div className="space-y-1">
-            {hasGroups
-              ? (navigation as NavigationGroup[]).map((group) => {
-                  const GroupIcon = group.icon || ChevronRight;
-                  const isExpanded = expandedGroups[group.title] ?? true;
-
-                  return (
-                    <div key={group.title} className="space-y-1">
-                      <button
-                        onClick={() => toggleGroup(group.title)}
-                        className="flex items-center justify-between w-full px-3 py-2 rounded-lg hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-colors"
-                      >
-                        <div className="flex items-center gap-2">
-                          <GroupIcon className="h-3.5 w-3.5 text-primary-600 dark:text-primary-400" />
-                          <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                            {group.title}
-                          </span>
-                        </div>
-                        <ChevronDown
+                      return (
+                        <Link
+                          key={item.name}
+                          href={item.href}
                           className={cn(
-                            "h-3 w-3 text-muted-foreground transition-transform",
-                            isExpanded && "rotate-180",
+                            "group flex items-center rounded-xl px-4 py-3 text-sm font-bold transition-all duration-300 relative outline-none",
+                            isActive
+                              ? "bg-gradient-to-r from-primary-50 to-primary-100 dark:from-primary-900/30 dark:to-primary-800/20 text-primary-700 dark:text-primary-400 border border-primary-200/50 dark:border-primary-800/30 shadow-lg"
+                              : "text-muted-foreground hover:text-foreground hover:bg-muted/30",
                           )}
-                        />
-                      </button>
+                          onClick={() => {
+                            if (window.innerWidth < 1024) {
+                              setOpen(false);
+                            }
+                          }}
+                        >
+                          <div className="relative">
+                            <item.icon
+                              className={cn(
+                                "mr-3 h-5 w-5 transition-all duration-300",
+                                isActive
+                                  ? "text-primary-700 dark:text-primary-400"
+                                  : "text-muted-foreground group-hover:text-primary-700 dark:group-hover:text-primary-400",
+                              )}
+                            />
+                            {isActive && (
+                              <motion.div
+                                layoutId="activeTab"
+                                className="absolute inset-0 bg-primary-500/10 rounded-lg blur-sm"
+                                transition={{
+                                  type: "spring",
+                                  stiffness: 300,
+                                  damping: 30,
+                                }}
+                              />
+                            )}
+                          </div>
 
-                      <AnimatePresence>
-                        {isExpanded && (
-                          <motion.div
-                            initial={{ height: 0, opacity: 0 }}
-                            animate={{ height: "auto", opacity: 1 }}
-                            exit={{ height: 0, opacity: 0 }}
-                            className="overflow-hidden pl-1"
-                          >
-                            <div className="space-y-0.5">
-                              {group.items.map((item) => {
-                                const isActive =
-                                  pathname === item.href ||
-                                  pathname?.startsWith(`${item.href}/`);
+                          <div className="flex-1 min-w-0">
+                            <p className="text-sm font-bold tracking-tight truncate">
+                              {item.name}
+                            </p>
+                            {item.description && (
+                              <p className="text-[10px] font-medium text-muted-foreground mt-0.5 truncate opacity-70 group-hover:opacity-100 transition-opacity">
+                                {item.description}
+                              </p>
+                            )}
+                          </div>
 
-                                return (
-                                  <Link
-                                    key={item.name}
-                                    href={item.href}
-                                    className={cn(
-                                      "flex items-center rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200",
-                                      isActive
-                                        ? "bg-gradient-to-r from-primary-500/10 to-primary-600/10 text-primary-700 dark:text-primary-400"
-                                        : "text-muted-foreground hover:text-foreground hover:bg-muted/30",
-                                    )}
-                                    onClick={() =>
-                                      window.innerWidth < 1024 && setOpen(false)
-                                    }
-                                  >
-                                    <item.icon
-                                      className={cn(
-                                        "mr-3 h-4 w-4 transition-colors",
-                                        isActive
-                                          ? "text-primary-600 dark:text-primary-400"
-                                          : "text-muted-foreground group-hover:text-primary-600",
-                                      )}
-                                    />
-                                    <span className="flex-1">{item.name}</span>
-                                    {item.badge && (
-                                      <Badge className="ml-2 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 text-[10px] font-bold px-1.5 py-0 border-0">
-                                        {item.badge}
-                                      </Badge>
-                                    )}
-                                  </Link>
-                                );
-                              })}
-                            </div>
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
-                    </div>
-                  );
-                })
-              : // Flat navigation
-                (navigation as NavigationItem[]).map((item) => {
-                  const isActive =
-                    pathname === item.href ||
-                    pathname?.startsWith(`${item.href}/`);
+                          {item.badge && (
+                            <Badge className="ml-2 shrink-0 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 text-[10px] font-black px-2 py-0.5 border-0 whitespace-nowrap">
+                              {item.badge}
+                            </Badge>
+                          )}
 
-                  return (
-                    <Link
-                      key={item.name}
-                      href={item.href}
-                      className={cn(
-                        "flex items-center rounded-lg px-3 py-2 text-sm font-medium transition-all duration-200",
-                        isActive
-                          ? "bg-gradient-to-r from-primary-500/10 to-primary-600/10 text-primary-700 dark:text-primary-400"
-                          : "text-muted-foreground hover:text-foreground hover:bg-muted/30",
-                      )}
-                      onClick={() => window.innerWidth < 1024 && setOpen(false)}
-                    >
-                      <item.icon
-                        className={cn(
-                          "mr-3 h-4 w-4 transition-colors",
-                          isActive
-                            ? "text-primary-600 dark:text-primary-400"
-                            : "text-muted-foreground group-hover:text-primary-600",
-                        )}
+                          {isActive && (
+                            <ChevronRight className="ml-2 h-4 w-4 text-primary-700 dark:text-primary-400" />
+                          )}
+                        </Link>
+                      );
+                    })}
+                  </div>
+                </div>
+              ))}
+
+              {/* SYSTEM METRICS WIDGET - For Admin/Tech Roles Only */}
+              {(user.role === "SUPER_ADMIN" || user.role === "ADMIN") && (
+                <div className="mx-3 mt-6 p-5 rounded-2xl bg-gradient-to-br from-primary-50 to-primary-100 dark:from-primary-900/20 dark:to-primary-800/10 border border-primary-200/50 dark:border-primary-800/30">
+                  <div className="flex items-center justify-between mb-4">
+                    <p className="text-xs font-black uppercase tracking-wider text-foreground">
+                      System Status
+                    </p>
+                    <Zap className="h-4 w-4 text-amber-500" />
+                  </div>
+                  <div className="space-y-4">
+                    <div className="space-y-2">
+                      <div className="flex justify-between text-xs font-bold text-muted-foreground">
+                        <span>Storage Usage</span>
+                        <span className="text-primary-700 dark:text-primary-400">
+                          78%
+                        </span>
+                      </div>
+                      <Progress
+                        value={78}
+                        className="h-1.5 bg-primary-100 dark:bg-primary-900/30"
                       />
-                      <span className="flex-1">{item.name}</span>
-                    </Link>
-                  );
-                })}
-          </div>
-
-          {/* Quick Actions (Admin Only) */}
-          {(user.role === "SUPER_ADMIN" || user.role === "ADMIN") && (
-            <div className="mt-6 pt-4 border-t border-border/30">
-              <div className="px-3 mb-3">
-                <h3 className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-muted-foreground">
-                  <Zap className="h-3 w-3 text-amber-500" /> Quick Actions
-                </h3>
-              </div>
-              <div className="grid grid-cols-2 gap-2">
-                {quickActions.map((action, index) => (
-                  <button
-                    key={index}
-                    onClick={() => {
-                      router.push(action.href);
-                      window.innerWidth < 1024 && setOpen(false);
-                    }}
-                    className={cn(
-                      "group flex flex-col items-center justify-center rounded-lg p-2.5",
-                      "bg-gradient-to-br from-white to-white/80 dark:from-slate-900 dark:to-slate-900/80",
-                      "border border-border/30 hover:border-primary-300 dark:hover:border-primary-700",
-                      "transition-all duration-200 hover:scale-[1.02]",
-                      "outline-none focus:ring-2 focus:ring-primary-500/20",
-                    )}
-                  >
-                    <div
-                      className={cn(
-                        "w-7 h-7 rounded-lg flex items-center justify-center mb-1.5",
-                        `bg-gradient-to-br ${action.color}`,
-                      )}
-                    >
-                      <action.icon className="h-3.5 w-3.5 text-white" />
                     </div>
-                    <span className="text-[10px] font-bold text-foreground text-center leading-tight">
-                      {action.label}
-                    </span>
-                  </button>
-                ))}
-              </div>
+                    <div className="space-y-2">
+                      <div className="flex justify-between text-xs font-bold text-muted-foreground">
+                        <span>Active Users</span>
+                        <span className="text-emerald-600 dark:text-emerald-400">
+                          42/100
+                        </span>
+                      </div>
+                      <Progress
+                        value={42}
+                        className="h-1.5 bg-primary-100 dark:bg-primary-900/30"
+                      />
+                    </div>
+                  </div>
+                  <Button
+                    size="sm"
+                    className="w-full mt-4 h-9 bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 text-xs font-black text-white rounded-xl shadow-lg"
+                  >
+                    Upgrade Plan
+                  </Button>
+                </div>
+              )}
+
+              {/* STUDENT SPECIFIC WIDGET */}
+              {user.role === "STUDENT" && (
+                <div className="mx-3 mt-6 p-5 rounded-2xl bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/10 border border-blue-200/50 dark:border-blue-800/30">
+                  <div className="flex items-center justify-between mb-4">
+                    <p className="text-xs font-black uppercase tracking-wider text-foreground">
+                      Learning Progress
+                    </p>
+                    <Target className="h-4 w-4 text-blue-500" />
+                  </div>
+                  <div className="space-y-4">
+                    <div className="space-y-2">
+                      <div className="flex justify-between text-xs font-bold text-muted-foreground">
+                        <span>Quran Memorization</span>
+                        <span className="text-blue-700 dark:text-blue-400">
+                          65%
+                        </span>
+                      </div>
+                      <Progress
+                        value={65}
+                        className="h-1.5 bg-blue-100 dark:bg-blue-900/30"
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <div className="flex justify-between text-xs font-bold text-muted-foreground">
+                        <span>Assignments Complete</span>
+                        <span className="text-emerald-600 dark:text-emerald-400">
+                          8/10
+                        </span>
+                      </div>
+                      <Progress
+                        value={80}
+                        className="h-1.5 bg-blue-100 dark:bg-blue-900/30"
+                      />
+                    </div>
+                  </div>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="w-full mt-4 h-9 border-blue-200 dark:border-blue-800/30 text-blue-700 dark:text-blue-400 text-xs font-bold rounded-xl"
+                  >
+                    View Progress Report
+                  </Button>
+                </div>
+              )}
+
+              {/* PARENT SPECIFIC WIDGET */}
+              {user.role === "PARENT" && (
+                <div className="mx-3 mt-6 p-5 rounded-2xl bg-gradient-to-br from-violet-50 to-purple-50 dark:from-violet-900/20 dark:to-purple-900/10 border border-violet-200/50 dark:border-violet-800/30">
+                  <div className="flex items-center justify-between mb-4">
+                    <p className="text-xs font-black uppercase tracking-wider text-foreground">
+                      Child Summary
+                    </p>
+                    <Users className="h-4 w-4 text-violet-500" />
+                  </div>
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-bold text-muted-foreground">
+                        Attendance
+                      </span>
+                      <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400">
+                        95%
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-bold text-muted-foreground">
+                        Avg. Grade
+                      </span>
+                      <span className="text-xs font-bold text-blue-600 dark:text-blue-400">
+                        A-
+                      </span>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-bold text-muted-foreground">
+                        Assignments Due
+                      </span>
+                      <span className="text-xs font-bold text-amber-600 dark:text-amber-400">
+                        2
+                      </span>
+                    </div>
+                  </div>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    className="w-full mt-4 h-9 border-violet-200 dark:border-violet-800/30 text-violet-700 dark:text-violet-400 text-xs font-bold rounded-xl"
+                  >
+                    View Children
+                  </Button>
+                </div>
+              )}
             </div>
-          )}
+          </div>
         </div>
 
-        {/* Footer */}
-        <div className="mt-auto border-t border-border/30 p-4 space-y-2">
-          <Link
-            href="/help"
-            className="flex items-center rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground hover:text-foreground hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-colors"
-            onClick={() => window.innerWidth < 1024 && setOpen(false)}
-          >
-            <HelpCircle className="mr-3 h-4 w-4" />
-            <span>Help & Support</span>
-          </Link>
+        {/* SIDEBAR FOOTER - Enhanced Profile Widget */}
+        <div className="shrink-0 border-t border-border/50 p-4 space-y-4 bg-gradient-to-b from-background to-background/80">
+          <div className="flex items-center gap-3 p-3 rounded-2xl bg-gradient-to-r from-primary-50 to-primary-100 dark:from-primary-900/20 dark:to-primary-800/10">
+            <div className="relative">
+              <Avatar className="h-12 w-12 border-2 border-primary-500/30">
+                <AvatarImage src={user.image || undefined} alt={user.name} />
+                <AvatarFallback
+                  className={cn(
+                    "text-white font-black text-sm",
+                    getRoleColor(),
+                  )}
+                >
+                  {getInitials(user.name)}
+                </AvatarFallback>
+              </Avatar>
+              {user.role === "SUPER_ADMIN" && (
+                <Crown className="absolute -top-1 -right-1 h-4 w-4 text-amber-500 fill-amber-500" />
+              )}
+              <div className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full border-2 border-background bg-gradient-to-r from-emerald-400 to-teal-500" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-black text-foreground truncate">
+                {user.name}
+              </p>
+              <div className="flex items-center gap-2 mt-1">
+                <Badge
+                  className={cn(
+                    "text-[10px] font-black px-2 py-0.5 border-0",
+                    getRoleColor(),
+                  )}
+                >
+                  {user.role.replace("_", " ")}
+                </Badge>
+                <Sparkles className="h-3 w-3 text-amber-500" />
+              </div>
+            </div>
+          </div>
 
-          <button
-            onClick={handleSignOut}
-            className="flex w-full items-center rounded-lg px-3 py-2 text-sm font-medium text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors"
-          >
-            <LogOut className="mr-3 h-4 w-4" />
-            <span>Sign Out</span>
-          </button>
+          <div className="grid grid-cols-2 gap-2">
+            <Link
+              href="/help"
+              className="flex items-center justify-center gap-2 rounded-xl bg-primary-50 dark:bg-primary-900/20 py-2.5 text-xs font-bold text-primary-700 dark:text-primary-400 hover:bg-primary-100 dark:hover:bg-primary-900/30 transition-all"
+              onClick={() => {
+                if (window.innerWidth < 1024) {
+                  setOpen(false);
+                }
+              }}
+            >
+              <LifeBuoy className="h-4 w-4" />
+              Help
+            </Link>
+            <button
+              onClick={handleSignOut}
+              className="flex items-center justify-center gap-2 rounded-xl bg-red-50 dark:bg-red-500/10 py-2.5 text-xs font-bold text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-500/20 transition-all"
+            >
+              <LogOut className="h-4 w-4" />
+              Sign Out
+            </button>
+          </div>
 
-          {/* Status */}
-          <div className="pt-3 mt-2 border-t border-border/30">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <div className="h-1.5 w-1.5 rounded-full bg-gradient-to-r from-emerald-400 to-teal-500 animate-pulse" />
+          {/* Version Info */}
+          <div className="pt-4 mt-2 border-t border-border/50">
+            <div className="flex items-center justify-between px-2">
+              <span className="text-[10px] font-bold text-muted-foreground">
+                v2.1.0 • Elite Edition
+              </span>
+              <div className="flex items-center gap-1">
+                <div className="h-2 w-2 rounded-full bg-gradient-to-r from-emerald-400 to-teal-500" />
                 <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400">
-                  Systems Operational
+                  Live
                 </span>
               </div>
-              <Badge variant="outline" className="text-[10px] font-bold">
-                v2.1.0
-              </Badge>
             </div>
           </div>
         </div>
