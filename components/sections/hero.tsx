@@ -111,7 +111,7 @@ export function Hero() {
                 Connection.
               </span>
             </h1>
-            <p className="md:text-2xl text-muted-foreground leading-relaxed max-w-xl font-medium font-sans italic opacity-80">
+            <p className="text-lg md:text-2xl text-muted-foreground leading-relaxed max-w-xl font-medium font-sans italic opacity-80">
               {` "Connecting hearts to the Eternal Word through traditional
               scholarly excellence and modern digital sanctuary."`}
             </p>
