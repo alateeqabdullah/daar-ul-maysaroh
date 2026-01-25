@@ -111,7 +111,7 @@ export function Hero() {
                 Connection.
               </span>
             </h1>
-            <p className="text-2xl text-muted-foreground leading-relaxed max-w-xl font-medium font-sans italic opacity-80">
+            <p className="md:text-2xl text-muted-foreground leading-relaxed max-w-xl font-medium font-sans italic opacity-80">
               {` "Connecting hearts to the Eternal Word through traditional
               scholarly excellence and modern digital sanctuary."`}
             </p>
@@ -121,7 +121,7 @@ export function Hero() {
             <Link href="/courses">
               <Button
                 size="lg"
-                className="h-20 px-12 rounded-[2rem] text-lg font-black bg-primary-700 hover:bg-primary-800 text-white shadow-[0_30px_60px_-15px_rgba(124,58,237,0.4)] transition-all group overflow-hidden relative"
+                className="h-20 px-12 rounded-4xl text-sm md:text-md font-black bg-primary-700 hover:bg-primary-800 text-white shadow-[0_30px_60px_-15px_rgba(124,58,237,0.4)] transition-all group overflow-hidden relative"
               >
                 <span className="relative z-10 flex items-center gap-2">
                   ADMISSIONS OPEN{" "}
