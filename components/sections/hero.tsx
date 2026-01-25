@@ -83,7 +83,7 @@ export function Hero() {
         <div className="absolute inset-0 bg-[url('/islamic-pattern.svg')] opacity-[0.02] [mask-image:linear-gradient(to_bottom,black,transparent)]" />
       </motion.div>
 
-      <div className="container mx-auto px-16 grid lg:grid-cols-2 gap-16 xl:gap-24 items-center relative z-10">
+      <div className="container mx-auto px-6 grid lg:grid-cols-2 gap-16 xl:gap-24 items-center relative z-10">
         {/* --- LEFT: INSTITUTIONAL CONTENT --- */}
         <motion.div
           style={{ y: textY }}
