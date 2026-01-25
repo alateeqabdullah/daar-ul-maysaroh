@@ -24,7 +24,7 @@ export function Teachers() {
   return (
     <section className="py-32 bg-background relative overflow-hidden">
       <div className="container mx-auto px-6">
-        <div className="flex flex-col lg:flex-row justify-between items-end gap-8 mb-24">
+        <div className="flex flex-col md:flex-row justify-between md:items-end gap-8 mb-24">
           <div className="max-w-2xl space-y-6">
             <Reveal>
               <div className="inline-flex items-center gap-2 text-gold font-black text-[10px] uppercase tracking-[0.3em]">
@@ -51,10 +51,10 @@ export function Teachers() {
         <div className="grid md:grid-cols-2 gap-12">
           {PREVIEW_TEACHERS.map((t, i) => (
             <Reveal key={t.name} delay={i * 0.1}>
-              <div className="institutional-card p-1 lg:p-12 relative group bg-card hover:border-primary-700/50 transition-all duration-700">
+              <div className="institutional-card p-12 lg:p-12 relative group bg-card hover:border-primary-700/50 transition-all duration-700">
                 <div className="flex flex-col md:flex-row gap-8 items-start">
                   {/* Portrait Placeholder */}
-                  <div className="w-full md:w-40 h-56 bg-muted/50 rounded-2xl overflow-hidden relative border border-border group-hover:border-primary-700/20">
+                  <div className="w-full p-8 md:w-40 h-56 bg-muted/50 rounded-8xl overflow-hidden relative border border-border group-hover:border-primary-700/20">
                     <div className="absolute inset-0 flex items-center justify-center opacity-10">
                       <GraduationCap className="w-12 h-12" />
                     </div>
