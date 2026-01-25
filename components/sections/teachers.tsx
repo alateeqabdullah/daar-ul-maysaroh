@@ -51,10 +51,10 @@ export function Teachers() {
         <div className="grid md:grid-cols-2 gap-12">
           {PREVIEW_TEACHERS.map((t, i) => (
             <Reveal key={t.name} delay={i * 0.1}>
-              <div className="institutional-card p-12 lg:p-12 relative group bg-card hover:border-primary-700/50 transition-all duration-700">
-                <div className="flex flex-col md:flex-row gap-8 items-start">
+              <div className="institutional-card p-12 relative group bg-card hover:border-primary-700/50 transition-all duration-700">
+                <div className="flex flex-col lg:flex-row gap-8 items-start">
                   {/* Portrait Placeholder */}
-                  <div className="w-full p-8 md:w-40 h-56 bg-muted/50 rounded-8xl overflow-hidden relative border border-border group-hover:border-primary-700/20">
+                  <div className="w-full p-8 lg:w-40 h-56 bg-muted/50 rounded-8xl overflow-hidden relative border border-border group-hover:border-primary-700/20">
                     <div className="absolute inset-0 flex items-center justify-center opacity-10">
                       <GraduationCap className="w-12 h-12" />
                     </div>
