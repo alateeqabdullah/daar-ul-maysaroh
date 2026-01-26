@@ -1,7 +1,7 @@
 "use client";
 
 import { Reveal } from "@/components/shared/section-animation";
-import { Calendar, CheckCircle, Star, Sparkles, Award } from "lucide-react";
+import { Calendar, CheckCircle, Sparkles, Award } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -87,7 +87,7 @@ export function CTA() {
                       className="p-4 sm:p-6 rounded-xl sm:rounded-2xl bg-background/50 border border-primary-700/10 group hover:border-primary-700/30 transition-all duration-300"
                     >
                       <div className="flex items-center gap-3 sm:gap-4 mb-3 sm:mb-4">
-                        <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-primary-700/10 flex items-center justify-center flex-shrink-0">
+                        <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-primary-700/10 flex items-center justify-center shrink-0">
                           <feature.icon className="w-5 h-5 sm:w-6 sm:h-6 text-primary-700" />
                         </div>
                         <div className="text-left">
@@ -111,7 +111,7 @@ export function CTA() {
                   className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center pt-6 sm:pt-8"
                 >
                   <Link href="/register" className="w-full sm:w-auto">
-                    <Button className="w-full rounded-full px-6 py-4 sm:px-8 sm:py-5 md:px-10 md:py-6 text-base sm:text-lg font-black bg-primary-700 hover:bg-primary-800 min-h-[44px] min-w-[44px]">
+                    <Button className="w-full rounded-full px-6 py-4 sm:px-8 sm:py-5 md:px-10 md:py-6 text-base sm:text-lg font-black bg-primary-700 hover:bg-primary-800 min-h-11 min-w-11">
                       <span className="flex items-center gap-3 sm:gap-4">
                         <Calendar className="w-4 h-4 sm:w-5 sm:h-5" />
                         ENROLL NOW
@@ -122,7 +122,7 @@ export function CTA() {
                   <Link href="/contact" className="w-full sm:w-auto">
                     <Button
                       variant="outline"
-                      className="w-full rounded-full px-6 py-4 sm:px-8 sm:py-5 md:px-10 md:py-6 text-base sm:text-lg font-black border-2 min-h-[44px] min-w-[44px]"
+                      className="w-full rounded-full px-6 py-4 sm:px-8 sm:py-5 md:px-10 md:py-6 text-base sm:text-lg font-black border-2 min-h-11 min-w-11"
                     >
                       <span className="flex items-center gap-3 sm:gap-4">
                         SPEAK TO ADVISOR
