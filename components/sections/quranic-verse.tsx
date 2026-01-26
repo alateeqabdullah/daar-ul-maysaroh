@@ -124,7 +124,7 @@ export function QuranicVerse() {
       ref={ref}
       aria-label="Quranic Verse Display"
       role="region"
-      className="py-32 lg:py-48 relative overflow-hidden bg-slate-950 isolate"
+      className="py-12 lg:py-32 relative overflow-hidden bg-slate-950 isolate"
     >
       {/* Background Islamic Geometry Overlay with loading state */}
       <div
