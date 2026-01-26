@@ -39,7 +39,7 @@ export default function RootLayout({
       <body
         className={`${inter.variable} ${noto.variable} ${amiri.variable} ${playfair.variable} font-sans antialiased`}
       >
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
           <AuthProvider>
             {children}
             <Toaster position="top-center" richColors />
