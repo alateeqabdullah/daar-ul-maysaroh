@@ -110,6 +110,14 @@
 //   );
 // }
 
+
+
+
+
+
+
+
+
 "use client";
 
 import { motion, useInView, useAnimation } from "framer-motion";
@@ -242,7 +250,7 @@ export function TrustIndicators() {
     },
     hover: {
       scale: 1.2,
-      opacity: 0.8,
+      opacity: 0.1,
     },
   };
 
@@ -253,7 +261,7 @@ export function TrustIndicators() {
       aria-label="Trust Seals and Certifications"
     >
       {/* Background Gradient */}
-      <div className="absolute inset-0 bg-gradient-to-b from-background via-primary-50/5 to-background dark:from-background dark:via-primary-950/5 dark:to-background" />
+      <div className="absolute inset-0 bg-linear-to-b from-background via-primary-50/5 to-background dark:from-background dark:via-primary-950/5 dark:to-background" />
 
       {/* Animated floating particles */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
@@ -296,7 +304,7 @@ export function TrustIndicators() {
           </div>
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-black tracking-tighter mb-4">
             Trusted by{" "}
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-600 to-primary-800">
+            <span className="text-transparent bg-clip-text bg-linear-to-r from-primary-600 to-primary-800">
               Scholars
             </span>{" "}
             Worldwide
@@ -324,21 +332,21 @@ export function TrustIndicators() {
               {/* Glow Effect */}
               <motion.div
                 variants={glowVariants}
-                className={`absolute -inset-0.5 bg-gradient-to-br ${seal.color} rounded-2xl blur-xl opacity-0 group-hover:opacity-30 transition-opacity duration-500`}
+                className={`absolute -inset-0.5 bg-linear-to-br ${seal.color} rounded-2xl blur-xl opacity-0 group-hover:opacity-30 transition-opacity duration-500`}
               />
 
               {/* Main Card */}
-              <div className="relative bg-gradient-to-br from-card to-card/80 backdrop-blur-sm border border-white/10 dark:border-white/5 rounded-2xl p-6 md:p-8 shadow-lg shadow-black/5 dark:shadow-black/20 overflow-hidden h-full">
+              <div className="relative bg-linear-to-br from-card to-card/80 backdrop-blur-sm border border-white/10 dark:border-white/5 rounded-2xl p-6 md:p-8 shadow-lg shadow-black/5 dark:shadow-black/20 overflow-hidden h-full">
                 {/* Corner Accent */}
                 <div
-                  className={`absolute top-0 right-0 w-16 h-16 bg-gradient-to-bl ${seal.color} opacity-5 rounded-bl-full`}
+                  className={`absolute top-0 right-0 w-16 h-16 bg-linear-to-bl ${seal.color} opacity-5 rounded-bl-full`}
                 />
 
                 {/* Icon Container */}
                 <div className="relative mb-6">
                   <motion.div
                     variants={iconVariants}
-                    className={`relative w-14 h-14 md:w-16 md:h-16 rounded-xl bg-gradient-to-br ${seal.color} flex items-center justify-center shadow-lg`}
+                    className={`relative w-14 h-14 md:w-16 md:h-16 rounded-xl bg-linear-to-br ${seal.color} flex items-center justify-center shadow-lg`}
                   >
                     <seal.icon className="w-7 h-7 md:w-8 md:h-8 text-white" />
 
@@ -379,7 +387,7 @@ export function TrustIndicators() {
                     {seal.label}
                   </h3>
                   <p
-                    className={`text-sm md:text-base font-bold uppercase tracking-[0.1em] bg-gradient-to-r ${seal.color} bg-clip-text text-transparent`}
+                    className={`text-sm md:text-base font-bold uppercase tracking-widest bg-linear-to-r ${seal.color} bg-clip-text text-transparent`}
                   >
                     {seal.sub}
                   </p>
@@ -390,7 +398,7 @@ export function TrustIndicators() {
 
                 {/* Hover Line Indicator */}
                 <motion.div
-                  className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-current to-transparent opacity-0 group-hover:opacity-100"
+                  className="absolute bottom-0 left-0 right-0 h-1 bg-linear-to-r from-transparent via-current to-transparent opacity-0 group-hover:opacity-100"
                   initial={{ scaleX: 0 }}
                   whileHover={{ scaleX: 1 }}
                   transition={{ duration: 0.3 }}
@@ -420,11 +428,11 @@ export function TrustIndicators() {
           className="text-center mt-12 md:mt-16"
         >
           <div className="inline-flex items-center gap-3 text-sm text-muted-foreground">
-            <div className="h-px w-8 bg-gradient-to-r from-transparent to-border" />
+            <div className="h-px w-8 bg-linear-to-r from-transparent to-border" />
             <span className="font-medium">
               All certifications verified annually
             </span>
-            <div className="h-px w-8 bg-gradient-to-l from-transparent to-border" />
+            <div className="h-px w-8 bg-linear-to-l from-transparent to-border" />
           </div>
         </motion.div>
       </div>
