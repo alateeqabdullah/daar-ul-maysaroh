@@ -19,44 +19,30 @@ const FAQ_ITEMS = [
   {
     question: "What exactly is an Ijazah certificate?",
     answer:
-      "An Ijazah is a traditional Islamic certification granting permission to teach the Quran. It represents an unbroken chain of oral transmission (sanad) that traces back directly to Prophet Muhammad (ﷺ). This ensures the Quran is recited today exactly as it was revealed 1,400 years ago.",
+      "An Ijazah is a traditional Islamic certification with an unbroken chain of transmission (sanad) tracing back to Prophet Muhammad (ﷺ).",
     icon: Shield,
-    category: "Certification",
+    shortAnswer: "Traditional certification with unbroken chain to Prophet (ﷺ)",
   },
   {
-    question: "How does Al-Maysaroh differ from other online Quran schools?",
+    question: "How does Al-Maysaroh differ from others?",
     answer:
-      "Unlike typical online programs, we combine authentic sanad-based methodology with structured modern pedagogy. Every student receives personalized 1-on-1 attention from Ijazah-certified scholars (not just teachers). Our proprietary tracking system provides detailed analytics for every ayah, mistake, and improvement—unavailable elsewhere.",
+      "We combine authentic sanad-based methodology with structured modern pedagogy. 1-on-1 attention from Ijazah-certified scholars with detailed progress analytics.",
     icon: BookOpen,
-    category: "Methodology",
+    shortAnswer: "Sanad-based + modern pedagogy with 1-on-1 scholar attention",
   },
   {
-    question: "Can working professionals with busy schedules enroll?",
+    question: "Can working professionals enroll?",
     answer:
-      "Absolutely. 78% of our students are professionals. We offer flexible scheduling across global timezones with 24/7 portal access. Most students commit 3-5 hours weekly, scheduled around their work and family commitments. Progress is consistent, not rushed.",
+      "Yes! 78% of our students are professionals. Flexible scheduling across timezones with 24/7 portal access. 3-5 hours weekly commitment.",
     icon: Clock,
-    category: "Scheduling",
+    shortAnswer: "Yes - flexible scheduling for professionals (3-5 hrs/week)",
   },
   {
-    question: "I have zero Arabic background. Where do I start?",
+    question: "No Arabic background - where to start?",
     answer:
-      "Our Arabic Fluency program is designed for absolute beginners. Using our proven methodology, students typically read Quranic Arabic within 3 months and understand basic grammar by 6 months. We provide bilingual support throughout your journey.",
+      "Our Arabic program is designed for absolute beginners. Read Quranic Arabic within 3 months, understand basic grammar by 6 months.",
     icon: Users,
-    category: "Beginner Friendly",
-  },
-  {
-    question: "Are male and female teachers available?",
-    answer:
-      "Yes, we have both male and female Ijazah-certified scholars. Students may request same-gender instructors. All our scholars have minimum 10 years teaching experience and complete training in modern pedagogical techniques.",
-    icon: Users,
-    category: "Faculty",
-  },
-  {
-    question: "What technology or equipment do I need?",
-    answer:
-      "Just a stable internet connection and any device (computer, tablet, or smartphone). We provide access to our proprietary learning portal for all lessons, materials, and tracking. No special software required—everything works securely in your browser.",
-    icon: HelpCircle,
-    category: "Technical",
+    shortAnswer: "Beginner program - read Arabic in 3 months",
   },
 ];
 
@@ -64,104 +50,93 @@ export function FAQ() {
   const [openIndex, setOpenIndex] = useState<number | null>(0);
 
   return (
-    <section className="py-16 sm:py-20 md:py-28 lg:py-36 bg-gradient-to-b from-background to-primary-50/5 dark:to-primary-950/5">
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Section Header */}
-        <div className="max-w-4xl mx-auto mb-16 sm:mb-20 lg:mb-24">
+    <section className="py-12 md:py-16 lg:py-24 bg-background">
+      <div className="container mx-auto px-4">
+        {/* Section Header - Mobile Optimized */}
+        <div className="max-w-3xl mx-auto mb-12 md:mb-16">
           <Reveal>
-            <div className="text-center space-y-6 md:space-y-8">
-              {/* Badge */}
-              <div className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-primary-50 dark:bg-primary-950/40 border border-primary-700/20">
-                <HelpCircle className="w-4 h-4 sm:w-5 sm:h-5 text-primary-700" />
-                <span className="text-xs sm:text-sm font-black text-primary-700 uppercase tracking-[0.2em]">
-                  GUIDANCE & CLARITY
+            <div className="text-center space-y-4 md:space-y-6">
+              {/* Badge - Mobile Sized */}
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary-50 dark:bg-primary-950/40 border border-primary-700/20">
+                <HelpCircle className="w-4 h-4 text-primary-700" />
+                <span className="text-xs font-bold text-primary-700 uppercase tracking-wider">
+                  COMMON QUESTIONS
                 </span>
               </div>
 
-              {/* Main Heading */}
-              <div className="space-y-4">
-                <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-7.5xl font-black tracking-tight font-heading leading-[1.1]">
-                  <span className="block">Common Questions,</span>
-                  <span className="text-primary-700 italic">Clear Answers</span>
+              {/* Main Heading - Mobile First */}
+              <div className="space-y-3">
+                <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold tracking-tight font-heading leading-tight">
+                  <span className="block">Your Questions</span>
+                  <span className="text-primary-700 italic">Answered</span>
                 </h2>
 
-                {/* Subtitle */}
-                <p className="text-lg sm:text-xl md:text-2xl text-muted-foreground font-light leading-relaxed max-w-2xl mx-auto px-4 sm:px-0">
-                  Everything you need to know about beginning your authentic
-                  Quranic journey
+                {/* Subtitle - Short & Clear */}
+                <p className="text-base md:text-lg text-muted-foreground font-light leading-relaxed max-w-xl mx-auto px-2">
+                  Clear answers about your Quranic journey
                 </p>
               </div>
-
-              {/* Decorative Line */}
-              <div className="w-24 h-0.5 bg-gradient-to-r from-transparent via-primary-700 to-transparent mx-auto" />
             </div>
           </Reveal>
         </div>
 
-        {/* FAQ Accordion */}
-        <div className="max-w-4xl mx-auto space-y-3 sm:space-y-4">
+        {/* FAQ Accordion - Mobile Optimized */}
+        <div className="max-w-3xl mx-auto space-y-2 md:space-y-3">
           {FAQ_ITEMS.map((item, index) => (
-            <Reveal key={index} delay={index * 0.07}>
+            <Reveal key={index} delay={index * 0.05}>
               <motion.div
                 layout
-                className="overflow-hidden rounded-2xl sm:rounded-3xl border border-border/50 hover:border-primary-700/30 transition-colors duration-300"
+                className="overflow-hidden rounded-xl md:rounded-2xl border border-border/50 hover:border-primary-700/20 transition-colors duration-200"
               >
                 <button
                   onClick={() =>
                     setOpenIndex(openIndex === index ? null : index)
                   }
-                  className="w-full text-left p-6 sm:p-8 bg-white/50 dark:bg-gray-900/50 backdrop-blur-sm hover:bg-white/70 dark:hover:bg-gray-900/70 transition-all duration-300"
+                  className="w-full text-left p-4 md:p-6 bg-white dark:bg-gray-900/30 hover:bg-white/70 dark:hover:bg-gray-900/50 transition-all duration-200 touch-target"
                   aria-expanded={openIndex === index}
                 >
-                  <div className="flex items-start justify-between gap-6">
-                    {/* Left Content */}
-                    <div className="flex items-start gap-4 sm:gap-6 flex-1">
-                      {/* Icon */}
-                      <div className="flex-shrink-0 w-12 h-12 sm:w-14 sm:h-14 rounded-xl sm:rounded-2xl bg-gradient-to-br from-primary-50 to-primary-100 dark:from-primary-900/30 dark:to-primary-800/20 flex items-center justify-center shadow-sm">
-                        <item.icon className="w-6 h-6 sm:w-7 sm:h-7 text-primary-700" />
+                  <div className="flex items-start justify-between gap-3 md:gap-4">
+                    {/* Left Content - Stacked on Mobile */}
+                    <div className="flex items-start gap-3 md:gap-4 flex-1">
+                      {/* Icon - Smaller on Mobile */}
+                      <div className="flex-shrink-0 w-10 h-10 md:w-12 md:h-12 rounded-lg md:rounded-xl bg-primary-50 dark:bg-primary-900/30 flex items-center justify-center">
+                        <item.icon className="w-5 h-5 md:w-6 md:h-6 text-primary-700" />
                       </div>
 
                       {/* Text Content */}
                       <div className="flex-1 min-w-0">
-                        {/* Category Tag */}
-                        <div className="inline-block mb-3">
-                          <span className="px-3 py-1 rounded-full bg-primary-100 dark:bg-primary-900/30 text-primary-700 text-xs font-bold uppercase tracking-wider">
-                            {item.category}
-                          </span>
-                        </div>
-
-                        {/* Question */}
-                        <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-foreground leading-tight mb-2 sm:mb-3">
+                        {/* Question - Mobile Optimized */}
+                        <h3 className="text-base md:text-lg font-semibold text-foreground leading-snug mb-1 md:mb-2">
                           {item.question}
                         </h3>
 
-                        {/* Answer Preview (Collapsed) */}
+                        {/* Short Answer Preview - Only Show When Collapsed */}
                         <AnimatePresence>
                           {openIndex !== index && (
                             <motion.p
                               initial={{ opacity: 0, height: 0 }}
                               animate={{ opacity: 1, height: "auto" }}
                               exit={{ opacity: 0, height: 0 }}
-                              className="text-sm sm:text-base text-muted-foreground line-clamp-2"
+                              className="text-sm text-muted-foreground line-clamp-2"
                             >
-                              {item.answer.substring(0, 100)}...
+                              {item.shortAnswer}
                             </motion.p>
                           )}
                         </AnimatePresence>
                       </div>
                     </div>
 
-                    {/* Chevron */}
-                    <div className="flex-shrink-0">
+                    {/* Chevron - Right Aligned */}
+                    <div className="flex-shrink-0 pt-1">
                       <ChevronDown
-                        className={`w-5 h-5 sm:w-6 sm:h-6 text-primary-700 transition-transform duration-300 ${
+                        className={`w-5 h-5 md:w-6 md:h-6 text-primary-700 transition-transform duration-300 ${
                           openIndex === index ? "rotate-180" : ""
                         }`}
                       />
                     </div>
                   </div>
 
-                  {/* Full Answer (Expanded) */}
+                  {/* Full Answer - Optimized for Mobile Reading */}
                   <AnimatePresence>
                     {openIndex === index && (
                       <motion.div
@@ -170,20 +145,18 @@ export function FAQ() {
                         exit={{ opacity: 0, height: 0 }}
                         className="overflow-hidden"
                       >
-                        <div className="mt-6 pt-6 border-t border-border/30">
-                          <div className="pl-16 sm:pl-20">
-                            <p className="text-base sm:text-lg md:text-xl text-foreground/80 leading-relaxed font-light">
+                        <div className="mt-4 pt-4 border-t border-border/20">
+                          <div className="pl-0 md:pl-14">
+                            <p className="text-sm md:text-base text-foreground/80 leading-relaxed font-normal">
                               {item.answer}
                             </p>
 
-                            {/* Optional Additional Info */}
+                            {/* Additional Note for First Item */}
                             {index === 0 && (
-                              <div className="mt-4 p-4 rounded-lg bg-primary-50 dark:bg-primary-900/20 border border-primary-700/10">
-                                <p className="text-sm text-primary-700 font-medium">
-                                  <span className="font-bold">Note:</span> Our
-                                  scholars maintain complete sanad
-                                  documentation, which students can review upon
-                                  request.
+                              <div className="mt-3 p-3 rounded-lg bg-primary-50/50 dark:bg-primary-900/20 border border-primary-700/10">
+                                <p className="text-xs md:text-sm text-primary-700 font-medium">
+                                  <span className="font-bold">Note:</span>{" "}
+                                  Complete sanad documentation available.
                                 </p>
                               </div>
                             )}
@@ -198,87 +171,84 @@ export function FAQ() {
           ))}
         </div>
 
-        {/* Additional Support Section */}
-        <Reveal delay={0.4}>
-          <div className="max-w-4xl mx-auto mt-16 sm:mt-20 lg:mt-24">
-            <div className="bg-gradient-to-br from-background to-primary-50/10 dark:to-primary-950/10 border border-primary-700/20 rounded-3xl p-8 sm:p-10 lg:p-12 text-center space-y-8">
+        {/* Additional Support - Mobile Optimized */}
+        <Reveal delay={0.3}>
+          <div className="max-w-3xl mx-auto mt-12 md:mt-16">
+            <div className="bg-gradient-to-b from-white/50 to-primary-50/20 dark:from-gray-900/30 dark:to-primary-950/10 border border-primary-700/10 rounded-2xl md:rounded-3xl p-6 md:p-8">
               {/* Header */}
-              <div className="space-y-4">
-                <div className="inline-flex items-center gap-3 px-5 py-2.5 rounded-full bg-primary-50 dark:bg-primary-950/40 border border-primary-700/20">
-                  <MessageCircle className="w-5 h-5 text-primary-700" />
-                  <span className="text-sm font-black text-primary-700 uppercase tracking-[0.2em]">
-                    PERSONAL GUIDANCE
+              <div className="text-center space-y-4 mb-6 md:mb-8">
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary-50 dark:bg-primary-950/40 border border-primary-700/20">
+                  <MessageCircle className="w-4 h-4 text-primary-700" />
+                  <span className="text-xs font-bold text-primary-700 uppercase tracking-wider">
+                    NEED HELP?
                   </span>
                 </div>
 
-                <h3 className="text-2xl sm:text-3xl md:text-4xl font-bold text-foreground">
-                  Need More Specific Guidance?
+                <h3 className="text-xl md:text-2xl font-bold text-foreground">
+                  Personal Guidance Available
                 </h3>
 
-                <p className="text-lg text-muted-foreground font-light max-w-2xl mx-auto">
-                  Our academic advisors provide personalized consultations to
-                  match you with the perfect program and scholar.
+                <p className="text-sm md:text-base text-muted-foreground font-light">
+                  Speak with our academic advisors
                 </p>
               </div>
 
-              {/* Contact Options */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-2xl mx-auto">
+              {/* Contact Options - Stack on Mobile */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                 {/* Email */}
                 <a
                   href="mailto:admissions@almaysaroh.com"
-                  className="group p-6 rounded-2xl bg-white/50 dark:bg-gray-900/50 border border-border hover:border-primary-700/50 hover:bg-white dark:hover:bg-gray-900 transition-all duration-300 text-left"
+                  className="group p-4 md:p-5 rounded-xl bg-white/70 dark:bg-gray-900/40 border border-border hover:border-primary-700/30 hover:bg-white dark:hover:bg-gray-900/60 transition-all duration-200 text-left touch-target"
                 >
-                  <div className="flex items-center gap-4 mb-4">
-                    <div className="w-12 h-12 rounded-xl bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center">
-                      <Mail className="w-6 h-6 text-primary-700" />
+                  <div className="flex items-center gap-3 md:gap-4 mb-3">
+                    <div className="w-10 h-10 md:w-12 md:h-12 rounded-lg bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center flex-shrink-0">
+                      <Mail className="w-5 h-5 md:w-6 md:h-6 text-primary-700" />
                     </div>
-                    <div>
-                      <div className="text-sm font-bold text-primary-700 uppercase tracking-wider mb-1">
-                        Email Response: 2-4 Hours
+                    <div className="min-w-0">
+                      <div className="text-xs font-bold text-primary-700 uppercase tracking-wider mb-1">
+                        Email • 2-4 Hours
                       </div>
-                      <div className="text-lg font-bold text-foreground">
+                      <div className="text-sm md:text-base font-semibold text-foreground truncate">
                         admissions@almaysaroh.com
                       </div>
                     </div>
                   </div>
-                  <p className="text-sm text-muted-foreground">
-                    Ideal for detailed program questions and documentation
-                    requests
+                  <p className="text-xs md:text-sm text-muted-foreground">
+                    For detailed questions
                   </p>
                 </a>
 
                 {/* Phone */}
                 <a
                   href="tel:+11234567890"
-                  className="group p-6 rounded-2xl bg-white/50 dark:bg-gray-900/50 border border-border hover:border-primary-700/50 hover:bg-white dark:hover:bg-gray-900 transition-all duration-300 text-left"
+                  className="group p-4 md:p-5 rounded-xl bg-white/70 dark:bg-gray-900/40 border border-border hover:border-primary-700/30 hover:bg-white dark:hover:bg-gray-900/60 transition-all duration-200 text-left touch-target"
                 >
-                  <div className="flex items-center gap-4 mb-4">
-                    <div className="w-12 h-12 rounded-xl bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center">
-                      <Phone className="w-6 h-6 text-primary-700" />
+                  <div className="flex items-center gap-3 md:gap-4 mb-3">
+                    <div className="w-10 h-10 md:w-12 md:h-12 rounded-lg bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center flex-shrink-0">
+                      <Phone className="w-5 h-5 md:w-6 md:h-6 text-primary-700" />
                     </div>
-                    <div>
-                      <div className="text-sm font-bold text-primary-700 uppercase tracking-wider mb-1">
-                        Call: 10AM-8PM (GMT)
+                    <div className="min-w-0">
+                      <div className="text-xs font-bold text-primary-700 uppercase tracking-wider mb-1">
+                        Call • 10AM-8PM GMT
                       </div>
-                      <div className="text-lg font-bold text-foreground">
+                      <div className="text-sm md:text-base font-semibold text-foreground">
                         +1 (123) 456-7890
                       </div>
                     </div>
                   </div>
-                  <p className="text-sm text-muted-foreground">
-                    Speak directly with an advisor for immediate answers
+                  <p className="text-xs md:text-sm text-muted-foreground">
+                    For immediate answers
                   </p>
                 </a>
               </div>
 
               {/* Guarantee Note */}
-              <div className="pt-6 border-t border-border/30">
-                <p className="text-base text-muted-foreground font-light">
+              <div className="mt-6 pt-6 border-t border-border/20">
+                <p className="text-xs md:text-sm text-muted-foreground font-light text-center">
                   <span className="font-bold text-primary-700">
-                    All consultations are free
+                    Free consultations
                   </span>{" "}
-                  and come with our 30-day satisfaction guarantee. No commitment
-                  required.
+                  with 30-day guarantee
                 </p>
               </div>
             </div>
