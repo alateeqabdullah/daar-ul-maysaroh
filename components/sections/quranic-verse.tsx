@@ -1,7 +1,25 @@
 "use client";
 
 import { motion, useScroll, useTransform, useInView } from "framer-motion";
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState, useMemo } from "react";
+
+// Generate deterministic random values based on index
+const generateDeterministicValues = (index: number) => {
+  // Simple pseudo-random function based on index
+  const pseudoRandom = (seed: number) => {
+    const x = Math.sin(seed * 100) * 10000;
+    return x - Math.floor(x);
+  };
+
+  return {
+    width: 5 + pseudoRandom(index * 2) * 20,
+    height: 5 + pseudoRandom(index * 3) * 20,
+    top: pseudoRandom(index * 4) * 100,
+    left: pseudoRandom(index * 5) * 100,
+    duration: 10 + pseudoRandom(index * 6) * 20,
+    delay: pseudoRandom(index * 7) * 5,
+  };
+};
 
 export function QuranicVerse() {
   const ref = useRef(null);
@@ -12,6 +30,22 @@ export function QuranicVerse() {
 
   const isInView = useInView(ref, { amount: 0.5 });
   const [patternLoaded, setPatternLoaded] = useState(false);
+
+  // Generate particle data deterministically
+  const particles = useMemo(() => {
+    return Array.from({ length: 8 }).map((_, i) => {
+      const values = generateDeterministicValues(i);
+      return {
+        id: i,
+        width: `${values.width}px`,
+        height: `${values.height}px`,
+        top: `${values.top}%`,
+        left: `${values.left}%`,
+        animation: `float ${values.duration}s infinite ease-in-out`,
+        animationDelay: `${values.delay}s`,
+      };
+    });
+  }, []);
 
   // Load pattern image to prevent flash
   useEffect(() => {
@@ -65,7 +99,7 @@ export function QuranicVerse() {
 
       {/* Fallback pattern while loading */}
       {!patternLoaded && (
-        <div className="absolute inset-0 opacity-[0.02] bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900" />
+        <div className="absolute inset-0 opacity-[0.02] bg-linear-to-br from-slate-900 via-slate-800 to-slate-900" />
       )}
 
       <div className="container mx-auto px-6 relative z-10 text-center space-y-12">
@@ -77,8 +111,10 @@ export function QuranicVerse() {
             lang="ar"
             aria-label="Bismillah Hir Rahman Nir Rahim - In the name of Allah, the Most Gracious, the Most Merciful"
           >
-            <span className="text-5xl md:text-7xl lg:text-8xl tracking-wider leading-relaxed">
-وَلَقَدْ يَسَّرْنَا ٱلْقُرْءَانَ لِلذِّكْرِ فَهَلْ مِن مُّدَّكِرٍۢ ١٧            </span>
+            <span className="text-3xl md:text-7xl lg:text-8xl tracking-wider leading-relaxed">
+              وَلَقَدْ يَسَّرْنَا ٱلْقُرْءَانَ لِلذِّكْرِ<br /> فَهَلْ مِن مُّدَّكِرٍۢ
+              ١٧{" "}
+            </span>
 
             {/* Decorative dots */}
             <div className="absolute -bottom-6 left-1/2 transform -translate-x-1/2 flex gap-2">
@@ -135,7 +171,7 @@ export function QuranicVerse() {
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="mt-8 px-8 py-3 rounded-full bg-gradient-to-r from-amber-900/20 to-amber-800/10 border border-amber-700/30 text-amber-300 hover:text-amber-200 hover:border-amber-500/50 transition-all duration-300 group"
+              className="mt-8 px-8 py-3 rounded-full bg-linear-to-r from-amber-900/20 to-amber-800/10 border border-amber-700/30 text-amber-300 hover:text-amber-200 hover:border-amber-500/50 transition-all duration-300 group"
               aria-label="Learn more about this verse"
               onClick={() => window.open("https://quran.com/54/17", "_blank")}
             >
@@ -162,21 +198,21 @@ export function QuranicVerse() {
         </motion.div>
 
         {/* Ambient Glow - optimized for performance */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-[600px] h-[300px] bg-gradient-to-br from-amber-900/10 via-primary-700/10 to-transparent blur-[100px] -z-10 rounded-full opacity-60" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-[600px] h-[300px] bg-linear-to-br from-amber-900/10 via-primary-700/10 to-transparent blur-[100px] -z-10 rounded-full opacity-60" />
 
         {/* Performance-optimized floating particles */}
         <div className="absolute inset-0 overflow-hidden -z-10 pointer-events-none">
-          {Array.from({ length: 8 }).map((_, i) => (
+          {particles.map((particle) => (
             <div
-              key={i}
+              key={particle.id}
               className="absolute rounded-full bg-amber-500/5"
               style={{
-                width: `${Math.random() * 20 + 5}px`,
-                height: `${Math.random() * 20 + 5}px`,
-                top: `${Math.random() * 100}%`,
-                left: `${Math.random() * 100}%`,
-                animation: `float ${Math.random() * 20 + 10}s infinite ease-in-out`,
-                animationDelay: `${Math.random() * 5}s`,
+                width: particle.width,
+                height: particle.height,
+                top: particle.top,
+                left: particle.left,
+                animation: particle.animation,
+                animationDelay: particle.animationDelay,
               }}
             />
           ))}
@@ -189,9 +225,11 @@ export function QuranicVerse() {
           0%,
           100% {
             transform: translateY(0) rotate(0deg);
+            opacity: 0.3;
           }
           50% {
             transform: translateY(-20px) rotate(180deg);
+            opacity: 0.7;
           }
         }
 
