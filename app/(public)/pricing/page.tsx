@@ -120,7 +120,7 @@ export default async function AdmissionsPricingPage() {
                   },
                 ].map((step) => (
                   <div key={step.n} className="flex gap-4 sm:gap-6 group">
-                    <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-primary-700 text-white flex items-center justify-center text-xs sm:text-sm font-black shadow-lg group-hover:scale-105 sm:group-hover:scale-110 transition-transform flex-shrink-0">
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-primary-700 text-white flex items-center justify-center text-xs sm:text-sm font-black shadow-lg group-hover:scale-105 sm:group-hover:scale-110 transition-transform shrink-0">
                       {step.n}
                     </div>
                     <div>
@@ -167,7 +167,7 @@ export default async function AdmissionsPricingPage() {
             </p>
             <Button
               variant="outline"
-              className="h-12 sm:h-14 rounded-lg sm:rounded-xl border-2 font-black px-6 sm:px-8 w-full sm:w-auto min-h-[44px]"
+              className="h-12 sm:h-14 rounded-lg sm:rounded-xl border-2 font-black px-6 sm:px-8 w-full sm:w-auto min-h-11"
             >
               APPLY FOR FINANCIAL AID
             </Button>
