@@ -128,7 +128,7 @@ export default function DashboardHeader({ user }: HeaderProps) {
   const getRoleColor = () => {
     switch (user.role) {
       case "SUPER_ADMIN":
-        return "bg-gradient-to-br from-amber-500 via-orange-500 to-amber-600";
+        return "bg-linear-to-br from-amber-500 via-orange-500 to-amber-600";
       case "ADMIN":
         return "bg-gradient-to-br from-purple-600 via-indigo-600 to-purple-700";
       case "TEACHER":
@@ -176,7 +176,7 @@ export default function DashboardHeader({ user }: HeaderProps) {
 
               {/* Page info */}
               <div className="hidden md:flex items-center gap-3">
-                <div className="w-9 h-9 bg-gradient-to-br from-primary-600 to-primary-800 rounded-xl flex items-center justify-center shadow-lg shadow-primary-500/20">
+                <div className="w-9 h-9 bg-linear-to-br from-primary-600 to-primary-800 rounded-xl flex items-center justify-center shadow-lg shadow-primary-500/20">
                   <PageIcon className="h-4 w-4 text-white" />
                 </div>
                 <div className="flex flex-col">
@@ -184,7 +184,7 @@ export default function DashboardHeader({ user }: HeaderProps) {
                     <h1 className="text-sm font-black tracking-tight text-foreground">
                       {getBreadcrumb()}
                     </h1>
-                    <Badge className="rounded-full bg-gradient-to-r from-emerald-400 to-teal-500 border-0 text-[10px] font-black px-2 py-0.5">
+                    <Badge className="rounded-full bg-linear-to-r from-emerald-400 to-teal-500 border-0 text-[10px] font-black px-2 py-0.5">
                       LIVE
                     </Badge>
                   </div>
@@ -250,7 +250,7 @@ export default function DashboardHeader({ user }: HeaderProps) {
                   aria-label="Language Selector"
                 >
                   <Globe className="h-4 w-4" />
-                  <Badge className="absolute -top-1 -right-1 h-3 w-3 p-0 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 text-[8px] flex items-center justify-center">
+                  <Badge className="absolute -top-1 -right-1 h-3 w-3 p-0 rounded-full bg-linear-to-r from-amber-500 to-orange-500 text-[8px] flex items-center justify-center">
                     EN
                   </Badge>
                 </Button>
@@ -304,7 +304,7 @@ export default function DashboardHeader({ user }: HeaderProps) {
                   aria-label="Notifications"
                 >
                   <Bell className="h-4 w-4" />
-                  <span className="absolute -top-1 -right-1 flex h-2.5 w-2.5 items-center justify-center rounded-full bg-gradient-to-r from-red-500 to-pink-600 ring-2 ring-background">
+                  <span className="absolute -top-1 -right-1 flex h-2.5 w-2.5 items-center justify-center rounded-full bg-linear-to-r from-red-500 to-pink-600 ring-2 ring-background">
                     <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-red-500/60"></span>
                   </span>
                 </Button>
@@ -317,12 +317,12 @@ export default function DashboardHeader({ user }: HeaderProps) {
                       exit={{ opacity: 0, y: 10, scale: 0.95 }}
                       className="absolute right-0 top-full mt-2 w-96 bg-background border border-border/50 rounded-2xl shadow-2xl overflow-hidden z-50"
                     >
-                      <div className="p-4 bg-gradient-to-r from-primary-50 to-primary-100 dark:from-primary-900/30 dark:to-primary-800/20">
+                      <div className="p-4 bg-linear-to-r from-primary-50 to-primary-100 dark:from-primary-900/30 dark:to-primary-800/20">
                         <div className="flex items-center justify-between">
                           <p className="text-sm font-black uppercase tracking-wider">
                             Notifications
                           </p>
-                          <Badge className="rounded-full bg-gradient-to-r from-primary-600 to-primary-800 text-[10px] font-black px-2.5 py-0.5">
+                          <Badge className="rounded-full bg-linear-to-r from-primary-600 to-primary-800 text-[10px] font-black px-2.5 py-0.5">
                             {notifications.length} New
                           </Badge>
                         </div>
@@ -336,7 +336,7 @@ export default function DashboardHeader({ user }: HeaderProps) {
                               className="p-4 border-b border-border/50 hover:bg-muted/30 transition-colors cursor-pointer group"
                             >
                               <div className="flex items-start gap-3">
-                                <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-primary-100 to-primary-200 dark:from-primary-900/30 dark:to-primary-800/20 flex items-center justify-center">
+                                <div className="w-9 h-9 rounded-lg bg-linear-to-br from-primary-100 to-primary-200 dark:from-primary-900/30 dark:to-primary-800/20 flex items-center justify-center">
                                   <Icon className="h-4 w-4 text-primary-700 dark:text-primary-400" />
                                 </div>
                                 <div className="flex-1">
@@ -389,7 +389,7 @@ export default function DashboardHeader({ user }: HeaderProps) {
                     {user.role === "SUPER_ADMIN" && (
                       <Crown className="absolute -top-1 -right-1 h-3 w-3 text-amber-500 fill-amber-500" />
                     )}
-                    <div className="absolute -bottom-0.5 -right-0.5 h-2 w-2 rounded-full border-2 border-background bg-gradient-to-r from-emerald-400 to-teal-500" />
+                    <div className="absolute -bottom-0.5 -right-0.5 h-2 w-2 rounded-full border-2 border-background bg-linear-to-r from-emerald-400 to-teal-500" />
                   </div>
                   <div className="hidden lg:flex flex-col items-start text-left">
                     <span className="text-xs font-bold text-foreground leading-none">
@@ -415,7 +415,7 @@ export default function DashboardHeader({ user }: HeaderProps) {
                       exit={{ opacity: 0, y: 10, scale: 0.95 }}
                       className="absolute right-0 top-full mt-2 w-64 bg-background border border-border/50 rounded-2xl shadow-2xl overflow-hidden z-50"
                     >
-                      <div className="p-4 bg-gradient-to-r from-primary-50 to-primary-100 dark:from-primary-900/30 dark:to-primary-800/20">
+                      <div className="p-4 bg-linear-to-r from-primary-50 to-primary-100 dark:from-primary-900/30 dark:to-primary-800/20">
                         <div className="flex items-center gap-3">
                           <Avatar className="h-10 w-10 border border-primary-500/30">
                             <AvatarImage src={user.image} alt={user.name} />
@@ -458,7 +458,7 @@ export default function DashboardHeader({ user }: HeaderProps) {
                           </Button>
                         </Link>
                         <div className="my-2 px-3">
-                          <div className="rounded-xl bg-gradient-to-r from-primary-50 to-primary-100 dark:from-primary-900/30 dark:to-primary-800/20 p-2.5">
+                          <div className="rounded-xl bg-linear-to-r from-primary-50 to-primary-100 dark:from-primary-900/30 dark:to-primary-800/20 p-2.5">
                             <div className="flex items-center justify-between mb-1.5">
                               <span className="text-xs font-medium text-muted-foreground">
                                 Storage
@@ -468,7 +468,7 @@ export default function DashboardHeader({ user }: HeaderProps) {
                               </span>
                             </div>
                             <div className="w-full bg-primary-100 dark:bg-primary-900/30 rounded-full h-1.5">
-                              <div className="bg-gradient-to-r from-primary-500 to-primary-600 h-1.5 rounded-full w-2/3" />
+                              <div className="bg-linear-to-r from-primary-500 to-primary-600 h-1.5 rounded-full w-2/3" />
                             </div>
                           </div>
                         </div>
