@@ -304,7 +304,7 @@ export function TrustIndicators() {
           </div>
           <h2 className="text-3xl md:text-4xl lg:text-5xl font-black tracking-tighter mb-4">
             Trusted by{" "}
-            <span className="text-transparent bg-clip-text bg-linear-to-r from-primary-600 to-primary-800">
+            <span className="text-primary bg-clip-text bg-linear-to-r from-primary-600 to-primary-800">
               Scholars
             </span>{" "}
             Worldwide

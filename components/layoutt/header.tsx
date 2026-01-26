@@ -127,7 +127,7 @@ export function Header() {
         className={cn(
           "fixed top-0 left-0 right-0 z-50 w-full transition-all duration-500 flex items-center",
           isScrolled
-            ? "glass-surface shadow-xl py-2 h-20 bg-background/80 backdrop-blur-lg supports-[backdrop-filter]:bg-background/60"
+            ? "glass-surface shadow-xl py-2 h-20 bg-background/80 backdrop-blur-lg supports-backdrop-filter:bg-background/60"
             : "bg-transparent py-4 h-24",
           "pt-safe", // Safe area for notched phones
         )}
@@ -136,7 +136,7 @@ export function Header() {
           {/* --- LOGO SECTION --- */}
           <Link
             href="/"
-            className="flex items-center space-x-3 md:space-x-4 relative z-[60] group outline-none min-h-[44px] min-w-[44px]"
+            className="flex items-center space-x-3 md:space-x-4 relative z-60 group outline-none min-h-11 min-w-11"
             onClick={() => setMobileMenuOpen(false)}
             aria-label="AL-MAYSAROH International Institute - Home"
           >
@@ -179,7 +179,7 @@ export function Header() {
                     aria-haspopup={item.dropdown ? "true" : "false"}
                     aria-current={isActive ? "page" : undefined}
                     className={cn(
-                      "px-4 py-3 text-[13px] font-black flex items-center gap-1 transition-all uppercase tracking-wider outline-none min-h-[44px]",
+                      "px-4 py-3 text-[13px] font-black flex items-center gap-1 transition-all uppercase tracking-wider outline-none min-h-11",
                       "focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 focus-visible:outline-none",
                       activeDropdown === item.name || isActive
                         ? "text-primary-700"
@@ -237,7 +237,7 @@ export function Header() {
           </ul>
 
           {/* --- COMMAND ACTIONS --- */}
-          <div className="flex items-center space-x-2 md:space-x-3 lg:space-x-4 relative z-[60]">
+          <div className="flex items-center space-x-2 md:space-x-3 lg:space-x-4 relative z-60">
             {/* Theme Toggle */}
             <Button
               variant="ghost"
@@ -259,13 +259,13 @@ export function Header() {
             <div className="hidden md:flex items-center gap-2 lg:gap-3">
               {session ? (
                 <Link href="/dashboard">
-                  <Button className="rounded-xl font-black px-5 lg:px-6 bg-primary-700 hover:bg-primary-800 text-white shadow-lg relative overflow-hidden group min-h-[44px]">
+                  <Button className="rounded-xl font-black px-5 lg:px-6 bg-primary-700 hover:bg-primary-800 text-white shadow-lg relative overflow-hidden group min-h-11">
                     <span className="relative z-10 flex items-center gap-2 text-[11px] tracking-widest">
                       <LayoutDashboard className="w-4 h-4" aria-hidden="true" />
                       DASHBOARD
                     </span>
                     <motion.div
-                      className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12"
+                      className="absolute inset-0 bg-linear-to-r from-transparent via-white/20 to-transparent -skew-x-12"
                       animate={{ x: ["-100%", "200%"] }}
                       transition={{
                         duration: 3,
@@ -280,16 +280,16 @@ export function Header() {
                   <Link href="/login">
                     <Button
                       variant="ghost"
-                      className="font-black text-[11px] tracking-widest uppercase px-4 min-h-[44px]"
+                      className="font-black text-[11px] tracking-widest uppercase px-4 min-h-11"
                     >
                       LOGIN
                     </Button>
                   </Link>
                   <Link href="/register">
-                    <Button className="rounded-xl font-black px-6 lg:px-8 bg-primary-700 hover:bg-primary-800 text-white shadow-lg text-[11px] tracking-widest relative overflow-hidden group min-h-[44px]">
+                    <Button className="rounded-xl font-black px-6 lg:px-8 bg-primary-700 hover:bg-primary-800 text-white shadow-lg text-[11px] tracking-widest relative overflow-hidden group min-h-11">
                       <span className="relative z-10">ADMISSIONS</span>
                       <motion.div
-                        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12"
+                        className="absolute inset-0 bg-linear-to-r from-transparent via-white/20 to-transparent -skew-x-12"
                         animate={{ x: ["-100%", "200%"] }}
                         transition={{
                           duration: 4,
@@ -332,7 +332,7 @@ export function Header() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setMobileMenuOpen(false)}
-              className="fixed inset-0 bg-black/60 backdrop-blur-md z-[90] lg:hidden"
+              className="fixed inset-0 bg-black/60 backdrop-blur-md z-90 lg:hidden"
               aria-hidden="true"
             />
 
@@ -341,7 +341,7 @@ export function Header() {
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="fixed inset-y-0 right-0 z-[100] w-full max-w-full sm:max-w-sm bg-background shadow-3xl lg:hidden flex flex-col p-4 sm:p-6 md:p-8 pt-24 sm:pt-28 md:pt-32 min-h-[100dvh]"
+              className="fixed inset-y-0 right-0 z-100 w-full max-w-full sm:max-w-sm bg-background shadow-3xl lg:hidden flex flex-col p-4 sm:p-6 md:p-8 pt-24 sm:pt-28 md:pt-32 min-h-dvh"
               style={{
                 paddingBottom: "calc(2rem + env(safe-area-inset-bottom))",
               }}
@@ -497,6 +497,18 @@ export function Header() {
     </>
   );
 }
+
+
+
+
+
+
+
+
+
+
+
+
 
 // "use client";
 
@@ -690,7 +702,7 @@ export function Header() {
 //                       <LayoutDashboard className="w-4 h-4" /> DASHBOARD
 //                     </span>
 //                     <motion.div
-//                       className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12"
+//                       className="absolute inset-0 bg-linear-to-r from-transparent via-white/20 to-transparent -skew-x-12"
 //                       animate={{ x: ["-100%", "200%"] }}
 //                       transition={{
 //                         duration: 3,
