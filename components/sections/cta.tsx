@@ -1,67 +1,49 @@
 "use client";
 
 import { Reveal } from "@/components/shared/section-animation";
-import { Calendar, CheckCircle,Sparkles, Award } from "lucide-react";
+import { Calendar, CheckCircle, Star, Sparkles, Award } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { motion } from "framer-motion";
 
-
 export function CTA() {
   return (
-    <section className="py-32 lg:py-48 relative overflow-hidden bg-linear-to-b from-background to-primary-50/5 dark:to-primary-950/10">
-      {/* Background Pattern */}
-      <div className="absolute inset-0 opacity-[0.02] bg-[url('/islamic-pattern.svg')] bg-center bg-repeat" />
-
-      {/* Floating Elements */}
-      <div className="absolute top-20 left-10 w-64 h-64 bg-linear-to-br from-primary-700/10 to-transparent rounded-full blur-3xl" />
-      <div className="absolute bottom-20 right-10 w-96 h-96 bg-linear-to-tl from-primary-700/10 to-transparent rounded-full blur-3xl" />
-
-      <div className="container mx-auto px-6 relative">
+    <section className="py-12 sm:py-16 md:py-24 lg:py-32 relative bg-background">
+      <div className="container mx-auto px-4 sm:px-6 relative">
         <Reveal>
-          <div className="max-w-6xl mx-auto">
-            <div className="glass-surface rounded-[2.5rem] p-12 md:p-20 relative overflow-hidden border border-primary-700/20">
-              {/* Decorative Corner Accents */}
-              <div className="absolute top-0 left-0 w-32 h-32 border-t-2 border-l-2 border-primary-700/30 rounded-tl-[2.5rem]" />
-              <div className="absolute top-0 right-0 w-32 h-32 border-t-2 border-r-2 border-primary-700/30 rounded-tr-[2.5rem]" />
-              <div className="absolute bottom-0 left-0 w-32 h-32 border-b-2 border-l-2 border-primary-700/30 rounded-bl-[2.5rem]" />
-              <div className="absolute bottom-0 right-0 w-32 h-32 border-b-2 border-r-2 border-primary-700/30 rounded-br-[2.5rem]" />
-
-              <div className="relative z-10 text-center space-y-12">
+          <div className="max-w-4xl sm:max-w-5xl md:max-w-6xl mx-auto">
+            <div className="institutional-card p-6 sm:p-8 md:p-12 lg:p-16 xl:p-20 relative overflow-hidden border border-primary-700/20">
+              <div className="relative z-10 text-center space-y-8 sm:space-y-10 md:space-y-12">
                 {/* Header */}
-                <div className="space-y-8">
-                  <div className="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-linear-to-r from-primary-700/10 to-primary-500/10 border border-primary-700/20">
-                    <Sparkles className="w-5 h-5 text-primary-700" />
-                    <span className="text-sm font-black text-primary-700 uppercase tracking-[0.3em]">
-                      ENROLLMENT NOW OPEN
+                <div className="space-y-6 sm:space-y-8">
+                  <div className="inline-flex items-center gap-2 sm:gap-3 px-4 py-2 sm:px-6 sm:py-3 rounded-full bg-primary-700/10 border border-primary-700/20">
+                    <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-primary-700" />
+                    <span className="text-xs sm:text-sm font-black text-primary-700 uppercase tracking-widest sm:tracking-[0.3em]">
+                      ENROLLMENT OPEN
                     </span>
-                    <Award className="w-5 h-5 text-primary-700" />
+                    <Award className="w-4 h-4 sm:w-5 sm:h-5 text-primary-700" />
                   </div>
 
-                  <h2 className="text-6xl lg:text-8xl font-black tracking-tighter font-heading leading-[0.9]">
-                    Your{" "}
-                    <span className="bg-linear-to-br from-primary-600 via-primary-700 to-primary-800 bg-clip-text text-transparent italic">
-                      Sacred
-                    </span>
+                  <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black tracking-tighter font-heading leading-tight">
+                    Your <span className="text-primary-700 italic">Sacred</span>
                     <br />
                     Journey Begins
                   </h2>
 
                   <div className="max-w-2xl mx-auto">
-                    <p className="text-2xl text-muted-foreground font-light leading-relaxed border-l-4 border-gold/50 pl-8 py-2">
-                      Join 1,847 students who have transformed their
-                      relationship with the Quran through authentic, sanad-based
-                      education.
+                    <p className="text-base sm:text-lg md:text-xl text-muted-foreground font-light leading-relaxed border-l-4 border-gold/50 pl-4 sm:pl-6 md:pl-8 py-2">
+                      Join students who have transformed their relationship with
+                      the Quran.
                     </p>
                   </div>
                 </div>
 
                 {/* Stats */}
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-3xl mx-auto">
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6 md:gap-8 max-w-3xl mx-auto">
                   {[
-                    { value: "98%", label: "Completion Rate" },
-                    { value: "14:1", label: "Student:Scholar Ratio" },
-                    { value: "1400+", label: "Years of Sanad" },
+                    { value: "98%", label: "Completion" },
+                    { value: "14:1", label: "Ratio" },
+                    { value: "1400+", label: "Years" },
                     { value: "30-Day", label: "Guarantee" },
                   ].map((stat, index) => (
                     <motion.div
@@ -69,12 +51,12 @@ export function CTA() {
                       initial={{ opacity: 0, y: 20 }}
                       whileInView={{ opacity: 1, y: 0 }}
                       transition={{ delay: index * 0.1 }}
-                      className="text-center p-6 rounded-2xl bg-linear-to-b from-background/50 to-background/30 border border-primary-700/10"
+                      className="text-center p-4 sm:p-6 rounded-xl sm:rounded-2xl bg-background/50 border border-primary-700/10"
                     >
-                      <div className="text-4xl font-black text-primary-700 mb-2">
+                      <div className="text-2xl sm:text-3xl md:text-4xl font-black text-primary-700 mb-1 sm:mb-2">
                         {stat.value}
                       </div>
-                      <div className="text-sm font-medium text-muted-foreground">
+                      <div className="text-xs sm:text-sm font-medium text-muted-foreground">
                         {stat.label}
                       </div>
                     </motion.div>
@@ -82,37 +64,37 @@ export function CTA() {
                 </div>
 
                 {/* Features */}
-                <div className="grid md:grid-cols-3 gap-6 max-w-3xl mx-auto">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6 max-w-3xl mx-auto">
                   {[
                     {
                       icon: CheckCircle,
-                      title: "Free Trial Session",
-                      desc: "Experience our methodology",
+                      title: "Free Trial",
+                      desc: "Experience methodology",
                     },
                     {
                       icon: CheckCircle,
                       title: "1-on-1 Assessment",
-                      desc: "Personalized learning path",
+                      desc: "Personalized path",
                     },
                     {
                       icon: CheckCircle,
-                      title: "Flexible Scheduling",
+                      title: "Flexible",
                       desc: "Across timezones",
                     },
                   ].map((feature, index) => (
                     <div
                       key={index}
-                      className="p-6 rounded-2xl bg-linear-to-br from-background to-primary-50/10 dark:to-primary-950/5 border border-primary-700/10 group hover:border-primary-700/30 transition-all duration-300"
+                      className="p-4 sm:p-6 rounded-xl sm:rounded-2xl bg-background/50 border border-primary-700/10 group hover:border-primary-700/30 transition-all duration-300"
                     >
-                      <div className="flex items-center gap-4 mb-4">
-                        <div className="w-12 h-12 rounded-xl bg-primary-700/10 flex items-center justify-center">
-                          <feature.icon className="w-6 h-6 text-primary-700" />
+                      <div className="flex items-center gap-3 sm:gap-4 mb-3 sm:mb-4">
+                        <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-primary-700/10 flex items-center justify-center flex-shrink-0">
+                          <feature.icon className="w-5 h-5 sm:w-6 sm:h-6 text-primary-700" />
                         </div>
                         <div className="text-left">
-                          <div className="text-lg font-black uppercase tracking-tight">
+                          <div className="text-base sm:text-lg font-black uppercase tracking-tight">
                             {feature.title}
                           </div>
-                          <div className="text-sm text-muted-foreground">
+                          <div className="text-xs sm:text-sm text-muted-foreground">
                             {feature.desc}
                           </div>
                         </div>
@@ -126,48 +108,39 @@ export function CTA() {
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ delay: 0.4 }}
-                  className="flex flex-col sm:flex-row gap-6 justify-center items-center pt-8"
+                  className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center pt-6 sm:pt-8"
                 >
                   <Link href="/register" className="w-full sm:w-auto">
-                    <Button
-                      size="xl"
-                      className="w-full rounded-full px-12 py-7 text-xl font-black bg-linear-to-r from-primary-700 to-primary-800 hover:shadow-2xl hover:shadow-primary-500/40 transition-all duration-500 group"
-                    >
-                      <span className="flex items-center gap-4">
-                        <Calendar className="w-6 h-6" />
+                    <Button className="w-full rounded-full px-6 py-4 sm:px-8 sm:py-5 md:px-10 md:py-6 text-base sm:text-lg font-black bg-primary-700 hover:bg-primary-800 min-h-[44px] min-w-[44px]">
+                      <span className="flex items-center gap-3 sm:gap-4">
+                        <Calendar className="w-4 h-4 sm:w-5 sm:h-5" />
                         ENROLL NOW
                       </span>
-
-                      {/* Shimmer Effect */}
-                      <div className="absolute inset-0 -z-10 overflow-hidden rounded-full">
-                        <div className="absolute inset-0 bg-linear-to-r from-transparent via-white/20 to-transparent -skew-x-12 animate-shimmer" />
-                      </div>
                     </Button>
                   </Link>
 
-                  <Link href="/contact">
+                  <Link href="/contact" className="w-full sm:w-auto">
                     <Button
-                      variant="elite"
-                      size="xl"
-                      className="w-full sm:w-auto rounded-full px-12 py-7 text-xl font-black border-2"
+                      variant="outline"
+                      className="w-full rounded-full px-6 py-4 sm:px-8 sm:py-5 md:px-10 md:py-6 text-base sm:text-lg font-black border-2 min-h-[44px] min-w-[44px]"
                     >
-                      <span className="flex items-center gap-4">
+                      <span className="flex items-center gap-3 sm:gap-4">
                         SPEAK TO ADVISOR
-                        <ArrowRight className="w-6 h-6 transition-transform duration-500 group-hover:translate-x-3" />
+                        <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 transition-transform duration-500 group-hover:translate-x-2" />
                       </span>
                     </Button>
                   </Link>
                 </motion.div>
 
                 {/* Guarantee */}
-                <div className="pt-12 border-t border-primary-700/20 max-w-2xl mx-auto">
-                  <div className="inline-flex items-center gap-4 text-lg text-muted-foreground">
-                    <Shield className="w-8 h-8 text-primary-700" />
+                <div className="pt-6 sm:pt-8 md:pt-12 border-t border-primary-700/20 max-w-2xl mx-auto">
+                  <div className="inline-flex items-center gap-3 sm:gap-4 text-sm sm:text-base md:text-lg text-muted-foreground">
+                    <Shield className="w-6 h-6 sm:w-8 sm:h-8 text-primary-700" />
                     <span>
                       <span className="font-black text-primary-700">
-                        30-Day Satisfaction Guarantee
+                        30-Day Guarantee
                       </span>{" "}
-                      – Full refund if not satisfied with your progress.
+                      – Full refund if not satisfied.
                     </span>
                   </div>
                 </div>

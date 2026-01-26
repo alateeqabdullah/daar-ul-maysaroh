@@ -7,7 +7,6 @@ import {
   Users,
   Clock,
   ArrowRight,
-  Sparkles,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -120,7 +119,7 @@ export function FeaturedCourses() {
                   </div>
 
                   {/* Description */}
-                  <p className="text-base sm:text-lg text-muted-foreground font-light leading-relaxed mb-6 sm:mb-8 flex-grow">
+                  <p className="text-base sm:text-lg text-muted-foreground font-light leading-relaxed mb-6 sm:mb-8 grow">
                     {course.description}
                   </p>
 
@@ -190,7 +189,7 @@ export function FeaturedCourses() {
               </div>
 
               <Link href="/courses">
-                <Button className="rounded-full px-8 py-4 sm:px-10 sm:py-5 md:px-12 md:py-6 text-base sm:text-lg md:text-xl font-black bg-primary-700 hover:bg-primary-800 transition-all duration-500 group min-h-[44px] min-w-[44px]">
+                <Button className="rounded-full px-8 py-4 sm:px-10 sm:py-5 md:px-12 md:py-6 text-base sm:text-lg md:text-xl font-black bg-primary-700 hover:bg-primary-800 transition-all duration-500 group min-h-11 min-w-11">
                   <span className="flex items-center gap-3 sm:gap-4">
                     VIEW ALL PROGRAMS
                     <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 transition-all duration-500 group-hover:translate-x-2" />
