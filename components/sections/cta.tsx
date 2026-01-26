@@ -13,8 +13,8 @@ export function CTA() {
           <Reveal>
             <div className="institutional-card p-12 md:p-16 relative overflow-hidden">
               {/* Decorative Elements */}
-              <div className="absolute top-0 right-0 w-64 h-64 bg-gradient-to-bl from-primary-500/5 to-transparent rounded-full blur-3xl -translate-y-32 translate-x-32" />
-              <div className="absolute bottom-0 left-0 w-64 h-64 bg-gradient-to-tr from-primary-500/5 to-transparent rounded-full blur-3xl translate-y-32 -translate-x-32" />
+              <div className="absolute top-0 right-0 w-64 h-64 bg-linear-to-bl from-primary-500/5 to-transparent rounded-full blur-3xl -translate-y-32 translate-x-32" />
+              <div className="absolute bottom-0 left-0 w-64 h-64 bg-linear-to-tr from-primary-500/5 to-transparent rounded-full blur-3xl translate-y-32 -translate-x-32" />
 
               <div className="relative z-10 text-center space-y-8">
                 {/* Header */}
@@ -50,7 +50,7 @@ export function CTA() {
                       key={index}
                       className="flex items-center gap-3 p-4 rounded-xl bg-muted/30"
                     >
-                      <feature.icon className="w-5 h-5 text-primary-700 flex-shrink-0" />
+                      <feature.icon className="w-5 h-5 text-primary-700 hrink-0" />
                       <span className="text-sm font-black uppercase tracking-tight">
                         {feature.text}
                       </span>
