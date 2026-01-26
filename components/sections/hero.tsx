@@ -38,7 +38,7 @@ export function Hero() {
   return (
     <section
       ref={containerRef}
-      className="relative min-h-[100vh] md:min-h-[110vh] flex items-center pt-20 md:pt-32 pb-10 md:pb-20 overflow-hidden bg-background"
+      className="relative min-h-screen md:min-h-[110vh] flex items-center pt-20 md:pt-32 pb-10 md:pb-20 overflow-hidden bg-background"
     >
       {/* --- MOBILE-OPTIMIZED BACKGROUND --- */}
       <motion.div style={{ y: bgYValue }} className="absolute inset-0 z-0">
@@ -78,10 +78,10 @@ export function Hero() {
           />
         ))}
 
-        <div className="absolute inset-0 bg-[url('/islamic-pattern.svg')] opacity-[0.02] md:opacity-[0.03] [mask-image:linear-gradient(to_bottom,black,transparent)] scale-150 md:scale-100" />
+        <div className="absolute inset-0 bg-[url('/islamic-pattern.svg')] opacity-[0.02] md:opacity-[0.03] mask-[linear-gradient(to_bottom,black,transparent)] scale-150 md:scale-100" />
       </motion.div>
 
-      <div className="container mx-auto px-4 sm:px-6 grid lg:grid-cols-2 gap-8 md:gap-16 xl:gap-24 items-center relative z-10">
+      <div className="container mx-auto px-4 sm:px-6 -grid lg:grid-cols-2 gap-8 md:gap-16 xl:gap-24 items-center relative z-10">
         {/* --- LEFT: INSTITUTIONAL CONTENT --- */}
         <motion.div
           style={{ y: textYValue }}
@@ -105,7 +105,7 @@ export function Hero() {
           <div className="space-y-4 md:space-y-6">
             <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tighter leading-[0.9] md:leading-[0.8] font-heading">
               Divine <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-br from-gold via-primary-700 to-primary-950 drop-shadow-sm">
+              <span className="text-transparent bg-clip-text bg-linear-to-br from-gold via-primary-700 to-primary-950 drop-shadow-sm">
                 Connection.
               </span>
             </h1>
@@ -126,7 +126,7 @@ export function Hero() {
                 </span>
                 {!isMobile && (
                   <motion.div
-                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12"
+                    className="absolute inset-0 bg-linear-to-r from-transparent via-white/20 to-transparent -skew-x-12"
                     animate={{ x: ["-150%", "250%"] }}
                     transition={{
                       duration: 4,
@@ -166,13 +166,13 @@ export function Hero() {
             <motion.div
               animate={{ rotate: 360 }}
               transition={{ duration: 50, repeat: Infinity, ease: "linear" }}
-              className="absolute inset-0 border-[1px] border-primary-700/10 rounded-full scale-[1.2] opacity-50 hidden md:block"
+              className="absolute inset-0 border border-primary-700/10 rounded-full scale-[1.2] opacity-50 hidden md:block"
             />
           )}
 
           <div className="w-full max-w-[90vw] sm:max-w-[500px] md:max-w-[600px] glass-surface rounded-3xl md:rounded-[5rem] border-white/20 md:border-white/30 dark:border-white/5 p-6 sm:p-8 md:p-12 lg:p-20 shadow-xl md:shadow-[0_80px_150px_-30px_rgba(0,0,0,0.2)] text-center relative overflow-hidden group">
             {/* Mobile-optimized inner glow */}
-            <div className="absolute -top-10 -left-10 md:-top-20 md:-left-20 w-32 h-32 md:w-64 md:h-64 bg-primary-700/5 md:bg-primary-700/10 blur-[40px] md:blur-[100px] rounded-full group-hover:bg-primary-700/10 md:group-hover:bg-primary-700/20 transition-all duration-1000" />
+            <div className="absolute -top-10 -left-10 md:-top-20 md:-left-20 w-32 h-32 md:w-64 md:h-64 bg-primary-700/5 md:bg-primary-700/10 blur-2xl md:blur-[100px] rounded-full group-hover:bg-primary-700/10 md:group-hover:bg-primary-700/20 transition-all duration-1000" />
 
             {/* THE QURAN VERSE - Mobile responsive */}
             <motion.div
@@ -195,14 +195,14 @@ export function Hero() {
                 </p>
 
                 <div className="flex items-center justify-center gap-4 md:gap-8">
-                  <div className="h-[1px] md:h-[2px] flex-1 bg-gradient-to-r from-transparent via-gold/30 md:via-gold/50 to-gold" />
+                  <div className="h-px md:h-0.5 flex-1 bg-linear-to-r from-transparent via-gold/30 md:via-gold/50 to-gold" />
                   <div className="flex flex-col items-center min-w-[100px]">
                     <BookMarked className="w-4 h-4 md:w-5 md:h-5 text-gold mb-1 md:mb-2" />
                     <p className="text-[10px] md:text-[12px] font-bold md:font-black text-gold uppercase tracking-[0.3em] md:tracking-[0.6em] whitespace-nowrap">
                       Surah Al-Qamar
                     </p>
                   </div>
-                  <div className="h-[1px] md:h-[2px] flex-1 bg-gradient-to-l from-transparent via-gold/30 md:via-gold/50 to-gold" />
+                  <div className="h-px md:h-0.5 flex-1 bg-linear-to-l from-transparent via-gold/30 md:via-gold/50 to-gold" />
                 </div>
               </div>
             </motion.div>
@@ -249,7 +249,7 @@ export function Hero() {
           <p className="text-[10px] font-black tracking-widest uppercase opacity-40">
             Begin Journey
           </p>
-          <div className="w-[1px] h-8 md:h-12 bg-gradient-to-b from-primary-700 to-transparent" />
+          <div className="w-px h-8 md:h-12 bg-linear-to-b from-primary-700 to-transparent" />
         </motion.div>
       )}
     </section>
