@@ -15,173 +15,127 @@ import { motion } from "framer-motion";
 
 const FEATURED_COURSES = [
   {
-    title: "Hifz Al-Quran",
-    subtitle: "Sanad-Based Memorization",
-    description:
-      "Complete memorization with Ijazah certification. Unbroken chain to Prophet Muhammad (ﷺ).",
+    title: "Hifz Program",
+    subtitle: "Quran Memorization",
+    description: "Complete Quran memorization with Ijazah certification.",
     icon: BookOpen,
     duration: "2-3 Years",
     students: "1-on-1",
     level: "All Levels",
     href: "/courses/hifz",
-    features: [
-      "Ijazah Certification",
-      "24/7 Portal Access",
-      "Progress Analytics",
-    ],
-    color: "primary",
+    features: ["Ijazah", "24/7 Portal", "Analytics"],
   },
   {
-    title: "Tajweed Al-Itqan",
+    title: "Tajweed Mastery",
     subtitle: "Scientific Recitation",
     description:
-      "Master Quranic phonetics with rules-based methodology. Perfect your Makharij & Sifaat.",
+      "Perfect your Quranic pronunciation with rules-based methodology.",
     icon: Star,
     duration: "6 Months",
     students: "Small Groups",
     level: "Beginner+",
     href: "/courses/tajweed",
-    features: ["Live Correction", "Audio Analysis", "Mistake Tracking"],
-    color: "accent",
+    features: ["Live Correction", "Audio Analysis"],
   },
   {
-    title: "Al-Lughah Al-Arabiyyah",
-    subtitle: "Quranic Linguistics",
-    description:
-      "Understand the Quran in its divine language. Classical Arabic with Quranic vocabulary.",
+    title: "Arabic Fluency",
+    subtitle: "Quranic Language",
+    description: "Understand Quran in its original language.",
     icon: Users,
     duration: "1 Year",
     students: "Group Sessions",
     level: "Beginner",
     href: "/courses/arabic",
-    features: ["Quranic Grammar", "Vocabulary Builder", "Tafsir Integration"],
-    color: "gold",
+    features: ["Grammar", "Vocabulary", "Tafsir"],
   },
   {
-    title: "Tafsir Al-Mubin",
+    title: "Tafsir Studies",
     subtitle: "Quranic Exegesis",
-    description:
-      "Deep dive into Quranic meanings with classical tafsir methodology and modern application.",
+    description: "Deep dive into Quranic meanings with classical methodology.",
     icon: Clock,
     duration: "1.5 Years",
     students: "1-on-1",
     level: "Advanced",
     href: "/courses/tafsir",
-    features: ["Classical Sources", "Thematic Studies", "Scholar Mentorship"],
-    color: "purple",
+    features: ["Classical Sources", "Scholar Mentorship"],
   },
 ];
 
 export function FeaturedCourses() {
   return (
-    <section className="py-32 lg:py-48 bg-gradient-to-b from-background via-background to-primary-50/10 dark:to-primary-950/5 relative overflow-hidden">
-      {/* Background Elements */}
-      <div className="absolute top-1/4 left-0 w-96 h-96 bg-primary-500/5 rounded-full blur-3xl -translate-x-1/2" />
-      <div className="absolute bottom-1/4 right-0 w-96 h-96 bg-primary-500/5 rounded-full blur-3xl translate-x-1/2" />
-
-      <div className="container mx-auto px-6 relative">
+    <section className="py-12 sm:py-16 md:py-24 lg:py-32 bg-background relative">
+      <div className="container mx-auto px-4 sm:px-6">
         {/* Section Header */}
-        <div className="max-w-4xl mb-24 space-y-8">
+        <div className="max-w-3xl mx-auto text-center mb-12 sm:mb-16 md:mb-20 space-y-4 sm:space-y-6">
           <Reveal>
-            <div className="flex items-center gap-4">
-              <div className="w-12 h-px bg-gradient-to-r from-transparent via-primary-700 to-transparent" />
-              <div className="inline-flex items-center gap-3 text-primary-700 font-black text-[11px] uppercase tracking-[0.4em]">
-                <Sparkles className="w-4 h-4" /> ACADEMIC PROGRAMS
-              </div>
-              <div className="w-12 h-px bg-gradient-to-r from-transparent via-primary-700 to-transparent" />
+            <div className="inline-flex items-center gap-2 text-primary-700 font-black text-xs sm:text-[10px] uppercase tracking-widest sm:tracking-[0.3em]">
+              <BookOpen className="w-3 h-3 sm:w-4 sm:h-4" /> Featured Programs
             </div>
-
-            <div className="relative">
-              <h2 className="text-7xl lg:text-9xl font-black tracking-tighter font-heading leading-[0.85]">
-                <span className="text-foreground">Paths to</span>
-                <br />
-                <span className="bg-gradient-to-br from-primary-600 via-primary-700 to-primary-800 bg-clip-text text-transparent italic">
-                  Perfection.
-                </span>
-              </h2>
-
-              {/* Decorative Arabic Calligraphy */}
-              <div className="absolute -top-8 -right-8 opacity-5">
-                <span className="font-quran text-[200px] leading-none">
-                  ﻊﻠﻣ
-                </span>
-              </div>
-            </div>
-
-            <p className="text-2xl text-muted-foreground font-light max-w-2xl leading-relaxed border-l-4 border-gold/50 pl-8 py-2">
-              Structured journeys into Quranic mastery, each with sanad-based
-              certification and scholarly mentorship.
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black tracking-tighter font-heading leading-tight">
+              Sacred <span className="text-primary-700 italic">Knowledge</span>
+              <br />
+              Paths
+            </h2>
+            <p className="text-base sm:text-lg md:text-xl text-muted-foreground font-medium max-w-2xl mx-auto border-l-4 border-gold pl-4 sm:pl-6">
+              Choose your journey into Quranic mastery with structured,
+              sanad-based programs.
             </p>
           </Reveal>
         </div>
 
         {/* Courses Grid */}
-        <div className="grid lg:grid-cols-2 gap-8 mb-20">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6 md:gap-8 mb-12 sm:mb-16 md:mb-20">
           {FEATURED_COURSES.map((course, index) => (
             <Reveal key={course.title} delay={index * 0.15}>
               <motion.div
-                whileHover={{ y: -8 }}
+                whileHover={{ y: -4 }}
                 transition={{ type: "spring", stiffness: 300 }}
                 className="group relative"
               >
                 {/* Card */}
-                <div className="relative z-10 institutional-card p-10 h-full flex flex-col border-2 border-transparent group-hover:border-primary-700/30 bg-gradient-to-b from-background to-background/80 backdrop-blur-sm">
+                <div className="relative z-10 institutional-card p-6 sm:p-8 md:p-10 h-full flex flex-col border border-transparent group-hover:border-primary-700/30">
                   {/* Course Header */}
-                  <div className="flex items-start justify-between mb-10">
-                    <div className="flex items-center gap-6">
-                      <div
-                        className={`
-                        w-20 h-20 rounded-3xl flex items-center justify-center
-                        relative overflow-hidden
-                        ${
-                          course.color === "gold"
-                            ? "bg-gradient-to-br from-gold/20 to-gold/10"
-                            : course.color === "accent"
-                              ? "bg-gradient-to-br from-accent/20 to-accent/10"
-                              : "bg-gradient-to-br from-primary-700/20 to-primary-700/10"
-                        }
-                      `}
-                      >
-                        {/* Icon Background Glow */}
-                        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-br from-primary-500/30 to-transparent blur-md" />
-                        <course.icon className="w-10 h-10 text-primary-700 relative z-10" />
+                  <div className="flex items-start justify-between mb-6 sm:mb-8 md:mb-10">
+                    <div className="flex items-center gap-4 sm:gap-6">
+                      <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-2xl bg-primary-50 dark:bg-primary-950/40 flex items-center justify-center shadow-inner group-hover:scale-105 transition-transform">
+                        <course.icon className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-primary-700" />
                       </div>
 
                       <div>
-                        <div className="text-[10px] font-black text-primary-700 uppercase tracking-[0.3em] mb-2">
+                        <div className="text-xs sm:text-[10px] font-black text-primary-700 uppercase tracking-widest mb-1 sm:mb-2">
                           {course.subtitle}
                         </div>
-                        <h3 className="text-3xl font-black uppercase tracking-tight">
+                        <h3 className="text-xl sm:text-2xl md:text-3xl font-black uppercase tracking-tight">
                           {course.title}
                         </h3>
                       </div>
                     </div>
 
                     {/* Duration Badge */}
-                    <div className="px-4 py-2 rounded-full bg-primary-700/10 border border-primary-700/20">
-                      <span className="text-sm font-black text-primary-700">
+                    <div className="px-3 py-1 sm:px-4 sm:py-2 rounded-full bg-primary-700/10 border border-primary-700/20">
+                      <span className="text-xs sm:text-sm font-black text-primary-700">
                         {course.duration}
                       </span>
                     </div>
                   </div>
 
                   {/* Description */}
-                  <p className="text-lg text-muted-foreground font-light leading-relaxed mb-8 flex-grow">
+                  <p className="text-base sm:text-lg text-muted-foreground font-light leading-relaxed mb-6 sm:mb-8 flex-grow">
                     {course.description}
                   </p>
 
                   {/* Features */}
-                  <div className="mb-10">
-                    <div className="text-xs font-black text-primary-700 uppercase tracking-widest mb-4">
+                  <div className="mb-6 sm:mb-8 md:mb-10">
+                    <div className="text-xs font-black text-primary-700 uppercase tracking-widest mb-3 sm:mb-4">
                       PROGRAM FEATURES
                     </div>
-                    <div className="flex flex-wrap gap-3">
+                    <div className="flex flex-wrap gap-2 sm:gap-3">
                       {course.features.map((feature, idx) => (
                         <div
                           key={idx}
-                          className="px-4 py-2 rounded-full bg-primary-50 dark:bg-primary-950/40 border border-primary-700/10"
+                          className="px-3 py-1.5 sm:px-4 sm:py-2 rounded-full bg-primary-50 dark:bg-primary-950/40 border border-primary-700/10"
                         >
-                          <span className="text-sm font-medium text-primary-700">
+                          <span className="text-xs sm:text-sm font-medium text-primary-700">
                             {feature}
                           </span>
                         </div>
@@ -190,36 +144,37 @@ export function FeaturedCourses() {
                   </div>
 
                   {/* Footer */}
-                  <div className="flex items-center justify-between pt-8 border-t border-border/50">
-                    <div className="space-y-2">
-                      <div className="text-xs font-black text-muted-foreground uppercase tracking-widest">
-                        FORMAT
+                  <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pt-6 border-t border-border/50">
+                    <div className="flex items-center gap-6 w-full sm:w-auto">
+                      <div className="space-y-1">
+                        <div className="text-xs font-black text-muted-foreground uppercase tracking-widest">
+                          FORMAT
+                        </div>
+                        <div className="text-base sm:text-lg font-black">
+                          {course.students}
+                        </div>
                       </div>
-                      <div className="text-lg font-black">
-                        {course.students}
+
+                      <div className="space-y-1">
+                        <div className="text-xs font-black text-muted-foreground uppercase tracking-widest">
+                          LEVEL
+                        </div>
+                        <div className="text-base sm:text-lg font-black">
+                          {course.level}
+                        </div>
                       </div>
                     </div>
 
-                    <div className="space-y-2">
-                      <div className="text-xs font-black text-muted-foreground uppercase tracking-widest">
-                        LEVEL
-                      </div>
-                      <div className="text-lg font-black">{course.level}</div>
-                    </div>
-
-                    <Link href={course.href}>
-                      <Button className="rounded-full px-8 py-4 font-black bg-gradient-to-r from-primary-700 to-primary-800 hover:from-primary-600 hover:to-primary-700 group/btn">
-                        <span className="flex items-center gap-3">
+                    <Link href={course.href} className="w-full sm:w-auto">
+                      <Button className="w-full rounded-full px-6 py-3 sm:px-8 sm:py-4 font-black bg-primary-700 hover:bg-primary-800 text-sm sm:text-base group/btn">
+                        <span className="flex items-center gap-2 sm:gap-3">
                           EXPLORE
-                          <ArrowRight className="w-5 h-5 transition-transform group-hover/btn:translate-x-2" />
+                          <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 transition-transform group-hover/btn:translate-x-2" />
                         </span>
                       </Button>
                     </Link>
                   </div>
                 </div>
-
-                {/* Hover Glow */}
-                <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-primary-700/10 to-transparent opacity-0 group-hover:opacity-100 blur-xl transition-opacity duration-500 -z-10" />
               </motion.div>
             </Reveal>
           ))}
@@ -228,23 +183,18 @@ export function FeaturedCourses() {
         {/* View All CTA */}
         <Reveal>
           <div className="text-center">
-            <div className="inline-flex flex-col items-center gap-8">
-              <div className="text-lg text-muted-foreground font-light max-w-md">
-                Each program includes Ijazah certification, scholarly
-                mentorship, and lifetime access to resources.
+            <div className="inline-flex flex-col items-center gap-6 sm:gap-8">
+              <div className="text-base sm:text-lg text-muted-foreground font-light max-w-md px-4">
+                Each program includes Ijazah certification and scholarly
+                mentorship.
               </div>
 
               <Link href="/courses">
-                <Button className="rounded-full px-12 py-7 text-xl font-black bg-gradient-to-r from-primary-700 to-primary-800 hover:shadow-2xl hover:shadow-primary-500/30 transition-all duration-500 group">
-                  <span className="flex items-center gap-4">
-                    VIEW COMPLETE CURRICULUM
-                    <ArrowRight className="w-6 h-6 transition-all duration-500 group-hover:translate-x-3" />
+                <Button className="rounded-full px-8 py-4 sm:px-10 sm:py-5 md:px-12 md:py-6 text-base sm:text-lg md:text-xl font-black bg-primary-700 hover:bg-primary-800 transition-all duration-500 group min-h-[44px] min-w-[44px]">
+                  <span className="flex items-center gap-3 sm:gap-4">
+                    VIEW ALL PROGRAMS
+                    <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 transition-all duration-500 group-hover:translate-x-2" />
                   </span>
-
-                  {/* Shimmer Effect */}
-                  <div className="absolute inset-0 -z-10 overflow-hidden rounded-full">
-                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12 animate-shimmer" />
-                  </div>
                 </Button>
               </Link>
             </div>
