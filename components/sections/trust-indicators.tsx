@@ -302,10 +302,10 @@ export function TrustIndicators() {
               Certified Excellence
             </span>
           </div>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-black tracking-tighter mb-4">
+          <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tighter leading-[0.9] md:leading-[0.8] font-heading mb-4">
             Trusted by{" "}
-            <span className="text-primary bg-clip-text bg-linear-to-r from-primary-600 to-primary-800">
-              Scholars
+            <span className="text-primary bg-clip-text bg-linear-to-r italic from-primary-600 to-primary-800">
+              Scholars{" "}
             </span>{" "}
             Worldwide
           </h2>
