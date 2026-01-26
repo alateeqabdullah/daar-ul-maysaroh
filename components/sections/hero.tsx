@@ -91,7 +91,7 @@ export function Hero() {
           className="space-y-8 md:space-y-12 order-2 lg:order-1"
         >
           {/* Elite Academy Badge - Mobile optimized */}
-          <div className="relative pt-6 inline-block">
+          <div className="relative pt-16 inline-block">
             <motion.div
               whileHover={isMobile ? {} : { scale: 1.05 }}
               className="relative z-10 inline-flex items-center gap-2 md:gap-3 px-4 md:px-6 py-2 md:py-2.5 rounded-xl md:rounded-2xl glass-surface border-white/10 md:border-white/20 text-primary-700 text-[10px] md:text-[11px] font-bold md:font-black tracking-[0.2em] md:tracking-[0.3em] uppercase shadow-lg md:shadow-2xl"
@@ -114,7 +114,7 @@ export function Hero() {
             </p>
           </div>
 
-          <div className="flex flex-col sm:flex-row flex-wrap gap-4 md:gap-6">
+          <div className="flex flex-col pb-20 sm:flex-row flex-wrap gap-4 md:gap-6">
             <Link href="/courses" className="w-full sm:w-auto">
               <Button
                 size={isMobile ? "default" : "lg"}
