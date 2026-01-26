@@ -21,13 +21,19 @@ export function Hero() {
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
-  // Simplify animations for mobile
+  // ALWAYS call hooks unconditionally
   const bgY = useTransform(scrollY, [0, 500], [0, 200]);
   const textY = useTransform(scrollY, [0, 500], [0, -50]);
+  const rotateX = useTransform(scrollY, [0, 500], ["0deg", "2deg"]);
+  const rotateY = useTransform(scrollY, [0, 500], ["0deg", "2deg"]);
+  const scrollIndicatorOpacity = useTransform(scrollY, [0, 100], [1, 0]);
 
-  // Disable 3D effects on mobile
-  const rotateX = isMobile ? "0deg" : useTransform(scrollY, [0, 500], ["0deg", "2deg"]);
-  const rotateY = isMobile ? "0deg" : useTransform(scrollY, [0, 500], ["0deg", "2deg"]);
+  // Get values for conditional use
+  const bgYValue = isMobile ? 0 : bgY;
+  const textYValue = isMobile ? 0 : textY;
+  const rotateXValue = isMobile ? "0deg" : rotateX;
+  const rotateYValue = isMobile ? "0deg" : rotateY;
+  const perspectiveValue = isMobile ? 0 : 1200;
 
   return (
     <section
@@ -35,16 +41,17 @@ export function Hero() {
       className="relative min-h-[100vh] md:min-h-[110vh] flex items-center pt-20 md:pt-32 pb-10 md:pb-20 overflow-hidden bg-background"
     >
       {/* --- MOBILE-OPTIMIZED BACKGROUND --- */}
-      <motion.div 
-        style={{ y: isMobile ? 0 : bgY }} 
-        className="absolute inset-0 z-0"
-      >
+      <motion.div style={{ y: bgYValue }} className="absolute inset-0 z-0">
         {/* Simplified Divine Light */}
         <motion.div
-          animate={isMobile ? {} : {
-            scale: [1, 1.1, 1],
-            opacity: [0.1, 0.15, 0.1],
-          }}
+          animate={
+            isMobile
+              ? {}
+              : {
+                  scale: [1, 1.1, 1],
+                  opacity: [0.1, 0.15, 0.1],
+                }
+          }
           transition={isMobile ? {} : { duration: 8, repeat: Infinity }}
           className="absolute top-1/4 left-1/2 md:left-1/3 w-[300px] md:w-[800px] h-[300px] md:h-[800px] bg-primary-700/5 md:bg-primary-700/10 blur-[60px] md:blur-[160px] rounded-full pointer-events-none -translate-x-1/2 md:translate-x-0"
         />
@@ -77,7 +84,7 @@ export function Hero() {
       <div className="container mx-auto px-4 sm:px-6 grid lg:grid-cols-2 gap-8 md:gap-16 xl:gap-24 items-center relative z-10">
         {/* --- LEFT: INSTITUTIONAL CONTENT --- */}
         <motion.div
-          style={{ y: isMobile ? 0 : textY }}
+          style={{ y: textYValue }}
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.7 }}
@@ -121,7 +128,11 @@ export function Hero() {
                   <motion.div
                     className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12"
                     animate={{ x: ["-150%", "250%"] }}
-                    transition={{ duration: 4, repeat: Infinity, ease: "linear" }}
+                    transition={{
+                      duration: 4,
+                      repeat: Infinity,
+                      ease: "linear",
+                    }}
                   />
                 )}
               </Button>
@@ -133,7 +144,9 @@ export function Hero() {
                 <p className="text-[10px] md:text-[10px] font-bold md:font-black tracking-wider md:tracking-widest text-gold uppercase">
                   Scholarly Council
                 </p>
-                <p className="font-semibold md:font-bold text-sm">Ijazah Verified</p>
+                <p className="font-semibold md:font-bold text-sm">
+                  Ijazah Verified
+                </p>
               </div>
             </div>
           </div>
@@ -141,10 +154,10 @@ export function Hero() {
 
         {/* --- RIGHT: MOBILE-OPTIMIZED SACRED MANUSCRIPT --- */}
         <motion.div
-          style={{ 
-            rotateX: isMobile ? "0deg" : rotateX, 
-            rotateY: isMobile ? "0deg" : rotateY, 
-            perspective: isMobile ? 0 : 1200 
+          style={{
+            rotateX: rotateXValue,
+            rotateY: rotateYValue,
+            perspective: perspectiveValue,
           }}
           className="relative h-[400px] sm:h-[500px] md:h-[600px] lg:h-[800px] flex items-center justify-center order-1 lg:order-2 mb-8 lg:mb-0"
         >
@@ -230,7 +243,7 @@ export function Hero() {
       {/* Simplified Scroll Indicator for Mobile */}
       {!isMobile && (
         <motion.div
-          style={{ opacity: useTransform(scrollY, [0, 100], [1, 0]) }}
+          style={{ opacity: scrollIndicatorOpacity }}
           className="absolute bottom-6 md:bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
         >
           <p className="text-[10px] font-black tracking-widest uppercase opacity-40">
@@ -242,15 +255,6 @@ export function Hero() {
     </section>
   );
 }
-
-
-
-
-
-
-
-
-
 
 
 
