@@ -117,11 +117,22 @@ const ROLE_PORTAL_HOMES: Record<string, string> = {
 const PUBLIC_ROUTES = [
   "/",
   "/about",
+  "/blog",
+  "/admissions",
+  "events",
+  "/resources",
   "/contact",
   "/courses",
   "/pricing",
   "/faculty",
   "/faq",
+  "/terms",
+  "/privacy",
+  "/help",
+  "/pending",
+  "/account-status",
+  "/legal",
+  
 ];
 
 const AUTH_ROUTES = [
