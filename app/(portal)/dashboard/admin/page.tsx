@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { formatDistanceToNow } from "date-fns";
 import {
   Users,
@@ -223,7 +223,7 @@ export default function AdminDashboardPage() {
         className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"
       >
         <div>
-          <h1 className="text-3xl font-bold tracking-tight bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-400 bg-clip-text text-transparent">
+          <h1 className="text-3xl font-bold tracking-tight bg-linear-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-400 bg-clip-text text-transparent">
             Admin Dashboard
           </h1>
           <p className="text-muted-foreground mt-1">
@@ -243,7 +243,7 @@ export default function AdminDashboardPage() {
           <Button
             size="sm"
             onClick={scrollToApprovals}
-            className="bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white shadow-lg gap-2 transition-all hover:scale-105"
+            className="bg-linear-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white shadow-lg gap-2 transition-all hover:scale-105"
           >
             <UserCheck className="h-4 w-4" />
             Review Requests
@@ -266,9 +266,9 @@ export default function AdminDashboardPage() {
             <Card
               className={`border-none shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden relative`}
             >
-              {/* Gradient Background Decoration */}
+              {/* linear Background Decoration */}
               <div
-                className={`absolute top-0 right-0 w-24 h-24 bg-gradient-to-br ${stat.color} opacity-10 rounded-bl-full group-hover:scale-110 transition-transform`}
+                className={`absolute top-0 right-0 w-24 h-24 bg-linear-to-br ${stat.color} opacity-10 rounded-bl-full group-hover:scale-110 transition-transform`}
               />
 
               <CardContent className="p-6 flex justify-between items-center relative z-10">
@@ -285,7 +285,7 @@ export default function AdminDashboardPage() {
                   </div>
                 </div>
                 <div
-                  className={`p-3 rounded-xl bg-gradient-to-br ${stat.color} text-white ${stat.shadow} shadow-lg group-hover:rotate-6 transition-transform`}
+                  className={`p-3 rounded-xl bg-linear-to-br ${stat.color} text-white ${stat.shadow} shadow-lg group-hover:rotate-6 transition-transform`}
                 >
                   <stat.icon className="h-6 w-6" />
                 </div>
@@ -306,7 +306,7 @@ export default function AdminDashboardPage() {
                 <CardTitle>Revenue Analytics</CardTitle>
                 <CardDescription>Monthly income trends</CardDescription>
               </CardHeader>
-              <CardContent className="h-[320px]">
+              <CardContent className="h-80">
                 <ResponsiveContainer width="100%" height="100%">
                   <AreaChart data={data.charts.revenue}>
                     <defs>
@@ -549,7 +549,7 @@ export default function AdminDashboardPage() {
                       >
                         {/* Timeline Line */}
                         {idx !== data.recentActivity.length - 1 && (
-                          <span className="absolute left-4 top-8 bottom-0 w-[2px] bg-gradient-to-b from-border to-transparent" />
+                          <span className="absolute left-4 top-8 bottom-0 w-0.5 bg-linear-to-b from-border to-transparent" />
                         )}
 
                         <div
@@ -598,7 +598,7 @@ export default function AdminDashboardPage() {
 
           {/* Quick Tip / Promo Card */}
           <motion.div variants={itemVariants}>
-            <div className="rounded-xl bg-gradient-to-br from-indigo-600 to-purple-700 p-6 text-white shadow-lg">
+            <div className="rounded-xl bg-linear-to-br from-indigo-600 to-purple-700 p-6 text-white shadow-lg">
               <h3 className="font-bold text-lg mb-2">Need Help?</h3>
               <p className="text-indigo-100 text-sm mb-4">
                 Check our documentation for advanced reports and system

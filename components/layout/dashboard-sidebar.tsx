@@ -128,7 +128,7 @@ export default function DashboardSidebar({ user }: DashboardSidebarProps) {
           },
           {
             name: "Approvals",
-            href: "/dashboardadmin/approvals",
+            href: "/dashboard/admin/approvals",
             icon: UserCheck,
             badge: "5 Pending",
             description: "Verify new user requests",

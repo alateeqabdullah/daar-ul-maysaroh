@@ -115,7 +115,7 @@ function LoginForm() {
 
   return (
     <Card className="border-none shadow-2xl bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl overflow-hidden">
-      <CardHeader className="space-y-2 text-center pt-10 pb-6 bg-gradient-to-b from-purple-50/50 to-transparent dark:from-purple-900/10">
+      <CardHeader className="space-y-2 text-center pt-10 pb-6 bg-linear-to-b from-purple-50/50 to-transparent dark:from-purple-900/10">
         <CardTitle className="text-3xl font-extrabold tracking-tight text-slate-800 dark:text-white">
           Welcome Back
         </CardTitle>
@@ -269,7 +269,7 @@ function LoginForm() {
 
 export default function LoginPage() {
   return (
-    <div className="relative min-h-screen bg-gradient-to-br from-indigo-100 via-white to-purple-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 overflow-hidden">
+    <div className="relative min-h-screen bg-linear-to-br from-indigo-100 via-white to-purple-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 overflow-hidden">
       {/* Background Aura Animations */}
       <div className="absolute inset-0 overflow-hidden -z-10">
         <motion.div

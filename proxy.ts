@@ -97,11 +97,23 @@
 
 
 
+
+
+
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { auth } from "@/lib/auth";
 
-// Configuration Constants
+// 1. Configuration Constants - UPDATED to use /portal routes
+const ROLE_PORTAL_HOMES: Record<string, string> = {
+  SUPER_ADMIN: "/portal",
+  ADMIN: "/dashboard",
+  TEACHER: "/dashboard",
+  STUDENT: "/dashboard",
+  PARENT: "/dashboard",
+  SUPPORT: "/dashboard",
+};
+
 const PUBLIC_ROUTES = [
   "/",
   "/about",
@@ -123,16 +135,19 @@ export default async function proxy(request: NextRequest) {
   const session = await auth();
   const { pathname } = request.nextUrl;
 
-  // Identify Route Types
+  // Helper: Get portal home based on role
+  const getPortalHome = (role: string) => ROLE_PORTAL_HOMES[role] || "/portal";
+
+  // 2. Identify Route Type
   const isAuthRoute = AUTH_ROUTES.some((route) => pathname.startsWith(route));
   const isPublicRoute = PUBLIC_ROUTES.some(
     (route) => pathname === route || pathname.startsWith(route + "/"),
   );
   const isPendingRoute = pathname.startsWith("/pending");
   const isStatusRoute = pathname.startsWith("/account-status");
-  const isDashboardRoute = pathname.startsWith("/dashboard");
+  const isPortalRoute = pathname.startsWith("/dashboard"); // ADD THIS
 
-  // 1. Logic for Unauthenticated Users
+  // 3. Logic for Unauthenticated Users
   if (!session) {
     if (!isAuthRoute && !isPublicRoute) {
       const callbackUrl = encodeURIComponent(pathname);
@@ -143,17 +158,17 @@ export default async function proxy(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // 2. Logic for Authenticated Users
+  // 4. Logic for Authenticated Users
   const user = session.user;
   const userRole = user?.role || "STUDENT";
   const userStatus = user?.status || "PENDING";
 
-  // 2a. Redirect away from Auth routes to dashboard
+  // 4a. Redirect away from Auth routes to PORTAL (not /admin, /teacher, etc.)
   if (isAuthRoute) {
-    return NextResponse.redirect(new URL("/dashboard", request.url));
+    return NextResponse.redirect(new URL("/dashboard", request.url)); // CHANGED HERE
   }
 
-  // 2b. Handle Account Status
+  // 4b. Handle Account Status
   if (userStatus === "SUSPENDED" || userStatus === "DEACTIVATED") {
     if (pathname !== "/account-status/suspended") {
       return NextResponse.redirect(
@@ -172,21 +187,21 @@ export default async function proxy(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // 2c. Handle Pending Approval
+  // 4c. Handle Pending Approval
   if (userStatus === "PENDING" && !isPendingRoute && !isPublicRoute) {
     return NextResponse.redirect(new URL("/pending", request.url));
   }
 
-  // 2d. Prevent Approved users from seeing Pending page
+  // 4d. Prevent Approved users from seeing the Pending page
   if (userStatus === "APPROVED" && isPendingRoute) {
-    return NextResponse.redirect(new URL("/dashboard", request.url));
+    return NextResponse.redirect(new URL("/dashboard", request.url)); // CHANGED HERE
   }
 
-  // 3. Role-Based Access Control for Dashboard Routes
-  if (isDashboardRoute) {
-    // Define which dashboard sub-routes each role can access
-    const ROLE_PERMISSIONS: Record<string, string[]> = {
-      SUPER_ADMIN: ["/dashboard", "/dashboard/admin", "/dashboard/super-admin"],
+  // 5. Role-Based Access Control for Portal Routes
+  if (isPortalRoute) {
+    // Define which roles can access which portal sub-routes
+    const PORTAL_ROLE_PERMISSIONS: Record<string, string[]> = {
+      SUPER_ADMIN: ["/dashboard", "/dashboard/admin"],
       ADMIN: ["/dashboard", "/dashboard/admin"],
       TEACHER: ["/dashboard", "/dashboard/teacher"],
       STUDENT: ["/dashboard", "/dashboard/student"],
@@ -194,8 +209,7 @@ export default async function proxy(request: NextRequest) {
       SUPPORT: ["/dashboard", "/dashboard/support"],
     };
 
-    // Get allowed routes for user's role
-    const allowedRoutes = ROLE_PERMISSIONS[userRole] || ["/dashboard"];
+    const allowedRoutes = PORTAL_ROLE_PERMISSIONS[userRole] || ["/dashboard"];
 
     // Check if current path is allowed for this role
     const isRouteAllowed = allowedRoutes.some(
@@ -203,35 +217,34 @@ export default async function proxy(request: NextRequest) {
     );
 
     if (!isRouteAllowed) {
-      // User trying to access a route not allowed for their role
+      // User trying to access a portal route not allowed for their role
       return NextResponse.redirect(new URL("/dashboard", request.url));
     }
   }
 
-  // 4. Legacy route support (optional - remove if you don't need these)
-  // If you want to redirect old routes like /admin to /dashboard/admin
-  const LEGACY_ROUTE_MAP: Record<string, string> = {
-    "/admin": "/dashboard/admin",
-    "/teacher": "/dashboard/teacher",
-    "/student": "/dashboard/student",
-    "/parent": "/dashboard/parent",
-    "/support": "/dashboard/support",
-  };
+  // 6. Elite Role-Based Access Control (RBAC) - FOR LEGACY ROUTES
+  // This section catches attempts to access old routes like /admin, /teacher directly
+  const legacyRoleProtectedRoutes = [
+    {
+      path: "/admin",
+      allowed: ["SUPER_ADMIN", "ADMIN"],
+      redirectTo: "/dashboard/admin",
+    },
+    { path: "/teacher", allowed: ["TEACHER"], redirectTo: "/dashboard/teacher" },
+    { path: "/student", allowed: ["STUDENT"], redirectTo: "/dashboard/student" },
+    { path: "/parent", allowed: ["PARENT"], redirectTo: "/dashboard/parent" },
+    { path: "/support", allowed: ["SUPPORT"], redirectTo: "/dashboard/support" },
+  ];
 
-  if (LEGACY_ROUTE_MAP[pathname]) {
-    const newPath = LEGACY_ROUTE_MAP[pathname];
-    // Check if user has permission for this legacy route
-    const allowedLegacyRoutes = {
-      SUPER_ADMIN: ["/admin"],
-      ADMIN: ["/admin"],
-      TEACHER: ["/teacher"],
-      STUDENT: ["/student"],
-      PARENT: ["/parent"],
-      SUPPORT: ["/support"],
-    };
-
-    if (allowedLegacyRoutes[userRole]?.includes(pathname)) {
-      return NextResponse.redirect(new URL(newPath, request.url));
+  for (const route of legacyRoleProtectedRoutes) {
+    if (pathname.startsWith(route.path)) {
+      if (!route.allowed.includes(userRole)) {
+        // User not allowed for this legacy route, redirect to portal
+        return NextResponse.redirect(new URL("/dashboard", request.url));
+      } else {
+        // User is allowed, redirect to new portal version of the route
+        return NextResponse.redirect(new URL(route.redirectTo, request.url));
+      }
     }
   }
 
