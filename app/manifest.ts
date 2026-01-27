@@ -8,7 +8,7 @@ export default function manifest(): MetadataRoute.Manifest {
     start_url: "/",
     display: "standalone",
     background_color: "#ffffff",
-    
+
     theme_color: "#10b981", // Emerald-500 matching your theme
     orientation: "portrait",
     lang: "en",
