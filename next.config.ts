@@ -1,16 +1,13 @@
 import type { NextConfig } from "next";
-import withPWAInit from "@ducanh2912/next-pwa";
+import withSerwistInit from "@serwist/next";
 
-const withPWA = withPWAInit({
-  dest: "public",
-  cacheOnFrontEndNav: true,
-  aggressiveFrontEndNavCaching: true,
-  reloadOnOnline: true,
-  // swcMinify: true, // <--- REMOVED (Not a valid PWA option)
+const withSerwist = withSerwistInit({
+  // Points to your custom service worker file
+  swSrc: "src/app/sw.ts",
+  // Output location
+  swDest: "public/sw.js",
+  // Disable in dev to allow Turbopack to work for the rest of the app
   disable: process.env.NODE_ENV === "development",
-  workboxOptions: {
-    disableDevLogs: true,
-  },
 });
 
 const nextConfig: NextConfig = {
@@ -27,7 +24,11 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default withPWA(nextConfig);
+export default withSerwist(nextConfig);
+
+
+
+
 
 
 
@@ -38,37 +39,14 @@ export default withPWA(nextConfig);
 
 // import type { NextConfig } from "next";
 
-// // Initialize PWA Wrapper
-// const withPWA = require("@ducanh2912/next-pwa").default({
-//   dest: "public",
-//   cacheOnFrontEndNav: true,
-//   aggressiveFrontEndNavCaching: true,
-//   reloadOnOnline: true,
-//   swcMinify: true,
-//   // Disable PWA in development to avoid caching issues while coding
-//   disable: process.env.NODE_ENV === "development",
-//   workboxOptions: {
-//     disableDevLogs: true,
-//   },
-// });
-
 // const nextConfig: NextConfig = {
-//   typescript: {
+//     typescript: {
 //     // !! WARN !!
 //     // This allows production builds to complete even if
 //     // your project has type errors.
 //     ignoreBuildErrors: true,
 //   },
-//   // Recommended for PWA: Allow Next.js images from external sources if needed
-//   images: {
-//     remotePatterns: [
-//       {
-//         protocol: "https",
-//         hostname: "**",
-//       },
-//     ],
-//   },
+//   /* config options here */
 // };
 
-// // Wrap the config with PWA
-// export default withPWA(nextConfig);
+// export default nextConfig;
