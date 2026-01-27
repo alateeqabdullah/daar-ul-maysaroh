@@ -51,7 +51,7 @@ import { Input } from "@/components/ui/input";
 interface NavItem {
   name: string;
   href: string;
-  icon: any;
+  icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
   badge?: string;
   description?: string;
 }
@@ -99,17 +99,17 @@ export default function DashboardSidebar({ user }: DashboardSidebarProps) {
   const getRoleColor = () => {
     switch (user.role) {
       case "SUPER_ADMIN":
-        return "bg-gradient-to-br from-amber-500 via-orange-500 to-amber-600";
+        return "bg-linear-to-br from-amber-500 via-orange-500 to-amber-600";
       case "ADMIN":
-        return "bg-gradient-to-br from-purple-600 via-indigo-600 to-purple-700";
+        return "bg-linear-to-br from-purple-600 via-indigo-600 to-purple-700";
       case "TEACHER":
-        return "bg-gradient-to-br from-emerald-500 via-teal-600 to-emerald-600";
+        return "bg-linear-to-br from-emerald-500 via-teal-600 to-emerald-600";
       case "STUDENT":
-        return "bg-gradient-to-br from-blue-500 via-cyan-500 to-blue-600";
+        return "bg-linear-to-br from-blue-500 via-cyan-500 to-blue-600";
       case "PARENT":
-        return "bg-gradient-to-br from-violet-500 via-purple-600 to-violet-600";
+        return "bg-linear-to-br from-violet-500 via-purple-600 to-violet-600";
       default:
-        return "bg-gradient-to-br from-slate-600 via-slate-700 to-slate-800";
+        return "bg-linear-to-br from-slate-600 via-slate-700 to-slate-800";
     }
   };
 
@@ -128,14 +128,14 @@ export default function DashboardSidebar({ user }: DashboardSidebarProps) {
           },
           {
             name: "Approvals",
-            href: "/admin/approvals",
+            href: "/dashboardadmin/approvals",
             icon: UserCheck,
             badge: "5 Pending",
             description: "Verify new user requests",
           },
           {
             name: "Users",
-            href: "/admin/users",
+            href: "/dashboard/admin/users",
             icon: Users,
             description: "Total system users",
           },
@@ -146,32 +146,32 @@ export default function DashboardSidebar({ user }: DashboardSidebarProps) {
         items: [
           {
             name: "Class Groups",
-            href: "/admin/groups",
+            href: "/dashboard/admin/groups",
             icon: Users2,
             description: "Manage study groups",
           },
           {
             name: "Curriculum",
-            href: "/admin/classes",
+            href: "/dashboard/admin/classes",
             icon: BookOpen,
             description: "Class syllabi & books",
             badge: "New",
           },
           {
             name: "Teachers",
-            href: "/admin/teachers",
+            href: "/dashboard/admin/teachers",
             icon: GraduationCap,
             description: "Faculty management",
           },
           {
             name: "Students",
-            href: "/admin/students",
+            href: "/dashboard/admin/students",
             icon: UserIcon,
             description: "Student profiles",
           },
           {
             name: "Attendance",
-            href: "/admin/attendance",
+            href: "/dashboard/admin/attendance",
             icon: CheckCircle,
             description: "Track attendance",
           },
@@ -182,13 +182,13 @@ export default function DashboardSidebar({ user }: DashboardSidebarProps) {
         items: [
           {
             name: "Schedule",
-            href: "/admin/schedule",
+            href: "/dashboard/admin/schedule",
             icon: Calendar,
             description: "Timetable management",
           },
           {
             name: "Assignments",
-            href: "/admin/assignments",
+            href: "/dashboard/admin/assignments",
             icon: FileText,
             description: "Assignments & submissions",
           },
@@ -200,14 +200,14 @@ export default function DashboardSidebar({ user }: DashboardSidebarProps) {
           },
           {
             name: "Financial",
-            href: "/admin/financial",
+            href: "/dashboard/admin/financial",
             icon: Wallet,
             badge: "Secure",
             description: "Payment tracking",
           },
           {
             name: "System Config",
-            href: "/admin/settings",
+            href: "/dashboard/admin/settings",
             icon: Settings,
             description: "System preferences",
           },
@@ -218,25 +218,25 @@ export default function DashboardSidebar({ user }: DashboardSidebarProps) {
         items: [
           {
             name: "Reports",
-            href: "/admin/reports",
+            href: "/dashboard/admin/reports",
             icon: PieChart,
             description: "Generate reports",
           },
           {
             name: "Parents",
-            href: "/admin/parents",
+            href: "/dashboard/admin/parents",
             icon: Users,
             description: "Parent management",
           },
           {
             name: "Communication",
-            href: "/admin/communication",
+            href: "/dashboard/admin/communication",
             icon: MessageSquare,
             description: "Messaging system",
           },
           {
             name: "Resources",
-            href: "/admin/resources",
+            href: "/dashboard/admin/resources",
             icon: Folder,
             description: "Learning materials",
           },
@@ -257,13 +257,13 @@ export default function DashboardSidebar({ user }: DashboardSidebarProps) {
           },
           {
             name: "Active Classes",
-            href: "/teacher/classes",
+            href: "/dashboard/teacher/classes",
             icon: BookOpen,
             description: "Manage classes",
           },
           {
             name: "Quran Progress",
-            href: "/teacher/quran",
+            href: "/dashboard/teacher/quran",
             icon: Book,
             description: "Student progress",
           },
@@ -274,25 +274,25 @@ export default function DashboardSidebar({ user }: DashboardSidebarProps) {
         items: [
           {
             name: "Students",
-            href: "/teacher/students",
+            href: "/dashboard/teacher/students",
             icon: Users,
             description: "Student roster",
           },
           {
             name: "Attendance",
-            href: "/teacher/attendance",
+            href: "/dashboard/teacher/attendance",
             icon: CheckCircle,
             description: "Daily attendance",
           },
           {
             name: "Assignments",
-            href: "/teacher/assignments",
+            href: "/dashboard/teacher/assignments",
             icon: FileText,
             description: "Create & grade",
           },
           {
             name: "Grades",
-            href: "/teacher/grades",
+            href: "/dashboard/teacher/grades",
             icon: TrendingUp,
             description: "Student performance",
           },
@@ -303,25 +303,25 @@ export default function DashboardSidebar({ user }: DashboardSidebarProps) {
         items: [
           {
             name: "Schedule",
-            href: "/teacher/schedule",
+            href: "/dashboard/teacher/schedule",
             icon: Calendar,
             description: "Class schedule",
           },
           {
             name: "Resources",
-            href: "/teacher/resources",
+            href: "/dashboard/teacher/resources",
             icon: Folder,
             description: "Teaching materials",
           },
           {
             name: "Communication",
-            href: "/teacher/communication",
+            href: "/dashboard/teacher/communication",
             icon: MessageSquare,
             description: "Contact students",
           },
           {
             name: "Reports",
-            href: "/teacher/reports",
+            href: "/dashboard/teacher/reports",
             icon: PieChart,
             description: "Progress reports",
           },
@@ -342,19 +342,19 @@ export default function DashboardSidebar({ user }: DashboardSidebarProps) {
           },
           {
             name: "My Classes",
-            href: "/student/classes",
+            href: "/dashboard/student/classes",
             icon: BookOpen,
             description: "Enrolled classes",
           },
           {
             name: "Quran Progress",
-            href: "/student/quran",
+            href: "/dashboard/student/quran",
             icon: Book,
             description: "Memorization tracker",
           },
           {
             name: "Schedule",
-            href: "/student/schedule",
+            href: "/dashboard/student/schedule",
             icon: Calendar,
             description: "Class timetable",
           },
@@ -365,26 +365,26 @@ export default function DashboardSidebar({ user }: DashboardSidebarProps) {
         items: [
           {
             name: "Assignments",
-            href: "/student/assignments",
+            href: "/dashboard/student/assignments",
             icon: FileText,
             description: "View & submit",
             badge: "2 Due",
           },
           {
             name: "Grades",
-            href: "/student/grades",
+            href: "/dashboard/student/grades",
             icon: TrendingUp,
             description: "Performance",
           },
           {
             name: "Attendance",
-            href: "/student/attendance",
+            href: "/dashboard/student/attendance",
             icon: CheckCircle,
             description: "Attendance record",
           },
           {
             name: "Resources",
-            href: "/student/resources",
+            href: "/dashboard/student/resources",
             icon: Folder,
             description: "Study materials",
           },
@@ -395,19 +395,19 @@ export default function DashboardSidebar({ user }: DashboardSidebarProps) {
         items: [
           {
             name: "Certificates",
-            href: "/student/certificates",
+            href: "/dashboard/student/certificates",
             icon: Award,
             description: "My certificates",
           },
           {
             name: "Progress",
-            href: "/student/progress",
+            href: "/dashboard/student/progress",
             icon: BarChart,
             description: "Learning analytics",
           },
           {
             name: "Goals",
-            href: "/student/goals",
+            href: "/dashboard/student/goals",
             icon: Target,
             description: "Learning objectives",
           },
@@ -428,13 +428,13 @@ export default function DashboardSidebar({ user }: DashboardSidebarProps) {
           },
           {
             name: "My Children",
-            href: "/parent/children",
+            href: "/dashboard/parent/children",
             icon: Users,
             description: "Children profiles",
           },
           {
             name: "Progress Reports",
-            href: "/parent/progress",
+            href: "/dashboard/parent/progress",
             icon: TrendingUp,
             description: "Academic progress",
           },
@@ -445,25 +445,25 @@ export default function DashboardSidebar({ user }: DashboardSidebarProps) {
         items: [
           {
             name: "Attendance",
-            href: "/parent/attendance",
+            href: "/dashboard/parent/attendance",
             icon: CheckCircle,
             description: "Attendance tracking",
           },
           {
             name: "Grades",
-            href: "/parent/grades",
+            href: "/dashboard/parent/grades",
             icon: BarChart3,
             description: "Academic performance",
           },
           {
             name: "Assignments",
-            href: "/parent/assignments",
+            href: "/dashboard/parent/assignments",
             icon: FileText,
             description: "Homework status",
           },
           {
             name: "Schedule",
-            href: "/parent/schedule",
+            href: "/dashboard/parent/schedule",
             icon: Calendar,
             description: "Children schedule",
           },
@@ -474,26 +474,26 @@ export default function DashboardSidebar({ user }: DashboardSidebarProps) {
         items: [
           {
             name: "Payments",
-            href: "/parent/payments",
+            href: "/dashboard/parent/payments",
             icon: CreditCard,
             description: "Fee management",
             badge: "1 Due",
           },
           {
             name: "Messages",
-            href: "/parent/messages",
+            href: "/dashboard/parent/messages",
             icon: MessageSquare,
             description: "School communication",
           },
           {
             name: "Quran Progress",
-            href: "/parent/quran",
+            href: "/dashboard/parent/quran",
             icon: Book,
             description: "Quran memorization",
           },
           {
             name: "Support",
-            href: "/parent/support",
+            href: "/dashboard/parent/support",
             icon: LifeBuoy,
             description: "Help & assistance",
           },
@@ -593,7 +593,7 @@ export default function DashboardSidebar({ user }: DashboardSidebarProps) {
         style={{ transform: "none" }}
       >
         {/* BRAND LOGO AREA - With Animation */}
-        <div className="shrink-0 flex h-24 items-center justify-between px-6 border-b border-border/50 bg-gradient-to-b from-primary-50/10 to-transparent dark:from-primary-900/5 dark:to-transparent">
+        <div className="shrink-0 flex h-24 items-center justify-between px-6 border-b border-border/50 bg-linear-to-b from-primary-50/10 to-transparent dark:from-primary-900/5 dark:to-transparent">
           <Link
             href="/dashboard"
             className="group flex items-center gap-4 outline-none"
@@ -605,7 +605,7 @@ export default function DashboardSidebar({ user }: DashboardSidebarProps) {
           >
             <motion.div
               whileHover={{ rotate: 6, scale: 1.05 }}
-              className="w-12 h-12 bg-gradient-to-br from-primary-600 to-primary-800 rounded-2xl flex items-center justify-center shadow-xl shadow-primary-500/20"
+              className="w-12 h-12 bg-linear-to-br from-primary-600 to-primary-800 rounded-2xl flex items-center justify-center shadow-xl shadow-primary-500/20"
             >
               <BookOpen className="h-6 w-6 text-white" />
             </motion.div>
@@ -670,7 +670,7 @@ export default function DashboardSidebar({ user }: DashboardSidebarProps) {
                           className={cn(
                             "group flex items-center rounded-xl px-4 py-3 text-sm font-bold transition-all duration-300 relative outline-none",
                             isActive
-                              ? "bg-gradient-to-r from-primary-50 to-primary-100 dark:from-primary-900/30 dark:to-primary-800/20 text-primary-700 dark:text-primary-400 border border-primary-200/50 dark:border-primary-800/30 shadow-lg"
+                              ? "bg-linear-to-r from-primary-50 to-primary-100 dark:from-primary-900/30 dark:to-primary-800/20 text-primary-700 dark:text-primary-400 border border-primary-200/50 dark:border-primary-800/30 shadow-lg"
                               : "text-muted-foreground hover:text-foreground hover:bg-muted/30",
                           )}
                           onClick={() => {
@@ -713,7 +713,7 @@ export default function DashboardSidebar({ user }: DashboardSidebarProps) {
                           </div>
 
                           {item.badge && (
-                            <Badge className="ml-2 shrink-0 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 text-[10px] font-black px-2 py-0.5 border-0 whitespace-nowrap">
+                            <Badge className="ml-2 shrink-0 rounded-full bg-linear-to-r from-amber-500 to-orange-500 text-[10px] font-black px-2 py-0.5 border-0 whitespace-nowrap">
                               {item.badge}
                             </Badge>
                           )}
@@ -730,7 +730,7 @@ export default function DashboardSidebar({ user }: DashboardSidebarProps) {
 
               {/* SYSTEM METRICS WIDGET - For Admin/Tech Roles Only */}
               {(user.role === "SUPER_ADMIN" || user.role === "ADMIN") && (
-                <div className="mx-3 mt-6 p-5 rounded-2xl bg-gradient-to-br from-primary-50 to-primary-100 dark:from-primary-900/20 dark:to-primary-800/10 border border-primary-200/50 dark:border-primary-800/30">
+                <div className="mx-3 mt-6 p-5 rounded-2xl bg-linear-to-br from-primary-50 to-primary-100 dark:from-primary-900/20 dark:to-primary-800/10 border border-primary-200/50 dark:border-primary-800/30">
                   <div className="flex items-center justify-between mb-4">
                     <p className="text-xs font-black uppercase tracking-wider text-foreground">
                       System Status
@@ -765,7 +765,7 @@ export default function DashboardSidebar({ user }: DashboardSidebarProps) {
                   </div>
                   <Button
                     size="sm"
-                    className="w-full mt-4 h-9 bg-gradient-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 text-xs font-black text-white rounded-xl shadow-lg"
+                    className="w-full mt-4 h-9 bg-linear-to-r from-primary-600 to-primary-700 hover:from-primary-700 hover:to-primary-800 text-xs font-black text-white rounded-xl shadow-lg"
                   >
                     Upgrade Plan
                   </Button>
@@ -774,7 +774,7 @@ export default function DashboardSidebar({ user }: DashboardSidebarProps) {
 
               {/* STUDENT SPECIFIC WIDGET */}
               {user.role === "STUDENT" && (
-                <div className="mx-3 mt-6 p-5 rounded-2xl bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/10 border border-blue-200/50 dark:border-blue-800/30">
+                <div className="mx-3 mt-6 p-5 rounded-2xl bg-linear-to-br from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/10 border border-blue-200/50 dark:border-blue-800/30">
                   <div className="flex items-center justify-between mb-4">
                     <p className="text-xs font-black uppercase tracking-wider text-foreground">
                       Learning Progress
@@ -819,7 +819,7 @@ export default function DashboardSidebar({ user }: DashboardSidebarProps) {
 
               {/* PARENT SPECIFIC WIDGET */}
               {user.role === "PARENT" && (
-                <div className="mx-3 mt-6 p-5 rounded-2xl bg-gradient-to-br from-violet-50 to-purple-50 dark:from-violet-900/20 dark:to-purple-900/10 border border-violet-200/50 dark:border-violet-800/30">
+                <div className="mx-3 mt-6 p-5 rounded-2xl bg-linear-to-br from-violet-50 to-purple-50 dark:from-violet-900/20 dark:to-purple-900/10 border border-violet-200/50 dark:border-violet-800/30">
                   <div className="flex items-center justify-between mb-4">
                     <p className="text-xs font-black uppercase tracking-wider text-foreground">
                       Child Summary
@@ -866,8 +866,8 @@ export default function DashboardSidebar({ user }: DashboardSidebarProps) {
         </div>
 
         {/* SIDEBAR FOOTER - Enhanced Profile Widget */}
-        <div className="shrink-0 border-t border-border/50 p-4 space-y-4 bg-gradient-to-b from-background to-background/80">
-          <div className="flex items-center gap-3 p-3 rounded-2xl bg-gradient-to-r from-primary-50 to-primary-100 dark:from-primary-900/20 dark:to-primary-800/10">
+        <div className="shrink-0 border-t border-border/50 p-4 space-y-4 bg-linear-to-b from-background to-background/80">
+          <div className="flex items-center gap-3 p-3 rounded-2xl bg-linear-to-r from-primary-50 to-primary-100 dark:from-primary-900/20 dark:to-primary-800/10">
             <div className="relative">
               <Avatar className="h-12 w-12 border-2 border-primary-500/30">
                 <AvatarImage src={user.image || undefined} alt={user.name} />
@@ -883,7 +883,7 @@ export default function DashboardSidebar({ user }: DashboardSidebarProps) {
               {user.role === "SUPER_ADMIN" && (
                 <Crown className="absolute -top-1 -right-1 h-4 w-4 text-amber-500 fill-amber-500" />
               )}
-              <div className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full border-2 border-background bg-gradient-to-r from-emerald-400 to-teal-500" />
+              <div className="absolute -bottom-0.5 -right-0.5 h-3 w-3 rounded-full border-2 border-background bg-linear-to-r from-emerald-400 to-teal-500" />
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-black text-foreground truncate">
@@ -932,7 +932,7 @@ export default function DashboardSidebar({ user }: DashboardSidebarProps) {
                 v2.1.0 • Elite Edition
               </span>
               <div className="flex items-center gap-1">
-                <div className="h-2 w-2 rounded-full bg-gradient-to-r from-emerald-400 to-teal-500" />
+                <div className="h-2 w-2 rounded-full bg-linear-to-r from-emerald-400 to-teal-500" />
                 <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400">
                   Live
                 </span>

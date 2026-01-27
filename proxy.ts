@@ -101,16 +101,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { auth } from "@/lib/auth";
 
-// 1. Configuration Constants
-const ROLE_DASHBOARDS: Record<string, string> = {
-  SUPER_ADMIN: "/admin",
-  ADMIN: "/admin",
-  TEACHER: "/teacher",
-  STUDENT: "/student",
-  PARENT: "/parent",
-  SUPPORT: "/support",
-};
-
+// Configuration Constants
 const PUBLIC_ROUTES = [
   "/",
   "/about",
@@ -119,9 +110,8 @@ const PUBLIC_ROUTES = [
   "/pricing",
   "/faculty",
   "/faq",
-  
-  
 ];
+
 const AUTH_ROUTES = [
   "/login",
   "/register",
@@ -133,18 +123,16 @@ export default async function proxy(request: NextRequest) {
   const session = await auth();
   const { pathname } = request.nextUrl;
 
-  // Helper: Get dashboard based on role
-  const getDashboard = (role: string) => ROLE_DASHBOARDS[role] || "/";
-
-  // 2. Identify Route Type
+  // Identify Route Types
   const isAuthRoute = AUTH_ROUTES.some((route) => pathname.startsWith(route));
   const isPublicRoute = PUBLIC_ROUTES.some(
-    (route) => pathname === route || pathname.startsWith(route),
+    (route) => pathname === route || pathname.startsWith(route + "/"),
   );
   const isPendingRoute = pathname.startsWith("/pending");
   const isStatusRoute = pathname.startsWith("/account-status");
+  const isDashboardRoute = pathname.startsWith("/dashboard");
 
-  // 3. Logic for Unauthenticated Users
+  // 1. Logic for Unauthenticated Users
   if (!session) {
     if (!isAuthRoute && !isPublicRoute) {
       const callbackUrl = encodeURIComponent(pathname);
@@ -155,17 +143,17 @@ export default async function proxy(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // 4. Logic for Authenticated Users
+  // 2. Logic for Authenticated Users
   const user = session.user;
   const userRole = user?.role || "STUDENT";
   const userStatus = user?.status || "PENDING";
 
-  // 4a. Redirect away from Auth routes (Login/Register) if already logged in
+  // 2a. Redirect away from Auth routes to dashboard
   if (isAuthRoute) {
-    return NextResponse.redirect(new URL(getDashboard(userRole), request.url));
+    return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
-  // 4b. Handle Account Status (Real-World Security)
+  // 2b. Handle Account Status
   if (userStatus === "SUSPENDED" || userStatus === "DEACTIVATED") {
     if (pathname !== "/account-status/suspended") {
       return NextResponse.redirect(
@@ -184,32 +172,66 @@ export default async function proxy(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // 4c. Handle Pending Approval (The Waiting Room)
+  // 2c. Handle Pending Approval
   if (userStatus === "PENDING" && !isPendingRoute && !isPublicRoute) {
     return NextResponse.redirect(new URL("/pending", request.url));
   }
 
-  // 4d. Prevent Approved users from seeing the Pending page
+  // 2d. Prevent Approved users from seeing Pending page
   if (userStatus === "APPROVED" && isPendingRoute) {
-    return NextResponse.redirect(new URL(getDashboard(userRole), request.url));
+    return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
-  // 5. Elite Role-Based Access Control (RBAC)
-  const roleProtectedRoutes = [
-    { path: "/admin", allowed: ["SUPER_ADMIN", "ADMIN"] },
-    { path: "/teacher", allowed: ["TEACHER"] },
-    { path: "/student", allowed: ["STUDENT"] },
-    { path: "/parent", allowed: ["PARENT"] },
-  ];
+  // 3. Role-Based Access Control for Dashboard Routes
+  if (isDashboardRoute) {
+    // Define which dashboard sub-routes each role can access
+    const ROLE_PERMISSIONS: Record<string, string[]> = {
+      SUPER_ADMIN: ["/dashboard", "/dashboard/admin", "/dashboard/super-admin"],
+      ADMIN: ["/dashboard", "/dashboard/admin"],
+      TEACHER: ["/dashboard", "/dashboard/teacher"],
+      STUDENT: ["/dashboard", "/dashboard/student"],
+      PARENT: ["/dashboard", "/dashboard/parent"],
+      SUPPORT: ["/dashboard", "/dashboard/support"],
+    };
 
-  for (const route of roleProtectedRoutes) {
-    if (pathname.startsWith(route.path)) {
-      if (!route.allowed.includes(userRole)) {
-        // Redirect to their proper dashboard if they try to "peep" into other roles
-        return NextResponse.redirect(
-          new URL(getDashboard(userRole), request.url),
-        );
-      }
+    // Get allowed routes for user's role
+    const allowedRoutes = ROLE_PERMISSIONS[userRole] || ["/dashboard"];
+
+    // Check if current path is allowed for this role
+    const isRouteAllowed = allowedRoutes.some(
+      (route) => pathname === route || pathname.startsWith(route + "/"),
+    );
+
+    if (!isRouteAllowed) {
+      // User trying to access a route not allowed for their role
+      return NextResponse.redirect(new URL("/dashboard", request.url));
+    }
+  }
+
+  // 4. Legacy route support (optional - remove if you don't need these)
+  // If you want to redirect old routes like /admin to /dashboard/admin
+  const LEGACY_ROUTE_MAP: Record<string, string> = {
+    "/admin": "/dashboard/admin",
+    "/teacher": "/dashboard/teacher",
+    "/student": "/dashboard/student",
+    "/parent": "/dashboard/parent",
+    "/support": "/dashboard/support",
+  };
+
+  if (LEGACY_ROUTE_MAP[pathname]) {
+    const newPath = LEGACY_ROUTE_MAP[pathname];
+    // Check if user has permission for this legacy route
+    const allowedLegacyRoutes = {
+      SUPER_ADMIN: ["/admin"],
+      ADMIN: ["/admin"],
+      TEACHER: ["/teacher"],
+      STUDENT: ["/student"],
+      PARENT: ["/parent"],
+      SUPPORT: ["/support"],
+    };
+
+    if (allowedLegacyRoutes[userRole]?.includes(pathname)) {
+      return NextResponse.redirect(new URL(newPath, request.url));
     }
   }
 
@@ -218,13 +240,6 @@ export default async function proxy(request: NextRequest) {
 
 export const config = {
   matcher: [
-    /*
-     * Match all request paths except:
-     * - api (internal API routes)
-     * - _next/static (static files)
-     * - _next/image (image optimization)
-     * - favicon.ico, sitemap.xml, robots.txt
-     */
     "/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|public).*)",
   ],
 };
