@@ -46,7 +46,7 @@ const navigation = [
       },
     ],
   },
-  { name: "Faculty", href: "/teachers" },
+  { name: "Faculty", href: "/faculty" },
   { name: "Admissions", href: "/pricing" },
 ];
 

@@ -48,7 +48,7 @@ export function CourseListClient({ dbPrograms }: { dbPrograms: any[] }) {
     <div className="space-y-12">
       {/* --- COMMAND CENTER (SEARCH & FILTERS) --- */}
       <Reveal delay={0.3}>
-        <div className="glass-surface p-6 rounded-[2rem] border shadow-xl space-y-6">
+        <div className="glass-surface p-6 rounded-4xl border shadow-xl space-y-6">
           <div className="flex flex-col lg:flex-row gap-6 items-center justify-between">
             {/* Search Architecture */}
             <div className="relative w-full lg:max-w-md group">

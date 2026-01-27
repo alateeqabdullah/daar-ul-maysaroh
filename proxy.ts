@@ -117,8 +117,10 @@ const PUBLIC_ROUTES = [
   "/contact",
   "/courses",
   "/pricing",
-  "/teachers",
+  "/faculty",
   "/faq",
+  
+  
 ];
 const AUTH_ROUTES = [
   "/login",
@@ -132,7 +134,7 @@ export default async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   // Helper: Get dashboard based on role
-  const getDashboard = (role: string) => ROLE_DASHBOARDS[role] || "/dashboard";
+  const getDashboard = (role: string) => ROLE_DASHBOARDS[role] || "/";
 
   // 2. Identify Route Type
   const isAuthRoute = AUTH_ROUTES.some((route) => pathname.startsWith(route));

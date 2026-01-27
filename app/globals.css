@@ -329,7 +329,7 @@ body {
 }
 
 @utility quran-monumental {
-  font-family: var(--font-quran);
+  font-family: var(--font-quran-arabic);
   direction: rtl;
   font-size: clamp(3.5rem, 2vw, 6rem);
   line-height: 1.8;

@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Background: Emerald Green Rounded Square -->
+  <rect width="512" height="512" rx="120" fill="#10b981" />
+  
+  <!-- Icon: Open Book (Quran) with subtle shadow -->
+  <g transform="translate(106, 136) scale(0.6)">
+    <!-- Book Pages -->
+    <path fill="#ffffff" d="M464 64H352c-44.2 0-80 35.8-80 80v288c0 20 28.2 27.8 39.4 10.8l20.4-42.8c9.6-20.2 30-33 52.8-33h79.4c17.7 0 32-14.3 32-32V96c0-17.7-14.3-32-32-32z" />
+    <path fill="#e2e8f0" d="M48 64h112c44.2 0 80 35.8 80 80v288c0 20-28.2 27.8-39.4 10.8l-20.4-42.8c-9.6-20.2-30-33-52.8-33H48c-17.7 0-32-14.3-32-32V96c0-17.7 14.3-32 32-32z" />
+    
+    <!-- Spine/Center Glow -->
+    <path fill="#d1fae5" d="M256 144c0-44.2-35.8-80-80-80H48C21.5 64 0 85.5 0 112v256c0 35.3 28.7 64 64 64h96c35.3 0 64-28.7 64-64V144z" opacity="0.3" />
+  </g>
+  
+  <!-- Accent: Crescent Moon (Top Right) -->
+  <path fill="#fbbf24" d="M380 80c-15 0-28 8-35 20 25 5 40 30 35 55 10-5 20-15 20-30 0-25-20-45-20-45z" />
+</svg>

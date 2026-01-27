@@ -1,6 +1,6 @@
 import { prisma } from "@/lib/prisma";
 import { Reveal } from "@/components/shared/section-animation";
-import { GraduationCap, Landmark } from "lucide-react";
+import { Landmark } from "lucide-react";
 import { CourseListClient } from "@/components/public/courses/course-list-client";
 
 const MOCK_DATA = [
@@ -64,14 +64,14 @@ export default async function CoursesPage() {
   return (
     <main className="pt-24 sm:pt-28 md:pt-32 lg:pt-36 xl:pt-40 pb-12 sm:pb-16 md:pb-20 bg-background relative overflow-hidden">
       {/* Immersive Background Lighting - Mobile Optimized */}
-      <div className="absolute top-0 right-0 w-[300px] h-[300px] sm:w-[400px] sm:h-[400px] md:w-[600px] md:h-[600px] lg:w-[800px] lg:h-[800px] bg-primary-700/5 blur-[40px] sm:blur-[60px] md:blur-[100px] lg:blur-[150px] -z-10 rounded-full translate-x-1/4 -translate-y-1/4" />
+      <div className="absolute top-0 right-0 w-[300px] h-[300px] sm:w-[400px] sm:h-[400px] md:w-[600px] md:h-[600px] lg:w-[800px] lg:h-[800px] bg-primary-700/5 blur-2xl sm:blur-[60px] md:blur-[100px] lg:blur-[150px] -z-10 rounded-full translate-x-1/4 -translate-y-1/4" />
       <div className="absolute bottom-0 left-0 w-[250px] h-[250px] sm:w-[350px] sm:h-[350px] md:w-[500px] md:h-[500px] lg:w-[600px] lg:h-[600px] bg-gold/5 blur-[30px] sm:blur-[50px] md:blur-[80px] lg:blur-[120px] -z-10 rounded-full -translate-x-1/4 translate-y-1/4" />
 
       <div className="container mx-auto px-4 sm:px-6">
         {/* --- INSTITUTIONAL PROSPECTUS HEADER --- */}
         <div className="max-w-4xl mb-12 sm:mb-16 md:mb-20 lg:mb-24 space-y-6 sm:space-y-8 md:space-y-10">
           <Reveal>
-            <div className="inline-flex items-center gap-2 sm:gap-3 px-4 py-2.5 sm:px-5 sm:py-2.5 rounded-xl sm:rounded-2xl glass-surface border border-primary-100/50 text-primary-700 text-xs sm:text-[10px] font-black uppercase tracking-wider sm:tracking-[0.3em] shadow-lg sm:shadow-xl min-h-[44px]">
+            <div className="inline-flex items-center gap-2 sm:gap-3 px-4 py-2.5 sm:px-5 sm:py-2.5 rounded-xl sm:rounded-2xl glass-surface border border-primary-100/50 text-primary-700 text-xs sm:text-[10px] font-black uppercase tracking-wider sm:tracking-[0.3em] shadow-lg sm:shadow-xl min-h-11">
               <Landmark className="w-4 h-4 sm:w-4 sm:h-4 animate-pulse" />
               Scholarly Curriculum 2026
             </div>
