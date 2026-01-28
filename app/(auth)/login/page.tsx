@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, Suspense, useRef } from "react";
+import { useState, useEffect, Suspense, useRef, useCallback } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
@@ -31,10 +31,18 @@ import {
 import { cn } from "@/lib/utils";
 
 const loginSchema = z.object({
-  email: z.string().email("Please enter a valid email address"),
-  password: z.string().min(1, "Password is required"),
+  email: z
+    .string()
+    .email("Please enter a valid email address")
+    .min(1, "Email is required")
+    .max(100, "Email is too long"),
+  password: z
+    .string()
+    .min(1, "Password is required")
+    .min(6, "Password must be at least 6 characters")
+    .max(50, "Password is too long"),
   rememberMe: z.boolean().default(false),
-  website: z.string().optional(),
+  website: z.string().max(0, "Invalid input").optional(), // Honeypot validation
 });
 
 type LoginFormData = z.infer<typeof loginSchema>;
@@ -44,18 +52,31 @@ function LoginForm() {
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") || "/dashboard";
   const emailInputRef = useRef<HTMLInputElement>(null);
+  const [isMounted, setIsMounted] = useState(false);
 
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loginAttempts, setLoginAttempts] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
+
+  // Check mobile on mount
+  useEffect(() => {
+    setIsMounted(true);
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
+  }, []);
 
   const {
     register,
     handleSubmit,
     control,
-    formState: { errors },
+    formState: { errors, isValid, isSubmitting },
     setValue,
+    watch,
+    trigger,
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -64,9 +85,31 @@ function LoginForm() {
       rememberMe: false,
       website: "",
     },
+    mode: "onChange", // Validate on change for better UX
   });
 
+  // Watch form values for real-time validation
+  const watchedFields = watch();
+
+  // Validate on mobile input
   useEffect(() => {
+    if (isMounted && isMobile) {
+      const timer = setTimeout(() => {
+        trigger();
+      }, 300);
+      return () => clearTimeout(timer);
+    }
+  }, [
+    watchedFields.email,
+    watchedFields.password,
+    isMobile,
+    trigger,
+    isMounted,
+  ]);
+
+  useEffect(() => {
+    if (!isMounted) return;
+
     const saved = localStorage.getItem("rememberedEmail");
     if (saved) {
       setValue("email", saved);
@@ -77,75 +120,104 @@ function LoginForm() {
     setTimeout(() => {
       emailInputRef.current?.focus();
     }, 100);
-  }, [setValue]);
+  }, [setValue, isMounted]);
 
-  const onSubmit = async (data: LoginFormData) => {
-    if (data.website) return;
-
-    if (loginAttempts >= 5) {
-      setError("Too many attempts. Please try again in 15 minutes.");
-      toast.error("Too many login attempts");
-      return;
-    }
-
-    setIsLoading(true);
-    setError(null);
-
-    try {
-      if (data.rememberMe) {
-        localStorage.setItem("rememberedEmail", data.email);
-      } else {
-        localStorage.removeItem("rememberedEmail");
+  const onSubmit = useCallback(
+    async (data: LoginFormData) => {
+      // Honeypot validation
+      if (data.website && data.website.trim() !== "") {
+        toast.error("Invalid request detected");
+        return;
       }
 
-      const result = await signIn("credentials", {
-        email: data.email,
-        password: data.password,
-        redirect: false,
-        callbackUrl,
-      });
+      if (loginAttempts >= 5) {
+        setError("Too many attempts. Please try again in 15 minutes.");
+        toast.error("Too many login attempts");
+        return;
+      }
 
-      if (result?.error) {
-        setLoginAttempts((prev) => prev + 1);
-        const errorMessages: Record<string, string> = {
-          CredentialsSignin: "Invalid email or password",
-          AccessDenied: "Your account needs activation",
-          OAuthAccountNotLinked: "Account not linked",
-        };
+      setIsLoading(true);
+      setError(null);
 
-        const msg =
-          errorMessages[result.error] || "An error occurred during sign in";
-        setError(msg);
-        toast.error(msg);
-      } else {
-        setLoginAttempts(0);
-        toast.success("Welcome back!", {
-          description: "Redirecting to your dashboard...",
+      try {
+        if (data.rememberMe) {
+          localStorage.setItem("rememberedEmail", data.email);
+        } else {
+          localStorage.removeItem("rememberedEmail");
+        }
+
+        const result = await signIn("credentials", {
+          email: data.email,
+          password: data.password,
+          redirect: false,
+          callbackUrl,
         });
-        router.push(callbackUrl);
-        router.refresh();
+
+        if (result?.error) {
+          setLoginAttempts((prev) => prev + 1);
+          const errorMessages: Record<string, string> = {
+            CredentialsSignin: "Invalid email or password",
+            AccessDenied: "Your account needs activation",
+            OAuthAccountNotLinked: "Account not linked",
+            Default: "An error occurred. Please try again.",
+          };
+
+          const msg = errorMessages[result.error] || errorMessages.Default;
+          setError(msg);
+          toast.error(msg);
+        } else {
+          setLoginAttempts(0);
+          toast.success("Welcome back!", {
+            description: "Redirecting to your dashboard...",
+          });
+          router.push(callbackUrl);
+          router.refresh();
+        }
+      } catch (err) {
+        setError("Network error. Please check your connection.");
+        toast.error("Network error");
+      } finally {
+        setIsLoading(false);
       }
-    } catch (err) {
-      setError("Network error. Please check your connection.");
-      toast.error("Network error");
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    },
+    [callbackUrl, loginAttempts, router],
+  );
+
+  // Handle enter key submission
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      if (e.key === "Enter" && !isLoading && isValid) {
+        handleSubmit(onSubmit)();
+      }
+    },
+    [isLoading, isValid, handleSubmit, onSubmit],
+  );
 
   return (
     <div className="glass-surface border border-primary-700/20 rounded-3xl sm:rounded-[2.5rem] overflow-hidden w-full max-w-[95vw] sm:max-w-lg shadow-xl sm:shadow-2xl relative">
-      {/* Mobile-optimized background elements */}
-      <div className="absolute top-0 right-0 w-16 h-16 sm:w-32 sm:h-32 bg-linear-to-bl from-primary-500/5 to-transparent rounded-full blur-lg sm:blur-xl -translate-y-8 sm:-translate-y-16 translate-x-8 sm:translate-x-16" />
-      <div className="absolute bottom-0 left-0 w-16 h-16 sm:w-32 sm:h-32 bg-linear-to-tr from-primary-500/5 to-transparent rounded-full blur-lg sm:blur-xl translate-y-8 sm:translate-y-16 -translate-x-8 sm:-translate-x-16" />
+      {/* Performance-optimized background elements */}
+      <div
+        className="absolute top-0 right-0 w-16 h-16 sm:w-32 sm:h-32 rounded-full blur-lg sm:blur-xl -translate-y-8 sm:-translate-y-16 translate-x-8 sm:translate-x-16"
+        style={{
+          background:
+            "linear-gradient(225deg, rgba(124, 58, 237, 0.05) 0%, transparent 100%)",
+        }}
+      />
+      <div
+        className="absolute bottom-0 left-0 w-16 h-16 sm:w-32 sm:h-32 rounded-full blur-lg sm:blur-xl translate-y-8 sm:translate-y-16 -translate-x-8 sm:-translate-x-16"
+        style={{
+          background:
+            "linear-gradient(45deg, rgba(124, 58, 237, 0.05) 0%, transparent 100%)",
+        }}
+      />
 
       <div className="relative z-10">
-        {/* Header - Mobile optimized spacing */}
+        {/* Header */}
         <div className="pt-6 sm:pt-8 md:pt-10 pb-4 sm:pb-6 px-4 sm:px-6 md:px-8 text-center border-b border-border/30">
           <Reveal>
             <div className="inline-flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 rounded-full bg-primary-700/10 border border-primary-700/20 mb-4 sm:mb-6">
               <Sparkles className="w-3 h-3 sm:w-4 sm:h-4 text-primary-700" />
-              <span className="text-[10px] sm:text-[11px] font-black text-primary-700 uppercase tracking-wider sm:tracking-[0.3em]">
+              <span className="text-[11px] sm:text-[12px] font-black text-primary-700 uppercase tracking-wider sm:tracking-[0.3em]">
                 SCHOLAR PORTAL
               </span>
               <Shield className="w-3 h-3 sm:w-4 sm:h-4 text-primary-700" />
@@ -161,40 +233,47 @@ function LoginForm() {
           </Reveal>
 
           <Reveal delay={0.2}>
-            <p className="text-xs sm:text-sm text-muted-foreground font-medium px-2">
+            <p className="text-sm sm:text-base text-muted-foreground font-medium px-2">
               Enter your credentials to access your learning journey
             </p>
           </Reveal>
         </div>
 
-        {/* Form - Mobile optimized padding and spacing */}
-        <form onSubmit={handleSubmit(onSubmit)} className="p-4 sm:p-6 md:p-8">
-          {/* Honeypot - Hidden but accessible for screen readers */}
-          <div className="sr-only">
-            <Label htmlFor="website">Website</Label>
+        {/* Form */}
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="p-4 sm:p-6 md:p-8"
+          onKeyDown={handleKeyDown}
+        >
+          {/* Honeypot - Hidden with better validation */}
+          <div className="sr-only" aria-hidden="true">
+            <Label htmlFor="website">Don't fill this out</Label>
             <Input
               {...register("website")}
               id="website"
               type="text"
               tabIndex={-1}
               autoComplete="off"
-              aria-hidden="true"
+              className="opacity-0 h-0"
             />
+            {errors.website && (
+              <p className="text-xs text-red-500">{errors.website.message}</p>
+            )}
           </div>
 
-          {/* Error Display - Mobile optimized */}
+          {/* Error Display */}
           <AnimatePresence mode="wait">
             {error && (
               <motion.div
                 initial={{ opacity: 0, y: -5 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.95 }}
-                className="mb-4 sm:mb-6 p-3 sm:p-4 rounded-lg sm:rounded-xl bg-linear-to-r from-red-50/50 to-red-100/30 dark:from-red-950/20 dark:to-red-900/10 border border-red-200 dark:border-red-900/30"
+                className="mb-4 sm:mb-6 p-3 sm:p-4 rounded-lg sm:rounded-xl border border-red-200 dark:border-red-900/30 bg-red-50/50 dark:bg-red-950/20"
                 role="alert"
               >
                 <div className="flex items-start gap-2 sm:gap-3">
                   <AlertCircle className="h-4 w-4 sm:h-5 sm:w-5 text-red-600 dark:text-red-400 shrink-0 mt-0.5" />
-                  <p className="text-xs sm:text-sm font-black text-red-700 dark:text-red-300 leading-tight">
+                  <p className="text-sm font-black text-red-700 dark:text-red-300 leading-tight">
                     {error}
                   </p>
                 </div>
@@ -203,9 +282,9 @@ function LoginForm() {
           </AnimatePresence>
 
           <div className="space-y-4 sm:space-y-6">
-            {/* Email Field - Fixed selection issue */}
+            {/* Email Field */}
             <Reveal delay={0.3}>
-              <div className="space-y-2 sm:space-y-3">
+              <div className="space-y-2">
                 <Label
                   htmlFor="email"
                   className="text-xs font-black uppercase tracking-widest text-primary-700"
@@ -213,37 +292,58 @@ function LoginForm() {
                   INSTITUTIONAL EMAIL
                 </Label>
                 <div className="relative">
-                  <Mail className="absolute left-3 sm:left-4 top-3 sm:top-3.5 h-4 w-4 sm:h-5 sm:w-5 text-primary-700 z-10" />
+                  <Mail className="absolute left-3 sm:left-4 top-3.5 h-4 w-4 sm:h-5 sm:w-5 text-primary-700 z-10 pointer-events-none" />
                   <Input
-                    {...register("email")}
+                    {...register("email", {
+                      onChange: () => {
+                        if (isMobile) trigger("email");
+                      },
+                    })}
                     ref={emailInputRef}
                     id="email"
                     type="email"
+                    inputMode="email"
+                    autoComplete="email"
                     placeholder="student@almaysaroh.edu"
                     className={cn(
-                      "pl-9 sm:pl-12 h-11 sm:h-12 border border-border bg-background text-sm sm:text-base font-medium",
-                      "focus:border-primary-700 focus:ring-2 focus:ring-primary-500/20 transition-all",
-                      "rounded-lg sm:rounded-xl",
-                      errors.email && "border-red-500 focus:border-red-500",
+                      "pl-10 sm:pl-12 h-12 sm:h-14 border-2",
+                      "text-base sm:text-lg font-medium",
+                      "rounded-xl sm:rounded-2xl",
+                      "transition-all duration-200",
+                      errors.email
+                        ? "border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-500/20"
+                        : "border-border focus:border-primary-700 focus:ring-2 focus:ring-primary-500/20",
                     )}
                     disabled={isLoading}
-                    aria-describedby={errors.email ? "email-error" : undefined}
+                    aria-invalid={!!errors.email}
+                    aria-describedby={
+                      errors.email ? "email-error" : "email-help"
+                    }
                   />
                 </div>
-                {errors.email && (
-                  <p
-                    id="email-error"
-                    className="text-xs text-red-500 font-black mt-1"
-                  >
-                    {errors.email.message}
-                  </p>
-                )}
+                <div className="min-h-[20px]">
+                  {errors.email ? (
+                    <p
+                      id="email-error"
+                      className="text-xs text-red-500 font-black mt-1 animate-in fade-in"
+                    >
+                      {errors.email.message}
+                    </p>
+                  ) : (
+                    <p
+                      id="email-help"
+                      className="text-xs text-muted-foreground mt-1"
+                    >
+                      Enter your institutional email address
+                    </p>
+                  )}
+                </div>
               </div>
             </Reveal>
 
-            {/* Password Field - Fixed selection issue */}
+            {/* Password Field */}
             <Reveal delay={0.4}>
-              <div className="space-y-2 sm:space-y-3">
+              <div className="space-y-2">
                 <div className="flex items-center justify-between">
                   <Label
                     htmlFor="password"
@@ -253,36 +353,48 @@ function LoginForm() {
                   </Label>
                   <Link
                     href="/forgot-password"
-                    className="text-xs text-primary-700 hover:text-primary-800 font-black transition-all hover:underline"
+                    className="text-xs text-primary-700 hover:text-primary-800 font-black transition-all hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 rounded"
+                    tabIndex={0}
                   >
                     FORGOT?
                   </Link>
                 </div>
                 <div className="relative">
-                  <Lock className="absolute left-3 sm:left-4 top-3 sm:top-3.5 h-4 w-4 sm:h-5 sm:w-5 text-primary-700 z-10" />
+                  <Lock className="absolute left-3 sm:left-4 top-3.5 h-4 w-4 sm:h-5 sm:w-5 text-primary-700 z-10 pointer-events-none" />
                   <Input
-                    {...register("password")}
+                    {...register("password", {
+                      onChange: () => {
+                        if (isMobile) trigger("password");
+                      },
+                    })}
                     id="password"
                     type={showPassword ? "text" : "password"}
+                    inputMode="text"
+                    autoComplete="current-password"
                     placeholder="Enter your password"
                     className={cn(
-                      "pl-9 sm:pl-12 pr-10 sm:pr-12 h-11 sm:h-12 border border-border bg-background text-sm sm:text-base font-medium",
-                      "focus:border-primary-700 focus:ring-2 focus:ring-primary-500/20 transition-all",
-                      "rounded-lg sm:rounded-xl",
-                      errors.password && "border-red-500 focus:border-red-500",
+                      "pl-10 sm:pl-12 pr-12 h-12 sm:h-14 border-2",
+                      "text-base sm:text-lg font-medium",
+                      "rounded-xl sm:rounded-2xl",
+                      "transition-all duration-200",
+                      errors.password
+                        ? "border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-500/20"
+                        : "border-border focus:border-primary-700 focus:ring-2 focus:ring-primary-500/20",
                     )}
                     disabled={isLoading}
+                    aria-invalid={!!errors.password}
                     aria-describedby={
-                      errors.password ? "password-error" : undefined
+                      errors.password ? "password-error" : "password-help"
                     }
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 sm:right-4 top-3 sm:top-3.5 text-primary-700 hover:text-primary-800 transition-colors p-1 rounded focus:outline-none focus:ring-2 focus:ring-primary-500/50"
+                    className="absolute right-3 sm:right-4 top-3.5 text-primary-700 hover:text-primary-800 transition-colors p-1.5 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500/30 active:scale-95"
                     aria-label={
                       showPassword ? "Hide password" : "Show password"
                     }
+                    aria-pressed={showPassword}
                     disabled={isLoading}
                     tabIndex={0}
                   >
@@ -295,28 +407,37 @@ function LoginForm() {
                         transition={{ duration: 0.15 }}
                       >
                         {showPassword ? (
-                          <EyeOff className="h-4 w-4 sm:h-5 sm:w-5" />
+                          <EyeOff className="h-5 w-5" />
                         ) : (
-                          <Eye className="h-4 w-4 sm:h-5 sm:w-5" />
+                          <Eye className="h-5 w-5" />
                         )}
                       </motion.div>
                     </AnimatePresence>
                   </button>
                 </div>
-                {errors.password && (
-                  <p
-                    id="password-error"
-                    className="text-xs text-red-500 font-black mt-1"
-                  >
-                    {errors.password.message}
-                  </p>
-                )}
+                <div className="min-h-[20px]">
+                  {errors.password ? (
+                    <p
+                      id="password-error"
+                      className="text-xs text-red-500 font-black mt-1 animate-in fade-in"
+                    >
+                      {errors.password.message}
+                    </p>
+                  ) : (
+                    <p
+                      id="password-help"
+                      className="text-xs text-muted-foreground mt-1"
+                    >
+                      Minimum 6 characters required
+                    </p>
+                  )}
+                </div>
               </div>
             </Reveal>
 
-            {/* Remember Me - Mobile optimized */}
+            {/* Remember Me */}
             <Reveal delay={0.5}>
-              <div className="flex items-center gap-3 p-3 sm:p-4 rounded-lg sm:rounded-xl bg-muted/50 border border-border">
+              <div className="flex items-center gap-3 p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-muted/30 border border-border">
                 <Controller
                   name="rememberMe"
                   control={control}
@@ -326,58 +447,74 @@ function LoginForm() {
                       checked={field.value}
                       onCheckedChange={field.onChange}
                       disabled={isLoading}
-                      className="h-4 w-4 sm:h-5 sm:w-5 data-[state=checked]:bg-primary-700 data-[state=checked]:border-primary-700"
+                      className="h-5 w-5 sm:h-6 sm:w-6 data-[state=checked]:bg-primary-700 data-[state=checked]:border-primary-700"
+                      aria-label="Remember me on this device"
                     />
                   )}
                 />
                 <Label
                   htmlFor="rememberMe"
-                  className="text-xs sm:text-sm font-black text-foreground cursor-pointer select-none grow leading-tight"
+                  className="text-sm sm:text-base font-black text-foreground cursor-pointer select-none grow leading-tight"
                 >
                   Keep me signed in on this device
                 </Label>
               </div>
             </Reveal>
 
-            {/* Submit Button - Mobile optimized */}
+            {/* Submit Button */}
             <Reveal delay={0.6}>
               <Button
                 type="submit"
-                disabled={isLoading}
-                className="w-full h-11 sm:h-12 md:h-14 rounded-full font-black bg-primary-700 hover:bg-primary-800 text-white shadow-lg hover:shadow-xl transition-all duration-300 group relative overflow-hidden min-h-11"
+                disabled={isLoading || !isValid || isSubmitting}
+                className={cn(
+                  "w-full h-14 sm:h-16 rounded-full font-black text-white",
+                  "shadow-lg hover:shadow-xl transition-all duration-300",
+                  "relative overflow-hidden",
+                  "min-h-[56px] sm:min-h-[64px]",
+                  isLoading || !isValid
+                    ? "bg-primary-700/70 cursor-not-allowed"
+                    : "bg-primary-700 hover:bg-primary-800",
+                )}
               >
-                <span className="relative z-10 flex items-center justify-center gap-2 sm:gap-3 text-sm sm:text-base">
+                <span className="relative z-10 flex items-center justify-center gap-3 text-base sm:text-lg">
                   {isLoading ? (
                     <>
-                      <Loader2 className="h-4 w-4 sm:h-5 sm:w-5 animate-spin" />
+                      <Loader2 className="h-5 w-5 animate-spin" />
                       <span>ACCESSING...</span>
                     </>
                   ) : (
                     <>
                       <span>ACCESS PORTAL</span>
-                      <ArrowRight className="h-3.5 w-3.5 sm:h-4 sm:w-4 transition-transform duration-300 group-hover:translate-x-1 sm:group-hover:translate-x-2" />
+                      <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-2" />
                     </>
                   )}
                 </span>
+                {/* Shimmer effect only when enabled */}
+                {!isLoading && isValid && (
+                  <div className="absolute inset-0 -z-10 overflow-hidden rounded-full">
+                    <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -skew-x-12 animate-shimmer" />
+                  </div>
+                )}
               </Button>
             </Reveal>
           </div>
         </form>
 
-        {/* Footer - Mobile optimized */}
-        <div className="px-4 sm:px-6 md:px-8 pb-6 sm:pb-8 pt-3 sm:pt-4 border-t border-border/30">
+        {/* Footer */}
+        <div className="px-4 sm:px-6 md:px-8 pb-6 sm:pb-8 pt-4 sm:pt-6 border-t border-border/30">
           <Reveal delay={0.7}>
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
-              <p className="text-xs sm:text-sm text-muted-foreground font-medium text-center sm:text-left">
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+              <p className="text-sm text-muted-foreground font-medium text-center sm:text-left">
                 Need an institutional account?
               </p>
               <Link href="/register" className="w-full sm:w-auto">
                 <Button
                   variant="outline"
-                  className="w-full rounded-full px-4 sm:px-6 py-2.5 sm:py-3 font-black border border-primary-700/30 hover:bg-primary-700/10 text-xs sm:text-sm min-h-11"
+                  className="w-full rounded-full px-6 sm:px-8 py-3 sm:py-4 font-black border-2 border-primary-700/30 hover:bg-primary-700/10 text-sm sm:text-base min-h-[48px] sm:min-h-[52px]"
+                  tabIndex={0}
                 >
-                  <span className="flex items-center gap-1.5 sm:gap-2">
-                    <BookMarked className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+                  <span className="flex items-center gap-2">
+                    <BookMarked className="h-4 w-4 sm:h-5 sm:w-5" />
                     REQUEST ACCESS
                   </span>
                 </Button>
@@ -394,46 +531,76 @@ export default function LoginPage() {
   const [reducedMotion, setReducedMotion] = useState(false);
 
   useEffect(() => {
-    setReducedMotion(
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches,
-    );
+    // Check for reduced motion preference
+    const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setReducedMotion(mediaQuery.matches);
+
+    const handleChange = (e: MediaQueryListEvent) =>
+      setReducedMotion(e.matches);
+    mediaQuery.addEventListener("change", handleChange);
+    return () => mediaQuery.removeEventListener("change", handleChange);
   }, []);
 
   return (
     <div className="relative min-h-screen bg-background overflow-hidden">
-      {/* Mobile-optimized background */}
-      <div className="absolute inset-0 bg-linear-to-b from-background via-background to-primary-50/5 dark:to-primary-950/10" />
+      {/* Optimized background */}
+      <div
+        className="absolute inset-0"
+        style={{
+          background:
+            "linear-gradient(to bottom, hsl(var(--background)) 0%, hsl(var(--background)) 50%, rgba(124, 58, 237, 0.03) 100%)",
+        }}
+      />
 
-      {/* Subtle pattern - lighter on mobile */}
-      <div className="absolute inset-0 opacity-[0.01] sm:opacity-[0.015] bg-[url('/islamic-pattern.svg')] bg-center bg-repeat bg-size-[200px] sm:bg-size-[300px]" />
+      {/* Subtle pattern - only on desktop */}
+      <div
+        className="hidden sm:block absolute inset-0 opacity-[0.015] bg-[url('/islamic-pattern.svg')] bg-center bg-repeat"
+        style={{ backgroundSize: "300px" }}
+      />
 
-      {/* Mobile-optimized floating elements */}
+      {/* Conditional floating elements */}
       {!reducedMotion && (
         <>
-          <div className="absolute top-10 left-4 w-40 h-40 sm:w-64 sm:h-64 bg-linear-to-br from-primary-700/5 to-transparent rounded-full blur-2xl sm:blur-3xl" />
-          <div className="absolute bottom-10 right-4 w-48 h-48 sm:w-96 sm:h-96 bg-linear-to-tl from-primary-700/5 to-transparent rounded-full blur-2xl sm:blur-3xl" />
+          <div
+            className="absolute top-10 left-4 w-40 h-40 sm:w-64 sm:h-64 rounded-full blur-2xl sm:blur-3xl"
+            style={{
+              background:
+                "radial-gradient(circle at 30% 30%, rgba(124, 58, 237, 0.08) 0%, transparent 70%)",
+            }}
+          />
+          <div
+            className="absolute bottom-10 right-4 w-48 h-48 sm:w-96 sm:h-96 rounded-full blur-2xl sm:blur-3xl"
+            style={{
+              background:
+                "radial-gradient(circle at 70% 70%, rgba(124, 58, 237, 0.08) 0%, transparent 70%)",
+            }}
+          />
         </>
       )}
 
-      {/* Main Content - Mobile optimized */}
-      <div className="container mx-auto flex items-center justify-center px-3 sm:px-4 py-4 sm:py-6 md:py-8 min-h-screen relative z-10">
-        <div className="w-full max-w-full sm:max-w-lg space-y-4 sm:space-y-6 md:space-y-8">
-          {/* Institutional Header - Mobile optimized */}
+      {/* Main Content */}
+      <div className="container mx-auto flex items-center justify-center px-4 sm:px-6 py-6 sm:py-8 md:py-12 min-h-screen relative z-10">
+        <div className="w-full max-w-full sm:max-w-lg space-y-6 sm:space-y-8 md:space-y-10">
+          {/* Institutional Header */}
           <Reveal>
-            <div className="flex flex-col items-center text-center space-y-3 sm:space-y-4">
-              <Link href="/" className="group" aria-label="Al-Maysaroh Home">
-                <div className="mx-auto mb-3 sm:mb-4 flex h-14 w-14 sm:h-16 sm:w-16 md:h-20 md:w-20 items-center justify-center rounded-xl sm:rounded-2xl bg-linear-to-br from-primary-700 to-primary-800 text-white shadow-lg sm:shadow-xl group-hover:rotate-3 sm:group-hover:rotate-6 transition-transform duration-300">
-                  <BookOpen className="h-7 w-7 sm:h-8 sm:w-8 md:h-10 md:w-10" />
+            <div className="flex flex-col items-center text-center space-y-4 sm:space-y-6">
+              <Link
+                href="/"
+                className="group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 rounded-2xl"
+                aria-label="Al-Maysaroh Home"
+              >
+                <div className="mx-auto mb-4 sm:mb-6 flex h-16 w-16 sm:h-20 sm:w-20 md:h-24 md:w-24 items-center justify-center rounded-2xl bg-gradient-to-br from-primary-700 to-primary-800 text-white shadow-lg sm:shadow-xl group-hover:rotate-3 transition-transform duration-300">
+                  <BookOpen className="h-8 w-8 sm:h-10 sm:w-10 md:h-12 md:w-12" />
                 </div>
-                <h1 className="text-2xl sm:text-3xl md:text-4xl font-black tracking-tighter font-heading text-foreground uppercase leading-tight">
+                <h1 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter font-heading text-foreground uppercase leading-tight">
                   AL-MAYSAROH
                 </h1>
-                <div className="flex items-center justify-center gap-1.5 sm:gap-2 mt-2">
-                  <div className="h-px w-4 sm:w-6 bg-linear-to-r from-transparent to-primary-700" />
-                  <p className="text-primary-700 font-black uppercase tracking-wider sm:tracking-[0.3em] text-[9px] sm:text-[10px] md:text-[11px]">
+                <div className="flex items-center justify-center gap-2 sm:gap-3 mt-3">
+                  <div className="h-px w-6 sm:w-8 bg-gradient-to-r from-transparent to-primary-700" />
+                  <p className="text-primary-700 font-black uppercase tracking-wider sm:tracking-[0.3em] text-xs sm:text-sm">
                     INTERNATIONAL INSTITUTE
                   </p>
-                  <div className="h-px w-4 sm:w-6 bg-linear-to-l from-transparent to-primary-700" />
+                  <div className="h-px w-6 sm:w-8 bg-gradient-to-l from-transparent to-primary-700" />
                 </div>
               </Link>
             </div>
@@ -442,29 +609,29 @@ export default function LoginPage() {
           {/* Login Card */}
           <Suspense
             fallback={
-              <div className="glass-surface border border-primary-700/20 rounded-3xl h-[500px] sm:h-[550px] animate-pulse" />
+              <div className="glass-surface border border-primary-700/20 rounded-3xl h-[580px] sm:h-[620px] animate-pulse" />
             }
           >
             <LoginForm />
           </Suspense>
 
-          {/* Security Footer - Mobile optimized */}
+          {/* Security Footer */}
           <Reveal delay={0.8}>
-            <div className="text-center space-y-3 sm:space-y-4">
-              <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 text-xs sm:text-sm text-muted-foreground font-medium">
-                <div className="flex items-center gap-1.5 sm:gap-2">
-                  <Shield className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-primary-700" />
+            <div className="text-center space-y-4 sm:space-y-6">
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-6 text-sm sm:text-base text-muted-foreground font-medium">
+                <div className="flex items-center gap-2">
+                  <Shield className="h-4 w-4 sm:h-5 sm:w-5 text-primary-700" />
                   <span>End-to-End Encrypted</span>
                 </div>
-                <div className="hidden sm:block h-4 w-px bg-border" />
-                <div className="sm:hidden h-px w-16 bg-border/50 mx-auto" />
-                <div className="flex items-center gap-1.5 sm:gap-2">
-                  <GraduationCap className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-primary-700" />
+                <div className="hidden sm:block h-5 w-px bg-border" />
+                <div className="sm:hidden h-px w-20 bg-border/50 mx-auto" />
+                <div className="flex items-center gap-2">
+                  <GraduationCap className="h-4 w-4 sm:h-5 sm:w-5 text-primary-700" />
                   <span>Academic Integrity</span>
                 </div>
               </div>
 
-              <p className="text-[9px] sm:text-[10px] text-muted-foreground font-black uppercase tracking-wider sm:tracking-[0.3em]">
+              <p className="text-xs sm:text-sm text-muted-foreground font-black uppercase tracking-wider sm:tracking-[0.3em]">
                 &copy; {new Date().getFullYear()} AL-MAYSAROH &bull; ALL RIGHTS
                 RESERVED
               </p>
@@ -475,15 +642,6 @@ export default function LoginPage() {
     </div>
   );
 }
-
-
-
-
-
-
-
-
-
 
 
 
