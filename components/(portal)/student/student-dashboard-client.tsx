@@ -1,318 +1,442 @@
 "use client";
 
-import { motion } from "framer-motion";
-import {
-  AlertCircle,
-  ArrowRight,
-  Bell,
-  BookOpen,
-  CheckCircle2,
-  ChevronRight,
-  Clock,
-  CreditCard,
-  Download,
-  FileText,
-  GraduationCap,
-  Search,
-  Sparkles,
-  Video,
-  Zap
-} from "lucide-react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { motion, AnimatePresence } from "framer-motion";
+import { 
+  BookOpen, Calendar, Clock, Award, Video, FileText, 
+  TrendingUp, Download, CreditCard, ChevronRight, 
+  Bell, Search, Settings, ArrowRight, Play,
+  CheckCircle2, AlertCircle, Sparkles, Zap, GraduationCap, 
+  X, UploadCloud, Heart, Star, Map, History, ShieldCheck,
+  MoreHorizontal, Plus, Headphones, MessageSquare, Wallet
+} from "lucide-react";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
+import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { toast } from "sonner";
+import { cn } from "@/lib/utils";
+
+// --- TYPES ---
+import { EnrollmentStatus, AttendanceStatus, SubmissionStatus, PrayerType, PrayerStatus } from "@/app/generated/prisma";
 
 // --- ANIMATION VARIANTS ---
-const container = {
+const staggerContainer = {
   hidden: { opacity: 0 },
   show: { opacity: 1, transition: { staggerChildren: 0.05 } }
 };
 
-const item = {
+const fadeInUp = {
   hidden: { y: 20, opacity: 0 },
   show: { y: 0, opacity: 1, transition: { type: "spring", stiffness: 100 } }
 };
 
 export default function StudentDashboardClient({ data }: { data: any }) {
   const router = useRouter();
+  
+  // MODAL & INTERACTION STATE
+  const [activeView, setActiveView] = useState<string | null>(null);
+  const [selectedItem, setSelectedItem] = useState<any>(null);
+  const [currentTime, setCurrentTime] = useState(new Date());
 
-  // --- FUNCTIONAL HANDLERS ---
-  const handleJoinClass = (url: string | null) => {
-    if (!url) return toast.error("Class link not active yet. Check back 5 mins before start.");
-    toast.success("Opening Live Classroom...");
-    window.open(url, "_blank");
+  useEffect(() => {
+    const timer = setInterval(() => setCurrentTime(new Date()), 1000);
+    return () => clearInterval(timer);
+  }, []);
+
+  // --- ACTIONS ---
+  const handleAction = (type: string, payload?: any) => {
+    setSelectedItem(payload);
+    setActiveView(type);
   };
 
-  const handleDownload = (fileName: string) => {
-    toast.promise(new Promise((res) => setTimeout(res, 2000)), {
-      loading: `Downloading ${fileName}...`,
-      success: "Successfully saved to device!",
-      error: "Download failed.",
-    });
-  };
-
-  const navigateTo = (path: string) => {
-    toast.loading("Navigating...");
-    router.push(path);
+  const closeOverlay = () => {
+    setActiveView(null);
+    setSelectedItem(null);
   };
 
   return (
-    <div className="min-h-screen bg-[#FDFDFD] dark:bg-[#050505] pb-20">
+    <div className="min-h-screen bg-[#F8F9FB] dark:bg-[#020202] pb-24 selection:bg-primary/30">
       
-      {/* 1. ELITE GLOBAL HEADER */}
-      {/* <header className="sticky top-0 z-50 w-full border-b bg-white/60 dark:bg-black/60 backdrop-blur-2xl px-4 md:px-8 py-4">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <div className="h-10 w-10 bg-primary rounded-xl flex items-center justify-center shadow-lg shadow-primary/20">
+      {/* 1. SPATIAL TOP NAVIGATION */}
+      <header className="sticky top-0 z-[60] w-full border-b bg-white/70 dark:bg-black/70 backdrop-blur-xl px-4 md:px-8 py-3">
+        <div className="max-w-[1600px] mx-auto flex items-center justify-between">
+          <div className="flex items-center gap-6">
+            <div className="h-10 w-10 bg-primary rounded-2xl flex items-center justify-center shadow-lg shadow-primary/20 rotate-3">
               <GraduationCap className="text-white h-6 w-6" />
             </div>
-            <div className="hidden sm:block">
-              <h2 className="text-sm font-black tracking-tighter uppercase leading-none">Academy.</h2>
-              <p className="text-[10px] text-muted-foreground font-bold tracking-[0.2em] uppercase">Student Portal</p>
+            <div className="hidden lg:block">
+              <h1 className="text-lg font-black tracking-tighter uppercase leading-none">Al-Ateeq Elite</h1>
+              <p className="text-[10px] text-muted-foreground font-black tracking-[0.3em] uppercase opacity-60">Command Center</p>
+            </div>
+          </div>
+
+          <div className="flex-1 max-w-xl mx-10 hidden md:block">
+            <div className="relative group">
+               <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+               <input 
+                 placeholder="Search Quran, Assignments, or Schedule (⌘K)" 
+                 className="w-full pl-12 h-11 rounded-2xl bg-secondary/40 border-none text-sm focus:ring-2 ring-primary/20 transition-all outline-none" 
+               />
             </div>
           </div>
 
           <div className="flex items-center gap-2 md:gap-4">
-            <div className="hidden md:flex relative group">
-               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
-               <input 
-                 placeholder="Search commands..." 
-                 className="pl-10 h-10 w-64 rounded-full bg-secondary/50 border-none text-sm focus:ring-2 ring-primary/20 transition-all outline-none" 
-               />
-            </div>
-            <Button variant="ghost" size="icon" className="rounded-full relative">
+            <Badge variant="outline" className="hidden xl:flex border-primary/20 bg-primary/5 rounded-full px-4 h-9 items-center gap-2 font-bold text-primary">
+              <div className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
+              {currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+            </Badge>
+            <Button variant="ghost" size="icon" className="rounded-2xl bg-secondary/40 h-10 w-10">
               <Bell className="h-5 w-5" />
-              <span className="absolute top-2.5 right-2.5 h-2 w-2 bg-rose-500 rounded-full ring-2 ring-background" />
             </Button>
-            <Avatar onClick={() => navigateTo("/dashboard/student/profile")} className="h-10 w-10 border-2 border-background shadow-md cursor-pointer hover:scale-105 transition-transform">
+            <Avatar onClick={() => router.push('/profile')} className="h-11 w-11 border-2 border-background shadow-xl cursor-pointer hover:scale-110 transition-transform">
               <AvatarImage src={data.user.image} />
-              <AvatarFallback>{data.user.name[0]}</AvatarFallback>
+              <AvatarFallback className="font-black bg-primary text-white">{data.user.name[0]}</AvatarFallback>
             </Avatar>
           </div>
         </div>
-      </header> */}
+      </header>
 
       <motion.main 
-        variants={container} 
+        variants={staggerContainer} 
         initial="hidden" 
         animate="show" 
-        className="max-w-7xl mx-auto px-4 md:px-8 mt-10 space-y-10"
+        className="max-w-[1600px] mx-auto px-4 md:px-8 mt-8 space-y-8"
       >
-        {/* 2. HERO SECTION */}
-        <section className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
-          <div className="space-y-1">
-            <motion.div variants={item} className="flex items-center gap-2 text-primary font-bold text-xs uppercase tracking-widest">
-              <Sparkles className="h-3 w-3" /> Dashboard Overview
+        {/* 2. DYNAMIC HERO SECTION */}
+        <section className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-end">
+          <div className="lg:col-span-8 space-y-2">
+            <motion.div variants={fadeInUp} className="flex items-center gap-2 text-primary font-black text-xs uppercase tracking-widest">
+              <Sparkles className="h-3 w-3" /> Spiritual Productivity: High
             </motion.div>
-            <motion.h1 variants={item} className="text-4xl md:text-5xl font-black tracking-tight text-slate-900 dark:text-white">
-              Assalamu Alaikum, <span className="text-primary">{data.user.name.split(' ')[0]}</span>.
-            </motion.h1>
-            <motion.p variants={item} className="text-muted-foreground font-medium text-lg italic-none">
-              You're currently on a <span className="text-foreground font-bold italic underline decoration-primary/30">7-day learning streak</span>.
+            <motion.h2 variants={fadeInUp} className="text-4xl md:text-6xl font-black tracking-tight leading-[0.9]">
+              Marhaba, <span className="text-primary italic">{data.user.name.split(' ')[0]}</span>.
+            </motion.h2>
+            <motion.p variants={fadeInUp} className="text-muted-foreground font-medium text-lg max-w-2xl">
+              Today is <span className="text-foreground font-bold underline decoration-primary/40 underline-offset-4">Thursday, 29th Rajab</span>. You have 2 classes today.
             </motion.p>
           </div>
-          <motion.div variants={item} className="flex gap-3 w-full md:w-auto">
-            <Button 
-              onClick={() => navigateTo("/dashboard/student/classes")}
-              className="flex-1 md:flex-none rounded-2xl h-14 px-8 font-bold shadow-2xl shadow-primary/20 bg-primary hover:bg-primary/90 transition-all active:scale-95"
-            >
-              Learning Path <ArrowRight className="ml-2 h-4 w-4" />
+          <div className="lg:col-span-4 flex gap-3 w-full">
+            <Button onClick={() => handleAction('schedule')} className="flex-1 h-14 rounded-[1.5rem] font-black shadow-2xl shadow-primary/20 bg-primary text-white hover:bg-primary/90 transition-all">
+              Full Schedule <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
-          </motion.div>
+            <Button variant="secondary" className="h-14 w-14 rounded-[1.5rem] p-0 bg-white shadow-xl">
+              <MessageSquare className="h-6 w-6" />
+            </Button>
+          </div>
         </section>
 
-        {/* 3. KPI BENTO STRIP */}
-        <section className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          {[
-            { label: "Attendance", val: `${data.stats.attendance}%`, icon: CheckCircle2, col: "text-emerald-500", bg: "bg-emerald-500/10" },
-            { label: "Due Tasks", val: data.stats.assignments, icon: Zap, col: "text-amber-500", bg: "bg-amber-500/10" },
-            { label: "Active Nodes", val: data.stats.activeCourses, icon: BookOpen, col: "text-blue-500", bg: "bg-blue-500/10" },
-            { label: "Balance", val: data.stats.walletBalance > 0 ? `$${data.stats.walletBalance}` : "Cleared", icon: CreditCard, col: "text-rose-500", bg: "bg-rose-500/10" },
-          ].map((s) => (
-            <motion.div key={s.label} variants={item}>
-              <Card className="border-none bg-background/40 backdrop-blur-md shadow-sm rounded-4xl overflow-hidden group hover:shadow-xl transition-all border border-transparent hover:border-primary/20">
-                <CardContent className="p-5 flex flex-col md:flex-row items-center gap-4 text-center md:text-left">
-                   <div className={cn("p-4 rounded-2xl transition-all group-hover:rotate-12", s.bg, s.col)}>
-                      <s.icon className="h-6 w-6" />
-                   </div>
-                   <div>
-                      <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">{s.label}</p>
-                      <p className="text-xl font-black">{s.val}</p>
-                   </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-          ))}
-        </section>
-
-        {/* 4. MAIN DASHBOARD GRID */}
+        {/* 3. THE BENTO COMMAND GRID */}
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           
-          {/* LEFT COLUMN: PRIMARY FOCUS (8 COLS) */}
+          {/* LEFT: CORE ACADEMIC & SPIRITUAL (8 COLS) */}
           <div className="lg:col-span-8 space-y-6">
             
-            {/* QURAN PROGRESS HERO */}
-            <motion.div variants={item}>
-              <Card className="border-none bg-slate-900 text-white rounded-[2.5rem] shadow-2xl overflow-hidden relative group">
-                <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:scale-125 transition-transform duration-700">
-                  <BookOpen className="h-64 w-64" />
+            {/* KPI STRIP - INTELLIGENT ANALYTICS */}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+               {[
+                 { label: "Attendance", val: `${data.stats.attendance}%`, trend: "+2%", icon: CheckCircle2, col: "text-emerald-500", bg: "bg-emerald-500/10" },
+                 { label: "Tasks", val: data.stats.assignments, trend: "4 Overdue", icon: Zap, col: "text-amber-500", bg: "bg-amber-500/10" },
+                 { label: "GPA", val: "3.85", trend: "Elite", icon: Award, col: "text-blue-500", bg: "bg-blue-500/10" },
+                 { label: "Balance", val: data.stats.walletBalance > 0 ? `$${data.stats.walletBalance}` : "Clear", icon: Wallet, col: "text-rose-500", bg: "bg-rose-500/10" },
+               ].map((s) => (
+                 <motion.div key={s.label} variants={fadeInUp}>
+                   <Card className="border-none shadow-sm rounded-3xl bg-white/50 dark:bg-zinc-900/50 backdrop-blur-md group hover:shadow-xl transition-all">
+                      <CardContent className="p-4 flex flex-col gap-3">
+                         <div className={cn("h-10 w-10 rounded-xl flex items-center justify-center", s.bg, s.col)}>
+                            <s.icon className="h-5 w-5" />
+                         </div>
+                         <div>
+                            <p className="text-[10px] font-black uppercase text-muted-foreground tracking-tighter">{s.label}</p>
+                            <p className="text-xl font-black">{s.val}</p>
+                         </div>
+                      </CardContent>
+                   </Card>
+                 </motion.div>
+               ))}
+            </div>
+
+            {/* THE MASTER HIFZ BENTO */}
+            <motion.div variants={fadeInUp}>
+              <Card 
+                onClick={() => handleAction('hifz')}
+                className="cursor-pointer border-none bg-slate-900 text-white rounded-[2.5rem] shadow-2xl overflow-hidden relative group h-[340px]"
+              >
+                <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity duration-1000 rotate-12">
+                  <BookOpen className="h-[400px] w-[400px]" />
                 </div>
-                <CardContent className="p-8 md:p-12 relative z-10">
-                   <div className="flex flex-col md:flex-row justify-between items-start gap-6">
+                <CardContent className="p-10 relative z-10 flex flex-col h-full justify-between">
+                   <div className="flex justify-between items-start">
                       <div className="space-y-4">
-                        <Badge className="bg-primary/20 text-primary border-none font-black px-4 py-1">Level: {data.hifz.level || "Mastery"}</Badge>
-                        <h3 className="text-4xl md:text-5xl font-black tracking-tighter">Surah {data.hifz.currentSurah}</h3>
-                        <p className="text-slate-400 text-lg font-medium">Currently Memorizing • Ayahs 1-12</p>
+                        <Badge className="bg-primary/20 text-primary border-none font-black px-4 py-1 tracking-widest text-[10px]">CURRENT PATHWAY</Badge>
+                        <h3 className="text-5xl md:text-6xl font-black tracking-tighter">Surah {data.hifz.currentSurah}</h3>
+                        <p className="text-slate-400 text-lg font-medium leading-tight max-w-md">Currently reviewing <span className="text-white italic">Juz 29</span>. Your pronunciation stability is 94%.</p>
                       </div>
-                      <Button 
-                        variant="outline" 
-                        onClick={() => navigateTo("/hifz")}
-                        className="rounded-2xl border-slate-700 bg-transparent hover:bg-white/10 text-white px-8 h-12 font-bold"
-                      >
-                        View Hifz Logs
-                      </Button>
+                      <div className="h-24 w-24 rounded-full border-4 border-slate-800 flex items-center justify-center flex-col bg-slate-900/50 backdrop-blur-xl">
+                         <span className="text-2xl font-black italic">65%</span>
+                         <span className="text-[8px] font-bold uppercase text-slate-500">Juz Progress</span>
+                      </div>
                    </div>
-                   <div className="mt-12 space-y-4">
-                      <div className="flex justify-between items-end">
-                        <span className="text-xs font-black uppercase tracking-widest text-slate-500">Course Completion</span>
-                        <span className="text-2xl font-black">65%</span>
+
+                   <div className="space-y-6">
+                      <div className="flex items-center gap-3">
+                         <Avatar className="h-8 w-8 ring-2 ring-primary">
+                            <AvatarFallback className="bg-primary text-white text-[10px]">TM</AvatarFallback>
+                         </Avatar>
+                         <p className="text-sm font-bold text-slate-300 italic-none">Reviewed by Prof. Abdullah yesterday</p>
                       </div>
-                      <div className="h-3 w-full bg-slate-800 rounded-full overflow-hidden">
-                        <motion.div 
-                          initial={{ width: 0 }}
-                          animate={{ width: "65%" }}
-                          transition={{ duration: 1.5, ease: "easeOut" }}
-                          className="h-full bg-gradient-to-r from-primary to-indigo-400" 
-                        />
+                      <div className="h-2.5 w-full bg-slate-800 rounded-full overflow-hidden">
+                        <motion.div initial={{ width: 0 }} animate={{ width: "65%" }} transition={{ duration: 2 }} className="h-full bg-gradient-to-r from-primary via-indigo-400 to-indigo-600" />
                       </div>
                    </div>
                 </CardContent>
               </Card>
             </motion.div>
 
-            {/* UPCOMING LIVE SESSIONS */}
-            <motion.div variants={item}>
-              <Card className="border-none bg-background shadow-xl rounded-[2.5rem] overflow-hidden border border-muted/20">
-                 <div className="p-8 pb-4 flex items-center justify-between">
-                    <h3 className="text-2xl font-black flex items-center gap-2">
-                       <Clock className="h-6 w-6 text-primary" /> Live Timeline
-                    </h3>
-                    <Button variant="ghost" onClick={() => navigateTo("/calendar")} className="font-bold text-muted-foreground text-xs hover:text-primary transition-colors">
-                      Full Schedule <ChevronRight className="h-4 w-4 ml-1" />
-                    </Button>
-                 </div>
-                 <CardContent className="p-8 pt-4 space-y-4">
+            {/* LIVE CLASS TIMELINE */}
+            <motion.div variants={fadeInUp}>
+               <Card className="border-none bg-white shadow-xl rounded-[2.5rem] overflow-hidden">
+                  <div className="p-8 pb-0 flex items-center justify-between">
+                     <h3 className="text-2xl font-black flex items-center gap-3">
+                        <Video className="h-6 w-6 text-primary" /> Live Sessions
+                     </h3>
+                     <Badge className="bg-rose-500 text-white animate-pulse">2 LIVE NOW</Badge>
+                  </div>
+                  <CardContent className="p-8 space-y-4">
                     {data.sessions.map((session: any) => (
-                      <div key={session.id} className="flex flex-col md:flex-row items-center justify-between p-6 rounded-[2rem] bg-secondary/30 hover:bg-secondary/60 transition-all group">
+                      <div key={session.id} className="flex flex-col md:flex-row items-center justify-between p-6 rounded-[2rem] bg-slate-50 hover:bg-slate-100 transition-all group">
                          <div className="flex items-center gap-6">
-                            <div className="h-16 w-16 rounded-[1.5rem] bg-background flex items-center justify-center shadow-sm group-hover:bg-primary group-hover:text-white transition-all duration-300">
-                               <Video className="h-7 w-7" />
+                            <div className="h-16 w-16 rounded-[1.5rem] bg-white flex items-center justify-center shadow-inner group-hover:scale-110 transition-transform">
+                               <Play className="h-6 w-6 text-primary fill-primary" />
                             </div>
                             <div>
-                               <p className="text-lg font-black">{session.date.toLocaleDateString('en-US', { weekday: 'long' })}</p>
-                               <p className="text-sm text-muted-foreground font-bold uppercase tracking-tight">{session.startTime} • Prof. {session.teacherName || "Academy Tutor"}</p>
+                               <p className="text-xl font-black leading-none mb-1">{session.className}</p>
+                               <p className="text-sm text-muted-foreground font-bold">{session.startTime} - {session.endTime} • {session.teacherName}</p>
                             </div>
                          </div>
-                         <Button 
-                          onClick={() => handleJoinClass(session.meetingUrl)} 
-                          className="w-full md:w-auto mt-4 md:mt-0 rounded-2xl h-14 px-10 font-black shadow-lg shadow-primary/10 transition-transform active:scale-95"
-                         >
-                            Join Class
+                         <Button onClick={() => handleJoinClass(session.meetingUrl)} className="w-full md:w-auto mt-4 md:mt-0 rounded-2xl h-14 px-10 font-black shadow-xl shadow-primary/10">
+                            Enter Classroom
                          </Button>
-                      </div>
-                    ))}
-                 </CardContent>
-              </Card>
-            </motion.div>
-          </div>
-
-          {/* RIGHT COLUMN: UTILITY & TASKS (4 COLS) */}
-          <div className="lg:col-span-4 space-y-6">
-            
-            {/* BILLING ALERT */}
-            {data.stats.walletBalance > 0 && (
-              <motion.div variants={item}>
-                <Card className="border-none bg-rose-50 dark:bg-rose-950/20 rounded-[2.5rem] p-2 border border-rose-200">
-                  <CardContent className="p-6 space-y-4">
-                    <div className="flex items-center gap-2 text-rose-600 font-black text-xs uppercase tracking-widest">
-                       <AlertCircle className="h-4 w-4" /> Action Required
-                    </div>
-                    <p className="text-2xl font-black tracking-tighter">Outstanding Balance: ${data.stats.walletBalance}</p>
-                    <p className="text-xs text-rose-600/80 font-medium leading-relaxed">Please settle your invoice to maintain uninterrupted access to live sessions.</p>
-                    <Button 
-                      onClick={() => navigateTo("/dashboard/student/billing")}
-                      className="w-full rounded-2xl bg-rose-600 hover:bg-rose-700 text-white font-bold h-14 shadow-lg shadow-rose-200"
-                    >
-                      Pay Now
-                    </Button>
-                  </CardContent>
-                </Card>
-              </motion.div>
-            )}
-
-            {/* RECENT ASSIGNMENTS */}
-            <motion.div variants={item}>
-              <Card className="border-none shadow-sm rounded-[2.5rem] bg-background border border-muted/20">
-                <CardHeader className="px-8 pt-8 pb-4">
-                  <CardTitle className="text-xl font-black">Open Tasks</CardTitle>
-                </CardHeader>
-                <CardContent className="px-8 pb-8 pt-0 space-y-3">
-                  {data.assignments.map((task: any) => (
-                    <div 
-                      key={task.id} 
-                      onClick={() => navigateTo(`/dashboard/student/assignments/${task.id}`)}
-                      className="p-4 rounded-2xl border border-muted hover:border-primary transition-all cursor-pointer group"
-                    >
-                      <div className="flex justify-between items-start">
-                        <p className="font-bold text-sm leading-tight group-hover:text-primary transition-colors">{task.title}</p>
-                      </div>
-                      <div className="mt-3 flex items-center justify-between">
-                        <Badge variant="secondary" className="text-[10px] bg-slate-100 text-slate-600 border-none font-bold uppercase">{task.type}</Badge>
-                        <p className="text-[10px] font-black text-rose-500 uppercase">Due: {new Date(task.dueDate).toLocaleDateString()}</p>
-                      </div>
-                    </div>
-                  ))}
-                  <Button variant="ghost" onClick={() => navigateTo("/dashboard/student/assignments")} className="w-full mt-2 font-bold text-muted-foreground text-xs hover:text-primary transition-colors">
-                    View All Assignments
-                  </Button>
-                </CardContent>
-              </Card>
-            </motion.div>
-
-            {/* RESOURCE LIST */}
-            <motion.div variants={item}>
-               <Card className="border-none bg-background shadow-xl rounded-[2.5rem] border border-muted/20">
-                  <CardHeader className="p-8 pb-4">
-                    <CardTitle className="text-xl font-black">Library Peek</CardTitle>
-                  </CardHeader>
-                  <CardContent className="p-8 pt-0 space-y-2">
-                    {data.materials.map((res: any) => (
-                      <div key={res.id} className="flex items-center justify-between p-3 rounded-2xl hover:bg-secondary/50 transition-colors group cursor-pointer">
-                        <div className="flex items-center gap-3">
-                          <div className="h-10 w-10 bg-indigo-50 dark:bg-indigo-900/30 rounded-xl flex items-center justify-center text-indigo-600">
-                             <FileText className="h-5 w-5" />
-                          </div>
-                          <p className="text-sm font-bold truncate max-w-[140px]">{res.title}</p>
-                        </div>
-                        <Button variant="ghost" size="icon" className="rounded-full opacity-0 group-hover:opacity-100 transition-opacity" onClick={(e) => { e.stopPropagation(); handleDownload(res.title); }}>
-                           <Download className="h-4 w-4" />
-                        </Button>
                       </div>
                     ))}
                   </CardContent>
                </Card>
             </motion.div>
           </div>
+
+          {/* RIGHT: SIDEBAR (4 COLS) */}
+          <div className="lg:col-span-4 space-y-6">
+            
+            {/* SPIRITUAL CHECKLIST (PRAYER TRACKER) */}
+            <motion.div variants={fadeInUp}>
+               <Card className="border-none bg-indigo-600 text-white rounded-[2.5rem] shadow-xl p-8">
+                  <h3 className="text-xl font-black mb-6 flex items-center gap-2">
+                     <Heart className="h-5 w-5 fill-white" /> Daily Adhkar & Prayer
+                  </h3>
+                  <div className="space-y-3">
+                     {["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"].map((prayer) => (
+                       <div key={prayer} className="flex items-center justify-between p-4 rounded-2xl bg-white/10 hover:bg-white/20 transition-all cursor-pointer border border-white/5">
+                          <span className="font-bold">{prayer}</span>
+                          <CheckCircle2 className="h-5 w-5 text-indigo-200" />
+                       </div>
+                     ))}
+                  </div>
+                  <Button variant="outline" className="w-full mt-6 border-white/20 text-white hover:bg-white/10 rounded-2xl py-6 font-bold">
+                     Update Prayer Log
+                  </Button>
+               </Card>
+            </motion.div>
+
+            {/* ASSIGNMENTS MODULE */}
+            <motion.div variants={fadeInUp}>
+               <Card className="border-none bg-white shadow-xl rounded-[2.5rem] p-8">
+                  <div className="flex justify-between items-center mb-6">
+                     <h3 className="text-xl font-black">Open Tasks</h3>
+                     <Badge className="bg-amber-100 text-amber-600 border-none font-bold">{data.assignments.length}</Badge>
+                  </div>
+                  <div className="space-y-4">
+                     {data.assignments.map((task: any) => (
+                       <div 
+                         key={task.id} 
+                         onClick={() => handleAction('assignment', task)}
+                         className="p-5 rounded-[1.5rem] border hover:border-primary transition-all cursor-pointer group flex flex-col gap-4"
+                       >
+                          <div className="flex justify-between items-start">
+                             <p className="font-bold text-sm leading-tight group-hover:text-primary transition-colors">{task.title}</p>
+                             <div className="h-8 w-8 bg-secondary rounded-lg flex items-center justify-center">
+                                <Plus className="h-4 w-4" />
+                             </div>
+                          </div>
+                          <div className="flex items-center justify-between">
+                             <span className="text-[10px] font-black uppercase text-muted-foreground tracking-widest">{task.type}</span>
+                             <span className="text-[10px] font-black text-rose-500 uppercase">DUE: {new Date(task.dueDate).toLocaleDateString()}</span>
+                          </div>
+                       </div>
+                     ))}
+                  </div>
+               </Card>
+            </motion.div>
+
+            {/* QUICK WALLET / BILLING */}
+            {data.stats.walletBalance > 0 && (
+              <motion.div variants={fadeInUp}>
+                 <Card className="border-none bg-rose-50 dark:bg-rose-950/20 rounded-[2.5rem] p-8 border border-rose-100">
+                    <div className="flex items-center gap-3 text-rose-600 mb-4">
+                       <AlertCircle className="h-5 w-5" />
+                       <p className="text-xs font-black uppercase tracking-[0.2em]">Pending Invoice</p>
+                    </div>
+                    <p className="text-3xl font-black text-slate-900 dark:text-white">${data.stats.walletBalance}</p>
+                    <p className="text-sm text-rose-600/70 font-medium mt-2 leading-snug italic-none">Your "Advanced Arabic" subscription is due. Settle now to avoid interruption.</p>
+                    <Button onClick={() => handleAction('billing')} className="w-full mt-6 bg-rose-600 hover:bg-rose-700 text-white h-14 rounded-2xl font-black shadow-lg shadow-rose-200 transition-all active:scale-95">
+                       Secure Pay
+                    </Button>
+                 </Card>
+              </motion.div>
+            )}
+          </div>
         </div>
       </motion.main>
+
+      {/* --- THE ELITE SPATIAL MODAL ENGINE --- */}
+      <AnimatePresence>
+        {activeView && (
+          <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+            <motion.div 
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              onClick={closeOverlay}
+              className="absolute inset-0 bg-black/70 backdrop-blur-2xl"
+            />
+            
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0, y: 40 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.9, opacity: 0, y: 40 }}
+              className="relative w-full max-w-2xl bg-white dark:bg-zinc-950 rounded-[3rem] shadow-[0_35px_60px_-15px_rgba(0,0,0,0.3)] overflow-hidden"
+            >
+              {/* Modal Header */}
+              <div className="p-10 pb-6 border-b flex justify-between items-center bg-slate-50/50 dark:bg-zinc-900/50 backdrop-blur-md">
+                 <div className="space-y-1">
+                    <h2 className="text-3xl font-black tracking-tight uppercase">
+                      {activeView === 'hifz' ? "Memorization Map" : 
+                       activeView === 'assignment' ? "Submission Portal" : 
+                       activeView === 'billing' ? "Secure Checkout" : "Navigation"}
+                    </h2>
+                    <p className="text-sm text-muted-foreground font-medium italic-none">Context: Student ID {data.studentId}</p>
+                 </div>
+                 <Button variant="ghost" size="icon" className="rounded-full h-12 w-12 hover:bg-muted" onClick={closeOverlay}>
+                    <X className="h-6 w-6" />
+                 </Button>
+              </div>
+
+              {/* Modal Content Logic */}
+              <div className="p-10 max-h-[70vh] overflow-y-auto custom-scrollbar">
+                
+                {/* INTERACTIVE HIFZ LOGS */}
+                {activeView === 'hifz' && (
+                  <div className="space-y-8">
+                    <div className="grid grid-cols-2 gap-4">
+                       <div className="p-6 rounded-[2rem] bg-indigo-50 border border-indigo-100 flex flex-col items-center">
+                          <span className="text-xs font-black text-indigo-600 uppercase mb-2">Current Goal</span>
+                          <p className="text-2xl font-black">15 Juz</p>
+                       </div>
+                       <div className="p-6 rounded-[2rem] bg-emerald-50 border border-emerald-100 flex flex-col items-center">
+                          <span className="text-xs font-black text-emerald-600 uppercase mb-2">Mastery Rate</span>
+                          <p className="text-2xl font-black text-emerald-600">92%</p>
+                       </div>
+                    </div>
+                    <div className="space-y-4">
+                       <h4 className="text-xs font-black uppercase text-muted-foreground tracking-widest">Recent Activity</h4>
+                       {data.hifz.logs.map((log: any) => (
+                         <div key={log.id} className="p-5 rounded-3xl border border-muted/50 flex justify-between items-center group hover:bg-muted/20 transition-all">
+                            <div className="flex items-center gap-4">
+                               <div className="h-10 w-10 rounded-xl bg-slate-100 flex items-center justify-center font-bold text-xs">{log.surah}</div>
+                               <div>
+                                  <p className="font-bold text-lg">Ayah {log.startAyah} - {log.endAyah}</p>
+                                  <p className="text-xs text-muted-foreground">{new Date(log.date).toDateString()}</p>
+                               </div>
+                            </div>
+                            <Badge className={cn("rounded-lg", log.status === 'PASS' ? 'bg-emerald-500' : 'bg-amber-500')}>
+                               {log.status}
+                            </Badge>
+                         </div>
+                       ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* ADVANCED ASSIGNMENT SUBMISSION */}
+                {activeView === 'assignment' && selectedItem && (
+                  <div className="space-y-8">
+                    <div className="p-8 rounded-[2rem] bg-amber-50 border border-amber-200 space-y-3">
+                       <div className="flex items-center gap-2 text-amber-600 font-black text-xs uppercase tracking-widest">
+                          <AlertCircle className="h-4 w-4" /> Instructor Guidance
+                       </div>
+                       <p className="text-sm font-bold text-amber-900 leading-relaxed italic-none">{selectedItem.description || "Refer to the module resources before submitting."}</p>
+                    </div>
+
+                    <div className="space-y-4">
+                       <h4 className="text-xs font-black uppercase text-muted-foreground tracking-widest">Submit Work</h4>
+                       <div className="group relative">
+                          <div className="h-56 border-2 border-dashed border-muted-foreground/30 rounded-[2.5rem] flex flex-col items-center justify-center gap-4 hover:border-primary hover:bg-primary/5 transition-all cursor-pointer">
+                             <div className="h-16 w-16 rounded-full bg-secondary flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all">
+                                <UploadCloud className="h-8 w-8" />
+                             </div>
+                             <div className="text-center">
+                                <p className="text-lg font-black tracking-tight">Recitation / PDF / Image</p>
+                                <p className="text-sm text-muted-foreground font-medium">Max file size: 50MB</p>
+                             </div>
+                          </div>
+                          <input type="file" className="absolute inset-0 opacity-0 cursor-pointer" />
+                       </div>
+                    </div>
+
+                    <div className="flex gap-3">
+                       <Button variant="outline" className="flex-1 h-16 rounded-2xl font-bold">Save Draft</Button>
+                       <Button className="flex-2 h-16 rounded-2xl font-black text-lg px-12 shadow-2xl shadow-primary/20" onClick={() => { toast.success("Submitted Successfully!"); closeOverlay(); }}>
+                          Final Submit
+                       </Button>
+                    </div>
+                  </div>
+                )}
+
+                {/* FINANCIAL / STRIPE CHECKOUT PEAK */}
+                {activeView === 'billing' && (
+                  <div className="space-y-8 text-center">
+                    <div className="h-24 w-24 bg-rose-50 rounded-full flex items-center justify-center mx-auto shadow-inner text-rose-500">
+                       <ShieldCheck className="h-12 w-12" />
+                    </div>
+                    <div>
+                       <h3 className="text-4xl font-black tracking-tight">$ {data.stats.walletBalance}</h3>
+                       <p className="text-muted-foreground font-bold mt-1 italic-none uppercase tracking-widest text-xs">Total Outstanding Amount</p>
+                    </div>
+                    <div className="grid grid-cols-1 gap-3">
+                       <Button className="h-16 rounded-2xl font-black text-lg bg-[#635BFF] hover:bg-[#534acc] transition-all">Pay with Stripe</Button>
+                       <Button variant="outline" className="h-16 rounded-2xl font-bold flex gap-2">
+                          <Download className="h-4 w-4" /> Download Statement
+                       </Button>
+                    </div>
+                  </div>
+                )}
+              </div>
+              
+              {/* Modal Footer (Always visible) */}
+              <div className="p-8 border-t bg-slate-50/50 dark:bg-zinc-900/50 flex items-center justify-center gap-4">
+                 <p className="text-[10px] font-black uppercase text-muted-foreground tracking-widest">Secured by Al-Ateeq Academy Framework v2.0</p>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
+
+
+
 
 
 
