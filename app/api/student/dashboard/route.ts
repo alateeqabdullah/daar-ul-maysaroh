@@ -1,24 +1,23 @@
-import { auth } from "@/lib/auth"; // Your Auth.js config
+import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 import {
-  EnrollmentStatus,
   AttendanceStatus,
+  EnrollmentStatus,
   SessionStatus,
 } from "@/app/generated/prisma/enums";
 
 export async function GET() {
   const session = await auth();
 
-  if (!session?.user || session.user.role !== "STUDENT") {
+  if (!session?.user?.id) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   try {
     const userId = session.user.id;
-    const now = new Date();
 
-    // 1. Get the student ID first to link all queries
+    // 1. Get the student profile
     const student = await prisma.student.findUnique({
       where: { userId },
       select: {
@@ -26,38 +25,45 @@ export async function GET() {
         studentId: true,
         currentLevel: true,
         hifzLevel: true,
+        parentId: true,
       },
     });
 
     if (!student) {
-      return NextResponse.json(
-        { error: "Student profile not found" },
-        { status: 404 },
-      );
+      return NextResponse.json({ error: "Student not found" }, { status: 404 });
     }
 
-    // 2. Parallel Fetching for "Command Center" Performance
+    const now = new Date();
+
+    // 2. Comprehensive Parallel Data Fetching
     const [
       enrollments,
-      attendanceData,
+      attendanceStats,
+      hifzLogs,
       upcomingSessions,
       pendingAssignments,
       recentMaterials,
-      hifzLogs,
-      pendingInvoices,
+      unpaidInvoices,
     ] = await Promise.all([
       // Active Enrollments
       prisma.enrollment.findMany({
         where: { studentId: student.id, status: EnrollmentStatus.ACTIVE },
-        include: { class: true },
+        include: { class: { select: { name: true, code: true } } },
       }),
-      // Attendance Stats
+      // Attendance Aggregation
       prisma.attendance.groupBy({
         by: ["status"],
         where: { studentId: student.id },
-        _count: true,
+        _count: { status: true },
       }),
-      // Next 3 Scheduled Sessions
+      // Latest Hifz Logs
+      prisma.hifzProgress.findMany({
+        where: { studentId: student.id },
+        orderBy: { date: "desc" },
+        take: 10,
+        include: { teacher: { include: { user: { select: { name: true } } } } },
+      }),
+      // Live Sessions (Next 48 hours)
       prisma.scheduledSession.findMany({
         where: {
           subscription: { studentId: student.id },
@@ -72,7 +78,7 @@ export async function GET() {
         orderBy: { date: "asc" },
         take: 3,
       }),
-      // Pending Assignments (Assignments with no submission from this student)
+      // Pending Assignments (Assignments for enrolled subjects with no submission)
       prisma.assignment.findMany({
         where: {
           subject: {
@@ -80,72 +86,79 @@ export async function GET() {
           },
           submissions: { none: { studentId: student.id } },
         },
+        select: {
+          id: true,
+          title: true,
+          dueDate: true,
+          type: true,
+          subject: { select: { name: true } },
+        },
         orderBy: { dueDate: "asc" },
-        take: 4,
+        take: 5,
       }),
-      // Recent Class Materials
+      // Newest Materials across all classes
       prisma.classMaterial.findMany({
         where: { class: { enrollments: { some: { studentId: student.id } } } },
         orderBy: { createdAt: "desc" },
-        take: 5,
+        take: 4,
+        select: { id: true, title: true, type: true, fileUrl: true },
       }),
-      // Hifz Progress
-      prisma.hifzProgress.findMany({
-        where: { studentId: student.id },
-        orderBy: { date: "desc" },
-        take: 5,
-      }),
-      // Parent Invoices (Wallet Balance)
-      prisma.invoice.findMany({
-        where: {
-          parent: { students: { some: { id: student.id } } },
-          status: "PENDING",
-        },
-        select: { amount: true },
-      }),
+      // Unpaid Invoices (linked via Parent)
+      student.parentId
+        ? prisma.invoice.findMany({
+            where: { parentId: student.parentId, status: "PENDING" },
+            select: { amount: true },
+          })
+        : Promise.resolve([]),
     ]);
 
-    // 3. Stats Aggregation
-    const totalAtt = attendanceData.reduce((acc, curr) => acc + curr._count, 0);
-    const presentAtt =
-      attendanceData.find((a) => a.status === AttendanceStatus.PRESENT)
-        ?._count || 0;
-    const attendanceRate =
-      totalAtt > 0 ? Math.round((presentAtt / totalAtt) * 100) : 100;
+    // 3. Stats Calculation Logic
+    const totalAttendance = attendanceStats.reduce(
+      (acc, curr) => acc + curr._count.status,
+      0,
+    );
+    const presentCount =
+      attendanceStats.find((a) => a.status === AttendanceStatus.PRESENT)?._count
+        .status || 0;
 
-    const walletBalance = pendingInvoices.reduce(
+    const attendanceRate =
+      totalAttendance > 0
+        ? Math.round((presentCount / totalAttendance) * 100)
+        : 100;
+
+    const totalBalance = unpaidInvoices.reduce(
       (acc, curr) => acc + Number(curr.amount),
       0,
     );
 
     return NextResponse.json({
-      student: {
-        ...student,
-        name: session.user.name,
-        image: session.user.image,
-      },
+      studentInfo: student,
       stats: {
-        attendance: attendanceRate,
-        assignments: pendingAssignments.length,
-        activeCourses: enrollments.length,
-        walletBalance,
+        attendanceRate,
+        pendingAssignments: pendingAssignments.length,
+        activeEnrollments: enrollments.length,
+        totalBalance,
       },
       hifz: {
-        currentSurah: hifzLogs[0]?.surah || "Not Started",
+        currentSurah: hifzLogs[0]?.surah || null,
         logs: hifzLogs,
+        level: student.hifzLevel,
       },
       sessions: upcomingSessions,
       assignments: pendingAssignments,
       materials: recentMaterials,
     });
   } catch (error) {
-    console.error("DASHBOARD_API_ERROR:", error);
+    console.error("DASHBOARD_DATA_ERROR", error);
     return NextResponse.json(
-      { error: "Internal Server Error" },
+      { error: "Critical Data Sync Failure" },
       { status: 500 },
     );
   }
 }
+
+
+
 
 // import { NextResponse } from "next/server";
 // import { auth } from "@/lib/auth";

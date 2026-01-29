@@ -1,7 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   BookOpen,
@@ -14,11 +13,6 @@ import {
   Download,
   CreditCard,
   ChevronRight,
-  Bell,
-  Search,
-  Settings,
-  ArrowRight,
-  Play,
   CheckCircle2,
   AlertCircle,
   Sparkles,
@@ -27,34 +21,22 @@ import {
   X,
   UploadCloud,
   Heart,
-  Star,
-  MessageSquare,
-  Wallet,
-  Moon,
-  Sun,
-  LayoutDashboard,
-  Library,
-  BookMarked,
-  History,
-  PieChart,
   ShieldCheck,
-  Headphones,
-  Globe,
-  Plus,
+  Wallet,
+  Play,
 } from "lucide-react";
 
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 
-// --- ANIMATION ENGINE ---
+// --- ANIMATION VARIANTS ---
 const container = {
   hidden: { opacity: 0 },
-  show: { opacity: 1, transition: { staggerChildren: 0.04 } },
+  show: { opacity: 1, transition: { staggerChildren: 0.05 } },
 };
 
 const item = {
@@ -63,421 +45,263 @@ const item = {
 };
 
 export default function StudentDashboardClient({ data }: { data: any }) {
-  const router = useRouter();
-
-  // COMMAND CENTER STATE
   const [activeOverlay, setActiveOverlay] = useState<string | null>(null);
-  const [overlayData, setOverlayData] = useState<any>(null);
-  const [activeTab, setActiveTab] = useState("overview");
+  const [selectedTask, setSelectedTask] = useState<any>(null);
 
-  // --- ACTIONS ---
-  const openOverlay = (view: string, payload?: any) => {
-    setOverlayData(payload);
-    setActiveOverlay(view);
-  };
-
-  const closeOverlay = () => {
-    setActiveOverlay(null);
-    setOverlayData(null);
-  };
+  if (!data) return null;
 
   return (
-    <div className="min-h-screen bg-[#F8F9FA] dark:bg-[#050505] text-slate-900 dark:text-zinc-100 transition-colors duration-700 pb-20 selection:bg-primary/30">
-      {/* 1. ELITE SPATIAL HEADER */}
-      <header className="sticky top-0 z-[60] w-full border-b border-slate-200/50 dark:border-zinc-800/50 bg-white/70 dark:bg-[#050505]/70 backdrop-blur-2xl px-6 md:px-10 py-4">
-        <div className="max-w-[1600px] mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-6">
-            <div className="h-12 w-12 bg-primary rounded-[1.25rem] flex items-center justify-center shadow-2xl shadow-primary/40 transform -rotate-3 hover:rotate-0 transition-all duration-500">
-              <GraduationCap className="text-white h-7 w-7" />
-            </div>
-            <div className="hidden xl:block leading-none">
-              <h1 className="text-2xl font-black tracking-tighter uppercase italic">
-                Al-Ateeq
-              </h1>
-              <p className="text-[10px] text-muted-foreground font-black tracking-[0.4em] uppercase opacity-60">
-                Elite Student Command
-              </p>
-            </div>
-          </div>
-
-          <div className="hidden md:flex flex-1 max-w-2xl mx-12">
-            <div className="relative w-full group">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
-              <input
-                placeholder="Search Knowledge, Sessions, or Grades... (⌘K)"
-                className="w-full pl-12 h-12 rounded-2xl bg-slate-100/50 dark:bg-zinc-900/50 border-none text-sm focus:ring-2 ring-primary/20 transition-all outline-none"
-              />
-            </div>
-          </div>
-
-          <div className="flex items-center gap-4">
-            <div className="hidden sm:flex items-center gap-2 px-4 h-11 rounded-2xl bg-slate-100/50 dark:bg-zinc-900/50 border border-slate-200/50 dark:border-zinc-800/50">
-              <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
-                Server Live
-              </span>
-            </div>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="rounded-2xl h-11 w-11 hover:bg-primary/10 relative"
-            >
-              <Bell className="h-5 w-5" />
-              <span className="absolute top-2.5 right-2.5 h-2 w-2 bg-rose-500 rounded-full ring-2 ring-white dark:ring-[#050505]" />
-            </Button>
-            <Avatar
-              onClick={() => router.push("/profile")}
-              className="h-11 w-11 border-2 border-white dark:border-zinc-800 shadow-2xl cursor-pointer hover:scale-110 transition-transform"
-            >
-              <AvatarImage src={data.user.image} />
-              <AvatarFallback className="font-black bg-primary text-white">
-                {data.user.name[0]}
-              </AvatarFallback>
-            </Avatar>
-          </div>
-        </div>
-      </header>
-
-      <motion.main
-        variants={container}
-        initial="hidden"
-        animate="show"
-        className="max-w-[1600px] mx-auto px-6 md:px-10 mt-10 space-y-10"
-      >
-        {/* 2. HERO GREETING & PATHWAY */}
-        <section className="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-8">
-          <div className="space-y-3">
-            <motion.div
-              variants={item}
-              className="flex items-center gap-2 text-primary font-black text-xs uppercase tracking-[0.3em]"
-            >
-              <Sparkles className="h-4 w-4" /> Spiritual Resonance: High
-            </motion.div>
-            <motion.h2
-              variants={item}
-              className="text-5xl md:text-8xl font-black tracking-tighter leading-[0.8]"
-            >
-              Marhaba,{" "}
-              <span className="text-primary italic">
-                {data.user.name.split(" ")[0]}
-              </span>
-              .
-            </motion.h2>
-            <motion.p
-              variants={item}
-              className="text-muted-foreground font-medium text-lg md:text-2xl max-w-3xl leading-snug italic-none"
-            >
-              Your Quranic fluency is up{" "}
-              <span className="text-foreground font-bold underline decoration-primary/40 underline-offset-8">
-                14% this month
-              </span>
-              . You have 2 sessions remaining today.
-            </motion.p>
-          </div>
-          <motion.div variants={item} className="flex gap-4 w-full lg:w-auto">
-            <Button
-              onClick={() => router.push("/classes")}
-              className="flex-1 lg:flex-none h-16 rounded-[2rem] px-10 font-black text-lg bg-primary text-white shadow-2xl shadow-primary/40 hover:translate-y-[-4px] transition-all"
-            >
-              The Learning Path <ArrowRight className="ml-2 h-5 w-5" />
-            </Button>
-            <Button
-              variant="secondary"
-              className="h-16 w-16 rounded-[2rem] p-0 bg-white dark:bg-zinc-900 shadow-xl border-none"
-            >
-              <MessageSquare className="h-6 w-6" />
-            </Button>
-          </motion.div>
-        </section>
-
-        {/* 3. KPI BENTO STRIP */}
-        <section className="grid grid-cols-2 lg:grid-cols-4 gap-6">
-          {[
-            {
-              label: "Attendance",
-              val: `${data.stats.attendance}%`,
-              icon: CheckCircle2,
-              col: "text-emerald-500",
-              bg: "bg-emerald-500/10",
-            },
-            {
-              label: "Tasks",
-              val: data.stats.assignments,
-              icon: Zap,
-              col: "text-amber-500",
-              bg: "bg-amber-500/10",
-            },
-            {
-              label: "Course Nodes",
-              val: data.stats.activeCourses,
-              icon: BookOpen,
-              col: "text-blue-500",
-              bg: "bg-blue-500/10",
-            },
-            {
-              label: "Balance",
-              val:
-                data.stats.walletBalance > 0
-                  ? `$${data.stats.walletBalance}`
-                  : "Clear",
-              icon: Wallet,
-              col: "text-rose-500",
-              bg: "bg-rose-500/10",
-            },
-          ].map((s) => (
-            <motion.div key={s.label} variants={item}>
-              <Card className="border border-slate-200 dark:border-zinc-800 bg-white/50 dark:bg-zinc-900/40 backdrop-blur-md shadow-sm rounded-[2.5rem] group hover:shadow-2xl transition-all duration-500">
-                <CardContent className="p-6 flex flex-col md:flex-row items-center gap-5 text-center md:text-left">
-                  <div
-                    className={cn(
-                      "h-14 w-14 rounded-2xl flex items-center justify-center transition-all group-hover:scale-110 group-hover:rotate-6",
-                      s.bg,
-                      s.col,
-                    )}
-                  >
-                    <s.icon className="h-7 w-7" />
-                  </div>
-                  <div>
-                    <p className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground mb-1">
-                      {s.label}
-                    </p>
-                    <p className="text-2xl font-black">{s.val}</p>
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-          ))}
-        </section>
-
-        {/* 4. THE COMMAND CENTER BENTO GRID */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          {/* LEFT: PRIMARY ACADEMIC & SPIRITUAL HUB (8 COLS) */}
-          <div className="lg:col-span-8 space-y-8">
-            {/* THE MASTER HIFZ BENTO */}
-            <motion.div variants={item}>
-              <Card
-                onClick={() => openOverlay("hifz")}
-                className="cursor-pointer border-none bg-slate-900 dark:bg-zinc-900 text-white rounded-[3.5rem] shadow-2xl overflow-hidden relative group min-h-[420px]"
-              >
-                {/* Midnight Aura Background */}
-                <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-primary/20 rounded-full blur-[140px] -mr-48 -mt-48 group-hover:bg-primary/30 transition-all duration-1000" />
-
-                <CardContent className="p-10 md:p-16 relative z-10 flex flex-col h-full justify-between">
-                  <div className="flex flex-col md:flex-row justify-between items-start gap-10">
-                    <div className="space-y-6">
-                      <Badge className="bg-white/10 text-white backdrop-blur-xl border-white/20 font-black px-6 py-2 tracking-widest text-xs uppercase rounded-xl">
-                        Spiritual Roadmap
-                      </Badge>
-                      <h3 className="text-6xl md:text-9xl font-black tracking-tighter leading-[0.8]">
-                        Surah {data.hifz.currentSurah}
-                      </h3>
-                      <p className="text-zinc-400 text-xl md:text-2xl font-medium max-w-xl leading-relaxed italic-none">
-                        Current Milestone:{" "}
-                        <span className="text-white font-bold italic underline decoration-primary underline-offset-8">
-                          Juz 29 (Tabarak)
-                        </span>
-                        . Pronunciation stability is optimized at 96%.
-                      </p>
-                    </div>
-                    <div className="h-32 w-32 rounded-full border-8 border-white/5 flex items-center justify-center flex-col bg-white/10 backdrop-blur-3xl group-hover:scale-110 transition-transform duration-700">
-                      <span className="text-4xl font-black italic">65%</span>
-                      <span className="text-[10px] font-bold uppercase text-zinc-500">
-                        Total
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="mt-16 space-y-6">
-                    <div className="flex items-center justify-between font-black text-[10px] uppercase tracking-[0.4em] text-zinc-500">
-                      <span>Memorization Progression</span>
-                      <span className="text-primary italic">
-                        Status: Excellent
-                      </span>
-                    </div>
-                    <div className="h-4 w-full bg-white/5 rounded-full overflow-hidden p-1 relative">
-                      <motion.div
-                        initial={{ width: 0 }}
-                        animate={{ width: "65%" }}
-                        transition={{ duration: 2.5, ease: "circOut" }}
-                        className="h-full bg-gradient-to-r from-primary via-indigo-400 to-white rounded-full shadow-[0_0_30px_rgba(99,102,241,0.6)]"
-                      />
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-
-            {/* LIVE SESSIONS COMMAND HUB */}
-            <motion.div variants={item}>
-              <Card className="border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 shadow-2xl rounded-[3.5rem] overflow-hidden">
-                <div className="p-10 pb-4 flex items-center justify-between">
-                  <div className="space-y-1">
-                    <h3 className="text-3xl font-black tracking-tight flex items-center gap-4 uppercase">
-                      <div className="h-3 w-3 rounded-full bg-rose-500 animate-ping" />
-                      Classroom Hub
-                    </h3>
-                    <p className="text-xs font-black text-muted-foreground tracking-widest uppercase">
-                      Live Synchronized Learning
-                    </p>
-                  </div>
-                  <Button
-                    variant="ghost"
-                    className="font-bold text-muted-foreground hover:text-primary transition-colors text-xs uppercase tracking-widest"
-                    onClick={() => openOverlay("calendar")}
-                  >
-                    Full Calendar <ChevronRight className="h-4 w-4 ml-2" />
-                  </Button>
+    <motion.div
+      variants={container}
+      initial="hidden"
+      animate="show"
+      className="space-y-10 selection:bg-primary/30 pb-20"
+    >
+      {/* 1. KPI HUD - DYNAMIC ANALYTICS */}
+      <section className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+        {[
+          {
+            label: "Attendance",
+            val: `${data.stats.attendanceRate}%`,
+            icon: CheckCircle2,
+            col: "text-emerald-500",
+            bg: "bg-emerald-500/10",
+          },
+          {
+            label: "Pending Tasks",
+            val: data.stats.pendingAssignments,
+            icon: Zap,
+            col: "text-amber-500",
+            bg: "bg-amber-500/10",
+          },
+          {
+            label: "Active Nodes",
+            val: data.stats.activeEnrollments,
+            icon: BookOpen,
+            col: "text-blue-500",
+            bg: "bg-blue-500/10",
+          },
+          {
+            label: "Balance",
+            val:
+              data.stats.totalBalance > 0
+                ? `$${data.stats.totalBalance}`
+                : "Cleared",
+            icon: Wallet,
+            col: "text-rose-500",
+            bg: "bg-rose-500/10",
+          },
+        ].map((s) => (
+          <motion.div key={s.label} variants={item}>
+            <Card className="border-none bg-white dark:bg-zinc-900/40 backdrop-blur-md shadow-sm rounded-[2rem] group hover:shadow-xl transition-all border border-transparent hover:border-primary/20">
+              <CardContent className="p-6 flex flex-col md:flex-row items-center gap-4 text-center md:text-left">
+                <div className={cn("p-4 rounded-2xl", s.bg, s.col)}>
+                  <s.icon className="h-6 w-6" />
                 </div>
-                <CardContent className="p-10 space-y-6">
-                  {data.sessions.map((session: any) => (
+                <div>
+                  <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">
+                    {s.label}
+                  </p>
+                  <p className="text-xl font-black tabular-nums">{s.val}</p>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+        ))}
+      </section>
+
+      {/* 2. COMMAND BENTO GRID */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        {/* LEFT: QURANIC & LIVE HUB (8 COLS) */}
+        <div className="lg:col-span-8 space-y-8">
+          {/* MASTER HIFZ CARD */}
+          <motion.div variants={item}>
+            <Card
+              onClick={() => setActiveOverlay("hifz")}
+              className="cursor-pointer border-none bg-slate-900 dark:bg-zinc-900 text-white rounded-[3.5rem] shadow-2xl overflow-hidden relative group min-h-[400px]"
+            >
+              <div className="absolute top-0 right-0 p-10 opacity-10 group-hover:scale-125 transition-transform duration-1000 rotate-12">
+                <BookOpen className="h-72 w-72" />
+              </div>
+              <CardContent className="p-10 md:p-14 relative z-10 flex flex-col h-full justify-between">
+                <div className="space-y-6">
+                  <Badge className="bg-primary/20 text-primary border-none font-black px-4 py-1 uppercase text-[10px] tracking-widest">
+                    {data.hifz.level || "Hifz Mastery"}
+                  </Badge>
+                  <h3 className="text-5xl md:text-7xl font-black tracking-tighter leading-none">
+                    {data.hifz.currentSurah
+                      ? `Surah ${data.hifz.currentSurah}`
+                      : "Begin Journey"}
+                  </h3>
+                  <p className="text-zinc-400 text-lg max-w-lg italic-none font-medium">
+                    {data.hifz.logs[0]
+                      ? `Last lesson: Ayahs ${data.hifz.logs[0].startAyah}-${data.hifz.logs[0].endAyah} reviewed by ${data.hifz.logs[0].teacher.user.name}`
+                      : "No memorization logs found. Start your first session today."}
+                  </p>
+                </div>
+                <div className="mt-12 space-y-4">
+                  <div className="flex justify-between items-end">
+                    <span className="text-xs font-black uppercase tracking-widest text-zinc-500 tracking-[0.3em]">
+                      Course Velocity
+                    </span>
+                    <span className="text-2xl font-black italic">65%</span>
+                  </div>
+                  <div className="h-3 w-full bg-white/10 rounded-full overflow-hidden">
+                    <motion.div
+                      initial={{ width: 0 }}
+                      animate={{ width: "65%" }}
+                      className="h-full bg-primary shadow-[0_0_20px_rgba(var(--primary),0.5)]"
+                    />
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+
+          {/* SESSIONS TABLE */}
+          <motion.div variants={item}>
+            <Card className="border-none bg-white dark:bg-zinc-950 shadow-xl rounded-[3rem] overflow-hidden">
+              <div className="p-8 pb-2 flex items-center justify-between">
+                <h3 className="text-2xl font-black flex items-center gap-3">
+                  <Video className="h-6 w-6 text-primary" /> Upcoming Sessions
+                </h3>
+              </div>
+              <CardContent className="p-8 space-y-4">
+                {data.sessions.length > 0 ? (
+                  data.sessions.map((session: any) => (
                     <div
                       key={session.id}
-                      className="flex flex-col lg:flex-row items-center justify-between p-8 rounded-[3rem] bg-slate-50 dark:bg-zinc-900/40 border border-transparent hover:border-primary/20 transition-all group relative overflow-hidden"
+                      className="flex flex-col md:flex-row items-center justify-between p-6 rounded-[2.5rem] bg-slate-50 dark:bg-zinc-900/50 border border-transparent hover:border-primary/20 transition-all group"
                     >
-                      <div className="flex items-center gap-8 relative z-10">
-                        <div className="h-18 w-18 rounded-[1.75rem] bg-white dark:bg-zinc-800 flex items-center justify-center shadow-2xl group-hover:bg-primary group-hover:text-white transition-all duration-500 transform group-hover:rotate-6">
-                          <Play className="h-8 w-8 fill-current" />
+                      <div className="flex items-center gap-6">
+                        <div className="h-16 w-16 rounded-3xl bg-white dark:bg-zinc-800 flex items-center justify-center shadow-sm group-hover:bg-primary group-hover:text-white transition-all">
+                          <Play className="h-6 w-6 fill-current" />
                         </div>
                         <div>
-                          <p className="text-2xl font-black leading-none mb-2 tracking-tight uppercase">
-                            {session.className}
+                          <p className="text-xl font-black leading-none mb-1">
+                            {session.date.split("T")[0]}
                           </p>
-                          <p className="text-sm text-muted-foreground font-bold uppercase tracking-widest">
-                            {session.startTime} - {session.endTime} • Instructor{" "}
-                            {session.teacherName}
+                          <p className="text-sm text-muted-foreground font-bold uppercase tracking-tight">
+                            {session.startTime} • Instructor{" "}
+                            {session.teacher.user.name}
                           </p>
                         </div>
                       </div>
                       <Button
-                        onClick={() => handleJoinClass(session.meetingUrl)}
-                        className="w-full lg:w-auto mt-8 lg:mt-0 rounded-[1.5rem] h-16 px-12 font-black text-lg shadow-2xl shadow-primary/20 hover:scale-105 transition-all relative z-10"
+                        onClick={() =>
+                          window.open(session.meetingUrl, "_blank")
+                        }
+                        className="w-full md:w-auto mt-4 md:mt-0 rounded-2xl h-14 px-10 font-black shadow-lg"
                       >
-                        Enter Session
+                        Join Room
                       </Button>
-                      {/* Subtle background glow on hover */}
-                      <div className="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity" />
                     </div>
-                  ))}
-                </CardContent>
-              </Card>
-            </motion.div>
-          </div>
-
-          {/* RIGHT: SIDEBAR ANALYTICS & SPIRITUAL LOGS (4 COLS) */}
-          <div className="lg:col-span-4 space-y-8">
-            {/* PRAYER COMMAND CARD (Spiritual Utility) */}
-            <motion.div variants={item}>
-              <Card className="border-none bg-indigo-600 dark:bg-indigo-700 text-white rounded-[3.5rem] shadow-2xl p-10 relative overflow-hidden group">
-                <div className="absolute -bottom-10 -right-10 opacity-10 group-hover:scale-125 transition-all duration-700 rotate-12">
-                  <Heart className="h-56 w-56 fill-white" />
-                </div>
-                <div className="relative z-10">
-                  <h3 className="text-2xl font-black mb-8 flex items-center gap-3 uppercase tracking-tighter">
-                    Spiritual Adhkar
-                  </h3>
-                  <div className="space-y-3">
-                    {["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"].map(
-                      (prayer) => (
-                        <div
-                          key={prayer}
-                          className="flex items-center justify-between p-4 rounded-2xl bg-white/10 hover:bg-white/20 transition-all cursor-pointer border border-white/5 group/row"
-                        >
-                          <span className="font-bold text-lg tracking-tight">
-                            {prayer}
-                          </span>
-                          <div className="h-6 w-6 rounded-lg border-2 border-white/20 flex items-center justify-center group-hover/row:border-white transition-colors">
-                            <CheckCircle2 className="h-4 w-4 text-white opacity-0 group-hover/row:opacity-100 transition-opacity" />
-                          </div>
-                        </div>
-                      ),
-                    )}
+                  ))
+                ) : (
+                  <div className="text-center py-10 text-muted-foreground font-bold italic">
+                    No sessions scheduled for the next 48 hours.
                   </div>
-                  <Button className="w-full mt-10 bg-white text-indigo-600 hover:bg-zinc-100 rounded-2xl h-16 font-black text-lg shadow-2xl transition-all active:scale-95 uppercase tracking-widest">
-                    Save Daily Log
+                )}
+              </CardContent>
+            </Card>
+          </motion.div>
+        </div>
+
+        {/* RIGHT: BILLING & TASKS (4 COLS) */}
+        <div className="lg:col-span-4 space-y-8">
+          {/* FINANCE CARD */}
+          {data.stats.totalBalance > 0 && (
+            <motion.div variants={item}>
+              <Card className="border-none bg-rose-500 text-white rounded-[3rem] p-10 shadow-2xl shadow-rose-500/20 relative overflow-hidden group">
+                <AlertCircle className="absolute -top-6 -left-6 h-32 w-32 opacity-10" />
+                <div className="relative z-10">
+                  <p className="text-[10px] font-black uppercase tracking-widest mb-2 opacity-80">
+                    Pending Dues
+                  </p>
+                  <p className="text-5xl font-black tracking-tighter mb-4">
+                    ${data.stats.totalBalance}
+                  </p>
+                  <p className="text-sm font-medium opacity-80 mb-8 leading-snug">
+                    Your subscription requires attention to maintain class
+                    access.
+                  </p>
+                  <Button
+                    className="w-full bg-white text-rose-600 hover:bg-zinc-100 h-16 rounded-2xl font-black shadow-xl"
+                    onClick={() => setActiveOverlay("billing")}
+                  >
+                    Pay Now
                   </Button>
                 </div>
               </Card>
             </motion.div>
+          )}
 
-            {/* PERFORMANCE INSIGHTS BENTO */}
-            <motion.div variants={item}>
-              <Card className="border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 shadow-2xl rounded-[3.5rem] p-10">
-                <div className="flex justify-between items-center mb-8">
-                  <h3 className="text-2xl font-black uppercase tracking-tighter">
-                    Academic Queue
-                  </h3>
-                  <div className="h-10 w-10 rounded-2xl bg-amber-500/10 text-amber-500 flex items-center justify-center font-black text-sm">
-                    {data.assignments.length}
-                  </div>
-                </div>
-                <div className="space-y-5">
-                  {data.assignments.map((task: any) => (
+          {/* TASKS BENTO */}
+          <motion.div variants={item}>
+            <Card className="border-none bg-white dark:bg-zinc-950 shadow-xl rounded-[3rem] p-10">
+              <h3 className="text-2xl font-black mb-8 uppercase tracking-tighter">
+                Tasks Queue
+              </h3>
+              <div className="space-y-4">
+                {data.assignments.length > 0 ? (
+                  data.assignments.map((task: any) => (
                     <div
                       key={task.id}
-                      onClick={() => openOverlay("assignment", task)}
-                      className="p-6 rounded-[2.25rem] border border-slate-100 dark:border-zinc-800 bg-slate-50/50 dark:bg-zinc-900/40 hover:border-primary transition-all cursor-pointer group"
+                      className="p-6 rounded-[2rem] border bg-slate-50 dark:bg-zinc-900 hover:border-primary transition-all cursor-pointer group"
+                      onClick={() => {
+                        setSelectedTask(task);
+                        setActiveOverlay("assignment");
+                      }}
                     >
-                      <div className="flex justify-between items-start mb-6">
-                        <h5 className="font-black text-base leading-tight group-hover:text-primary transition-colors tracking-tight uppercase">
-                          {task.title}
-                        </h5>
-                        <ArrowRight className="h-5 w-5 text-zinc-400 -rotate-45 group-hover:rotate-0 transition-all" />
-                      </div>
-                      <div className="flex items-center justify-between">
+                      <h5 className="font-bold text-sm leading-tight group-hover:text-primary mb-4">
+                        {task.title}
+                      </h5>
+                      <div className="flex justify-between items-center">
                         <Badge
                           variant="outline"
-                          className="text-[9px] font-black uppercase tracking-widest border-zinc-200 dark:border-zinc-700 px-3 py-1"
+                          className="text-[9px] font-black uppercase tracking-widest"
                         >
-                          Task: {task.type}
+                          {task.type}
                         </Badge>
-                        <span className="text-[9px] font-black text-rose-500 uppercase tracking-[0.2em]">
-                          {new Date(task.dueDate).toLocaleDateString()}
+                        <span className="text-[9px] font-black text-rose-500 uppercase">
+                          {task.dueDate.split("T")[0]}
                         </span>
                       </div>
                     </div>
-                  ))}
-                </div>
-                <Button
-                  variant="ghost"
-                  className="w-full mt-6 rounded-2xl h-12 text-muted-foreground font-black uppercase tracking-[0.2em] text-[10px]"
-                  onClick={() => router.push("/assignments")}
-                >
-                  See All Submissions
-                </Button>
-              </Card>
-            </motion.div>
-
-            {/* FINANCIAL OVERLAY ALERT */}
-            {data.stats.walletBalance > 0 && (
-              <motion.div variants={item}>
-                <Card className="border-none bg-rose-500 text-white rounded-[3.5rem] p-10 shadow-2xl shadow-rose-500/30 relative overflow-hidden group">
-                  <AlertCircle className="absolute -top-10 -left-10 h-40 w-40 opacity-10 group-hover:rotate-12 transition-all duration-700" />
-                  <div className="relative z-10">
-                    <p className="text-[10px] font-black uppercase tracking-[0.3em] mb-3 opacity-80">
-                      Payment Threshold Reached
-                    </p>
-                    <p className="text-6xl font-black tracking-tighter mb-6">
-                      ${data.stats.walletBalance}
-                    </p>
-                    <p className="text-sm font-medium opacity-90 mb-10 leading-relaxed italic-none">
-                      Your account balance for the 2026 Academic Term is
-                      outstanding. Please clear to maintain session access.
-                    </p>
-                    <Button
-                      onClick={() => openOverlay("billing")}
-                      className="w-full bg-white text-rose-600 hover:bg-zinc-100 h-16 rounded-[1.5rem] font-black text-xl transition-all active:scale-95 shadow-2xl"
-                    >
-                      Authorize Payment
-                    </Button>
+                  ))
+                ) : (
+                  <div className="text-center py-6 text-muted-foreground italic">
+                    All caught up!
                   </div>
-                </Card>
-              </motion.div>
-            )}
-          </div>
-        </div>
-      </motion.main>
+                )}
+              </div>
+            </Card>
+          </motion.div>
 
-      {/* --- SPATIAL COMMAND OVERLAYS (THE MODAL ENGINE) --- */}
+          {/* MATERIALS */}
+          <motion.div variants={item}>
+            <Card className="border-none bg-indigo-600 text-white rounded-[3rem] p-10">
+              <h3 className="text-xl font-black mb-6">Latest Library</h3>
+              <div className="space-y-3">
+                {data.materials.map((m: any) => (
+                  <div
+                    key={m.id}
+                    className="flex items-center justify-between p-4 rounded-2xl bg-white/10 hover:bg-white/20 transition-all cursor-pointer border border-white/5"
+                    onClick={() => window.open(m.fileUrl)}
+                  >
+                    <span className="text-sm font-bold truncate pr-4">
+                      {m.title}
+                    </span>
+                    <Download className="h-4 w-4" />
+                  </div>
+                ))}
+              </div>
+            </Card>
+          </motion.div>
+        </div>
+      </div>
+
+      {/* --- SPATIAL OVERLAY ENGINE --- */}
       <AnimatePresence>
         {activeOverlay && (
           <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
@@ -485,220 +309,101 @@ export default function StudentDashboardClient({ data }: { data: any }) {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              onClick={closeOverlay}
-              className="absolute inset-0 bg-black/85 backdrop-blur-[20px]"
+              onClick={() => setActiveOverlay(null)}
+              className="absolute inset-0 bg-black/80 backdrop-blur-2xl"
             />
 
             <motion.div
-              initial={{ scale: 0.85, opacity: 0, y: 50, filter: "blur(10px)" }}
-              animate={{ scale: 1, opacity: 1, y: 0, filter: "blur(0px)" }}
-              exit={{ scale: 0.85, opacity: 0, y: 50, filter: "blur(10px)" }}
-              transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="relative w-full max-w-3xl bg-white dark:bg-[#0A0A0B] rounded-[4rem] shadow-[0_50px_100px_-20px_rgba(0,0,0,0.5)] border border-white/10 overflow-hidden"
+              initial={{ scale: 0.9, opacity: 0, y: 40 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.9, opacity: 0, y: 40 }}
+              className="relative w-full max-w-2xl bg-white dark:bg-zinc-950 rounded-[4rem] shadow-3xl overflow-hidden border border-white/5"
             >
-              {/* Overlay Modal Header */}
-              <div className="p-12 pb-8 flex justify-between items-center border-b border-zinc-100 dark:border-zinc-900 bg-slate-50/50 dark:bg-zinc-900/50 backdrop-blur-3xl">
-                <div className="space-y-1">
-                  <h2 className="text-4xl font-black tracking-tighter uppercase leading-none">
-                    {activeOverlay === "hifz"
-                      ? "Hifz Progression"
-                      : activeOverlay === "assignment"
-                        ? "Turn In Task"
-                        : activeOverlay === "billing"
-                          ? "Secure Wallet"
-                          : "Command Hub"}
-                  </h2>
-                  <div className="flex items-center gap-3 text-xs font-black text-muted-foreground uppercase tracking-widest mt-2">
-                    <div className="h-1.5 w-1.5 rounded-full bg-primary" />
-                    Record {data.studentId} • {new Date().getFullYear()}
-                  </div>
-                </div>
+              <div className="p-12 pb-6 border-b flex justify-between items-center bg-slate-50 dark:bg-zinc-900">
+                <h2 className="text-3xl font-black tracking-tight uppercase">
+                  {activeOverlay === "hifz"
+                    ? "Hifz Logs"
+                    : activeOverlay === "assignment"
+                      ? "Turn In"
+                      : "Payment"}
+                </h2>
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="rounded-full h-16 w-16 bg-white dark:bg-zinc-800 shadow-xl border border-muted-foreground/10 hover:rotate-90 transition-all duration-500"
-                  onClick={closeOverlay}
+                  className="rounded-full h-12 w-12"
+                  onClick={() => setActiveOverlay(null)}
                 >
-                  <X className="h-8 w-8" />
+                  <X className="h-6 w-6" />
                 </Button>
               </div>
 
-              {/* Overlay Content Switcher */}
-              <div className="p-12 max-h-[65vh] overflow-y-auto custom-scrollbar">
-                {/* 1. HIFZ LOGS BREAKDOWN */}
+              <div className="p-12 max-h-[60vh] overflow-y-auto">
                 {activeOverlay === "hifz" && (
-                  <div className="space-y-8">
-                    <div className="grid grid-cols-2 gap-6">
-                      <div className="p-8 rounded-[3rem] bg-indigo-600 text-white flex flex-col items-center shadow-xl">
-                        <span className="text-[10px] font-black uppercase tracking-[0.3em] opacity-80 mb-3">
-                          Target
-                        </span>
-                        <p className="text-4xl font-black italic leading-none tracking-tight">
-                          30 Juz
-                        </p>
-                      </div>
-                      <div className="p-8 rounded-[3rem] bg-zinc-100 dark:bg-zinc-900 flex flex-col items-center">
-                        <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground mb-3">
-                          Mastery
-                        </span>
-                        <p className="text-4xl font-black leading-none tracking-tight">
-                          96.4%
-                        </p>
-                      </div>
-                    </div>
-                    <div className="space-y-4">
-                      <h4 className="text-xs font-black uppercase text-muted-foreground tracking-widest px-2">
-                        History Feed
-                      </h4>
-                      {data.hifz.logs.map((log: any) => (
-                        <div
-                          key={log.id}
-                          className="p-8 rounded-[2.5rem] border border-zinc-100 dark:border-zinc-800 flex justify-between items-center group hover:bg-zinc-50 dark:hover:bg-zinc-900 transition-all"
+                  <div className="space-y-4">
+                    {data.hifz.logs.map((log: any) => (
+                      <div
+                        key={log.id}
+                        className="p-6 rounded-[2.5rem] border flex justify-between items-center"
+                      >
+                        <div>
+                          <p className="text-xl font-black">
+                            Ayah {log.startAyah}-{log.endAyah}
+                          </p>
+                          <p className="text-xs font-bold text-muted-foreground uppercase mt-1">
+                            Surah {log.surah} • {log.date.split("T")[0]}
+                          </p>
+                        </div>
+                        <Badge
+                          className={cn(
+                            "px-4 py-1.5",
+                            log.status === "PASS"
+                              ? "bg-emerald-500"
+                              : "bg-amber-500",
+                          )}
                         >
-                          <div className="flex items-center gap-8">
-                            <div className="h-16 w-16 rounded-2xl bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center font-black text-xl italic text-primary">
-                              {log.surah}
-                            </div>
-                            <div>
-                              <p className="text-2xl font-black tracking-tight leading-none mb-2">
-                                Ayat {log.startAyah} - {log.endAyah}
-                              </p>
-                              <p className="text-xs font-bold text-muted-foreground uppercase tracking-widest">
-                                {new Date(log.date).toDateString()}
-                              </p>
-                            </div>
-                          </div>
-                          <Badge
-                            className={cn(
-                              "rounded-xl px-6 py-2 font-black uppercase tracking-widest text-[10px]",
-                              log.status === "PASS"
-                                ? "bg-emerald-500 text-white"
-                                : "bg-amber-500 text-white",
-                            )}
-                          >
-                            {log.status}
-                          </Badge>
-                        </div>
-                      ))}
-                    </div>
+                          {log.status}
+                        </Badge>
+                      </div>
+                    ))}
                   </div>
                 )}
 
-                {/* 2. ADVANCED TASK SUBMISSION ENGINE */}
-                {activeOverlay === "assignment" && overlayData && (
+                {activeOverlay === "assignment" && selectedTask && (
                   <div className="space-y-10">
-                    <div className="p-10 rounded-[3.5rem] bg-amber-50 dark:bg-amber-950/20 border border-amber-100 dark:border-amber-900/50 space-y-4">
-                      <div className="flex items-center gap-2 text-amber-600 font-black text-xs uppercase tracking-widest">
-                        <AlertCircle className="h-5 w-5" /> Academic Guidelines
-                      </div>
-                      <p className="text-lg font-bold text-amber-900 dark:text-amber-200 leading-relaxed italic-none">
-                        {overlayData.description ||
-                          "Refer to your module resources before finalizing your submission."}
+                    <div className="p-8 rounded-[3rem] bg-amber-50 dark:bg-amber-900/20 border border-amber-200">
+                      <p className="font-bold text-amber-900 dark:text-amber-200">
+                        Instructions: Ensure your audio is clear and recitation
+                        follows tajweed rules.
                       </p>
                     </div>
-
-                    <div className="space-y-6">
-                      <h4 className="text-xs font-black uppercase text-muted-foreground tracking-widest px-2">
-                        Payload Submission
-                      </h4>
-                      <div className="group relative">
-                        <div className="h-72 border-4 border-dashed border-zinc-200 dark:border-zinc-800 rounded-[3.5rem] flex flex-col items-center justify-center gap-6 hover:border-primary hover:bg-primary/5 transition-all cursor-pointer relative z-10 overflow-hidden">
-                          <div className="h-20 w-20 rounded-full bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all shadow-xl">
-                            <UploadCloud className="h-10 w-10" />
-                          </div>
-                          <div className="text-center">
-                            <p className="text-2xl font-black tracking-tighter uppercase mb-1">
-                              Upload Learning Artifact
-                            </p>
-                            <p className="text-sm text-muted-foreground font-bold uppercase tracking-widest italic-none">
-                              MP3 / PDF / JPG (Up to 100MB)
-                            </p>
-                          </div>
-                        </div>
-                        <input
-                          type="file"
-                          className="absolute inset-0 opacity-0 cursor-pointer z-20"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="flex gap-4">
-                      <Button
-                        variant="outline"
-                        className="flex-1 h-20 rounded-[1.5rem] font-bold text-lg border-zinc-200 dark:border-zinc-800"
-                      >
-                        Archive Draft
-                      </Button>
-                      <Button
-                        className="flex-[2] h-20 rounded-[1.5rem] font-black text-2xl px-12 shadow-[0_20px_40px_-10px_rgba(99,102,241,0.4)]"
-                        onClick={() => {
-                          toast.success("Submission Locked!");
-                          closeOverlay();
-                        }}
-                      >
-                        Final Submission
-                      </Button>
-                    </div>
-                  </div>
-                )}
-
-                {/* 3. FINANCIAL WALLET & STRIPE OVERLAY */}
-                {activeOverlay === "billing" && (
-                  <div className="space-y-12 text-center py-6">
-                    <div className="h-32 w-32 bg-rose-50 dark:bg-rose-950/30 rounded-full flex items-center justify-center mx-auto shadow-inner text-rose-500 border-4 border-rose-100 dark:border-rose-900">
-                      <ShieldCheck className="h-14 w-14" />
-                    </div>
-                    <div>
-                      <h3 className="text-7xl font-black tracking-tighter leading-none mb-4">
-                        $ {data.stats.walletBalance}
-                      </h3>
-                      <p className="text-muted-foreground font-black mt-1 italic-none uppercase tracking-[0.4em] text-xs">
-                        Unsettled Subscription Fees
+                    <div className="h-56 border-4 border-dashed rounded-[3rem] flex flex-col items-center justify-center gap-4 hover:border-primary transition-all cursor-pointer">
+                      <UploadCloud className="h-10 w-10 text-muted-foreground" />
+                      <p className="font-black text-lg">
+                        Click to Upload Submission
                       </p>
                     </div>
-                    <div className="grid grid-cols-1 gap-4 max-w-md mx-auto">
-                      <Button className="h-20 rounded-[1.75rem] font-black text-2xl bg-[#635BFF] hover:bg-[#534acc] transition-all shadow-xl shadow-indigo-200 flex items-center justify-center gap-4">
-                        <Globe className="h-6 w-6" /> Pay with Stripe
-                      </Button>
-                      <Button
-                        variant="outline"
-                        className="h-20 rounded-[1.75rem] font-black text-xl flex gap-3 border-zinc-200 dark:border-zinc-800"
-                      >
-                        <Download className="h-5 w-5" /> Export Invoice
-                      </Button>
-                    </div>
+                    <Button
+                      className="w-full h-20 rounded-[2rem] font-black text-xl shadow-2xl"
+                      onClick={() => {
+                        toast.success("Submitted!");
+                        setActiveOverlay(null);
+                      }}
+                    >
+                      Final Submission
+                    </Button>
                   </div>
                 )}
-              </div>
-
-              {/* Modal Footer (Sticky Signature) */}
-              <div className="p-10 border-t bg-slate-50/50 dark:bg-zinc-900/50 flex items-center justify-center gap-6">
-                <div className="flex -space-x-3">
-                  {[1, 2, 3].map((i) => (
-                    <div
-                      key={i}
-                      className="h-8 w-8 rounded-full border-2 border-white dark:border-zinc-800 bg-zinc-200 dark:bg-zinc-700"
-                    />
-                  ))}
-                </div>
-                <p className="text-[9px] font-black uppercase text-muted-foreground tracking-[0.5em] italic-none">
-                  Secure Academic Intelligence Gateway v3.1
-                </p>
               </div>
             </motion.div>
           </div>
         )}
       </AnimatePresence>
-
-      {/* --- FLOATING COMMAND ACTION (Mobile Shortcut) --- */}
-      <div className="fixed bottom-8 right-8 z-[70] lg:hidden">
-        <Button className="h-16 w-16 rounded-full shadow-2xl bg-primary text-white p-0">
-          <Plus className="h-8 w-8" />
-        </Button>
-      </div>
-    </div>
+    </motion.div>
   );
 }
+
+
+
 
 // "use client";
 
