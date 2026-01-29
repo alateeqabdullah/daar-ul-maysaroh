@@ -3,50 +3,60 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
-import { 
-  BookOpen, Calendar, Clock, Award, Video, FileText, 
-  TrendingUp, Download, CreditCard, ChevronRight, 
-  Bell, Search, Settings, ArrowRight, Play,
-  CheckCircle2, AlertCircle, Sparkles, Zap, GraduationCap, 
-  X, UploadCloud, Heart, Star, Map, History, ShieldCheck,
-  MoreHorizontal, Plus, Headphones, MessageSquare, Wallet
+import {
+  BookOpen,
+  Calendar,
+  Clock,
+  Award,
+  Video,
+  FileText,
+  TrendingUp,
+  Download,
+  CreditCard,
+  ChevronRight,
+  Bell,
+  Search,
+  Settings,
+  ArrowRight,
+  Play,
+  CheckCircle2,
+  AlertCircle,
+  Sparkles,
+  Zap,
+  GraduationCap,
+  X,
+  UploadCloud,
+  Heart,
+  Star,
+  MessageSquare,
+  Wallet,
+  Moon,
+  Sun,
 } from "lucide-react";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
-
-// --- TYPES ---
-import { EnrollmentStatus, AttendanceStatus, SubmissionStatus, PrayerType, PrayerStatus } from "@/app/generated/prisma";
 
 // --- ANIMATION VARIANTS ---
 const staggerContainer = {
   hidden: { opacity: 0 },
-  show: { opacity: 1, transition: { staggerChildren: 0.05 } }
+  show: { opacity: 1, transition: { staggerChildren: 0.05 } },
 };
 
 const fadeInUp = {
   hidden: { y: 20, opacity: 0 },
-  show: { y: 0, opacity: 1, transition: { type: "spring", stiffness: 100 } }
+  show: { y: 0, opacity: 1, transition: { type: "spring", stiffness: 100 } },
 };
 
 export default function StudentDashboardClient({ data }: { data: any }) {
   const router = useRouter();
-  
-  // MODAL & INTERACTION STATE
   const [activeView, setActiveView] = useState<string | null>(null);
   const [selectedItem, setSelectedItem] = useState<any>(null);
-  const [currentTime, setCurrentTime] = useState(new Date());
-
-  useEffect(() => {
-    const timer = setInterval(() => setCurrentTime(new Date()), 1000);
-    return () => clearInterval(timer);
-  }, []);
 
   // --- ACTIONS ---
   const handleAction = (type: string, payload?: any) => {
@@ -54,378 +64,475 @@ export default function StudentDashboardClient({ data }: { data: any }) {
     setActiveView(type);
   };
 
-  const closeOverlay = () => {
-    setActiveView(null);
-    setSelectedItem(null);
-  };
-
   return (
-    <div className="min-h-screen bg-[#F8F9FB] dark:bg-[#020202] pb-24 selection:bg-primary/30">
-      
-      {/* 1. SPATIAL TOP NAVIGATION */}
-      <header className="sticky top-0 z-[60] w-full border-b bg-white/70 dark:bg-black/70 backdrop-blur-xl px-4 md:px-8 py-3">
+    <div className="min-h-screen bg-[#FAFAFA] dark:bg-[#09090B] text-slate-900 dark:text-zinc-100 transition-colors duration-500 pb-24">
+      {/* 1. ULTRA-MODERN SPATIAL HEADER */}
+      <header className="sticky top-0 z-[60] w-full border-b border-slate-200/60 dark:border-zinc-800/50 bg-white/80 dark:bg-[#09090B]/80 backdrop-blur-xl px-4 md:px-8 py-3">
         <div className="max-w-[1600px] mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-6">
-            <div className="h-10 w-10 bg-primary rounded-2xl flex items-center justify-center shadow-lg shadow-primary/20 rotate-3">
+          <div className="flex items-center gap-4">
+            <div className="h-11 w-11 bg-primary rounded-2xl flex items-center justify-center shadow-lg shadow-primary/20 transform -rotate-2 hover:rotate-0 transition-transform duration-300">
               <GraduationCap className="text-white h-6 w-6" />
             </div>
             <div className="hidden lg:block">
-              <h1 className="text-lg font-black tracking-tighter uppercase leading-none">Al-Ateeq Elite</h1>
-              <p className="text-[10px] text-muted-foreground font-black tracking-[0.3em] uppercase opacity-60">Command Center</p>
+              <h1 className="text-xl font-black tracking-tighter uppercase leading-none italic">
+                Al-Ateeq
+              </h1>
+              <p className="text-[10px] text-muted-foreground font-black tracking-[0.3em] uppercase opacity-70">
+                Elite Command
+              </p>
             </div>
           </div>
 
           <div className="flex-1 max-w-xl mx-10 hidden md:block">
             <div className="relative group">
-               <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
-               <input 
-                 placeholder="Search Quran, Assignments, or Schedule (⌘K)" 
-                 className="w-full pl-12 h-11 rounded-2xl bg-secondary/40 border-none text-sm focus:ring-2 ring-primary/20 transition-all outline-none" 
-               />
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+              <input
+                placeholder="Search Knowledge Base..."
+                className="w-full pl-12 h-11 rounded-2xl bg-slate-100 dark:bg-zinc-900 border-none text-sm focus:ring-2 ring-primary/20 transition-all outline-none"
+              />
             </div>
           </div>
 
-          <div className="flex items-center gap-2 md:gap-4">
-            <Badge variant="outline" className="hidden xl:flex border-primary/20 bg-primary/5 rounded-full px-4 h-9 items-center gap-2 font-bold text-primary">
-              <div className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
-              {currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-            </Badge>
-            <Button variant="ghost" size="icon" className="rounded-2xl bg-secondary/40 h-10 w-10">
+          <div className="flex items-center gap-3">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="rounded-2xl h-11 w-11 bg-slate-100 dark:bg-zinc-900 hover:bg-primary/10"
+            >
               <Bell className="h-5 w-5" />
             </Button>
-            <Avatar onClick={() => router.push('/profile')} className="h-11 w-11 border-2 border-background shadow-xl cursor-pointer hover:scale-110 transition-transform">
+            <Avatar
+              onClick={() => router.push("/profile")}
+              className="h-11 w-11 border-2 border-white dark:border-zinc-800 shadow-xl cursor-pointer hover:scale-110 transition-transform"
+            >
               <AvatarImage src={data.user.image} />
-              <AvatarFallback className="font-black bg-primary text-white">{data.user.name[0]}</AvatarFallback>
+              <AvatarFallback className="font-black bg-primary text-white">
+                {data.user.name[0]}
+              </AvatarFallback>
             </Avatar>
           </div>
         </div>
       </header>
 
-      <motion.main 
-        variants={staggerContainer} 
-        initial="hidden" 
-        animate="show" 
-        className="max-w-[1600px] mx-auto px-4 md:px-8 mt-8 space-y-8"
+      <motion.main
+        variants={staggerContainer}
+        initial="hidden"
+        animate="show"
+        className="max-w-[1600px] mx-auto px-4 md:px-8 mt-10 space-y-10"
       >
-        {/* 2. DYNAMIC HERO SECTION */}
-        <section className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-end">
-          <div className="lg:col-span-8 space-y-2">
-            <motion.div variants={fadeInUp} className="flex items-center gap-2 text-primary font-black text-xs uppercase tracking-widest">
-              <Sparkles className="h-3 w-3" /> Spiritual Productivity: High
+        {/* 2. HERO GREETING */}
+        <section className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
+          <div className="space-y-2">
+            <motion.div
+              variants={fadeInUp}
+              className="flex items-center gap-2 text-primary font-black text-xs uppercase tracking-widest"
+            >
+              <Sparkles className="h-4 w-4" /> Spiritual Connectivity: Optimized
             </motion.div>
-            <motion.h2 variants={fadeInUp} className="text-4xl md:text-6xl font-black tracking-tight leading-[0.9]">
-              Marhaba, <span className="text-primary italic">{data.user.name.split(' ')[0]}</span>.
+            <motion.h2
+              variants={fadeInUp}
+              className="text-5xl md:text-7xl font-black tracking-tighter leading-[0.85]"
+            >
+              Salaam,{" "}
+              <span className="text-primary italic">
+                {data.user.name.split(" ")[0]}
+              </span>
+              .
             </motion.h2>
-            <motion.p variants={fadeInUp} className="text-muted-foreground font-medium text-lg max-w-2xl">
-              Today is <span className="text-foreground font-bold underline decoration-primary/40 underline-offset-4">Thursday, 29th Rajab</span>. You have 2 classes today.
+            <motion.p
+              variants={fadeInUp}
+              className="text-muted-foreground font-medium text-lg md:text-xl max-w-2xl leading-snug"
+            >
+              You've mastered{" "}
+              <span className="text-foreground font-bold">4 Surahs</span> this
+              month. Your path to mastery is 65% complete.
             </motion.p>
           </div>
-          <div className="lg:col-span-4 flex gap-3 w-full">
-            <Button onClick={() => handleAction('schedule')} className="flex-1 h-14 rounded-[1.5rem] font-black shadow-2xl shadow-primary/20 bg-primary text-white hover:bg-primary/90 transition-all">
-              Full Schedule <ArrowRight className="ml-2 h-4 w-4" />
+          <motion.div variants={fadeInUp} className="w-full md:w-auto">
+            <Button
+              onClick={() => router.push("/classes")}
+              className="w-full md:w-auto h-16 rounded-[2rem] px-10 font-black text-lg bg-primary text-white shadow-2xl shadow-primary/30 hover:shadow-primary/50 transition-all hover:-translate-y-1"
+            >
+              Learning Path <ArrowRight className="ml-2 h-5 w-5" />
             </Button>
-            <Button variant="secondary" className="h-14 w-14 rounded-[1.5rem] p-0 bg-white shadow-xl">
-              <MessageSquare className="h-6 w-6" />
-            </Button>
-          </div>
+          </motion.div>
         </section>
 
-        {/* 3. THE BENTO COMMAND GRID */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-          
-          {/* LEFT: CORE ACADEMIC & SPIRITUAL (8 COLS) */}
-          <div className="lg:col-span-8 space-y-6">
-            
-            {/* KPI STRIP - INTELLIGENT ANALYTICS */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-               {[
-                 { label: "Attendance", val: `${data.stats.attendance}%`, trend: "+2%", icon: CheckCircle2, col: "text-emerald-500", bg: "bg-emerald-500/10" },
-                 { label: "Tasks", val: data.stats.assignments, trend: "4 Overdue", icon: Zap, col: "text-amber-500", bg: "bg-amber-500/10" },
-                 { label: "GPA", val: "3.85", trend: "Elite", icon: Award, col: "text-blue-500", bg: "bg-blue-500/10" },
-                 { label: "Balance", val: data.stats.walletBalance > 0 ? `$${data.stats.walletBalance}` : "Clear", icon: Wallet, col: "text-rose-500", bg: "bg-rose-500/10" },
-               ].map((s) => (
-                 <motion.div key={s.label} variants={fadeInUp}>
-                   <Card className="border-none shadow-sm rounded-3xl bg-white/50 dark:bg-zinc-900/50 backdrop-blur-md group hover:shadow-xl transition-all">
-                      <CardContent className="p-4 flex flex-col gap-3">
-                         <div className={cn("h-10 w-10 rounded-xl flex items-center justify-center", s.bg, s.col)}>
-                            <s.icon className="h-5 w-5" />
-                         </div>
-                         <div>
-                            <p className="text-[10px] font-black uppercase text-muted-foreground tracking-tighter">{s.label}</p>
-                            <p className="text-xl font-black">{s.val}</p>
-                         </div>
-                      </CardContent>
-                   </Card>
-                 </motion.div>
-               ))}
-            </div>
+        {/* 3. BENTO GRID - KPI STRIP */}
+        <section className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
+          {[
+            {
+              label: "Attendance",
+              val: `${data.stats.attendance}%`,
+              icon: CheckCircle2,
+              col: "text-emerald-500",
+              bg: "bg-emerald-500/10",
+              border: "hover:border-emerald-500/30",
+            },
+            {
+              label: "Assignments",
+              val: data.stats.assignments,
+              icon: Zap,
+              col: "text-amber-500",
+              bg: "bg-amber-500/10",
+              border: "hover:border-amber-500/30",
+            },
+            {
+              label: "Active Nodes",
+              val: data.stats.activeCourses,
+              icon: BookOpen,
+              col: "text-blue-500",
+              bg: "bg-blue-500/10",
+              border: "hover:border-blue-500/30",
+            },
+            {
+              label: "Wallet",
+              val:
+                data.stats.walletBalance > 0
+                  ? `$${data.stats.walletBalance}`
+                  : "Clear",
+              icon: Wallet,
+              col: "text-rose-500",
+              bg: "bg-rose-500/10",
+              border: "hover:border-rose-500/30",
+            },
+          ].map((s) => (
+            <motion.div key={s.label} variants={fadeInUp}>
+              <Card
+                className={cn(
+                  "border border-slate-200 dark:border-zinc-800 bg-white/50 dark:bg-zinc-900/40 backdrop-blur-md shadow-sm rounded-[2rem] transition-all duration-300 group",
+                  s.border,
+                )}
+              >
+                <CardContent className="p-6 flex flex-col md:flex-row items-center gap-4 text-center md:text-left">
+                  <div
+                    className={cn(
+                      "h-14 w-14 rounded-2xl flex items-center justify-center transition-transform group-hover:scale-110 group-hover:rotate-3",
+                      s.bg,
+                      s.col,
+                    )}
+                  >
+                    <s.icon className="h-7 w-7" />
+                  </div>
+                  <div>
+                    <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground mb-1">
+                      {s.label}
+                    </p>
+                    <p className="text-2xl font-black tabular-nums">{s.val}</p>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+          ))}
+        </section>
 
+        {/* 4. PRIMARY CONTENT HUB */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          {/* MAIN COLUMN (8 COLS) */}
+          <div className="lg:col-span-8 space-y-8">
             {/* THE MASTER HIFZ BENTO */}
             <motion.div variants={fadeInUp}>
-              <Card 
-                onClick={() => handleAction('hifz')}
-                className="cursor-pointer border-none bg-slate-900 text-white rounded-[2.5rem] shadow-2xl overflow-hidden relative group h-[340px]"
+              <Card
+                onClick={() => handleAction("hifz")}
+                className="cursor-pointer border-none bg-slate-900 dark:bg-zinc-900 text-white rounded-[3rem] shadow-2xl overflow-hidden relative group min-h-[380px]"
               >
-                <div className="absolute top-0 right-0 p-8 opacity-5 group-hover:opacity-10 transition-opacity duration-1000 rotate-12">
-                  <BookOpen className="h-[400px] w-[400px]" />
-                </div>
-                <CardContent className="p-10 relative z-10 flex flex-col h-full justify-between">
-                   <div className="flex justify-between items-start">
-                      <div className="space-y-4">
-                        <Badge className="bg-primary/20 text-primary border-none font-black px-4 py-1 tracking-widest text-[10px]">CURRENT PATHWAY</Badge>
-                        <h3 className="text-5xl md:text-6xl font-black tracking-tighter">Surah {data.hifz.currentSurah}</h3>
-                        <p className="text-slate-400 text-lg font-medium leading-tight max-w-md">Currently reviewing <span className="text-white italic">Juz 29</span>. Your pronunciation stability is 94%.</p>
-                      </div>
-                      <div className="h-24 w-24 rounded-full border-4 border-slate-800 flex items-center justify-center flex-col bg-slate-900/50 backdrop-blur-xl">
-                         <span className="text-2xl font-black italic">65%</span>
-                         <span className="text-[8px] font-bold uppercase text-slate-500">Juz Progress</span>
-                      </div>
-                   </div>
+                {/* Spiritual Aura Background */}
+                <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary/20 rounded-full blur-[120px] -mr-48 -mt-48 group-hover:bg-primary/30 transition-colors duration-700" />
 
-                   <div className="space-y-6">
-                      <div className="flex items-center gap-3">
-                         <Avatar className="h-8 w-8 ring-2 ring-primary">
-                            <AvatarFallback className="bg-primary text-white text-[10px]">TM</AvatarFallback>
-                         </Avatar>
-                         <p className="text-sm font-bold text-slate-300 italic-none">Reviewed by Prof. Abdullah yesterday</p>
-                      </div>
-                      <div className="h-2.5 w-full bg-slate-800 rounded-full overflow-hidden">
-                        <motion.div initial={{ width: 0 }} animate={{ width: "65%" }} transition={{ duration: 2 }} className="h-full bg-gradient-to-r from-primary via-indigo-400 to-indigo-600" />
-                      </div>
-                   </div>
+                <CardContent className="p-10 md:p-14 relative z-10 flex flex-col h-full justify-between">
+                  <div className="flex flex-col md:flex-row justify-between items-start gap-8">
+                    <div className="space-y-6">
+                      <Badge className="bg-white/10 text-white backdrop-blur-md border-white/20 font-black px-5 py-1.5 tracking-widest text-xs uppercase">
+                        Quranic Roadmap
+                      </Badge>
+                      <h3 className="text-6xl md:text-8xl font-black tracking-tighter leading-none">
+                        Surah {data.hifz.currentSurah}
+                      </h3>
+                      <p className="text-zinc-400 text-xl font-medium max-w-lg leading-relaxed">
+                        Your next milestone is completing{" "}
+                        <span className="text-white font-bold">Juz 29</span>.
+                        Keep up your current Fajr revision speed.
+                      </p>
+                    </div>
+                    <div className="h-32 w-32 rounded-full border-8 border-white/5 flex items-center justify-center flex-col bg-white/10 backdrop-blur-xl group-hover:scale-110 transition-transform duration-500">
+                      <span className="text-3xl font-black italic">65%</span>
+                      <span className="text-[10px] font-bold uppercase text-zinc-400">
+                        Total
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="mt-12 space-y-6">
+                    <div className="flex items-center justify-between font-black text-xs uppercase tracking-widest text-zinc-500">
+                      <span>Global Progression</span>
+                      <span className="text-primary italic">
+                        Excellent Stability
+                      </span>
+                    </div>
+                    <div className="h-3 w-full bg-white/5 rounded-full overflow-hidden p-1">
+                      <motion.div
+                        initial={{ width: 0 }}
+                        animate={{ width: "65%" }}
+                        transition={{ duration: 2, ease: "circOut" }}
+                        className="h-full bg-gradient-to-r from-primary via-indigo-400 to-white rounded-full shadow-[0_0_20px_rgba(99,102,241,0.5)]"
+                      />
+                    </div>
+                  </div>
                 </CardContent>
               </Card>
             </motion.div>
 
-            {/* LIVE CLASS TIMELINE */}
+            {/* LIVE SESSIONS HUB */}
             <motion.div variants={fadeInUp}>
-               <Card className="border-none bg-white shadow-xl rounded-[2.5rem] overflow-hidden">
-                  <div className="p-8 pb-0 flex items-center justify-between">
-                     <h3 className="text-2xl font-black flex items-center gap-3">
-                        <Video className="h-6 w-6 text-primary" /> Live Sessions
-                     </h3>
-                     <Badge className="bg-rose-500 text-white animate-pulse">2 LIVE NOW</Badge>
-                  </div>
-                  <CardContent className="p-8 space-y-4">
-                    {data.sessions.map((session: any) => (
-                      <div key={session.id} className="flex flex-col md:flex-row items-center justify-between p-6 rounded-[2rem] bg-slate-50 hover:bg-slate-100 transition-all group">
-                         <div className="flex items-center gap-6">
-                            <div className="h-16 w-16 rounded-[1.5rem] bg-white flex items-center justify-center shadow-inner group-hover:scale-110 transition-transform">
-                               <Play className="h-6 w-6 text-primary fill-primary" />
-                            </div>
-                            <div>
-                               <p className="text-xl font-black leading-none mb-1">{session.className}</p>
-                               <p className="text-sm text-muted-foreground font-bold">{session.startTime} - {session.endTime} • {session.teacherName}</p>
-                            </div>
-                         </div>
-                         <Button onClick={() => handleJoinClass(session.meetingUrl)} className="w-full md:w-auto mt-4 md:mt-0 rounded-2xl h-14 px-10 font-black shadow-xl shadow-primary/10">
-                            Enter Classroom
-                         </Button>
+              <Card className="border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 shadow-xl rounded-[3rem] overflow-hidden">
+                <div className="p-10 pb-2 flex items-center justify-between">
+                  <h3 className="text-3xl font-black flex items-center gap-3 tracking-tight">
+                    <div className="h-2 w-2 rounded-full bg-rose-500 animate-ping" />
+                    Live Classroom
+                  </h3>
+                  <Button
+                    variant="ghost"
+                    className="font-bold text-muted-foreground hover:text-primary transition-colors"
+                  >
+                    Calendar <ChevronRight className="h-4 w-4 ml-1" />
+                  </Button>
+                </div>
+                <CardContent className="p-10 space-y-6">
+                  {data.sessions.map((session: any) => (
+                    <div
+                      key={session.id}
+                      className="flex flex-col md:flex-row items-center justify-between p-8 rounded-[2.5rem] bg-slate-50 dark:bg-zinc-900/40 border border-transparent hover:border-primary/20 transition-all group"
+                    >
+                      <div className="flex items-center gap-8">
+                        <div className="h-16 w-16 rounded-3xl bg-white dark:bg-zinc-800 flex items-center justify-center shadow-sm group-hover:bg-primary group-hover:text-white transition-all duration-300">
+                          <Play className="h-7 w-7 fill-current" />
+                        </div>
+                        <div>
+                          <p className="text-2xl font-black leading-none mb-2">
+                            {session.className}
+                          </p>
+                          <p className="text-sm text-muted-foreground font-bold uppercase tracking-tight">
+                            {session.startTime} - {session.endTime} •{" "}
+                            {session.teacherName}
+                          </p>
+                        </div>
                       </div>
-                    ))}
-                  </CardContent>
-               </Card>
+                      <Button
+                        onClick={() => toast.success("Redirecting...")}
+                        className="w-full md:w-auto mt-6 md:mt-0 rounded-2xl h-14 px-12 font-black shadow-xl shadow-primary/20 hover:scale-105 transition-transform"
+                      >
+                        Enter Room
+                      </Button>
+                    </div>
+                  ))}
+                </CardContent>
+              </Card>
             </motion.div>
           </div>
 
-          {/* RIGHT: SIDEBAR (4 COLS) */}
-          <div className="lg:col-span-4 space-y-6">
-            
-            {/* SPIRITUAL CHECKLIST (PRAYER TRACKER) */}
+          {/* SIDEBAR COLUMN (4 COLS) */}
+          <div className="lg:col-span-4 space-y-8">
+            {/* SPIRITUAL RADIUS CARD */}
             <motion.div variants={fadeInUp}>
-               <Card className="border-none bg-indigo-600 text-white rounded-[2.5rem] shadow-xl p-8">
-                  <h3 className="text-xl font-black mb-6 flex items-center gap-2">
-                     <Heart className="h-5 w-5 fill-white" /> Daily Adhkar & Prayer
-                  </h3>
-                  <div className="space-y-3">
-                     {["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"].map((prayer) => (
-                       <div key={prayer} className="flex items-center justify-between p-4 rounded-2xl bg-white/10 hover:bg-white/20 transition-all cursor-pointer border border-white/5">
-                          <span className="font-bold">{prayer}</span>
-                          <CheckCircle2 className="h-5 w-5 text-indigo-200" />
-                       </div>
-                     ))}
-                  </div>
-                  <Button variant="outline" className="w-full mt-6 border-white/20 text-white hover:bg-white/10 rounded-2xl py-6 font-bold">
-                     Update Prayer Log
-                  </Button>
-               </Card>
+              <Card className="border-none bg-indigo-600 dark:bg-indigo-700 text-white rounded-[3rem] shadow-2xl p-10 relative overflow-hidden group">
+                <div className="absolute -bottom-10 -right-10 opacity-10 group-hover:scale-125 transition-transform duration-500">
+                  <Heart className="h-48 w-48 fill-white" />
+                </div>
+                <h3 className="text-2xl font-black mb-8 flex items-center gap-3">
+                  Prayer Log
+                </h3>
+                <div className="space-y-3 relative z-10">
+                  {["Fajr", "Dhuhr", "Asr", "Maghrib", "Isha"].map((prayer) => (
+                    <div
+                      key={prayer}
+                      className="flex items-center justify-between p-4 rounded-2xl bg-white/10 hover:bg-white/20 transition-all cursor-pointer border border-white/5"
+                    >
+                      <span className="font-bold text-lg">{prayer}</span>
+                      <CheckCircle2 className="h-6 w-6 text-indigo-200 opacity-40" />
+                    </div>
+                  ))}
+                </div>
+                <Button className="w-full mt-8 bg-white text-indigo-600 hover:bg-zinc-100 rounded-2xl h-14 font-black shadow-lg">
+                  Submit Daily Log
+                </Button>
+              </Card>
             </motion.div>
 
-            {/* ASSIGNMENTS MODULE */}
+            {/* PENDING TASKS BENTO */}
             <motion.div variants={fadeInUp}>
-               <Card className="border-none bg-white shadow-xl rounded-[2.5rem] p-8">
-                  <div className="flex justify-between items-center mb-6">
-                     <h3 className="text-xl font-black">Open Tasks</h3>
-                     <Badge className="bg-amber-100 text-amber-600 border-none font-bold">{data.assignments.length}</Badge>
+              <Card className="border border-slate-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 shadow-xl rounded-[3rem] p-10">
+                <div className="flex justify-between items-center mb-8">
+                  <h3 className="text-2xl font-black">Tasks</h3>
+                  <div className="h-8 w-8 rounded-full bg-amber-500/10 text-amber-500 flex items-center justify-center font-black text-xs">
+                    {data.assignments.length}
                   </div>
-                  <div className="space-y-4">
-                     {data.assignments.map((task: any) => (
-                       <div 
-                         key={task.id} 
-                         onClick={() => handleAction('assignment', task)}
-                         className="p-5 rounded-[1.5rem] border hover:border-primary transition-all cursor-pointer group flex flex-col gap-4"
-                       >
-                          <div className="flex justify-between items-start">
-                             <p className="font-bold text-sm leading-tight group-hover:text-primary transition-colors">{task.title}</p>
-                             <div className="h-8 w-8 bg-secondary rounded-lg flex items-center justify-center">
-                                <Plus className="h-4 w-4" />
-                             </div>
-                          </div>
-                          <div className="flex items-center justify-between">
-                             <span className="text-[10px] font-black uppercase text-muted-foreground tracking-widest">{task.type}</span>
-                             <span className="text-[10px] font-black text-rose-500 uppercase">DUE: {new Date(task.dueDate).toLocaleDateString()}</span>
-                          </div>
-                       </div>
-                     ))}
-                  </div>
-               </Card>
+                </div>
+                <div className="space-y-4">
+                  {data.assignments.map((task: any) => (
+                    <div
+                      key={task.id}
+                      onClick={() => handleAction("assignment", task)}
+                      className="p-6 rounded-[2rem] border border-slate-100 dark:border-zinc-800 bg-slate-50/50 dark:bg-zinc-900/30 hover:border-primary transition-all cursor-pointer group"
+                    >
+                      <div className="flex justify-between items-start mb-4">
+                        <h5 className="font-bold text-base leading-tight group-hover:text-primary transition-colors">
+                          {task.title}
+                        </h5>
+                        <ArrowRight className="h-4 w-4 text-zinc-400 -rotate-45 group-hover:rotate-0 transition-transform" />
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <Badge
+                          variant="outline"
+                          className="text-[10px] font-black uppercase border-zinc-200 dark:border-zinc-700"
+                        >
+                          {task.type}
+                        </Badge>
+                        <span className="text-[10px] font-black text-rose-500 uppercase tracking-widest">
+                          {new Date(task.dueDate).toLocaleDateString()}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </Card>
             </motion.div>
 
-            {/* QUICK WALLET / BILLING */}
+            {/* BILLING MODULE */}
             {data.stats.walletBalance > 0 && (
               <motion.div variants={fadeInUp}>
-                 <Card className="border-none bg-rose-50 dark:bg-rose-950/20 rounded-[2.5rem] p-8 border border-rose-100">
-                    <div className="flex items-center gap-3 text-rose-600 mb-4">
-                       <AlertCircle className="h-5 w-5" />
-                       <p className="text-xs font-black uppercase tracking-[0.2em]">Pending Invoice</p>
-                    </div>
-                    <p className="text-3xl font-black text-slate-900 dark:text-white">${data.stats.walletBalance}</p>
-                    <p className="text-sm text-rose-600/70 font-medium mt-2 leading-snug italic-none">Your "Advanced Arabic" subscription is due. Settle now to avoid interruption.</p>
-                    <Button onClick={() => handleAction('billing')} className="w-full mt-6 bg-rose-600 hover:bg-rose-700 text-white h-14 rounded-2xl font-black shadow-lg shadow-rose-200 transition-all active:scale-95">
-                       Secure Pay
-                    </Button>
-                 </Card>
+                <Card className="border-none bg-rose-500 text-white rounded-[3rem] p-10 shadow-2xl shadow-rose-500/20 relative overflow-hidden group">
+                  <AlertCircle className="absolute -top-6 -left-6 h-32 w-32 opacity-10 group-hover:rotate-12 transition-transform" />
+                  <p className="text-xs font-black uppercase tracking-[0.2em] mb-2 opacity-80">
+                    Payment Overdue
+                  </p>
+                  <p className="text-5xl font-black tracking-tighter mb-4">
+                    ${data.stats.walletBalance}
+                  </p>
+                  <p className="text-sm font-medium opacity-80 mb-8 leading-relaxed italic-none">
+                    Your "Hifz Mastery" subscription requires attention to
+                    maintain classroom access.
+                  </p>
+                  <Button
+                    onClick={() => handleAction("billing")}
+                    className="w-full bg-white text-rose-600 hover:bg-zinc-100 h-16 rounded-2xl font-black text-lg transition-transform active:scale-95 shadow-xl"
+                  >
+                    Pay Invoice Now
+                  </Button>
+                </Card>
               </motion.div>
             )}
           </div>
         </div>
       </motion.main>
 
-      {/* --- THE ELITE SPATIAL MODAL ENGINE --- */}
+      {/* --- SPATIAL OVERLAY SYSTEM (MODALS) --- */}
       <AnimatePresence>
         {activeView && (
           <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-            <motion.div 
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              onClick={closeOverlay}
-              className="absolute inset-0 bg-black/70 backdrop-blur-2xl"
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setActiveView(null)}
+              className="absolute inset-0 bg-black/80 backdrop-blur-2xl"
             />
-            
+
             <motion.div
               initial={{ scale: 0.9, opacity: 0, y: 40 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.9, opacity: 0, y: 40 }}
-              className="relative w-full max-w-2xl bg-white dark:bg-zinc-950 rounded-[3rem] shadow-[0_35px_60px_-15px_rgba(0,0,0,0.3)] overflow-hidden"
+              className="relative w-full max-w-3xl bg-white dark:bg-zinc-950 rounded-[4rem] shadow-3xl border border-white/5 overflow-hidden"
             >
-              {/* Modal Header */}
-              <div className="p-10 pb-6 border-b flex justify-between items-center bg-slate-50/50 dark:bg-zinc-900/50 backdrop-blur-md">
-                 <div className="space-y-1">
-                    <h2 className="text-3xl font-black tracking-tight uppercase">
-                      {activeView === 'hifz' ? "Memorization Map" : 
-                       activeView === 'assignment' ? "Submission Portal" : 
-                       activeView === 'billing' ? "Secure Checkout" : "Navigation"}
-                    </h2>
-                    <p className="text-sm text-muted-foreground font-medium italic-none">Context: Student ID {data.studentId}</p>
-                 </div>
-                 <Button variant="ghost" size="icon" className="rounded-full h-12 w-12 hover:bg-muted" onClick={closeOverlay}>
-                    <X className="h-6 w-6" />
-                 </Button>
+              {/* Modal Inner Header */}
+              <div className="p-12 pb-6 flex justify-between items-center border-b border-zinc-100 dark:border-zinc-900 bg-slate-50/50 dark:bg-zinc-900/50">
+                <div className="space-y-1">
+                  <h2 className="text-4xl font-black tracking-tighter uppercase">
+                    {activeView === "hifz"
+                      ? "Hifz Portal"
+                      : activeView === "assignment"
+                        ? "Submit Task"
+                        : "Checkout"}
+                  </h2>
+                  <p className="text-sm text-muted-foreground font-bold uppercase tracking-widest italic-none">
+                    Academy Record ID #772
+                  </p>
+                </div>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  className="rounded-full h-14 w-14 bg-white dark:bg-zinc-800 shadow-sm"
+                  onClick={() => setActiveView(null)}
+                >
+                  <X className="h-6 w-6" />
+                </Button>
               </div>
 
-              {/* Modal Content Logic */}
-              <div className="p-10 max-h-[70vh] overflow-y-auto custom-scrollbar">
-                
-                {/* INTERACTIVE HIFZ LOGS */}
-                {activeView === 'hifz' && (
-                  <div className="space-y-8">
-                    <div className="grid grid-cols-2 gap-4">
-                       <div className="p-6 rounded-[2rem] bg-indigo-50 border border-indigo-100 flex flex-col items-center">
-                          <span className="text-xs font-black text-indigo-600 uppercase mb-2">Current Goal</span>
-                          <p className="text-2xl font-black">15 Juz</p>
-                       </div>
-                       <div className="p-6 rounded-[2rem] bg-emerald-50 border border-emerald-100 flex flex-col items-center">
-                          <span className="text-xs font-black text-emerald-600 uppercase mb-2">Mastery Rate</span>
-                          <p className="text-2xl font-black text-emerald-600">92%</p>
-                       </div>
-                    </div>
-                    <div className="space-y-4">
-                       <h4 className="text-xs font-black uppercase text-muted-foreground tracking-widest">Recent Activity</h4>
-                       {data.hifz.logs.map((log: any) => (
-                         <div key={log.id} className="p-5 rounded-3xl border border-muted/50 flex justify-between items-center group hover:bg-muted/20 transition-all">
-                            <div className="flex items-center gap-4">
-                               <div className="h-10 w-10 rounded-xl bg-slate-100 flex items-center justify-center font-bold text-xs">{log.surah}</div>
-                               <div>
-                                  <p className="font-bold text-lg">Ayah {log.startAyah} - {log.endAyah}</p>
-                                  <p className="text-xs text-muted-foreground">{new Date(log.date).toDateString()}</p>
-                               </div>
-                            </div>
-                            <Badge className={cn("rounded-lg", log.status === 'PASS' ? 'bg-emerald-500' : 'bg-amber-500')}>
-                               {log.status}
-                            </Badge>
-                         </div>
-                       ))}
-                    </div>
-                  </div>
-                )}
-
-                {/* ADVANCED ASSIGNMENT SUBMISSION */}
-                {activeView === 'assignment' && selectedItem && (
-                  <div className="space-y-8">
-                    <div className="p-8 rounded-[2rem] bg-amber-50 border border-amber-200 space-y-3">
-                       <div className="flex items-center gap-2 text-amber-600 font-black text-xs uppercase tracking-widest">
-                          <AlertCircle className="h-4 w-4" /> Instructor Guidance
-                       </div>
-                       <p className="text-sm font-bold text-amber-900 leading-relaxed italic-none">{selectedItem.description || "Refer to the module resources before submitting."}</p>
-                    </div>
-
-                    <div className="space-y-4">
-                       <h4 className="text-xs font-black uppercase text-muted-foreground tracking-widest">Submit Work</h4>
-                       <div className="group relative">
-                          <div className="h-56 border-2 border-dashed border-muted-foreground/30 rounded-[2.5rem] flex flex-col items-center justify-center gap-4 hover:border-primary hover:bg-primary/5 transition-all cursor-pointer">
-                             <div className="h-16 w-16 rounded-full bg-secondary flex items-center justify-center group-hover:bg-primary group-hover:text-white transition-all">
-                                <UploadCloud className="h-8 w-8" />
-                             </div>
-                             <div className="text-center">
-                                <p className="text-lg font-black tracking-tight">Recitation / PDF / Image</p>
-                                <p className="text-sm text-muted-foreground font-medium">Max file size: 50MB</p>
-                             </div>
+              <div className="p-12 max-h-[60vh] overflow-y-auto scrollbar-hide">
+                {activeView === "hifz" && (
+                  <div className="space-y-6">
+                    {data.hifz.logs.map((log: any) => (
+                      <div
+                        key={log.id}
+                        className="p-8 rounded-[2.5rem] bg-slate-50 dark:bg-zinc-900 border border-transparent hover:border-primary transition-all flex justify-between items-center"
+                      >
+                        <div className="flex items-center gap-6">
+                          <div className="h-14 w-14 rounded-2xl bg-white dark:bg-zinc-800 flex items-center justify-center font-black text-primary italic">
+                            S{log.surah}
                           </div>
-                          <input type="file" className="absolute inset-0 opacity-0 cursor-pointer" />
-                       </div>
-                    </div>
-
-                    <div className="flex gap-3">
-                       <Button variant="outline" className="flex-1 h-16 rounded-2xl font-bold">Save Draft</Button>
-                       <Button className="flex-2 h-16 rounded-2xl font-black text-lg px-12 shadow-2xl shadow-primary/20" onClick={() => { toast.success("Submitted Successfully!"); closeOverlay(); }}>
-                          Final Submit
-                       </Button>
-                    </div>
+                          <div>
+                            <p className="text-xl font-black">
+                              Ayah {log.startAyah} - {log.endAyah}
+                            </p>
+                            <p className="text-sm font-bold text-muted-foreground uppercase mt-1 tracking-widest">
+                              {new Date(log.date).toDateString()}
+                            </p>
+                          </div>
+                        </div>
+                        <Badge
+                          className={cn(
+                            "rounded-xl px-5 py-1.5 font-black",
+                            log.status === "PASS"
+                              ? "bg-emerald-500"
+                              : "bg-amber-500",
+                          )}
+                        >
+                          {log.status}
+                        </Badge>
+                      </div>
+                    ))}
                   </div>
                 )}
 
-                {/* FINANCIAL / STRIPE CHECKOUT PEAK */}
-                {activeView === 'billing' && (
-                  <div className="space-y-8 text-center">
-                    <div className="h-24 w-24 bg-rose-50 rounded-full flex items-center justify-center mx-auto shadow-inner text-rose-500">
-                       <ShieldCheck className="h-12 w-12" />
+                {activeView === "assignment" && selectedItem && (
+                  <div className="space-y-10">
+                    <div className="p-10 rounded-[3rem] bg-primary/5 border border-primary/20">
+                      <p className="text-lg font-bold text-zinc-600 dark:text-zinc-300 leading-relaxed italic-none">
+                        {selectedItem.description ||
+                          "Review and submit your assignment."}
+                      </p>
                     </div>
-                    <div>
-                       <h3 className="text-4xl font-black tracking-tight">$ {data.stats.walletBalance}</h3>
-                       <p className="text-muted-foreground font-bold mt-1 italic-none uppercase tracking-widest text-xs">Total Outstanding Amount</p>
+                    <div className="h-64 border-4 border-dashed border-zinc-200 dark:border-zinc-800 rounded-[3rem] flex flex-col items-center justify-center gap-4 hover:bg-primary/5 hover:border-primary transition-all cursor-pointer">
+                      <UploadCloud className="h-12 w-12 text-zinc-400" />
+                      <div className="text-center">
+                        <p className="text-xl font-black">
+                          Drop Your Submission
+                        </p>
+                        <p className="text-sm text-zinc-500 font-bold uppercase tracking-widest mt-1 italic-none">
+                          Audio / PDF / Image (Max 50MB)
+                        </p>
+                      </div>
                     </div>
-                    <div className="grid grid-cols-1 gap-3">
-                       <Button className="h-16 rounded-2xl font-black text-lg bg-[#635BFF] hover:bg-[#534acc] transition-all">Pay with Stripe</Button>
-                       <Button variant="outline" className="h-16 rounded-2xl font-bold flex gap-2">
-                          <Download className="h-4 w-4" /> Download Statement
-                       </Button>
-                    </div>
+                    <Button
+                      className="w-full h-20 rounded-[2rem] font-black text-xl shadow-2xl shadow-primary/20"
+                      onClick={() => {
+                        toast.success("Submitted!");
+                        setActiveView(null);
+                      }}
+                    >
+                      Finalize Submission
+                    </Button>
                   </div>
                 )}
-              </div>
-              
-              {/* Modal Footer (Always visible) */}
-              <div className="p-8 border-t bg-slate-50/50 dark:bg-zinc-900/50 flex items-center justify-center gap-4">
-                 <p className="text-[10px] font-black uppercase text-muted-foreground tracking-widest">Secured by Al-Ateeq Academy Framework v2.0</p>
               </div>
             </motion.div>
           </div>
@@ -434,14 +541,6 @@ export default function StudentDashboardClient({ data }: { data: any }) {
     </div>
   );
 }
-
-
-
-
-
-
-
-
 
 // "use client";
 
