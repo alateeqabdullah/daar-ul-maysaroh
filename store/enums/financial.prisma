@@ -1,0 +1,86 @@
+enum PaymentMethod {
+  CREDIT_CARD
+  DEBIT_CARD
+  BANK_TRANSFER
+  MOBILE_MONEY
+  CASH
+  CHECK
+  OTHER
+}
+
+enum PaymentGateway {
+  STRIPE
+  PAYPAL
+  RAZORPAY
+  EASYPAISA
+  JAZZCASH
+  MADA
+  SADAD
+  VALU
+  FAWRY
+  CASHFREE
+  PAYTM
+  MANUAL
+}
+
+enum PaymentStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+  REFUNDED
+  PARTIALLY_REFUNDED
+  CANCELLED
+}
+
+enum DonationType {
+  ZAKAT
+  SADAQAH
+  BUILDING_FUND
+  SPONSORSHIP
+  OTHER
+}
+
+enum ExpenseCategory {
+  SALARY
+  RENT
+  UTILITIES
+  MAINTENANCE
+  SUPPLIES
+  SOFTWARE
+  OTHER
+}
+
+enum PlanType {
+  ONE_ON_ONE
+  GROUP
+  CLASS
+  CUSTOM
+}
+
+enum PlanCategory {
+  QURAN
+  TAJWEED
+  ARABIC
+  FIQH
+  AQEEDAH
+  SEERAH
+  HADITH
+  GENERAL
+}
+
+enum BillingPeriod {
+  MONTHLY
+  QUARTERLY
+  YEARLY
+  LIFETIME
+}
+
+enum SubscriptionStatus {
+  PENDING
+  ACTIVE
+  PAUSED
+  CANCELLED
+  EXPIRED
+  TRIAL
+}
