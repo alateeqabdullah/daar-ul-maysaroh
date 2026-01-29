@@ -5,19 +5,16 @@ import {
   AttendanceStatus,
   EnrollmentStatus,
   SessionStatus,
-} from "@/app/generated/prisma/enums";
+} from "@/app/generated/prisma";
 
 export async function GET() {
   const session = await auth();
-
-  if (!session?.user?.id) {
+  if (!session?.user?.id)
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
 
   try {
     const userId = session.user.id;
 
-    // 1. Get the student profile
     const student = await prisma.student.findUnique({
       where: { userId },
       select: {
@@ -26,44 +23,43 @@ export async function GET() {
         currentLevel: true,
         hifzLevel: true,
         parentId: true,
+        user: { select: { name: true, image: true } },
       },
     });
 
-    if (!student) {
+    if (!student)
       return NextResponse.json({ error: "Student not found" }, { status: 404 });
-    }
 
     const now = new Date();
 
-    // 2. Comprehensive Parallel Data Fetching
     const [
       enrollments,
-      attendanceStats,
+      attendance,
       hifzLogs,
-      upcomingSessions,
-      pendingAssignments,
-      recentMaterials,
-      unpaidInvoices,
+      sessions,
+      assignments,
+      materials,
+      invoices,
     ] = await Promise.all([
-      // Active Enrollments
+      // 1. Active Courses
       prisma.enrollment.findMany({
         where: { studentId: student.id, status: EnrollmentStatus.ACTIVE },
         include: { class: { select: { name: true, code: true } } },
       }),
-      // Attendance Aggregation
+      // 2. Attendance Stats
       prisma.attendance.groupBy({
         by: ["status"],
         where: { studentId: student.id },
         _count: { status: true },
       }),
-      // Latest Hifz Logs
+      // 3. Spiritual/Hifz History
       prisma.hifzProgress.findMany({
         where: { studentId: student.id },
         orderBy: { date: "desc" },
-        take: 10,
+        take: 15,
         include: { teacher: { include: { user: { select: { name: true } } } } },
       }),
-      // Live Sessions (Next 48 hours)
+      // 4. Real-time Scheduled Sessions
       prisma.scheduledSession.findMany({
         where: {
           subscription: { studentId: student.id },
@@ -76,9 +72,9 @@ export async function GET() {
           },
         },
         orderBy: { date: "asc" },
-        take: 3,
+        take: 5,
       }),
-      // Pending Assignments (Assignments for enrolled subjects with no submission)
+      // 5. Academic Task Queue
       prisma.assignment.findMany({
         where: {
           subject: {
@@ -91,71 +87,64 @@ export async function GET() {
           title: true,
           dueDate: true,
           type: true,
+          description: true,
           subject: { select: { name: true } },
         },
         orderBy: { dueDate: "asc" },
-        take: 5,
+        take: 6,
       }),
-      // Newest Materials across all classes
+      // 6. Library Resources
       prisma.classMaterial.findMany({
         where: { class: { enrollments: { some: { studentId: student.id } } } },
         orderBy: { createdAt: "desc" },
-        take: 4,
-        select: { id: true, title: true, type: true, fileUrl: true },
+        take: 6,
       }),
-      // Unpaid Invoices (linked via Parent)
+      // 7. Wallet / Invoices
       student.parentId
         ? prisma.invoice.findMany({
             where: { parentId: student.parentId, status: "PENDING" },
-            select: { amount: true },
+            select: { amount: true, dueDate: true, id: true },
           })
         : Promise.resolve([]),
     ]);
 
-    // 3. Stats Calculation Logic
-    const totalAttendance = attendanceStats.reduce(
+    // Business Logic Aggregations
+    const totalAtt = attendance.reduce(
       (acc, curr) => acc + curr._count.status,
       0,
     );
-    const presentCount =
-      attendanceStats.find((a) => a.status === AttendanceStatus.PRESENT)?._count
+    const presentAtt =
+      attendance.find((a) => a.status === AttendanceStatus.PRESENT)?._count
         .status || 0;
 
-    const attendanceRate =
-      totalAttendance > 0
-        ? Math.round((presentCount / totalAttendance) * 100)
-        : 100;
-
-    const totalBalance = unpaidInvoices.reduce(
-      (acc, curr) => acc + Number(curr.amount),
-      0,
-    );
-
     return NextResponse.json({
-      studentInfo: student,
+      user: student.user,
+      studentId: student.studentId,
       stats: {
-        attendanceRate,
-        pendingAssignments: pendingAssignments.length,
-        activeEnrollments: enrollments.length,
-        totalBalance,
+        attendance:
+          totalAtt > 0 ? Math.round((presentAtt / totalAtt) * 100) : 100,
+        assignments: assignments.length,
+        activeCourses: enrollments.length,
+        walletBalance: invoices.reduce(
+          (acc, curr) => acc + Number(curr.amount),
+          0,
+        ),
       },
       hifz: {
-        currentSurah: hifzLogs[0]?.surah || null,
+        level: student.hifzLevel || "Foundation",
+        currentSurah: hifzLogs[0]?.surah || "Not Set",
         logs: hifzLogs,
-        level: student.hifzLevel,
       },
-      sessions: upcomingSessions,
-      assignments: pendingAssignments,
-      materials: recentMaterials,
+      sessions,
+      assignments,
+      materials,
+      invoices,
     });
   } catch (error) {
-    console.error("DASHBOARD_DATA_ERROR", error);
-    return NextResponse.json(
-      { error: "Critical Data Sync Failure" },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: "Database Sync Error" }, { status: 500 });
   }
 }
+
 
 
 
