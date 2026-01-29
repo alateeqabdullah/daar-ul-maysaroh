@@ -5,7 +5,7 @@ import {
   AttendanceStatus,
   EnrollmentStatus,
   SessionStatus,
-} from "@/app/generated/prisma";
+} from "@/app/generated/prisma/enums";
 
 export async function GET() {
   const session = await auth();
