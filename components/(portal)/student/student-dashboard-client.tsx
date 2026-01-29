@@ -1,275 +1,320 @@
 "use client";
 
-import React, { useState } from "react";
-import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
-import { 
-  BookOpen, Calendar, Clock, Award, Video, FileText, 
-  TrendingUp, Download, CreditCard, ChevronRight, 
-  MessageCircle, Bell, Search, Settings, ExternalLink,
-  PlayCircle, CheckCircle2, AlertCircle
+import {
+  AlertCircle,
+  ArrowRight,
+  Bell,
+  BookOpen,
+  CheckCircle2,
+  ChevronRight,
+  Clock,
+  CreditCard,
+  Download,
+  FileText,
+  GraduationCap,
+  Search,
+  Sparkles,
+  Video,
+  Zap
 } from "lucide-react";
+import { useRouter } from "next/navigation";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Progress } from "@/components/ui/progress";
-import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { toast } from "sonner";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
+
+// --- ANIMATION VARIANTS ---
+const container = {
+  hidden: { opacity: 0 },
+  show: { opacity: 1, transition: { staggerChildren: 0.05 } }
+};
+
+const item = {
+  hidden: { y: 20, opacity: 0 },
+  show: { y: 0, opacity: 1, transition: { type: "spring", stiffness: 100 } }
+};
 
 export default function StudentDashboardClient({ data }: { data: any }) {
   const router = useRouter();
-  const [isSearching, setIsSearching] = useState(false);
 
   // --- FUNCTIONAL HANDLERS ---
   const handleJoinClass = (url: string | null) => {
     if (!url) return toast.error("Class link not active yet. Check back 5 mins before start.");
-    toast.success("Opening Classroom...");
+    toast.success("Opening Live Classroom...");
     window.open(url, "_blank");
   };
 
   const handleDownload = (fileName: string) => {
     toast.promise(new Promise((res) => setTimeout(res, 2000)), {
       loading: `Downloading ${fileName}...`,
-      success: "Download complete!",
-      error: "Failed to download.",
+      success: "Successfully saved to device!",
+      error: "Download failed.",
     });
   };
 
-  const handlePayInvoice = () => {
-    toast.info("Redirecting to Secure Payment Gateway...");
-    router.push("/dashboard/student/billing");
-  };
-
   const navigateTo = (path: string) => {
-    toast.loading("Loading...");
+    toast.loading("Navigating...");
     router.push(path);
   };
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] dark:bg-slate-950 pb-12">
-      {/* TOP NAVIGATION BAR */}
-      {/* <nav className="sticky top-0 z-50 w-full border-b bg-white/80 dark:bg-slate-900/80 backdrop-blur-md px-6 py-3">
-        <div className="max-w-[1600px] mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-8">
-            <h2 className="text-xl font-black tracking-tighter text-primary">ACADEMY.</h2>
-            <div className="hidden md:flex relative w-96 group">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
-              <Input 
-                placeholder="Search classes, teachers, or resources..." 
-                className="pl-10 rounded-xl bg-slate-100 dark:bg-slate-800 border-none h-10"
-              />
+    <div className="min-h-screen bg-[#FDFDFD] dark:bg-[#050505] pb-20">
+      
+      {/* 1. ELITE GLOBAL HEADER */}
+      {/* <header className="sticky top-0 z-50 w-full border-b bg-white/60 dark:bg-black/60 backdrop-blur-2xl px-4 md:px-8 py-4">
+        <div className="max-w-7xl mx-auto flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <div className="h-10 w-10 bg-primary rounded-xl flex items-center justify-center shadow-lg shadow-primary/20">
+              <GraduationCap className="text-white h-6 w-6" />
+            </div>
+            <div className="hidden sm:block">
+              <h2 className="text-sm font-black tracking-tighter uppercase leading-none">Academy.</h2>
+              <p className="text-[10px] text-muted-foreground font-bold tracking-[0.2em] uppercase">Student Portal</p>
             </div>
           </div>
-          <div className="flex items-center gap-3">
+
+          <div className="flex items-center gap-2 md:gap-4">
+            <div className="hidden md:flex relative group">
+               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground group-focus-within:text-primary transition-colors" />
+               <input 
+                 placeholder="Search commands..." 
+                 className="pl-10 h-10 w-64 rounded-full bg-secondary/50 border-none text-sm focus:ring-2 ring-primary/20 transition-all outline-none" 
+               />
+            </div>
             <Button variant="ghost" size="icon" className="rounded-full relative">
               <Bell className="h-5 w-5" />
-              <span className="absolute top-2 right-2 h-2 w-2 bg-rose-500 rounded-full border-2 border-white" />
+              <span className="absolute top-2.5 right-2.5 h-2 w-2 bg-rose-500 rounded-full ring-2 ring-background" />
             </Button>
-            <Button variant="ghost" size="icon" className="rounded-full" onClick={() => navigateTo("/settings")}>
-              <Settings className="h-5 w-5" />
-            </Button>
-            <Avatar className="h-9 w-9 border cursor-pointer hover:ring-2 ring-primary transition-all">
+            <Avatar onClick={() => navigateTo("/dashboard/student/profile")} className="h-10 w-10 border-2 border-background shadow-md cursor-pointer hover:scale-105 transition-transform">
               <AvatarImage src={data.user.image} />
               <AvatarFallback>{data.user.name[0]}</AvatarFallback>
             </Avatar>
           </div>
         </div>
-      </nav> */}
+      </header> */}
 
       <motion.main 
-        initial={{ opacity: 0, y: 10 }} 
-        animate={{ opacity: 1, y: 0 }} 
-        className="max-w-[1600px] mx-auto px-6 mt-8 space-y-8"
+        variants={container} 
+        initial="hidden" 
+        animate="show" 
+        className="max-w-7xl mx-auto px-4 md:px-8 mt-10 space-y-10"
       >
-        {/* HERO SECTION */}
-        <section className="flex flex-col lg:flex-row gap-6">
-          <div className="flex-1 space-y-2">
-            <h1 className="text-4xl font-black tracking-tight">Welcome Back, {data.user.name.split(' ')[0]}!</h1>
-            <p className="text-muted-foreground text-lg">You have <span className="text-primary font-bold">{data.stats.assignments} assignments</span> due this week.</p>
+        {/* 2. HERO SECTION */}
+        <section className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
+          <div className="space-y-1">
+            <motion.div variants={item} className="flex items-center gap-2 text-primary font-bold text-xs uppercase tracking-widest">
+              <Sparkles className="h-3 w-3" /> Dashboard Overview
+            </motion.div>
+            <motion.h1 variants={item} className="text-4xl md:text-5xl font-black tracking-tight text-slate-900 dark:text-white">
+              Assalamu Alaikum, <span className="text-primary">{data.user.name.split(' ')[0]}</span>.
+            </motion.h1>
+            <motion.p variants={item} className="text-muted-foreground font-medium text-lg italic-none">
+              You're currently on a <span className="text-foreground font-bold italic underline decoration-primary/30">7-day learning streak</span>.
+            </motion.p>
           </div>
-          <div className="flex gap-3">
-            <Button onClick={() => navigateTo("/dashboard/student/classes")} className="rounded-2xl h-14 px-8 font-bold shadow-xl shadow-primary/20">
-               My Learning Path <ChevronRight className="ml-2 h-4 w-4" />
+          <motion.div variants={item} className="flex gap-3 w-full md:w-auto">
+            <Button 
+              onClick={() => navigateTo("/dashboard/student/classes")}
+              className="flex-1 md:flex-none rounded-2xl h-14 px-8 font-bold shadow-2xl shadow-primary/20 bg-primary hover:bg-primary/90 transition-all active:scale-95"
+            >
+              Learning Path <ArrowRight className="ml-2 h-4 w-4" />
             </Button>
-            <Button variant="secondary" onClick={() => navigateTo("/dashboard/student/profile")} className="rounded-2xl h-14 px-8 font-bold">
-               View Profile
-            </Button>
-          </div>
+          </motion.div>
         </section>
 
-        {/* STATS STRIP */}
-        <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* 3. KPI BENTO STRIP */}
+        <section className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           {[
-            { label: "Attendance", val: `${data.stats.attendance}%`, icon: CheckCircle2, color: "text-emerald-500", bg: "bg-emerald-50" },
-            { label: "Pending Work", val: data.stats.assignments, icon: AlertCircle, color: "text-rose-500", bg: "bg-rose-50" },
-            { label: "Active Courses", val: data.stats.activeCourses, icon: BookOpen, color: "text-blue-500", bg: "bg-blue-50" },
-            { label: "Fees Due", val: `$${data.stats.walletBalance}`, icon: CreditCard, color: "text-amber-500", bg: "bg-amber-50" },
-          ].map((stat) => (
-            <Card key={stat.label} className="border-none shadow-sm rounded-3xl overflow-hidden group hover:shadow-md transition-all">
-              <CardContent className="p-6 flex items-center gap-4">
-                <div className={cn("p-4 rounded-2xl transition-transform group-hover:scale-110", stat.bg)}>
-                  <stat.icon className={cn("h-6 w-6", stat.color)} />
-                </div>
-                <div>
-                  <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">{stat.label}</p>
-                  <p className="text-2xl font-black">{stat.val}</p>
-                </div>
-              </CardContent>
-            </Card>
+            { label: "Attendance", val: `${data.stats.attendance}%`, icon: CheckCircle2, col: "text-emerald-500", bg: "bg-emerald-500/10" },
+            { label: "Due Tasks", val: data.stats.assignments, icon: Zap, col: "text-amber-500", bg: "bg-amber-500/10" },
+            { label: "Active Nodes", val: data.stats.activeCourses, icon: BookOpen, col: "text-blue-500", bg: "bg-blue-500/10" },
+            { label: "Balance", val: data.stats.walletBalance > 0 ? `$${data.stats.walletBalance}` : "Cleared", icon: CreditCard, col: "text-rose-500", bg: "bg-rose-500/10" },
+          ].map((s) => (
+            <motion.div key={s.label} variants={item}>
+              <Card className="border-none bg-background/40 backdrop-blur-md shadow-sm rounded-4xl overflow-hidden group hover:shadow-xl transition-all border border-transparent hover:border-primary/20">
+                <CardContent className="p-5 flex flex-col md:flex-row items-center gap-4 text-center md:text-left">
+                   <div className={cn("p-4 rounded-2xl transition-all group-hover:rotate-12", s.bg, s.col)}>
+                      <s.icon className="h-6 w-6" />
+                   </div>
+                   <div>
+                      <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">{s.label}</p>
+                      <p className="text-xl font-black">{s.val}</p>
+                   </div>
+                </CardContent>
+              </Card>
+            </motion.div>
           ))}
         </section>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+        {/* 4. MAIN DASHBOARD GRID */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           
-          {/* COLUMN 1: ACTIVE LEARNING (8 COLS) */}
-          <div className="lg:col-span-8 space-y-8">
+          {/* LEFT COLUMN: PRIMARY FOCUS (8 COLS) */}
+          <div className="lg:col-span-8 space-y-6">
             
-            {/* HIFZ TRACKER (Spiritual Focus) */}
-            <Card className="border-none bg-slate-900 text-white rounded-[2.5rem] overflow-hidden relative shadow-2xl">
-               <div className="absolute top-0 right-0 p-10 opacity-10 rotate-12">
-                  <BookOpen className="h-48 w-48 text-white" />
-               </div>
-               <CardContent className="p-10 relative z-10">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <Badge className="bg-primary/20 text-primary border-none mb-4">Level: {data.hifz.level || "Beginner"}</Badge>
-                      <h3 className="text-4xl font-black">Quranic Hifz Progress</h3>
-                      <p className="text-slate-400 mt-2 text-lg">Currently Memorizing: <span className="text-white font-bold italic">Surah {data.hifz.currentSurah}</span></p>
-                    </div>
-                    <Button variant="outline" className="rounded-xl border-slate-700 hover:bg-slate-800 text-white" onClick={() => navigateTo("/hifz")}>
-                      View Logs
-                    </Button>
-                  </div>
-                  
-                  <div className="mt-10 space-y-4">
-                    <div className="flex justify-between font-bold text-sm">
-                      <span className="text-slate-400 uppercase tracking-widest">Global Completion</span>
-                      <span>{65}%</span>
-                    </div>
-                    <Progress value={65} className="h-3 bg-slate-800" />
-                  </div>
-               </CardContent>
-            </Card>
+            {/* QURAN PROGRESS HERO */}
+            <motion.div variants={item}>
+              <Card className="border-none bg-slate-900 text-white rounded-[2.5rem] shadow-2xl overflow-hidden relative group">
+                <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:scale-125 transition-transform duration-700">
+                  <BookOpen className="h-64 w-64" />
+                </div>
+                <CardContent className="p-8 md:p-12 relative z-10">
+                   <div className="flex flex-col md:flex-row justify-between items-start gap-6">
+                      <div className="space-y-4">
+                        <Badge className="bg-primary/20 text-primary border-none font-black px-4 py-1">Level: {data.hifz.level || "Mastery"}</Badge>
+                        <h3 className="text-4xl md:text-5xl font-black tracking-tighter">Surah {data.hifz.currentSurah}</h3>
+                        <p className="text-slate-400 text-lg font-medium">Currently Memorizing • Ayahs 1-12</p>
+                      </div>
+                      <Button 
+                        variant="outline" 
+                        onClick={() => navigateTo("/hifz")}
+                        className="rounded-2xl border-slate-700 bg-transparent hover:bg-white/10 text-white px-8 h-12 font-bold"
+                      >
+                        View Hifz Logs
+                      </Button>
+                   </div>
+                   <div className="mt-12 space-y-4">
+                      <div className="flex justify-between items-end">
+                        <span className="text-xs font-black uppercase tracking-widest text-slate-500">Course Completion</span>
+                        <span className="text-2xl font-black">65%</span>
+                      </div>
+                      <div className="h-3 w-full bg-slate-800 rounded-full overflow-hidden">
+                        <motion.div 
+                          initial={{ width: 0 }}
+                          animate={{ width: "65%" }}
+                          transition={{ duration: 1.5, ease: "easeOut" }}
+                          className="h-full bg-gradient-to-r from-primary to-indigo-400" 
+                        />
+                      </div>
+                   </div>
+                </CardContent>
+              </Card>
+            </motion.div>
 
-            {/* LIVE SESSIONS TABLE */}
-            <Card className="border-none shadow-sm rounded-[2.5rem] overflow-hidden">
-               <CardHeader className="p-8 pb-0 flex flex-row items-center justify-between">
-                  <CardTitle className="text-2xl font-black tracking-tight">Upcoming Sessions</CardTitle>
-                  <Button variant="ghost" className="font-bold text-primary" onClick={() => navigateTo("/calendar")}>Full Schedule</Button>
-               </CardHeader>
-               <CardContent className="p-8 space-y-4">
-                  {data.sessions.map((session: any) => (
-                    <div key={session.id} className="flex flex-col md:flex-row items-center justify-between p-5 rounded-3xl bg-slate-50 dark:bg-slate-900 border border-transparent hover:border-primary/20 transition-all group">
-                       <div className="flex items-center gap-4">
-                          <div className="h-14 w-14 rounded-2xl bg-white dark:bg-slate-800 flex items-center justify-center shadow-sm group-hover:bg-primary group-hover:text-white transition-all">
-                             <Video className="h-6 w-6" />
-                          </div>
-                          <div>
-                             <p className="font-bold text-lg">{session.date.toLocaleDateString('en-US', { weekday: 'long', month: 'short', day: 'numeric' })}</p>
-                             <p className="text-sm text-muted-foreground font-medium">{session.startTime} • Prof. {session.teacher.user.name}</p>
-                          </div>
-                       </div>
-                       <Button onClick={() => handleJoinClass(session.meetingUrl)} className="mt-4 md:mt-0 rounded-2xl px-8 h-12 font-bold bg-primary hover:bg-primary/90">
-                          Join Live Room
-                       </Button>
-                    </div>
-                  ))}
-               </CardContent>
-            </Card>
-          </div>
-
-          {/* COLUMN 2: SIDEBAR (4 COLS) */}
-          <div className="lg:col-span-4 space-y-8">
-            
-            {/* BILLING WIDGET */}
-            {data.stats.walletBalance > 0 && (
-              <Card className="border-none bg-rose-50 dark:bg-rose-950/30 rounded-[2.5rem] p-4 shadow-sm">
-                 <CardContent className="p-6 space-y-4">
-                    <div className="flex items-center gap-3 text-rose-600 dark:text-rose-400">
-                       <AlertCircle className="h-6 w-6" />
-                       <h4 className="font-black uppercase tracking-tighter text-sm">Action Required</h4>
-                    </div>
-                    <p className="text-2xl font-black text-slate-900 dark:text-white">Fees Due: ${data.stats.walletBalance}</p>
-                    <p className="text-sm text-rose-600/80 font-medium leading-relaxed">Your subscription for the Quran Mastery plan is pending payment.</p>
-                    <Button onClick={handlePayInvoice} className="w-full bg-rose-600 hover:bg-rose-700 text-white rounded-2xl py-6 font-bold shadow-lg shadow-rose-200">
-                       Pay Now
+            {/* UPCOMING LIVE SESSIONS */}
+            <motion.div variants={item}>
+              <Card className="border-none bg-background shadow-xl rounded-[2.5rem] overflow-hidden border border-muted/20">
+                 <div className="p-8 pb-4 flex items-center justify-between">
+                    <h3 className="text-2xl font-black flex items-center gap-2">
+                       <Clock className="h-6 w-6 text-primary" /> Live Timeline
+                    </h3>
+                    <Button variant="ghost" onClick={() => navigateTo("/calendar")} className="font-bold text-muted-foreground text-xs hover:text-primary transition-colors">
+                      Full Schedule <ChevronRight className="h-4 w-4 ml-1" />
                     </Button>
+                 </div>
+                 <CardContent className="p-8 pt-4 space-y-4">
+                    {data.sessions.map((session: any) => (
+                      <div key={session.id} className="flex flex-col md:flex-row items-center justify-between p-6 rounded-[2rem] bg-secondary/30 hover:bg-secondary/60 transition-all group">
+                         <div className="flex items-center gap-6">
+                            <div className="h-16 w-16 rounded-[1.5rem] bg-background flex items-center justify-center shadow-sm group-hover:bg-primary group-hover:text-white transition-all duration-300">
+                               <Video className="h-7 w-7" />
+                            </div>
+                            <div>
+                               <p className="text-lg font-black">{session.date.toLocaleDateString('en-US', { weekday: 'long' })}</p>
+                               <p className="text-sm text-muted-foreground font-bold uppercase tracking-tight">{session.startTime} • Prof. {session.teacherName || "Academy Tutor"}</p>
+                            </div>
+                         </div>
+                         <Button 
+                          onClick={() => handleJoinClass(session.meetingUrl)} 
+                          className="w-full md:w-auto mt-4 md:mt-0 rounded-2xl h-14 px-10 font-black shadow-lg shadow-primary/10 transition-transform active:scale-95"
+                         >
+                            Join Class
+                         </Button>
+                      </div>
+                    ))}
                  </CardContent>
               </Card>
+            </motion.div>
+          </div>
+
+          {/* RIGHT COLUMN: UTILITY & TASKS (4 COLS) */}
+          <div className="lg:col-span-4 space-y-6">
+            
+            {/* BILLING ALERT */}
+            {data.stats.walletBalance > 0 && (
+              <motion.div variants={item}>
+                <Card className="border-none bg-rose-50 dark:bg-rose-950/20 rounded-[2.5rem] p-2 border border-rose-200">
+                  <CardContent className="p-6 space-y-4">
+                    <div className="flex items-center gap-2 text-rose-600 font-black text-xs uppercase tracking-widest">
+                       <AlertCircle className="h-4 w-4" /> Action Required
+                    </div>
+                    <p className="text-2xl font-black tracking-tighter">Outstanding Balance: ${data.stats.walletBalance}</p>
+                    <p className="text-xs text-rose-600/80 font-medium leading-relaxed">Please settle your invoice to maintain uninterrupted access to live sessions.</p>
+                    <Button 
+                      onClick={() => navigateTo("/dashboard/student/billing")}
+                      className="w-full rounded-2xl bg-rose-600 hover:bg-rose-700 text-white font-bold h-14 shadow-lg shadow-rose-200"
+                    >
+                      Pay Now
+                    </Button>
+                  </CardContent>
+                </Card>
+              </motion.div>
             )}
 
-            {/* ASSIGNMENTS PEEK */}
-            <Card className="border-none shadow-sm rounded-[2.5rem]">
-               <CardHeader className="p-8 pb-4">
-                  <CardTitle className="text-xl font-black">Tasks for You</CardTitle>
-               </CardHeader>
-               <CardContent className="p-8 pt-0 space-y-4">
+            {/* RECENT ASSIGNMENTS */}
+            <motion.div variants={item}>
+              <Card className="border-none shadow-sm rounded-[2.5rem] bg-background border border-muted/20">
+                <CardHeader className="px-8 pt-8 pb-4">
+                  <CardTitle className="text-xl font-black">Open Tasks</CardTitle>
+                </CardHeader>
+                <CardContent className="px-8 pb-8 pt-0 space-y-3">
                   {data.assignments.map((task: any) => (
-                    <div key={task.id} className="p-4 rounded-2xl border bg-white dark:bg-slate-900 group hover:border-primary transition-all cursor-pointer" onClick={() => navigateTo(`/dashboard/student/assignments/${task.id}`)}>
-                       <div className="flex justify-between items-start">
-                          <h5 className="font-bold text-sm leading-snug group-hover:text-primary transition-colors">{task.title}</h5>
-                          <ExternalLink className="h-3 w-3 text-slate-300" />
-                       </div>
-                       <div className="mt-4 flex items-center justify-between">
-                          <Badge variant="outline" className="text-[10px] uppercase font-bold text-muted-foreground border-slate-200">{task.type}</Badge>
-                          <span className="text-[10px] font-black text-rose-500 uppercase">Due: {new Date(task.dueDate).toLocaleDateString()}</span>
-                       </div>
+                    <div 
+                      key={task.id} 
+                      onClick={() => navigateTo(`/dashboard/student/assignments/${task.id}`)}
+                      className="p-4 rounded-2xl border border-muted hover:border-primary transition-all cursor-pointer group"
+                    >
+                      <div className="flex justify-between items-start">
+                        <p className="font-bold text-sm leading-tight group-hover:text-primary transition-colors">{task.title}</p>
+                      </div>
+                      <div className="mt-3 flex items-center justify-between">
+                        <Badge variant="secondary" className="text-[10px] bg-slate-100 text-slate-600 border-none font-bold uppercase">{task.type}</Badge>
+                        <p className="text-[10px] font-black text-rose-500 uppercase">Due: {new Date(task.dueDate).toLocaleDateString()}</p>
+                      </div>
                     </div>
                   ))}
-                  <Button variant="ghost" className="w-full text-muted-foreground font-bold text-sm" onClick={() => navigateTo("/dashboard/student/assignments")}>
-                    Browse All Tasks
+                  <Button variant="ghost" onClick={() => navigateTo("/dashboard/student/assignments")} className="w-full mt-2 font-bold text-muted-foreground text-xs hover:text-primary transition-colors">
+                    View All Assignments
                   </Button>
-               </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            </motion.div>
 
-            {/* QUICK RESOURCES */}
-            <Card className="border-none shadow-sm rounded-[2.5rem]">
-               <CardHeader className="p-8 pb-4">
-                  <CardTitle className="text-xl font-black tracking-tight">New Materials</CardTitle>
-               </CardHeader>
-               <CardContent className="p-8 pt-0 space-y-3">
-                  {data.materials.map((m: any) => (
-                    <div key={m.id} className="flex items-center justify-between p-3 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-900 transition-colors group">
-                       <div className="flex items-center gap-3">
-                          <div className="p-2 bg-indigo-50 dark:bg-indigo-900/50 rounded-xl text-indigo-600">
-                             <FileText className="h-4 w-4" />
+            {/* RESOURCE LIST */}
+            <motion.div variants={item}>
+               <Card className="border-none bg-background shadow-xl rounded-[2.5rem] border border-muted/20">
+                  <CardHeader className="p-8 pb-4">
+                    <CardTitle className="text-xl font-black">Library Peek</CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-8 pt-0 space-y-2">
+                    {data.materials.map((res: any) => (
+                      <div key={res.id} className="flex items-center justify-between p-3 rounded-2xl hover:bg-secondary/50 transition-colors group cursor-pointer">
+                        <div className="flex items-center gap-3">
+                          <div className="h-10 w-10 bg-indigo-50 dark:bg-indigo-900/30 rounded-xl flex items-center justify-center text-indigo-600">
+                             <FileText className="h-5 w-5" />
                           </div>
-                          <span className="text-xs font-bold truncate max-w-[150px]">{m.title}</span>
-                       </div>
-                       <Button variant="ghost" size="icon" className="rounded-full opacity-0 group-hover:opacity-100 transition-opacity" onClick={() => handleDownload(m.title)}>
-                          <Download className="h-4 w-4" />
-                       </Button>
-                    </div>
-                  ))}
-               </CardContent>
-            </Card>
+                          <p className="text-sm font-bold truncate max-w-[140px]">{res.title}</p>
+                        </div>
+                        <Button variant="ghost" size="icon" className="rounded-full opacity-0 group-hover:opacity-100 transition-opacity" onClick={(e) => { e.stopPropagation(); handleDownload(res.title); }}>
+                           <Download className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    ))}
+                  </CardContent>
+               </Card>
+            </motion.div>
           </div>
         </div>
       </motion.main>
-
     </div>
   );
 }
 
-// Sub-component for inputs (standard shadcn)
-const Input = React.forwardRef<HTMLInputElement, React.InputHTMLAttributes<HTMLInputElement>>(
-  ({ className, type, ...props }, ref) => {
-    return (
-      <input
-        type={type}
-        className={cn(
-          "flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50",
-          className
-        )}
-        ref={ref}
-        {...props}
-      />
-    )
-  }
-)
-Input.displayName = "Input"
+
 
 
 
