@@ -53,6 +53,37 @@ import { toast } from "sonner";
 // Actions
 import { manageSchedule } from "@/app/actions/admin/schedule/actions";
 
+
+
+
+// --- ELITE 2026 ANIMATION ENGINE ---
+const kContainerVar = {
+  hidden: { opacity: 0 },
+  show: { 
+    opacity: 1, 
+    transition: { 
+      staggerChildren: 0.08, // Subtle "pop-in" sequence
+      delayChildren: 0.1 
+    } 
+  },
+};
+
+const kItemVar = {
+  hidden: { y: 20, opacity: 0, scale: 0.95 },
+  show: { 
+    y: 0, 
+    opacity: 1, 
+    scale: 1,
+    transition: { 
+      type: "spring", 
+      stiffness: 260, 
+      damping: 20 
+    } 
+  },
+};
+
+
+
 export default function ScheduleManagementClient({
   initialSchedules,
   classes,
@@ -84,6 +115,8 @@ export default function ScheduleManagementClient({
     timezone: "UTC",
     isRecurring: true,
   });
+
+ 
 
   const days = [
     "Sunday",
@@ -178,29 +211,42 @@ export default function ScheduleManagementClient({
         </div>
       </div>
 
-      {/* --- BENTO STATS (Mobile Responsive) --- */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
-        <StatCard
-          label="Active Load"
+      {/* --- ELITE BENTO STATS --- */}
+      <motion.div
+        variants={kContainerVar}
+        initial="hidden"
+        animate="show"
+        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6"
+      >
+        <EliteStatCard
+          label="System Load"
           value={schedules.length}
-          color="indigo"
           icon={Calendar}
+          color="indigo"
+          trend="Live Timetable"
         />
-        <StatCard
+        <EliteStatCard
           label="Virtual Nodes"
           value={schedules.filter((s: any) => s.isLive).length}
-          color="emerald"
           icon={Video}
+          color="emerald"
+          trend="Streaming Active"
         />
-        <StatCard label="Capacity" value="84%" color="amber" icon={Users} />
-        <StatCard
-          label="Day"
-          value={days[parseInt(selectedDay)]}
-          color="blue"
+        <EliteStatCard
+          label="Avg Utilization"
+          value="82%"
+          icon={Users}
+          color="amber"
+          trend="High Density"
+        />
+        <EliteStatCard
+          label="Day Status"
+          value={days[parseInt(selectedDay)].substring(0, 3)}
           icon={Globe}
-          isText
+          color="blue"
+          trend="Synced"
         />
-      </div>
+      </motion.div>
 
       {/* --- DAY SELECTOR --- */}
       <div className="sticky top-4 z-30 flex justify-center">
@@ -683,29 +729,105 @@ export default function ScheduleManagementClient({
 }
 
 // Sub-Component for Bento Stats
-function StatCard({ label, value, icon: Icon, color, isText }: any) {
+function EliteStatCard({ label, value, icon: Icon, color, trend }: any) {
   const themes: any = {
-    indigo: "text-indigo-600 bg-indigo-50 shadow-indigo-200/50",
-    emerald: "text-emerald-600 bg-emerald-50 shadow-emerald-200/50",
-    amber: "text-amber-600 bg-amber-50 shadow-amber-200/50",
-    blue: "text-blue-600 bg-blue-50 shadow-blue-200/50",
+    indigo: {
+      bg: "bg-indigo-500/5",
+      iconBg: "bg-indigo-500",
+      border: "border-indigo-500/10",
+      glow: "shadow-indigo-500/20",
+      text: "text-indigo-600",
+    },
+    emerald: {
+      bg: "bg-emerald-500/5",
+      iconBg: "bg-emerald-500",
+      border: "border-emerald-500/10",
+      glow: "shadow-emerald-500/20",
+      text: "text-emerald-600",
+    },
+    amber: {
+      bg: "bg-amber-500/5",
+      iconBg: "bg-amber-500",
+      border: "border-amber-500/10",
+      glow: "shadow-amber-500/20",
+      text: "text-amber-600",
+    },
+    blue: {
+      bg: "bg-blue-500/5",
+      iconBg: "bg-blue-500",
+      border: "border-blue-500/10",
+      glow: "shadow-blue-500/20",
+      text: "text-blue-600",
+    },
   };
+
+  const t = themes[color];
+
   return (
-    <Card className="border-0 shadow-sm bg-white dark:bg-slate-900 rounded-[2rem] p-4 md:p-6 flex items-center gap-4 transition-all hover:shadow-md">
-      <div className={`p-3 rounded-2xl ${themes[color]}`}>
-        <Icon className="h-5 w-5 md:h-6 md:w-6" />
+    <motion.div
+      variants={kItemVar} // This connects to the parent kContainerVar
+      whileHover={{ y: -5, transition: { duration: 0.2 } }}
+      className={`relative overflow-hidden rounded-[2.5rem] border ${t.border} ${t.bg} backdrop-blur-md p-6 flex flex-col justify-between min-h-[180px] group`}
+    >
+      {/* 2026 Mesh Glow Effect */}
+      <div
+        className={`absolute -right-8 -top-8 h-32 w-32 rounded-full ${t.iconBg} opacity-[0.03] blur-3xl group-hover:opacity-10 transition-opacity`}
+      />
+
+      <div className="flex justify-between items-start relative z-10">
+        <div
+          className={`p-3.5 rounded-2xl ${t.iconBg} text-white shadow-xl ${t.glow}`}
+        >
+          <Icon className="h-5 w-5" />
+        </div>
+        {trend && (
+          <div className="px-3 py-1 rounded-full bg-white/50 dark:bg-slate-800/50 backdrop-blur-md text-[9px] font-black text-slate-500 uppercase tracking-tighter">
+            {trend}
+          </div>
+        )}
       </div>
-      <div className="min-w-0">
-        <p className="text-[9px] md:text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none truncate">
+
+      <div className="relative z-10">
+        <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em] mb-1">
           {label}
         </p>
-        <p className="text-base md:text-xl font-black text-slate-900 dark:text-white leading-none mt-1 truncate">
-          {value}
-        </p>
+        <div className="flex items-end gap-2">
+          <h4 className="text-3xl font-black text-slate-900 dark:text-white tracking-tighter leading-none">
+            {value}
+          </h4>
+          <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 mb-1 animate-pulse" />
+        </div>
       </div>
-    </Card>
+
+      {/* Micro-Visual Sparkline */}
+      <div className="mt-4 pt-4 border-t border-slate-200/20 flex items-center justify-between">
+        <div className="flex -space-x-2">
+          {[1, 2, 3].map((i) => (
+            <div
+              key={i}
+              className="h-5 w-5 rounded-full border-2 border-white dark:border-slate-900 bg-slate-200 dark:bg-slate-800"
+            />
+          ))}
+        </div>
+        <svg className="w-12 h-4 opacity-30">
+          <path
+            d="M0 10 Q 5 0, 10 10 T 20 5 T 30 15 T 40 5"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            className={t.text}
+          />
+        </svg>
+      </div>
+    </motion.div>
   );
 }
+
+
+
+
+
+
 
 // "use client";
 
