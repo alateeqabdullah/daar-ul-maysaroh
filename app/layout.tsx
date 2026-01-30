@@ -3,7 +3,6 @@ import { ThemeProvider } from "@/components/providers/theme-provider";
 import type { Metadata, Viewport } from "next";
 import {
   Amiri,
-  Amiri_Quran,
   Inter,
   Noto_Sans_Arabic,
   Playfair_Display,
@@ -14,11 +13,10 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const noto = Noto_Sans_Arabic({ subsets: ["arabic"], variable: "--font-noto" });
 
-const amiri = Amiri_Quran({
-  // weight: ["400", "700"],
+const amiri = Amiri({
+  weight: ["400", "700"],
   subsets: ["arabic"],
   variable: "--font-quran",
-  weight: "400"
 });
 
 // const amiriQuran = Amiri_Quran({
