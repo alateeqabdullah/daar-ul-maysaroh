@@ -5,67 +5,75 @@ import AdminDashboardClient from "@/components/admin/dashboard-client";
 
 export default async function AdminDashboardPage() {
   const session = await auth();
-  if (!session || !["ADMIN", "SUPER_ADMIN"].includes(session.user.role)) redirect("/login");
+  if (!session || !["ADMIN", "SUPER_ADMIN"].includes(session.user.role))
+    redirect("/login");
 
-  // 1. Fetch all nodes for the 2026 Pulse
+  const now = new Date();
+  const todayStart = new Date(now.setHours(0, 0, 0, 0));
+  const dayOfWeek = new Date().getDay(); // 0-6
+  const currentTime = new Date().toLocaleTimeString("en-GB", {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: false,
+  });
+
   const [
-    pendingUsersData,
+    pendingUsers,
     studentCount,
-    teacherCount,
-    classCount,
-    recentHifzLogs,
-    revenueData
+    revenue,
+    expenses,
+    todayPrayers,
+    liveSessionsRaw,
+    recentLogs,
   ] = await Promise.all([
-    // Get actual users for the approval modal
-    prisma.user.findMany({ 
-      where: { status: "PENDING" },
-      include: { studentProfile: true, teacherProfile: true },
-      take: 10 
-    }),
+    prisma.user.findMany({ where: { status: "PENDING" }, take: 10 }),
     prisma.student.count(),
-    prisma.teacher.count(),
-    prisma.class.count(),
-    prisma.hifzProgress.findMany({
-      take: 6,
-      orderBy: { createdAt: "desc" },
-      include: { student: { include: { user: true } } }
-    }),
     prisma.payment.aggregate({
       _sum: { amount: true },
-      where: { status: "COMPLETED" }
-    })
+      where: { status: "COMPLETED" },
+    }),
+    prisma.expense.aggregate({ _sum: { amount: true } }),
+    prisma.prayerRecord.count({ where: { date: { gte: todayStart } } }),
+    prisma.classSchedule.findMany({
+      where: {
+        dayOfWeek,
+        startTime: { lte: currentTime },
+        endTime: { gte: currentTime },
+      },
+      include: { class: { include: { teacher: { include: { user: true } } } } },
+      take: 3,
+    }),
+    prisma.hifzProgress.findMany({
+      take: 5,
+      orderBy: { createdAt: "desc" },
+      include: { student: { include: { user: true } } },
+    }),
   ]);
 
-  // 2. Construct the Type-Safe DashboardData object
-  const dashboardData = {
+  // Calculate Spiritual Pulse (Today's prayers vs total possible prayers)
+  const totalPossiblePrayers = studentCount * 5;
+  const prayerCompliance =
+    totalPossiblePrayers > 0
+      ? Math.round((todayPrayers / totalPossiblePrayers) * 100)
+      : 0;
+
+  const data = {
     counts: {
-      pendingUsers: pendingUsersData.length,
+      pendingUsers: pendingUsers.length,
       students: studentCount,
-      teachers: teacherCount,
-      classes: classCount,
     },
-    revenue: {
-      monthly: Number(revenueData._sum.amount) || 0,
-      pending: 0, // Logic for pending invoices can go here
+    finance: {
+      income: Number(revenue._sum.amount) || 0,
+      expenses: Number(expenses._sum.amount) || 0,
     },
-    recentLogs: JSON.parse(JSON.stringify(recentHifzLogs)),
-    pendingList: JSON.parse(JSON.stringify(pendingUsersData)),
+    spiritualPulse: prayerCompliance,
+    liveSessions: JSON.parse(JSON.stringify(liveSessionsRaw)),
+    recentLogs: JSON.parse(JSON.stringify(recentLogs)),
+    pendingList: JSON.parse(JSON.stringify(pendingUsers)),
   };
 
-  return (
-    <div className="min-h-screen bg-slate-50/50 dark:bg-slate-950 p-4 md:p-8">
-      {/* Pass the data object correctly */}
-      <AdminDashboardClient data={dashboardData} />
-    </div>
-  );
+  return <AdminDashboardClient data={data} />;
 }
-
-
-
-
-
-
-
 
 // "use client";
 
