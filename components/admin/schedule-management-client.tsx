@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useTransition, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Search,
@@ -12,17 +12,21 @@ import {
   Clock,
   Video,
   MapPin,
-  MonitorPlay,
   Loader2,
   X,
-  ShieldCheck,
   Globe,
   Repeat,
   Users,
+  ChevronRight,
+  Sparkles,
   Hash,
   Lock,
-  AlertTriangle,
+  CheckCircle2,
+  AlertCircle,
+  CalendarDays,
 } from "lucide-react";
+
+// UI Components
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -45,6 +49,8 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Progress } from "@/components/ui/progress";
 import { toast } from "sonner";
+
+// Actions
 import { manageSchedule } from "@/app/actions/admin/schedule/actions";
 
 export default function ScheduleManagementClient({
@@ -52,14 +58,19 @@ export default function ScheduleManagementClient({
   classes,
   filters,
 }: any) {
+  const [isPending, startTransition] = useTransition();
   const [schedules, setSchedules] = useState(initialSchedules);
-  const [isLoading, setIsLoading] = useState(false);
-  const [selectedDay, setSelectedDay] = useState(filters.day);
+
+  // State for Instant Updates
+  const [selectedDay, setSelectedDay] = useState(
+    filters.day?.toString() || new Date().getDay().toString(),
+  );
   const [searchQuery, setSearchQuery] = useState("");
+
+  // Modal Management
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
 
-  // FULL SCHEMA STATE
   const [formData, setFormData] = useState({
     classId: "",
     dayOfWeek: 1,
@@ -72,7 +83,6 @@ export default function ScheduleManagementClient({
     meetingPassword: "",
     timezone: "UTC",
     isRecurring: true,
-    recurrenceRule: "Weekly",
   });
 
   const days = [
@@ -85,249 +95,287 @@ export default function ScheduleManagementClient({
     "Saturday",
   ];
 
+  // THE FIX: Instant Filter Logic
   const filteredSchedules = useMemo(() => {
-    return schedules.filter(
-      (s: any) =>
-        s.dayOfWeek.toString() === selectedDay &&
-        (s.class.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    return schedules
+      .filter((s: any) => s.dayOfWeek.toString() === selectedDay.toString())
+      .filter(
+        (s: any) =>
+          s.class.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
           s.class.teacher.user.name
             .toLowerCase()
-            .includes(searchQuery.toLowerCase())),
-    );
+            .includes(searchQuery.toLowerCase()),
+      )
+      .sort((a: any, b: any) => a.startTime.localeCompare(b.startTime));
   }, [schedules, selectedDay, searchQuery]);
 
   const handleSave = async () => {
-    setIsLoading(true);
-    try {
-      const res = await manageSchedule({ ...formData, id: editingId });
-      setSchedules((prev: any) =>
-        editingId
-          ? prev.map((s: any) => (s.id === editingId ? res.schedule : s))
-          : [...prev, res.schedule],
-      );
-      toast.success("Timeline Updated");
-      setIsModalOpen(false);
-    } catch (e: any) {
-      toast.error(e.message);
-    } finally {
-      setIsLoading(false);
-    }
+    if (!formData.classId)
+      return toast.error("Please assign an academic class");
+
+    startTransition(async () => {
+      try {
+        const res = await manageSchedule({ ...formData, id: editingId });
+        if (res.success) {
+          setSchedules((prev: any) =>
+            editingId
+              ? prev.map((s: any) => (s.id === editingId ? res.schedule : s))
+              : [...prev, res.schedule],
+          );
+          toast.success(editingId ? "Node Updated" : "Session Deployed", {
+            icon: <CheckCircle2 className="text-emerald-500" />,
+          });
+          setIsModalOpen(false);
+        }
+      } catch (e: any) {
+        toast.error(e.message);
+      }
+    });
   };
 
   return (
-    <div className="max-w-[1600px] mx-auto space-y-8">
-      {/* ELITE HEADER */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 bg-white dark:bg-slate-900 p-8 rounded-[2.5rem] shadow-sm border border-slate-100 dark:border-slate-800">
-        <div className="space-y-2">
-          <Badge className="bg-indigo-50 text-indigo-600 border-indigo-100 px-4 py-1 rounded-full uppercase tracking-widest text-[10px] font-black">
-            Admin Panel
-          </Badge>
-          <h1 className="text-4xl font-black text-slate-900 dark:text-white">
-            Schedule <span className="text-indigo-600">Commander</span>
-          </h1>
-          <p className="text-slate-400 font-medium">
-            Manage global class timings and meeting credentials
-          </p>
-        </div>
-        <div className="flex items-center gap-3">
-          <div className="relative group flex-1 min-w-[300px]">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 group-focus-within:text-indigo-500 transition-colors" />
-            <Input
-              placeholder="Search classes or teachers..."
-              className="pl-12 h-14 bg-slate-50 dark:bg-slate-800 border-0 rounded-2xl focus:ring-2 ring-indigo-500/10"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
+    <div className="max-w-7xl mx-auto space-y-6 md:space-y-10 pb-32 md:pb-20 px-4 md:px-0 mt-4 md:mt-8">
+      {/* --- ELITE HEADER --- */}
+      <div className="relative overflow-hidden bg-slate-900 rounded-[2rem] md:rounded-[3rem] p-8 md:p-12 text-white shadow-2xl border border-white/5">
+        <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-emerald-500/10 to-transparent pointer-events-none" />
+        <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-indigo-600/20 blur-[100px] pointer-events-none" />
+
+        <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
+          <div className="space-y-4">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/10 text-[10px] font-black tracking-widest uppercase">
+              <Sparkles className="h-3 w-3 text-emerald-400" />
+              <span>System Orchestrator</span>
+            </div>
+            <h1 className="text-4xl md:text-6xl font-black tracking-tighter leading-none">
+              Master <span className="text-emerald-400">Timetable</span>
+            </h1>
+            <p className="text-slate-400 max-w-md font-medium text-base md:text-lg hidden md:block">
+              Real-time synchronization of academic sessions and global
+              instructor nodes.
+            </p>
           </div>
-          <Button
-            onClick={() => {
-              setEditingId(null);
-              setIsModalOpen(true);
-            }}
-            className="h-14 px-8 rounded-2xl bg-indigo-600 hover:bg-indigo-700 shadow-xl shadow-indigo-200 dark:shadow-none font-bold"
-          >
-            <Plus className="h-5 w-5 mr-2" /> Add Entry
-          </Button>
+
+          <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
+            <div className="relative group w-full md:w-64">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-500" />
+              <Input
+                placeholder="Search..."
+                className="pl-12 h-14 bg-white/5 border-white/10 rounded-2xl text-white focus:ring-emerald-500/30 transition-all"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </div>
+            <Button
+              onClick={() => {
+                setEditingId(null);
+                setIsModalOpen(true);
+              }}
+              className="h-14 px-8 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-slate-900 font-black shadow-[0_0_20px_rgba(16,185,129,0.2)] transition-all hover:scale-105"
+            >
+              <Plus className="h-5 w-5 mr-2" /> New Entry
+            </Button>
+          </div>
         </div>
       </div>
 
-      {/* DAY SELECTOR */}
-      <div className="flex items-center gap-2 p-2 bg-white dark:bg-slate-900 rounded-[2rem] shadow-sm border border-slate-100 dark:border-slate-800 overflow-x-auto no-scrollbar">
-        {days.map((day, i) => (
-          <button
-            key={day}
-            onClick={() => setSelectedDay(i.toString())}
-            className={`flex-1 min-w-[120px] py-4 rounded-[1.5rem] text-xs font-black transition-all ${
-              selectedDay === i.toString()
-                ? "bg-indigo-600 text-white shadow-lg shadow-indigo-200 scale-[1.02]"
-                : "text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800"
-            }`}
-          >
-            {day.toUpperCase()}
-          </button>
-        ))}
+      {/* --- BENTO STATS (Mobile Responsive) --- */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 md:gap-6">
+        <StatCard
+          label="Active Load"
+          value={schedules.length}
+          color="indigo"
+          icon={Calendar}
+        />
+        <StatCard
+          label="Virtual Nodes"
+          value={schedules.filter((s: any) => s.isLive).length}
+          color="emerald"
+          icon={Video}
+        />
+        <StatCard label="Capacity" value="84%" color="amber" icon={Users} />
+        <StatCard
+          label="Day"
+          value={days[parseInt(selectedDay)]}
+          color="blue"
+          icon={Globe}
+          isText
+        />
       </div>
 
-      {/* SCHEDULE GRID */}
-      <div className="grid grid-cols-1 xl:grid-cols-2 2xl:grid-cols-3 gap-6">
-        <AnimatePresence mode="popLayout">
-          {filteredSchedules.map((s: any) => (
-            <motion.div
-              key={s.id}
-              layout
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.9 }}
+      {/* --- DAY SELECTOR --- */}
+      <div className="sticky top-4 z-30 flex justify-center">
+        <div className="inline-flex p-1.5 bg-white/80 dark:bg-slate-900/80 backdrop-blur-2xl rounded-[2rem] border border-slate-200 dark:border-slate-800 shadow-xl overflow-x-auto no-scrollbar max-w-full">
+          {days.map((day, i) => (
+            <button
+              key={day}
+              onClick={() => setSelectedDay(i.toString())}
+              className={`px-5 md:px-7 py-3 rounded-[1.5rem] text-[10px] font-black uppercase tracking-widest transition-all duration-300 whitespace-nowrap ${
+                selectedDay === i.toString()
+                  ? "bg-slate-900 text-white dark:bg-white dark:text-slate-900 shadow-xl scale-105"
+                  : "text-slate-400 hover:text-indigo-600"
+              }`}
             >
-              <Card className="border-0 shadow-sm bg-white dark:bg-slate-900 rounded-[2rem] overflow-hidden hover:shadow-2xl hover:shadow-indigo-500/10 transition-all duration-500">
-                <CardContent className="p-0">
-                  {/* Top Color Bar */}
+              {day.substring(0, 3)}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* --- FEED GRID --- */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-8">
+        <AnimatePresence mode="popLayout" initial={false}>
+          {filteredSchedules.length === 0 ? (
+            <motion.div
+              key="empty"
+              className="lg:col-span-2 py-20 text-center opacity-40"
+            >
+              <CalendarDays className="h-16 w-16 mx-auto mb-4" />
+              <p className="font-black uppercase tracking-widest text-xs">
+                No Nodes Scheduled
+              </p>
+            </motion.div>
+          ) : (
+            filteredSchedules.map((s: any) => (
+              <motion.div
+                key={s.id}
+                layout
+                initial={{ opacity: 0, scale: 0.95 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.95 }}
+                transition={{ type: "spring", stiffness: 400, damping: 30 }}
+              >
+                <Card className="group relative overflow-hidden rounded-[2.5rem] border-0 bg-white dark:bg-slate-900 shadow-xl shadow-slate-200/50 dark:shadow-none transition-all hover:shadow-2xl">
                   <div
-                    className={`h-2 w-full ${s.isLive ? "bg-indigo-500" : "bg-emerald-500"}`}
+                    className={`absolute top-0 left-0 w-2 h-full ${s.isLive ? "bg-indigo-500" : "bg-emerald-500"}`}
                   />
-
-                  <div className="p-8 space-y-6">
-                    <div className="flex justify-between items-start">
-                      <div className="space-y-1">
-                        <div className="flex items-center gap-2">
-                          <Badge
-                            variant="outline"
-                            className="text-[10px] font-black uppercase tracking-tighter border-slate-200"
-                          >
-                            {s.class.code}
-                          </Badge>
-                          {s.isRecurring && (
-                            <Badge className="bg-slate-100 text-slate-500 border-0">
-                              <Repeat className="h-3 w-3 mr-1" /> Weekly
-                            </Badge>
-                          )}
-                        </div>
-                        <h3 className="text-xl font-black text-slate-900 dark:text-white leading-tight">
-                          {s.class.name}
-                        </h3>
+                  <CardContent className="p-0 flex flex-col md:flex-row">
+                    {/* Time Module */}
+                    <div className="md:w-36 bg-slate-50 dark:bg-slate-800/50 p-6 md:p-8 flex md:flex-col items-center justify-between md:justify-center border-b md:border-b-0 md:border-r border-slate-100 dark:border-slate-800">
+                      <div className="text-center">
+                        <span className="text-2xl md:text-3xl font-black text-slate-900 dark:text-white leading-none">
+                          {s.startTime}
+                        </span>
+                        <div className="hidden md:block w-8 h-1 bg-indigo-500/20 rounded-full mx-auto my-2" />
+                        <span className="text-xs md:text-sm font-bold text-slate-400">
+                          {s.endTime}
+                        </span>
                       </div>
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button
-                            variant="ghost"
-                            size="icon"
-                            className="rounded-full hover:bg-slate-100"
-                          >
-                            <MoreVertical className="h-5 w-5" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end" className="rounded-xl">
-                          <DropdownMenuItem
-                            onClick={() => openEdit(s)}
-                            className="py-2"
-                          >
-                            <Edit className="h-4 w-4 mr-2" /> Edit Session
-                          </DropdownMenuItem>
-                          <DropdownMenuItem className="py-2 text-red-600">
-                            <Trash2 className="h-4 w-4 mr-2" /> Delete
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
+                      <Badge
+                        variant="ghost"
+                        className="md:mt-4 text-[9px] font-black text-indigo-500 uppercase"
+                      >
+                        {s.timezone}
+                      </Badge>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-4 py-4 border-y border-slate-50 dark:border-slate-800">
-                      <div className="flex items-center gap-3">
-                        <div className="p-3 bg-indigo-50 dark:bg-indigo-900/30 rounded-2xl text-indigo-600">
-                          <Clock className="h-5 w-5" />
+                    {/* Content Module */}
+                    <div className="flex-1 p-6 md:p-8 space-y-6">
+                      <div className="flex justify-between items-start">
+                        <div className="space-y-1">
+                          <div className="flex items-center gap-2">
+                            <span className="text-[10px] font-black uppercase text-indigo-500 tracking-widest bg-indigo-50 px-2 py-0.5 rounded">
+                              {s.class.code}
+                            </span>
+                            {s.isRecurring && (
+                              <Repeat className="h-3 w-3 text-slate-300" />
+                            )}
+                          </div>
+                          <h3 className="text-2xl font-black text-slate-900 dark:text-white leading-tight tracking-tight">
+                            {s.class.name}
+                          </h3>
                         </div>
-                        <div>
-                          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                            Time Slot
-                          </p>
-                          <p className="text-sm font-black text-slate-700 dark:text-slate-200">
-                            {s.startTime} - {s.endTime}
-                          </p>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-3">
-                        <div className="p-3 bg-emerald-50 dark:bg-emerald-900/30 rounded-2xl text-emerald-600">
-                          <Globe className="h-5 w-5" />
-                        </div>
-                        <div>
-                          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                            Zone
-                          </p>
-                          <p className="text-sm font-black text-slate-700 dark:text-slate-200">
-                            {s.timezone}
-                          </p>
-                        </div>
-                      </div>
-                    </div>
-
-                    {/* LIVE CREDENTIALS (SCHEMA DATA) */}
-                    {s.isLive && (
-                      <div className="bg-slate-50 dark:bg-slate-800/50 p-4 rounded-2xl space-y-3">
-                        <div className="flex items-center justify-between text-xs">
-                          <span className="flex items-center gap-2 text-slate-500 font-bold uppercase tracking-tighter">
-                            <Hash className="h-3 w-3" /> Meeting ID
-                          </span>
-                          <span className="font-mono font-bold text-indigo-600">
-                            {s.meetingId || "Not Set"}
-                          </span>
-                        </div>
-                        <div className="flex items-center justify-between text-xs">
-                          <span className="flex items-center gap-2 text-slate-500 font-bold uppercase tracking-tighter">
-                            <Lock className="h-3 w-3" /> Password
-                          </span>
-                          <span className="font-mono font-bold text-slate-700 dark:text-slate-300">
-                            {s.meetingPassword || "None"}
-                          </span>
-                        </div>
-                      </div>
-                    )}
-
-                    <div className="flex items-center justify-between pt-2">
-                      <div className="flex items-center gap-3">
-                        <Avatar className="h-10 w-10 ring-4 ring-slate-50 dark:ring-slate-800">
-                          <AvatarImage src={s.class.teacher.user.image} />
-                          <AvatarFallback className="font-black">
-                            {s.class.teacher.user.name[0]}
-                          </AvatarFallback>
-                        </Avatar>
-                        <div>
-                          <p className="text-xs font-black text-slate-900 dark:text-white leading-none">
-                            {s.class.teacher.user.name}
-                          </p>
-                          <p className="text-[10px] font-bold text-slate-400 mt-1 uppercase tracking-tighter">
-                            Instructor
-                          </p>
-                        </div>
-                      </div>
-                      <div className="text-right">
-                        <p className="text-[10px] font-black uppercase text-slate-400 mb-1">
-                          Capacity
-                        </p>
-                        <div className="flex items-center gap-2">
-                          <span
-                            className={`text-xs font-black ${s.class.currentEnrollment >= s.class.capacity ? "text-red-500" : "text-slate-700"}`}
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button
+                              variant="ghost"
+                              size="icon"
+                              className="rounded-full hover:bg-slate-100"
+                            >
+                              <MoreVertical className="h-5 w-5 text-slate-400" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent
+                            align="end"
+                            className="rounded-2xl p-2 border-slate-100"
                           >
-                            {s.class.currentEnrollment}/{s.class.capacity}
-                          </span>
-                          <div className="w-12 h-1.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
-                            <div
-                              className="h-full bg-indigo-500"
-                              style={{
-                                width: `${(s.class.currentEnrollment / s.class.capacity) * 100}%`,
-                              }}
-                            />
+                            <DropdownMenuItem
+                              onClick={() => openEdit(s)}
+                              className="rounded-xl py-3 font-bold"
+                            >
+                              <Edit className="h-4 w-4 mr-2" /> Modify Entry
+                            </DropdownMenuItem>
+                            <DropdownMenuItem className="rounded-xl py-3 font-bold text-red-500">
+                              <Trash2 className="h-4 w-4 mr-2" /> Delete Entry
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </div>
+
+                      <div className="flex items-center gap-6">
+                        <div className="flex items-center gap-3">
+                          <Avatar className="h-10 w-10 md:h-12 md:w-12 ring-4 ring-slate-100 dark:ring-slate-800">
+                            <AvatarImage src={s.class.teacher.user.image} />
+                            <AvatarFallback className="font-black">
+                              {s.class.teacher.user.name[0]}
+                            </AvatarFallback>
+                          </Avatar>
+                          <div className="flex flex-col">
+                            <span className="text-xs font-black text-slate-900 dark:text-white">
+                              {s.class.teacher.user.name}
+                            </span>
+                            <span className="text-[9px] font-bold text-slate-400 uppercase">
+                              Instructor
+                            </span>
                           </div>
                         </div>
+                        <div className="flex-1 hidden sm:block">
+                          <div className="flex justify-between text-[10px] font-black uppercase tracking-widest text-slate-400 mb-1">
+                            <span>Fill Rate</span>
+                            <span className="text-indigo-500">
+                              {s.class.currentEnrollment}/{s.class.capacity}
+                            </span>
+                          </div>
+                          <Progress
+                            value={
+                              (s.class.currentEnrollment / s.class.capacity) *
+                              100
+                            }
+                            className="h-1.5 bg-slate-100 dark:bg-slate-800"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="flex items-center justify-between pt-4 border-t border-slate-50 dark:border-slate-800">
+                        <div
+                          className={`flex items-center gap-2 text-[10px] font-black uppercase ${s.isLive ? "text-indigo-600" : "text-emerald-600"}`}
+                        >
+                          {s.isLive ? (
+                            <Video className="h-3.5 w-3.5" />
+                          ) : (
+                            <MapPin className="h-3.5 w-3.5" />
+                          )}
+                          {s.isLive
+                            ? `Live Sync (${s.meetingPlatform})`
+                            : "Physical Node"}
+                        </div>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          className="h-8 px-4 rounded-full bg-slate-50 dark:bg-slate-800 font-bold text-[9px] uppercase hover:bg-slate-100"
+                        >
+                          Inspect <ChevronRight className="h-3 w-3 ml-1" />
+                        </Button>
                       </div>
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-          ))}
+                  </CardContent>
+                </Card>
+              </motion.div>
+            ))
+          )}
         </AnimatePresence>
       </div>
 
-      {/* FULL-FEATURED MODAL */}
+      {/* --- SESSION CONFIG MODAL (ELITE REDESIGN) --- */}
       <AnimatePresence>
         {isModalOpen && (
           <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
@@ -335,205 +383,276 @@ export default function ScheduleManagementClient({
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="absolute inset-0 bg-slate-900/80 backdrop-blur-xl"
+              className="absolute inset-0 bg-slate-950/60 backdrop-blur-xl"
               onClick={() => setIsModalOpen(false)}
             />
+
             <motion.div
-              initial={{ scale: 0.95, y: 30 }}
-              animate={{ scale: 1, y: 0 }}
-              exit={{ scale: 0.95, y: 30 }}
-              className="relative bg-white dark:bg-slate-900 w-full max-w-2xl rounded-[3rem] shadow-2xl overflow-hidden border border-white/10"
+              initial={{ scale: 0.9, opacity: 0, y: 30 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.9, opacity: 0, y: 30 }}
+              className="relative bg-white dark:bg-slate-900 w-full max-w-2xl rounded-[3rem] shadow-2xl border border-white/10 overflow-hidden"
             >
-              <div className="p-10 space-y-8">
-                <div className="flex justify-between items-center">
-                  <h2 className="text-3xl font-black text-slate-900 dark:text-white">
-                    {editingId ? "Edit Configuration" : "Global Scheduler"}
+              {/* Header */}
+              <div className="bg-slate-900 dark:bg-slate-800 p-8 text-white flex justify-between items-center">
+                <div>
+                  <h2 className="text-2xl font-black">
+                    Session <span className="text-emerald-400">Config</span>
                   </h2>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => setIsModalOpen(false)}
-                    className="rounded-full h-12 w-12 hover:bg-slate-100"
+                  <p className="text-slate-400 text-[10px] uppercase font-bold tracking-widest mt-1">
+                    Manual Node Override
+                  </p>
+                </div>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setIsModalOpen(false)}
+                  className="rounded-full h-12 w-12 hover:bg-white/10 text-white"
+                >
+                  <X />
+                </Button>
+              </div>
+
+              <div className="p-8 md:p-12 space-y-8 max-h-[75vh] overflow-y-auto no-scrollbar">
+                {/* Section 1: Identity */}
+                <div className="space-y-4">
+                  <div className="flex items-center gap-2 text-[10px] font-black uppercase text-emerald-600 tracking-tighter">
+                    <span className="w-4 h-4 rounded-full bg-emerald-100 flex items-center justify-center">
+                      1
+                    </span>
+                    Assignment
+                  </div>
+                  <Select
+                    value={formData.classId}
+                    onValueChange={(v) =>
+                      setFormData({ ...formData, classId: v })
+                    }
                   >
-                    <X />
-                  </Button>
+                    <SelectTrigger className="h-16 rounded-2xl border-slate-100 bg-slate-50/50 dark:bg-slate-800/50 text-base font-bold shadow-none">
+                      <SelectValue placeholder="Identify Target Academic Class..." />
+                    </SelectTrigger>
+                    <SelectContent className="rounded-2xl">
+                      {classes.map((c: any) => (
+                        <SelectItem
+                          key={c.id}
+                          value={c.id}
+                          className="py-4 font-bold border-b last:border-0"
+                        >
+                          {c.name} — {c.code}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <div className="md:col-span-2 space-y-2">
-                    <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">
-                      Target Academic Class
-                    </Label>
-                    <Select
-                      value={formData.classId}
-                      onValueChange={(v) =>
-                        setFormData({ ...formData, classId: v })
-                      }
-                    >
-                      <SelectTrigger className="h-14 rounded-2xl border-slate-100 bg-slate-50/50 dark:bg-slate-800/50">
-                        <SelectValue placeholder="Select Class Record" />
-                      </SelectTrigger>
-                      <SelectContent className="rounded-2xl">
-                        {classes.map((c: any) => (
-                          <SelectItem
-                            key={c.id}
-                            value={c.id}
-                            className="py-3 font-bold"
-                          >
-                            {c.name} ({c.code})
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                {/* Section 2: Temporal Parameters */}
+                <div className="space-y-4 pt-4 border-t border-slate-50 dark:border-slate-800">
+                  <div className="flex items-center gap-2 text-[10px] font-black uppercase text-emerald-600 tracking-tighter">
+                    <span className="w-4 h-4 rounded-full bg-emerald-100 flex items-center justify-center">
+                      2
+                    </span>
+                    Temporal Control
                   </div>
-
-                  {/* TYPABLE TIME INPUTS */}
-                  <div className="space-y-2">
-                    <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">
-                      Start Time (24h)
-                    </Label>
-                    <Input
-                      type="time"
-                      className="h-14 rounded-2xl border-slate-100 font-bold text-lg"
-                      value={formData.startTime}
-                      onChange={(e) =>
-                        setFormData({ ...formData, startTime: e.target.value })
-                      }
-                    />
-                  </div>
-                  <div className="space-y-2">
-                    <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">
-                      End Time (24h)
-                    </Label>
-                    <Input
-                      type="time"
-                      className="h-14 rounded-2xl border-slate-100 font-bold text-lg"
-                      value={formData.endTime}
-                      onChange={(e) =>
-                        setFormData({ ...formData, endTime: e.target.value })
-                      }
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">
-                      Platform
-                    </Label>
-                    <Select
-                      value={formData.meetingPlatform}
-                      onValueChange={(v) =>
-                        setFormData({ ...formData, meetingPlatform: v })
-                      }
-                    >
-                      <SelectTrigger className="h-14 rounded-2xl border-slate-100">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent className="rounded-2xl">
-                        <SelectItem value="ZOOM">Zoom Video</SelectItem>
-                        <SelectItem value="GOOGLE_MEET">Google Meet</SelectItem>
-                        <SelectItem value="MICROSOFT_TEAMS">Teams</SelectItem>
-                        <SelectItem value="OTHER">
-                          Physical Classroom
-                        </SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-                  <div className="space-y-2">
-                    <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-1">
-                      Day of Week
-                    </Label>
-                    <Select
-                      value={formData.dayOfWeek.toString()}
-                      onValueChange={(v) =>
-                        setFormData({ ...formData, dayOfWeek: parseInt(v) })
-                      }
-                    >
-                      <SelectTrigger className="h-14 rounded-2xl border-slate-100">
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent className="rounded-2xl">
-                        {days.map((d, i) => (
-                          <SelectItem
-                            key={i}
-                            value={i.toString()}
-                            className="font-bold"
-                          >
-                            {d}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div className="md:col-span-2 grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400">
-                        Meeting ID
+                      <Label className="text-[10px] font-black uppercase text-slate-400 ml-2">
+                        Day of Week
                       </Label>
-                      <Input
-                        value={formData.meetingId}
-                        onChange={(e) =>
-                          setFormData({
-                            ...formData,
-                            meetingId: e.target.value,
-                          })
+                      <Select
+                        value={formData.dayOfWeek.toString()}
+                        onValueChange={(v) =>
+                          setFormData({ ...formData, dayOfWeek: parseInt(v) })
                         }
-                        placeholder="982 123 4567"
-                        className="h-14 rounded-2xl"
-                      />
+                      >
+                        <SelectTrigger className="h-14 rounded-2xl border-slate-100">
+                          <SelectValue />
+                        </SelectTrigger>
+                        <SelectContent className="rounded-xl">
+                          {days.map((d, i) => (
+                            <SelectItem
+                              key={i}
+                              value={i.toString()}
+                              className="font-bold"
+                            >
+                              {d}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
                     </div>
                     <div className="space-y-2">
-                      <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400">
-                        Meeting Password
+                      <Label className="text-[10px] font-black uppercase text-slate-400 ml-2">
+                        Timezone
                       </Label>
                       <Input
-                        value={formData.meetingPassword}
+                        value={formData.timezone}
                         onChange={(e) =>
-                          setFormData({
-                            ...formData,
-                            meetingPassword: e.target.value,
-                          })
+                          setFormData({ ...formData, timezone: e.target.value })
                         }
-                        placeholder="Passcode"
-                        className="h-14 rounded-2xl"
+                        className="h-14 rounded-2xl border-slate-100 bg-slate-50/30"
                       />
                     </div>
                   </div>
 
-                  <div className="md:col-span-2 flex items-center justify-between p-6 bg-slate-50 dark:bg-slate-800/50 rounded-3xl border border-slate-100 dark:border-slate-700">
-                    <div className="flex gap-4">
-                      <div className="p-3 bg-white dark:bg-slate-700 rounded-2xl shadow-sm">
-                        <Video className="text-indigo-600" />
-                      </div>
-                      <div>
-                        <p className="text-sm font-black text-slate-900 dark:text-white">
-                          Enable Live Session
-                        </p>
-                        <p className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">
-                          Automatic Link Generation
-                        </p>
-                      </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <Label className="text-[10px] font-black uppercase text-slate-400 ml-2">
+                        Start Time
+                      </Label>
+                      <Input
+                        type="time"
+                        className="h-16 rounded-2xl border-slate-100 bg-slate-50 font-black text-2xl px-6"
+                        value={formData.startTime}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            startTime: e.target.value,
+                          })
+                        }
+                      />
                     </div>
-                    <Switch
-                      checked={formData.isLive}
-                      onCheckedChange={(v) =>
-                        setFormData({ ...formData, isLive: v })
-                      }
-                    />
+                    <div className="space-y-2">
+                      <Label className="text-[10px] font-black uppercase text-slate-400 ml-2">
+                        End Time
+                      </Label>
+                      <Input
+                        type="time"
+                        className="h-16 rounded-2xl border-slate-100 bg-slate-50 font-black text-2xl px-6"
+                        value={formData.endTime}
+                        onChange={(e) =>
+                          setFormData({ ...formData, endTime: e.target.value })
+                        }
+                      />
+                    </div>
                   </div>
+                </div>
+
+                {/* Section 3: Connectivity */}
+                <div className="space-y-4 pt-4 border-t border-slate-50 dark:border-slate-800">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2 text-[10px] font-black uppercase text-emerald-600 tracking-tighter">
+                      <span className="w-4 h-4 rounded-full bg-emerald-100 flex items-center justify-center">
+                        3
+                      </span>
+                      Transmission
+                    </div>
+                    <div className="flex items-center gap-3 bg-slate-100 dark:bg-slate-800 px-4 py-2 rounded-full">
+                      <span className="text-[9px] font-black uppercase text-slate-500">
+                        Live Virtual Session
+                      </span>
+                      <Switch
+                        checked={formData.isLive}
+                        onCheckedChange={(v) =>
+                          setFormData({ ...formData, isLive: v })
+                        }
+                      />
+                    </div>
+                  </div>
+
+                  <AnimatePresence mode="wait">
+                    {formData.isLive ? (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: "auto", opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        className="space-y-4 overflow-hidden pt-2"
+                      >
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div className="space-y-2">
+                            <Label className="text-[10px] font-bold text-slate-400 ml-2">
+                              Platform Provider
+                            </Label>
+                            <Select
+                              value={formData.meetingPlatform}
+                              onValueChange={(v) =>
+                                setFormData({ ...formData, meetingPlatform: v })
+                              }
+                            >
+                              <SelectTrigger className="h-14 rounded-2xl border-slate-100">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent className="rounded-xl">
+                                <SelectItem value="ZOOM">Zoom Video</SelectItem>
+                                <SelectItem value="GOOGLE_MEET">
+                                  Google Meet
+                                </SelectItem>
+                                <SelectItem value="MICROSOFT_TEAMS">
+                                  Teams
+                                </SelectItem>
+                                <SelectItem value="OTHER">
+                                  Other/Custom
+                                </SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          <div className="space-y-2">
+                            <Label className="text-[10px] font-bold text-slate-400 ml-2">
+                              Meeting ID
+                            </Label>
+                            <Input
+                              value={formData.meetingId}
+                              onChange={(e) =>
+                                setFormData({
+                                  ...formData,
+                                  meetingId: e.target.value,
+                                })
+                              }
+                              placeholder="982 000 0000"
+                              className="h-14 rounded-2xl border-slate-100"
+                            />
+                          </div>
+                        </div>
+                        <div className="space-y-2">
+                          <Label className="text-[10px] font-bold text-slate-400 ml-2">
+                            Direct Meeting URL
+                          </Label>
+                          <Input
+                            value={formData.meetingUrl}
+                            onChange={(e) =>
+                              setFormData({
+                                ...formData,
+                                meetingUrl: e.target.value,
+                              })
+                            }
+                            placeholder="https://zoom.us/j/..."
+                            className="h-14 rounded-2xl border-slate-100"
+                          />
+                        </div>
+                      </motion.div>
+                    ) : (
+                      <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        className="p-6 bg-emerald-50 dark:bg-emerald-900/10 rounded-2xl border border-emerald-100 dark:border-emerald-900/20"
+                      >
+                        <div className="flex gap-4">
+                          <MapPin className="h-6 w-6 text-emerald-500" />
+                          <div>
+                            <p className="text-sm font-black text-slate-900 dark:text-white leading-none">
+                              Physical Classroom Logic
+                            </p>
+                            <p className="text-xs text-slate-500 mt-1">
+                              This session will be marked as On-Campus. No
+                              meeting links will be generated.
+                            </p>
+                          </div>
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
 
                 <Button
-                  className="w-full h-16 rounded-[1.5rem] bg-indigo-600 hover:bg-indigo-700 text-white font-black text-lg shadow-2xl shadow-indigo-500/30 transition-all"
+                  className="w-full h-20 rounded-[2rem] bg-indigo-600 hover:bg-indigo-700 text-white font-black text-xl shadow-2xl shadow-indigo-500/30 transition-all hover:scale-[1.01] active:scale-95 disabled:opacity-50"
                   onClick={handleSave}
-                  disabled={isLoading}
+                  disabled={isPending}
                 >
-                  {isLoading ? (
-                    <Loader2 className="animate-spin mr-2" />
+                  {isPending ? (
+                    <Loader2 className="animate-spin" />
                   ) : editingId ? (
-                    "Update Timetable Entry"
+                    "Update Timetable Node"
                   ) : (
-                    "Finalize Timetable Entry"
+                    "Initialize Session Entry"
                   )}
                 </Button>
               </div>
@@ -558,10 +677,34 @@ export default function ScheduleManagementClient({
       meetingPassword: s.meetingPassword || "",
       timezone: s.timezone,
       isRecurring: s.isRecurring,
-      recurrenceRule: s.recurrenceRule || "Weekly",
     });
     setIsModalOpen(true);
   }
+}
+
+// Sub-Component for Bento Stats
+function StatCard({ label, value, icon: Icon, color, isText }: any) {
+  const themes: any = {
+    indigo: "text-indigo-600 bg-indigo-50 shadow-indigo-200/50",
+    emerald: "text-emerald-600 bg-emerald-50 shadow-emerald-200/50",
+    amber: "text-amber-600 bg-amber-50 shadow-amber-200/50",
+    blue: "text-blue-600 bg-blue-50 shadow-blue-200/50",
+  };
+  return (
+    <Card className="border-0 shadow-sm bg-white dark:bg-slate-900 rounded-[2rem] p-4 md:p-6 flex items-center gap-4 transition-all hover:shadow-md">
+      <div className={`p-3 rounded-2xl ${themes[color]}`}>
+        <Icon className="h-5 w-5 md:h-6 md:w-6" />
+      </div>
+      <div className="min-w-0">
+        <p className="text-[9px] md:text-[10px] font-black text-slate-400 uppercase tracking-widest leading-none truncate">
+          {label}
+        </p>
+        <p className="text-base md:text-xl font-black text-slate-900 dark:text-white leading-none mt-1 truncate">
+          {value}
+        </p>
+      </div>
+    </Card>
+  );
 }
 
 // "use client";
