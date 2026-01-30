@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useTransition, useEffect } from "react";
+import { useState, useMemo, useTransition } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Search,
@@ -9,7 +9,6 @@ import {
   Edit,
   Trash2,
   Calendar,
-  Clock,
   Video,
   MapPin,
   Loader2,
@@ -19,10 +18,7 @@ import {
   Users,
   ChevronRight,
   Sparkles,
-  Hash,
-  Lock,
   CheckCircle2,
-  AlertCircle,
   CalendarDays,
 } from "lucide-react";
 
@@ -169,8 +165,8 @@ export default function ScheduleManagementClient({
   return (
     <div className="max-w-7xl mx-auto space-y-6 md:space-y-10 pb-32 md:pb-20 px-4 md:px-0 mt-4 md:mt-8">
       {/* --- ELITE HEADER --- */}
-      <div className="relative overflow-hidden bg-slate-900 rounded-[2rem] md:rounded-[3rem] p-8 md:p-12 text-white shadow-2xl border border-white/5">
-        <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-emerald-500/10 to-transparent pointer-events-none" />
+      <div className="relative overflow-hidden bg-slate-900 rounded-4xl md:rounded-3xl p-8 md:p-12 text-white shadow-2xl border border-white/5">
+        <div className="absolute top-0 right-0 w-1/2 h-full bg-linear-to-l from-emerald-500/10 to-transparent pointer-events-none" />
         <div className="absolute -bottom-24 -left-24 w-64 h-64 bg-indigo-600/20 blur-[100px] pointer-events-none" />
 
         <div className="relative z-10 flex flex-col md:flex-row justify-between items-start md:items-center gap-8">
@@ -437,7 +433,7 @@ export default function ScheduleManagementClient({
               initial={{ scale: 0.9, opacity: 0, y: 30 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.9, opacity: 0, y: 30 }}
-              className="relative bg-white dark:bg-slate-900 w-full max-w-2xl rounded-[3rem] shadow-2xl border border-white/10 overflow-hidden"
+              className="relative bg-white dark:bg-slate-900 w-full max-w-2xl rounded-3xl shadow-2xl border border-white/10 overflow-hidden"
             >
               {/* Header */}
               <div className="bg-slate-900 dark:bg-slate-800 p-8 text-white flex justify-between items-center">
@@ -689,7 +685,7 @@ export default function ScheduleManagementClient({
                 </div>
 
                 <Button
-                  className="w-full h-20 rounded-[2rem] bg-indigo-600 hover:bg-indigo-700 text-white font-black text-xl shadow-2xl shadow-indigo-500/30 transition-all hover:scale-[1.01] active:scale-95 disabled:opacity-50"
+                  className="w-full h-20 rounded-4xl bg-indigo-600 hover:bg-indigo-700 text-white font-black text-xl shadow-2xl shadow-indigo-500/30 transition-all hover:scale-[1.01] active:scale-95 disabled:opacity-50"
                   onClick={handleSave}
                   disabled={isPending}
                 >
