@@ -3,36 +3,59 @@
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
+import { AnnouncementType, AudienceType, PriorityLevel } from "@/app/generated/prisma/enums";
 
-export async function approveUserAction(userId: string) {
-  const session = await auth();
-  if (!session || !["ADMIN", "SUPER_ADMIN"].includes(session.user.role)) {
-    throw new Error("Unauthorized");
+export async function quickBroadcast(title: string, content: string) {
+  try {
+    const session = await auth();
+    if (!session || !["ADMIN", "SUPER_ADMIN"].includes(session.user.role)) {
+      throw new Error("Unauthorized");
+    }
+
+    // FIX: Prisma requires targetAudience and type based on your schema
+    await prisma.announcement.create({
+      data: {
+        title,
+        content,
+        type: "GENERAL" as AnnouncementType,
+        priority: "NORMAL" as PriorityLevel,
+        targetAudience: ["ALL"] as AudienceType[], // Fixed Enum Array
+        createdById: session.user.id,
+        isPublished: true,
+        publishAt: new Date(),
+      },
+    });
+
+    revalidatePath("/(portal)/dashboard/admin");
+    return { success: true };
+  } catch (error: any) {
+    console.error("Broadcast Error:", error);
+    return { error: error.message || "Failed to transmit broadcast" };
   }
-
-  await prisma.user.update({
-    where: { id: userId },
-    data: {
-      status: "APPROVED",
-      approvedAt: new Date(),
-      approvedById: session.user.id,
-    },
-  });
-
-  revalidatePath("/admin/dashboard");
-  return { success: true };
 }
 
-export async function broadcastAnnouncement(content: string) {
-  // Logic for creating a global announcement from your schema
-  const session = await auth();
-  await prisma.announcement.create({
-    data: {
-      title: "Global Administrative Update",
-      content,
-      createdById: session?.user.id as string,
-      targetAudience: ["ALL"],
-    },
-  });
-  revalidatePath("/admin/dashboard");
+export async function processUserAction(
+  userId: string,
+  action: "APPROVE" | "REJECT",
+) {
+  try {
+    const session = await auth();
+    if (!session || !["ADMIN", "SUPER_ADMIN"].includes(session.user.role)) {
+      throw new Error("Unauthorized");
+    }
+
+    await prisma.user.update({
+      where: { id: userId },
+      data: {
+        status: action === "APPROVE" ? "APPROVED" : "REJECTED",
+        approvedAt: action === "APPROVE" ? new Date() : null,
+        approvedById: session.user.id,
+      },
+    });
+
+    revalidatePath("/(portal)/dashboard/admin");
+    return { success: true };
+  } catch (error: any) {
+    return { error: error.message };
+  }
 }

@@ -1,21 +1,25 @@
-export interface DashboardStats {
-  pendingApprovals: number;
-  activeStudents: number;
-  todayAttendance: number;
-  revenue: number;
-  expenseTotal: number;
-}
+import { User, Student, Teacher, Payment, HifzProgress } from "@/app/generated/prisma/client";
 
-export interface RecentHifzLog {
-  id: string;
-  surah: number;
-  startAyah: number;
-  endAyah: number;
-  status: "PASS" | "FAIL" | "NEEDS_PRACTICE" | "EXCELLENT";
+export interface ExtendedHifzLog extends HifzProgress {
   student: {
     user: {
       name: string;
       image: string | null;
     };
   };
+}
+
+export interface DashboardData {
+  counts: {
+    pendingUsers: number;
+    students: number;
+    teachers: number;
+    classes: number;
+  };
+  revenue: {
+    monthly: number;
+    pending: number;
+  };
+  recentLogs: ExtendedHifzLog[];
+  pendingList: (User & { studentProfile: any; teacherProfile: any })[];
 }

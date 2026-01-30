@@ -5,49 +5,67 @@ import AdminDashboardClient from "@/components/admin/dashboard-client";
 
 export default async function AdminDashboardPage() {
   const session = await auth();
-  if (!session || !["ADMIN", "SUPER_ADMIN"].includes(session.user.role))
-    redirect("/login");
+  if (!session || !["ADMIN", "SUPER_ADMIN"].includes(session.user.role)) redirect("/login");
 
-  // Fetching the 2026 Pulse Data
+  // 1. Fetch all nodes for the 2026 Pulse
   const [
-    pendingUsers,
-    totalStudents,
-    todayAttendance,
-    monthlyRevenue,
+    pendingUsersData,
+    studentCount,
+    teacherCount,
+    classCount,
     recentHifzLogs,
+    revenueData
   ] = await Promise.all([
-    prisma.user.count({ where: { status: "PENDING" } }),
+    // Get actual users for the approval modal
+    prisma.user.findMany({ 
+      where: { status: "PENDING" },
+      include: { studentProfile: true, teacherProfile: true },
+      take: 10 
+    }),
     prisma.student.count(),
-    prisma.attendance.count({
-      where: { date: { gte: new Date(new Date().setHours(0, 0, 0, 0)) } },
+    prisma.teacher.count(),
+    prisma.class.count(),
+    prisma.hifzProgress.findMany({
+      take: 6,
+      orderBy: { createdAt: "desc" },
+      include: { student: { include: { user: true } } }
     }),
     prisma.payment.aggregate({
       _sum: { amount: true },
-      where: {
-        status: "COMPLETED",
-        createdAt: { gte: new Date(new Date().setDate(1)) },
-      },
-    }),
-    prisma.hifzProgress.findMany({
-      take: 5,
-      orderBy: { createdAt: "desc" },
-      include: { student: { include: { user: true } } },
-    }),
+      where: { status: "COMPLETED" }
+    })
   ]);
 
-  const stats = {
-    pendingApprovals: pendingUsers,
-    activeStudents: totalStudents,
-    todayAttendance,
-    revenue: monthlyRevenue._sum.amount || 0,
+  // 2. Construct the Type-Safe DashboardData object
+  const dashboardData = {
+    counts: {
+      pendingUsers: pendingUsersData.length,
+      students: studentCount,
+      teachers: teacherCount,
+      classes: classCount,
+    },
+    revenue: {
+      monthly: Number(revenueData._sum.amount) || 0,
+      pending: 0, // Logic for pending invoices can go here
+    },
+    recentLogs: JSON.parse(JSON.stringify(recentHifzLogs)),
+    pendingList: JSON.parse(JSON.stringify(pendingUsersData)),
   };
 
   return (
     <div className="min-h-screen bg-slate-50/50 dark:bg-slate-950 p-4 md:p-8">
-      <AdminDashboardClient stats={stats} recentHifz={recentHifzLogs} />
+      {/* Pass the data object correctly */}
+      <AdminDashboardClient data={dashboardData} />
     </div>
   );
 }
+
+
+
+
+
+
+
 
 // "use client";
 
