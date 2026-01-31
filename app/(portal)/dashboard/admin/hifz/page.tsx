@@ -1,7 +1,7 @@
-import { prisma } from "@/lib/prisma";
-import { auth } from "@/lib/auth";
-import { redirect } from "next/navigation";
 import HifzTerminalClient from "@/components/admin/hifz-terminal-client";
+import { auth } from "@/lib/auth";
+import { prisma } from "@/lib/prisma";
+import { redirect } from "next/navigation";
 
 export default async function HifzTerminalPage() {
   const session = await auth();

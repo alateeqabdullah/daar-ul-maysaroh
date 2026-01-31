@@ -442,6 +442,7 @@ export type QuranProgressOrderByWithRelationInput = {
 
 export type QuranProgressWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  studentId_surahNumber?: Prisma.QuranProgressStudentIdSurahNumberCompoundUniqueInput
   AND?: Prisma.QuranProgressWhereInput | Prisma.QuranProgressWhereInput[]
   OR?: Prisma.QuranProgressWhereInput[]
   NOT?: Prisma.QuranProgressWhereInput | Prisma.QuranProgressWhereInput[]
@@ -470,7 +471,7 @@ export type QuranProgressWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"QuranProgress"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"QuranProgress"> | Date | string
   student?: Prisma.XOR<Prisma.StudentScalarRelationFilter, Prisma.StudentWhereInput>
-}, "id">
+}, "id" | "studentId_surahNumber">
 
 export type QuranProgressOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -739,6 +740,11 @@ export type QuranProgressListRelationFilter = {
 
 export type QuranProgressOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
+}
+
+export type QuranProgressStudentIdSurahNumberCompoundUniqueInput = {
+  studentId: string
+  surahNumber: number
 }
 
 export type QuranProgressCountOrderByAggregateInput = {

@@ -3,40 +3,23 @@
 import { useState, useTransition } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  BookOpen,
-  Star,
-  AlertCircle,
-  CheckCircle2,
-  History,
   Plus,
+  Minus,
   Save,
-  MessageSquare,
-  ListFilter,
-  ChevronRight,
-  Hash,
-  Award,
-  Timer,
-  Loader2,
-  X,
   Search,
+  ChevronLeft,
+  ChevronRight,
+  History,
+  Star,
+  Info,
+  Loader2,
+  Sparkles,
+  BookOpen,
 } from "lucide-react";
 import { logHifzSession } from "@/app/actions/admin/hifz/actions";
-
-// Brand UI
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Progress } from "@/components/ui/progress";
 import { toast } from "sonner";
 
 export default function HifzTerminalClient({
@@ -45,382 +28,236 @@ export default function HifzTerminalClient({
   initialStudents: any[];
 }) {
   const [isPending, startTransition] = useTransition();
-  const [selectedStudent, setSelectedStudent] = useState<any>(
-    initialStudents[0],
-  );
-  const [search, setSearch] = useState("");
+  const [selectedIdx, setSelectedIdx] = useState(0);
+  const [showHistory, setShowHistory] = useState(false);
 
-  const [formData, setFormData] = useState({
-    surah: "",
-    startAyah: "1",
-    endAyah: "",
+  const student = initialStudents[selectedIdx];
+  const [form, setForm] = useState({
+    surah: "78",
+    start: "1",
+    end: "",
+    mistakes: 0,
     status: "PASS",
-    mistakes: "0",
-    comments: "",
   });
 
-  const filteredStudents = initialStudents.filter((s) =>
-    s.user.name.toLowerCase().includes(search.toLowerCase()),
-  );
-
-  const handleSubmit = async () => {
-    if (!formData.surah || !formData.endAyah)
-      return toast.error("Surah and Ayah range required");
-
+  const handleSync = () => {
     startTransition(async () => {
-      try {
-        await logHifzSession({ ...formData, studentId: selectedStudent.id });
-        toast.success(`Hifz Logged for ${selectedStudent.user.name}`, {
-          icon: <Award className="text-gold" />,
+      const res = await logHifzSession({
+        studentId: student.id,
+        surah: form.surah,
+        startAyah: form.start,
+        endAyah: form.end,
+        status: form.status,
+        mistakes: form.mistakes,
+      });
+      if (res?.error) toast.error("Handshake Failed");
+      else {
+        toast.success("Progress Synced", {
+          icon: <Sparkles className="text-gold" />,
         });
-        // Reset partial form
-        setFormData((prev) => ({
+        setForm((prev) => ({
           ...prev,
-          startAyah: (parseInt(prev.endAyah) + 1).toString(),
-          endAyah: "",
-          mistakes: "0",
+          start: (Number(prev.end) + 1).toString(),
+          end: "",
+          mistakes: 0,
         }));
-      } catch (e) {
-        toast.error("Handshake failed with database");
       }
     });
   };
 
   return (
-    <div className="max-w-7xl mx-auto space-y-6">
-      {/* --- ELITE HEADER --- */}
-      <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
-        <div className="space-y-2">
-          <div className="flex items-center gap-2">
-            <span className="h-2 w-2 rounded-full bg-gold animate-pulse" />
-            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground">
-              Quranic Mastery Terminal
-            </span>
-          </div>
-          <h1 className="text-5xl font-black tracking-tighter text-slate-900 dark:text-white">
-            Hifz <span className="text-primary-700">Recording</span>
-          </h1>
+    <div className="min-h-screen bg-background text-foreground pb-24">
+      {/* --- 1. TOP SELECTOR (Horizontal Scroll) --- */}
+      <div className="sticky top-0 z-30 w-full glass-surface border-b dark:border-white/5 py-4">
+        <div className="flex gap-4 overflow-x-auto px-6 no-scrollbar">
+          {initialStudents.map((s, i) => (
+            <button
+              key={s.id}
+              onClick={() => setSelectedIdx(i)}
+              className={`flex-shrink-0 flex flex-col items-center gap-2 transition-all ${selectedIdx === i ? "scale-110 opacity-100" : "opacity-40 scale-90"}`}
+            >
+              <Avatar
+                className={`h-14 w-14 border-2 ${selectedIdx === i ? "border-primary-700 shadow-royal" : "border-transparent"}`}
+              >
+                <AvatarImage src={s.user.image} />
+                <AvatarFallback>{s.user.name[0]}</AvatarFallback>
+              </Avatar>
+              <span className="text-[10px] font-black uppercase tracking-tighter">
+                {s.user.name.split(" ")[0]}
+              </span>
+            </button>
+          ))}
         </div>
-      </header>
+      </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        {/* --- LEFT: STUDENT FEED --- */}
-        <div className="lg:col-span-4 space-y-4">
-          <div className="relative group">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
-            <input
-              placeholder="Filter nodes..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="w-full h-14 pl-12 glass-surface rounded-2xl outline-none focus:ring-2 ring-primary/20 dark:bg-slate-900"
+      <main className="max-w-xl mx-auto px-6 mt-8 space-y-8">
+        {/* --- 2. FOCUS CARD --- */}
+        <motion.div
+          key={student.id}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="institutional-card glass-surface p-8 space-y-8 border-primary-700/20"
+        >
+          <div className="flex justify-between items-start">
+            <div>
+              <p className="text-[10px] font-black uppercase text-primary-700 tracking-widest mb-1">
+                Active Session
+              </p>
+              <h2 className="text-3xl font-black tracking-tighter leading-none">
+                {student.user.name}
+              </h2>
+            </div>
+            <Badge className="bg-gold text-white font-black rounded-full px-4">
+              Level {student.currentLevel || "1"}
+            </Badge>
+          </div>
+
+          {/* Recitation Params */}
+          <div className="grid grid-cols-3 gap-4">
+            <HUDInput
+              label="Surah"
+              value={form.surah}
+              onChange={(v) => setForm({ ...form, surah: v })}
+            />
+            <HUDInput
+              label="From"
+              value={form.start}
+              onChange={(v) => setForm({ ...form, start: v })}
+            />
+            <HUDInput
+              label="To"
+              value={form.end}
+              onChange={(v) => setForm({ ...form, end: v })}
+              placeholder="..."
             />
           </div>
 
-          <div className="space-y-3 max-h-[70vh] overflow-y-auto no-scrollbar pr-2">
-            {filteredStudents.map((student) => (
-              <motion.div
-                key={student.id}
-                onClick={() => setSelectedStudent(student)}
-                className={`p-4 rounded-3xl border-2 cursor-pointer transition-all ${
-                  selectedStudent?.id === student.id
-                    ? "bg-primary-700 border-primary-700 text-white shadow-royal scale-[1.02]"
-                    : "bg-white dark:bg-slate-900 border-transparent hover:border-primary-100"
+          {/* MISTAKE JOYPAD */}
+          <div className="bg-slate-900 dark:bg-black rounded-[2.5rem] p-8 text-white text-center space-y-4 shadow-2xl">
+            <p className="text-[10px] font-black uppercase tracking-[0.3em] text-indigo-400">
+              Mistake Engine
+            </p>
+            <div className="flex items-center justify-center gap-10">
+              <button
+                onClick={() =>
+                  setForm({ ...form, mistakes: Math.max(0, form.mistakes - 1) })
+                }
+                className="h-14 w-14 rounded-2xl bg-white/10 flex items-center justify-center active:scale-90 transition-all"
+              >
+                <Minus className="h-6 w-6" />
+              </button>
+              <span
+                className={`text-8xl font-black tracking-tighter ${form.mistakes > 2 ? "text-rose-500" : "text-white"}`}
+              >
+                {form.mistakes}
+              </span>
+              <button
+                onClick={() =>
+                  setForm({ ...form, mistakes: form.mistakes + 1 })
+                }
+                className="h-14 w-14 rounded-2xl bg-primary-700 flex items-center justify-center shadow-lg shadow-primary-700/40 active:scale-90 transition-all"
+              >
+                <Plus className="h-6 w-6" />
+              </button>
+            </div>
+          </div>
+
+          {/* Status Selection */}
+          <div className="grid grid-cols-2 gap-2">
+            {["EXCELLENT", "PASS", "NEEDS_PRACTICE", "FAIL"].map((s) => (
+              <button
+                key={s}
+                onClick={() => setForm({ ...form, status: s })}
+                className={`h-12 rounded-xl text-[9px] font-black uppercase tracking-widest transition-all ${
+                  form.status === s
+                    ? "bg-primary-700 text-white shadow-xl"
+                    : "bg-secondary text-muted-foreground"
                 }`}
               >
+                {s.replace("_", " ")}
+              </button>
+            ))}
+          </div>
+        </motion.div>
+
+        {/* --- 3. HISTORY TIMELINE --- */}
+        <div className="space-y-4">
+          <div className="flex items-center justify-between px-2">
+            <h4 className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+              Session Logs
+            </h4>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => setShowHistory(!showHistory)}
+              className="text-[9px] font-black"
+            >
+              {showHistory ? "HIDE" : "VIEW ALL"}
+            </Button>
+          </div>
+
+          <div className="space-y-3">
+            {student.hifzLogs.slice(0, showHistory ? 10 : 2).map((log: any) => (
+              <div
+                key={log.id}
+                className="p-5 glass-surface border-0 rounded-3xl flex justify-between items-center shadow-sm"
+              >
                 <div className="flex items-center gap-4">
-                  <Avatar className="h-12 w-12 border-2 border-white/20">
-                    <AvatarImage src={student.user.image} />
-                    <AvatarFallback className="font-black">
-                      {student.user.name[0]}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="flex-1 overflow-hidden">
-                    <p
-                      className={`text-sm font-black truncate ${selectedStudent?.id === student.id ? "text-white" : "text-slate-900 dark:text-white"}`}
-                    >
-                      {student.user.name}
+                  <div className="h-10 w-10 rounded-2xl bg-primary-700/10 text-primary-700 flex items-center justify-center">
+                    <BookOpen className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <p className="text-sm font-black tracking-tight">
+                      Surah {log.surah}
                     </p>
-                    <p
-                      className={`text-[10px] font-bold uppercase tracking-tight ${selectedStudent?.id === student.id ? "text-primary-100" : "text-slate-400"}`}
-                    >
-                      {student.studentId} • {student.currentLevel || "Standard"}
+                    <p className="text-[10px] font-bold text-muted-foreground uppercase">
+                      Verse {log.startAyah}-{log.endAyah}
                     </p>
                   </div>
-                  {selectedStudent?.id === student.id && (
-                    <ChevronRight className="h-4 w-4" />
-                  )}
                 </div>
-              </motion.div>
+                <Badge
+                  variant="outline"
+                  className="border-emerald-500/30 text-emerald-600 text-[9px] font-black"
+                >
+                  {log.status}
+                </Badge>
+              </div>
             ))}
           </div>
         </div>
+      </main>
 
-        {/* --- RIGHT: THE LOGGING ENGINE --- */}
-        <div className="lg:col-span-8 space-y-8">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={selectedStudent?.id}
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              className="space-y-8"
-            >
-              {/* Active Profile Stats */}
-              <div className="institutional-card glass-surface p-8 grid grid-cols-2 md:grid-cols-4 gap-6">
-                <StatMini
-                  label="Surahs Completed"
-                  value={selectedStudent?.quranProgress?.length || 0}
-                  icon={CheckCircle2}
-                  color="emerald"
-                />
-                <StatMini
-                  label="Last Rating"
-                  value={selectedStudent?.hifzLogs[0]?.status || "N/A"}
-                  icon={Star}
-                  color="gold"
-                />
-                <StatMini
-                  label="Avg Mistakes"
-                  value="1.4"
-                  icon={AlertCircle}
-                  color="rose"
-                />
-                <StatMini
-                  label="Juz Level"
-                  value={selectedStudent?.hifzLevel || "30"}
-                  icon={Hash}
-                  color="primary"
-                />
-              </div>
-
-              {/* Recording Terminal */}
-              <div className="institutional-card bg-white dark:bg-slate-900 p-8 md:p-12 space-y-10 relative overflow-hidden">
-                <div className="absolute top-0 right-0 p-8 opacity-5">
-                  <BookOpen className="h-48 w-48 rotate-12" />
-                </div>
-
-                <div className="relative z-10 space-y-8">
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-2xl font-black tracking-tight">
-                      Session{" "}
-                      <span className="text-primary-700">Parameters</span>
-                    </h3>
-                    <Badge className="bg-primary-50 text-primary-700 border-primary-100 dark:bg-primary-900/30">
-                      Active Recording
-                    </Badge>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div className="space-y-3">
-                      <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-2">
-                        Surah Number
-                      </Label>
-                      <Input
-                        type="number"
-                        className="h-16 rounded-2xl bg-slate-50 dark:bg-slate-800 border-0 text-xl font-black px-6"
-                        value={formData.surah}
-                        onChange={(e) =>
-                          setFormData({ ...formData, surah: e.target.value })
-                        }
-                        placeholder="1-114"
-                      />
-                    </div>
-                    <div className="space-y-3">
-                      <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-2">
-                        Ayah Start
-                      </Label>
-                      <Input
-                        type="number"
-                        className="h-16 rounded-2xl bg-slate-50 dark:bg-slate-800 border-0 text-xl font-black px-6"
-                        value={formData.startAyah}
-                        onChange={(e) =>
-                          setFormData({
-                            ...formData,
-                            startAyah: e.target.value,
-                          })
-                        }
-                      />
-                    </div>
-                    <div className="space-y-3">
-                      <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-2">
-                        Ayah End
-                      </Label>
-                      <Input
-                        type="number"
-                        className="h-16 rounded-2xl bg-slate-50 dark:bg-slate-800 border-0 text-xl font-black px-6"
-                        value={formData.endAyah}
-                        onChange={(e) =>
-                          setFormData({ ...formData, endAyah: e.target.value })
-                        }
-                        placeholder="..."
-                      />
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-3">
-                      <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-2">
-                        Evaluation Status
-                      </Label>
-                      <Select
-                        value={formData.status}
-                        onValueChange={(v) =>
-                          setFormData({ ...formData, status: v })
-                        }
-                      >
-                        <SelectTrigger className="h-16 rounded-2xl border-0 bg-slate-50 dark:bg-slate-800 font-black">
-                          <SelectValue />
-                        </SelectTrigger>
-                        <SelectContent className="rounded-2xl border-0 shadow-2xl">
-                          <SelectItem
-                            value="EXCELLENT"
-                            className="font-bold py-3 text-emerald-600"
-                          >
-                            EXCELLENT (Mumtaz)
-                          </SelectItem>
-                          <SelectItem
-                            value="PASS"
-                            className="font-bold py-3 text-indigo-600"
-                          >
-                            PASS (Jayyid)
-                          </SelectItem>
-                          <SelectItem
-                            value="NEEDS_PRACTICE"
-                            className="font-bold py-3 text-amber-600"
-                          >
-                            NEEDS PRACTICE
-                          </SelectItem>
-                          <SelectItem
-                            value="FAIL"
-                            className="font-bold py-3 text-rose-600"
-                          >
-                            FAIL (I'adah)
-                          </SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div className="space-y-3">
-                      <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-2">
-                        Mistakes Count
-                      </Label>
-                      <div className="flex gap-2">
-                        {[0, 1, 2, 3, 4, 5].map((n) => (
-                          <button
-                            key={n}
-                            onClick={() =>
-                              setFormData({
-                                ...formData,
-                                mistakes: n.toString(),
-                              })
-                            }
-                            className={`flex-1 h-16 rounded-2xl font-black transition-all ${
-                              formData.mistakes === n.toString()
-                                ? "bg-primary-700 text-white shadow-lg"
-                                : "bg-slate-50 dark:bg-slate-800 text-slate-400"
-                            }`}
-                          >
-                            {n}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="space-y-3">
-                    <Label className="text-[10px] font-black uppercase tracking-widest text-slate-400 ml-2">
-                      Teacher's Observations
-                    </Label>
-                    <Textarea
-                      className="rounded-[2rem] bg-slate-50 dark:bg-slate-800 border-0 p-6 min-h-[120px] font-medium"
-                      placeholder="Tajweed notes, fluency, melody observations..."
-                      value={formData.comments}
-                      onChange={(e) =>
-                        setFormData({ ...formData, comments: e.target.value })
-                      }
-                    />
-                  </div>
-
-                  <Button
-                    onClick={handleSubmit}
-                    disabled={isPending}
-                    className="w-full h-20 rounded-[2.5rem] bg-primary-700 hover:bg-primary-800 text-white font-black text-xl shadow-royal transition-all hover:scale-[1.01] active:scale-95 group"
-                  >
-                    {isPending ? (
-                      <Loader2 className="animate-spin" />
-                    ) : (
-                      <span className="flex items-center gap-3">
-                        <Save className="h-6 w-6" /> COMMIT TO REGISTRY
-                      </span>
-                    )}
-                  </Button>
-                </div>
-              </div>
-
-              {/* Recent History Feed */}
-              <div className="institutional-card glass-surface p-8">
-                <div className="flex items-center gap-2 mb-6">
-                  <History className="h-4 w-4 text-primary-700" />
-                  <h4 className="text-xs font-black uppercase tracking-widest text-slate-400">
-                    Node History
-                  </h4>
-                </div>
-                <div className="space-y-4">
-                  {selectedStudent?.hifzLogs.length > 0 ? (
-                    selectedStudent.hifzLogs.map((log: any) => (
-                      <div
-                        key={log.id}
-                        className="flex items-center justify-between p-4 bg-white/50 dark:bg-slate-900/50 rounded-2xl border border-white/20"
-                      >
-                        <div>
-                          <p className="text-sm font-black text-slate-900 dark:text-white">
-                            Surah {log.surah} ({log.startAyah}-{log.endAyah})
-                          </p>
-                          <p className="text-[10px] font-bold text-slate-400 uppercase">
-                            {new Date(log.date).toLocaleDateString()}
-                          </p>
-                        </div>
-                        <Badge
-                          className={`${log.status === "EXCELLENT" ? "bg-emerald-500" : "bg-primary-700"} text-[9px] font-black`}
-                        >
-                          {log.status}
-                        </Badge>
-                      </div>
-                    ))
-                  ) : (
-                    <p className="text-center py-6 text-slate-400 font-bold uppercase text-[10px]">
-                      No historical data found
-                    </p>
-                  )}
-                </div>
-              </div>
-            </motion.div>
-          </AnimatePresence>
-        </div>
+      {/* --- 4. FLOATING ACTION BUTTON --- */}
+      <div className="fixed bottom-8 left-1/2 -translate-x-1/2 w-full px-6 max-w-xl">
+        <Button
+          disabled={isPending}
+          onClick={handleSync}
+          className="w-full h-20 rounded-[2.5rem] bg-primary-700 hover:bg-primary-800 text-white font-black text-xl shadow-royal transition-all hover:scale-[1.02] active:scale-95"
+        >
+          {isPending ? (
+            <Loader2 className="animate-spin h-6 w-6" />
+          ) : (
+            "COMMIT PROGRESS"
+          )}
+        </Button>
       </div>
     </div>
   );
 }
 
-function StatMini({ label, value, icon: Icon, color }: any) {
-  const styles: any = {
-    emerald: "text-emerald-600 bg-emerald-50",
-    gold: "text-gold bg-gold/5",
-    rose: "text-rose-600 bg-rose-50",
-    primary: "text-primary-700 bg-primary-50",
-  };
+function HUDInput({ label, value, onChange, placeholder }: any) {
   return (
-    <div className="flex flex-col items-center text-center space-y-2">
-      <div className={`p-3 rounded-2xl ${styles[color]}`}>
-        <Icon className="h-4 w-4" />
-      </div>
-      <div>
-        <p className="text-[8px] font-black uppercase tracking-tighter text-slate-400">
-          {label}
-        </p>
-        <p className="text-sm font-black text-slate-900 dark:text-white">
-          {value}
-        </p>
-      </div>
+    <div className="space-y-2 text-center">
+      <p className="text-[8px] font-black uppercase text-muted-foreground tracking-widest">
+        {label}
+      </p>
+      <input
+        type="number"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        placeholder={placeholder}
+        className="w-full h-16 rounded-2xl bg-secondary dark:bg-slate-900 border-0 text-2xl font-black text-center focus:ring-2 ring-primary-700/50 outline-none transition-all"
+      />
     </div>
   );
 }

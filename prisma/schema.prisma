@@ -894,6 +894,7 @@ model QuranProgress {
   @@index([surahNumber])
   @@index([juzNumber])
   @@index([status])
+   @@unique([studentId, surahNumber]) 
   @@map("quran_progress")
 }
 
