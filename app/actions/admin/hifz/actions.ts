@@ -3,58 +3,58 @@
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
-import { z } from "zod";
 
-const hifzSchema = z.object({
-  studentId: z.string(),
-  surah: z.coerce.number().int(),
-  startAyah: z.coerce.number().int(),
-  endAyah: z.coerce.number().int(),
-  status: z.enum(["EXCELLENT", "PASS", "NEEDS_PRACTICE", "FAIL"]),
-  mistakes: z.coerce.number().int(),
-  comments: z.string().optional(),
-});
-
-export async function logHifzSession(rawInput: any) {
+export async function logHifzSession(data: any) {
   const session = await auth();
   if (!session) throw new Error("Unauthorized");
 
   try {
-    const data = hifzSchema.parse(rawInput);
+    // 1. Resolve Teacher Profile ID
+    const teacherProfile = await prisma.teacher.findUnique({
+      where: { userId: session.user.id },
+      select: { id: true },
+    });
+    if (!teacherProfile) return { error: "No Teacher Profile found." };
+
+    // 2. Strict Integer Conversion (The Handshake Fix)
+    const sId = String(data.studentId); // This is student.id
+    const surahNum = Math.floor(Number(data.surah));
+    const start = Math.floor(Number(data.startAyah));
+    const end = Math.floor(Number(data.endAyah));
+    const mistakeCount = Math.floor(Number(data.mistakes));
 
     return await prisma.$transaction(async (tx) => {
-      // 1. Create Daily Log
+      // 3. Create Daily Log
       await tx.hifzProgress.create({
         data: {
-          studentId: data.studentId,
-          surah: data.surah,
-          startAyah: data.startAyah,
-          endAyah: data.endAyah,
+          studentId: sId,
+          teacherId: teacherProfile.id,
+          surah: surahNum,
+          startAyah: start,
+          endAyah: end,
           status: data.status,
-          mistakes: data.mistakes,
+          mistakes: mistakeCount,
           comments: data.comments || "",
-          teacherId: session.user.id,
         },
       });
 
-      // 2. Sync Mastery Node
+      // 4. Update Mastery
       await tx.quranProgress.upsert({
         where: {
-          studentId_surahNumber: {
-            studentId: data.studentId,
-            surahNumber: data.surah,
-          },
+          studentId_surahNumber: { studentId: sId, surahNumber: surahNum },
         },
-        update: { toAyah: data.endAyah, lastRevisedAt: new Date() },
+        update: {
+          toAyah: end,
+          status: data.status === "EXCELLENT" ? "COMPLETED" : "IN_PROGRESS",
+        },
         create: {
-          studentId: data.studentId,
-          surahNumber: data.surah,
-          surahName: `Surah ${data.surah}`,
-          juzNumber: Math.ceil(data.surah / 4),
-          fromAyah: data.startAyah,
-          toAyah: data.endAyah,
-          totalAyahs: 0,
-          type: "MEMORIZATION",
+          studentId: sId,
+          surahNumber: surahNum,
+          surahName: `Surah ${surahNum}`,
+          juzNumber: Math.ceil(surahNum / 4) || 1,
+          fromAyah: start,
+          toAyah: end,
+          totalAyahs: end, // Required field
           status: "IN_PROGRESS",
         },
       });
@@ -62,7 +62,8 @@ export async function logHifzSession(rawInput: any) {
       revalidatePath("/admin/hifz");
       return { success: true };
     });
-  } catch (error: any) {
-    return { error: error.message };
+  } catch (e: any) {
+    console.error("DB Error:", e);
+    return { error: "Sync Refused: Check Schema Constraints." };
   }
 }

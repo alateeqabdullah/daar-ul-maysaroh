@@ -1,53 +1,28 @@
-import { redirect } from "next/navigation";
+import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
-import { getPendingUsers } from "@/lib/db/users";
-import UserApprovalsClient from "@/components/admin/user-approvals-client";
+import { redirect } from "next/navigation";
+import ApprovalsClient from "@/components/admin/approvals-client";
 
-interface PageProps {
-  searchParams: Promise<{
-    page?: string;
-    limit?: string;
-    role?: string;
-    search?: string;
-  }>;
-}
-
-export const metadata = {
-  title: "User Approvals | Admin Dashboard",
-  description: "Review pending registration requests",
-};
-
-export default async function UserApprovalsPage({ searchParams }: PageProps) {
-  // 1. Auth Guard
+export default async function ApprovalsPage() {
   const session = await auth();
-  if (!session) redirect("/login");
+  if (!session || !["ADMIN", "SUPER_ADMIN"].includes(session.user.role))
+    redirect("/login");
 
-  const userRole = session.user.role;
-  if (userRole !== "SUPER_ADMIN" && userRole !== "ADMIN") {
-    redirect("/dashboard");
-  }
+  const pendingUsers = await prisma.user.findMany({
+    where: { status: "PENDING" },
+    include: {
+      studentProfile: true,
+      teacherProfile: true,
+      parentProfile: true,
+    },
+    orderBy: { createdAt: "desc" },
+  });
 
-  // 2. Resolve Params (Next.js 15)
-  const resolvedParams = await searchParams;
-  const page = parseInt(resolvedParams.page || "1");
-  const limit = parseInt(resolvedParams.limit || "10");
-  const role = resolvedParams.role || "ALL";
-  const search = resolvedParams.search || "";
-
-  // 3. Fetch Data
-  const { users, pagination } = await getPendingUsers(
-    page,
-    limit,
-    role,
-    search
-  );
-
-  // 4. Render Client
   return (
-    <UserApprovalsClient
-      initialUsers={users}
-      pagination={pagination}
-      filters={{ role, search }}
-    />
+    <div className="min-h-screen p-4 md:p-8">
+      <ApprovalsClient
+        initialUsers={JSON.parse(JSON.stringify(pendingUsers))}
+      />
+    </div>
   );
 }
