@@ -1,17 +1,10 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import {
   Plus,
   Minus,
-  Save,
-  Search,
-  ChevronLeft,
-  ChevronRight,
-  History,
-  Star,
-  Info,
   Loader2,
   Sparkles,
   BookOpen,

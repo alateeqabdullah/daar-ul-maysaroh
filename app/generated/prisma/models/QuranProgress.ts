@@ -443,6 +443,21 @@ export type QuranProgressOrderByWithRelationInput = {
 export type QuranProgressWhereUniqueInput = Prisma.AtLeast<{
   id?: string
   studentId_surahNumber?: Prisma.QuranProgressStudentIdSurahNumberCompoundUniqueInput
+  studentId_surahNumber_juzNumber?: Prisma.QuranProgressStudentIdSurahNumberJuzNumberCompoundUniqueInput
+  studentId_surahNumber_pageNumber?: Prisma.QuranProgressStudentIdSurahNumberPageNumberCompoundUniqueInput
+  studentId_surahNumber_fromAyah_toAyah?: Prisma.QuranProgressStudentIdSurahNumberFromAyahToAyahCompoundUniqueInput
+  studentId_surahNumber_fromAyah_toAyah_totalAyahs?: Prisma.QuranProgressStudentIdSurahNumberFromAyahToAyahTotalAyahsCompoundUniqueInput
+  studentId_juzNumber_pageNumber?: Prisma.QuranProgressStudentIdJuzNumberPageNumberCompoundUniqueInput
+  studentId_juzNumber_fromAyah_toAyah?: Prisma.QuranProgressStudentIdJuzNumberFromAyahToAyahCompoundUniqueInput
+  studentId_juzNumber_fromAyah_toAyah_totalAyahs?: Prisma.QuranProgressStudentIdJuzNumberFromAyahToAyahTotalAyahsCompoundUniqueInput
+  studentId_pageNumber_fromAyah_toAyah?: Prisma.QuranProgressStudentIdPageNumberFromAyahToAyahCompoundUniqueInput
+  studentId_pageNumber_fromAyah_toAyah_totalAyahs?: Prisma.QuranProgressStudentIdPageNumberFromAyahToAyahTotalAyahsCompoundUniqueInput
+  studentId_fromAyah_toAyah?: Prisma.QuranProgressStudentIdFromAyahToAyahCompoundUniqueInput
+  studentId_fromAyah_toAyah_totalAyahs?: Prisma.QuranProgressStudentIdFromAyahToAyahTotalAyahsCompoundUniqueInput
+  studentId_totalAyahs?: Prisma.QuranProgressStudentIdTotalAyahsCompoundUniqueInput
+  studentId_recordingUrl?: Prisma.QuranProgressStudentIdRecordingUrlCompoundUniqueInput
+  studentId_recordingDuration?: Prisma.QuranProgressStudentIdRecordingDurationCompoundUniqueInput
+  studentId_recordingUrl_recordingDuration?: Prisma.QuranProgressStudentIdRecordingUrlRecordingDurationCompoundUniqueInput
   AND?: Prisma.QuranProgressWhereInput | Prisma.QuranProgressWhereInput[]
   OR?: Prisma.QuranProgressWhereInput[]
   NOT?: Prisma.QuranProgressWhereInput | Prisma.QuranProgressWhereInput[]
@@ -471,7 +486,7 @@ export type QuranProgressWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"QuranProgress"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"QuranProgress"> | Date | string
   student?: Prisma.XOR<Prisma.StudentScalarRelationFilter, Prisma.StudentWhereInput>
-}, "id" | "studentId_surahNumber">
+}, "id" | "studentId_surahNumber" | "studentId_surahNumber_juzNumber" | "studentId_surahNumber_pageNumber" | "studentId_surahNumber_fromAyah_toAyah" | "studentId_surahNumber_fromAyah_toAyah_totalAyahs" | "studentId_juzNumber_pageNumber" | "studentId_juzNumber_fromAyah_toAyah" | "studentId_juzNumber_fromAyah_toAyah_totalAyahs" | "studentId_pageNumber_fromAyah_toAyah" | "studentId_pageNumber_fromAyah_toAyah_totalAyahs" | "studentId_fromAyah_toAyah" | "studentId_fromAyah_toAyah_totalAyahs" | "studentId_totalAyahs" | "studentId_recordingUrl" | "studentId_recordingDuration" | "studentId_recordingUrl_recordingDuration">
 
 export type QuranProgressOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -745,6 +760,103 @@ export type QuranProgressOrderByRelationAggregateInput = {
 export type QuranProgressStudentIdSurahNumberCompoundUniqueInput = {
   studentId: string
   surahNumber: number
+}
+
+export type QuranProgressStudentIdSurahNumberJuzNumberCompoundUniqueInput = {
+  studentId: string
+  surahNumber: number
+  juzNumber: number
+}
+
+export type QuranProgressStudentIdSurahNumberPageNumberCompoundUniqueInput = {
+  studentId: string
+  surahNumber: number
+  pageNumber: number
+}
+
+export type QuranProgressStudentIdSurahNumberFromAyahToAyahCompoundUniqueInput = {
+  studentId: string
+  surahNumber: number
+  fromAyah: number
+  toAyah: number
+}
+
+export type QuranProgressStudentIdSurahNumberFromAyahToAyahTotalAyahsCompoundUniqueInput = {
+  studentId: string
+  surahNumber: number
+  fromAyah: number
+  toAyah: number
+  totalAyahs: number
+}
+
+export type QuranProgressStudentIdJuzNumberPageNumberCompoundUniqueInput = {
+  studentId: string
+  juzNumber: number
+  pageNumber: number
+}
+
+export type QuranProgressStudentIdJuzNumberFromAyahToAyahCompoundUniqueInput = {
+  studentId: string
+  juzNumber: number
+  fromAyah: number
+  toAyah: number
+}
+
+export type QuranProgressStudentIdJuzNumberFromAyahToAyahTotalAyahsCompoundUniqueInput = {
+  studentId: string
+  juzNumber: number
+  fromAyah: number
+  toAyah: number
+  totalAyahs: number
+}
+
+export type QuranProgressStudentIdPageNumberFromAyahToAyahCompoundUniqueInput = {
+  studentId: string
+  pageNumber: number
+  fromAyah: number
+  toAyah: number
+}
+
+export type QuranProgressStudentIdPageNumberFromAyahToAyahTotalAyahsCompoundUniqueInput = {
+  studentId: string
+  pageNumber: number
+  fromAyah: number
+  toAyah: number
+  totalAyahs: number
+}
+
+export type QuranProgressStudentIdFromAyahToAyahCompoundUniqueInput = {
+  studentId: string
+  fromAyah: number
+  toAyah: number
+}
+
+export type QuranProgressStudentIdFromAyahToAyahTotalAyahsCompoundUniqueInput = {
+  studentId: string
+  fromAyah: number
+  toAyah: number
+  totalAyahs: number
+}
+
+export type QuranProgressStudentIdTotalAyahsCompoundUniqueInput = {
+  studentId: string
+  totalAyahs: number
+}
+
+export type QuranProgressStudentIdRecordingUrlCompoundUniqueInput = {
+  studentId: string
+  recordingUrl: string
+}
+
+export type QuranProgressStudentIdRecordingDurationCompoundUniqueInput = {
+  studentId: string
+  recordingDuration: number
+}
+
+export type QuranProgressStudentIdRecordingUrlRecordingDurationCompoundUniqueInput = {
+  studentId: string
+  recordingUrl: string
+  recordingDuration: number
 }
 
 export type QuranProgressCountOrderByAggregateInput = {

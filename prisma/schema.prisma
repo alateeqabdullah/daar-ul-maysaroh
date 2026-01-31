@@ -894,8 +894,40 @@ model QuranProgress {
   @@index([surahNumber])
   @@index([juzNumber])
   @@index([status])
-   @@unique([studentId, surahNumber]) 
+  @@index([type])
+  @@index([evaluationType])
+  @@index([lastRevisedAt])
+  @@index([revisionCount])
+  @@index([createdAt])
+  @@index([updatedAt])
+  @@index([startedAt])
+  @@index([completedAt])
+  @@index([reviewedAt])
+  @@index([evaluatedAt])
+  @@index([recordingDuration])
+  @@index([recordingUrl])
+  @@index([fromAyah])
+  @@index([toAyah])
+  @@index([totalAyahs])
+  @@index([pageNumber])
+  @@unique([studentId, surahNumber])
   @@map("quran_progress")
+  @@unique([studentId, surahNumber, juzNumber])
+  @@unique([studentId, surahNumber, pageNumber])
+  @@unique([studentId, surahNumber, fromAyah, toAyah])
+  @@unique([studentId, surahNumber, fromAyah, toAyah, totalAyahs])
+  @@unique([studentId, juzNumber, pageNumber])
+  @@unique([studentId, juzNumber, fromAyah, toAyah])
+  @@unique([studentId, juzNumber, fromAyah, toAyah, totalAyahs])
+  @@unique([studentId, pageNumber, fromAyah, toAyah])
+  @@unique([studentId, pageNumber, fromAyah, toAyah, totalAyahs])
+  @@unique([studentId, fromAyah, toAyah])
+  @@unique([studentId, fromAyah, toAyah, totalAyahs])
+  @@unique([studentId, totalAyahs]) 
+  @@unique([studentId, recordingUrl])
+  @@unique([studentId, recordingDuration])
+  @@unique([studentId, recordingUrl, recordingDuration])
+
 }
 
 model PrayerRecord {
@@ -1883,7 +1915,18 @@ model HifzProgress {
 
   @@index([studentId])
   @@index([date])
+  @@index([surah])
+  @@index([status])
+  @@unique([studentId, date, surah])
   @@map("hifz_progress")
+  @@unique([studentId, date, surah, startAyah, endAyah])
+  @@unique([studentId, date, surah, startAyah, endAyah, mistakes])
+  @@unique([studentId, date, surah, startAyah, endAyah, comments])
+  @@unique([studentId, date, surah, startAyah, endAyah, status])
+  @@unique([studentId, date, surah, startAyah, endAyah, teacherId])
+  
+
+
 }
 
 enum HifzStatus {
