@@ -5,32 +5,27 @@ import UserRegistryClient from "@/components/admin/user-registry-client";
 
 export default async function UserRegistryPage() {
   const session = await auth();
-  if (!session || !["ADMIN", "SUPER_ADMIN"].includes(session.user.role)) redirect("/login");
+  if (!session || !["ADMIN", "SUPER_ADMIN"].includes(session.user.role))
+    redirect("/login");
 
   const usersRaw = await prisma.user.findMany({
     include: {
-      studentProfile: true,
+      studentProfile: { include: { parent: { include: { user: true } } } },
       teacherProfile: true,
       parentProfile: true,
     },
     orderBy: { createdAt: "desc" },
   });
 
-  // Clean data for client component
+  // Serialization to handle Decimal/Date types in Client Components
   const users = JSON.parse(JSON.stringify(usersRaw));
 
   return (
-    <div className="min-h-screen bg-slate-50/50 dark:bg-slate-950 p-4 md:p-8">
+    <div className="min-h-screen p-4 md:p-8">
       <UserRegistryClient initialUsers={users} />
     </div>
   );
 }
-
-
-
-
-
-
 
 // import { redirect } from "next/navigation";
 // import { prisma } from "@/lib/prisma";
@@ -70,7 +65,7 @@ export default async function UserRegistryPage() {
 
 //   if (params.role && params.role !== "ALL") {
 //     // @ts-ignore - Prisma enum casting safely handled by logic
-//     where.role = params.role; 
+//     where.role = params.role;
 //   }
 
 //   if (params.status && params.status !== "ALL") {
