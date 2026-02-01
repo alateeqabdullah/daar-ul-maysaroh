@@ -5,72 +5,77 @@ import { motion, AnimatePresence } from "framer-motion";
 import {
   Users,
   Search,
-  ChevronRight,
   Zap,
   CheckCircle2,
-  Plus,
-  UserPlus,
-  Filter,
-  ShieldCheck,
-  ArrowRight,
   Loader2,
   GraduationCap,
+  Layers,
+  Fingerprint,
+  ArrowRight,
+  ShieldCheck,
+  X,
+  Filter,
+  LayoutList,
 } from "lucide-react";
-import { bulkEnroll } from "@/app/actions/admin/enrollment/actions";
+import { bulkEnrollNodes } from "@/app/actions/admin/enrollment/actions";
 
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Progress } from "@/components/ui/progress";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { toast } from "sonner";
 
-export default function EnrollmentClient({ classes, students }: any) {
+export default function EnrollmentTerminal({ classes, students }: any) {
   const [isPending, startTransition] = useTransition();
-  const [selectedClassId, setSelectedClassId] = useState<string | null>(null);
-  const [selectedStudentIds, setSelectedStudentIds] = useState<string[]>([]);
+  const [targetClassId, setTargetClassId] = useState<string | null>(null);
+  const [selectedPool, setSelectedPool] = useState<string[]>([]);
   const [search, setSearch] = useState("");
+  const [config, setConfig] = useState({ type: "REGULAR", status: "ACTIVE" });
 
   const targetClass = useMemo(
-    () => classes.find((c: any) => c.id === selectedClassId),
-    [selectedClassId, classes],
+    () => classes.find((c: any) => c.id === targetClassId),
+    [targetClassId, classes],
   );
 
-  // Logic: Only show students NOT already in the selected class
-  const availableStudents = useMemo(() => {
+  // Intelligence: Filter pool based on search AND exclude students already in this class
+  const studentPool = useMemo(() => {
     return students.filter((s: any) => {
-      const isAlreadyIn = s.enrollments.some(
-        (e: any) => e.classId === selectedClassId,
+      const isAlreadyEnrolled = s.enrollments?.some(
+        (e: any) => e.classId === targetClassId,
       );
       const matchesSearch =
         s.user.name.toLowerCase().includes(search.toLowerCase()) ||
         s.studentId.toLowerCase().includes(search.toLowerCase());
-      return !isAlreadyIn && matchesSearch;
+      return !isAlreadyEnrolled && matchesSearch;
     });
-  }, [students, selectedClassId, search]);
+  }, [students, targetClassId, search]);
 
-  const toggleStudent = (id: string) => {
-    setSelectedStudentIds((prev) =>
+  const toggleNode = (id: string) => {
+    setSelectedPool((prev) =>
       prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id],
     );
   };
 
-  const handleEnroll = () => {
-    if (!selectedClassId || selectedStudentIds.length === 0)
-      return toast.error("Select both class and students");
-
+  const handleDeployment = () => {
     startTransition(async () => {
       try {
-        const res = await bulkEnroll({
-          classId: selectedClassId,
-          studentIds: selectedStudentIds,
-          type: "REGULAR",
+        await bulkEnrollNodes({
+          classId: targetClassId!,
+          studentIds: selectedPool,
+          type: config.type as any,
+          status: config.status as any,
         });
-        if (res.success) {
-          toast.success(
-            `${res.count} Students Injected into ${targetClass.name}`,
-          );
-          setSelectedStudentIds([]);
-        }
+        toast.success(
+          `Success: ${selectedPool.length} Nodes Injected into ${targetClass.name}`,
+        );
+        setSelectedPool([]);
       } catch (e: any) {
         toast.error(e.message);
       }
@@ -78,198 +83,255 @@ export default function EnrollmentClient({ classes, students }: any) {
   };
 
   return (
-    <div className="max-w-[1600px] mx-auto space-y-8">
-      {/* --- HEADER --- */}
-      <header className="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-6">
-        <div className="space-y-2">
-          <div className="flex items-center gap-2">
-            <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
-            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary-700 dark:text-primary-300">
-              Deployment Engine
+    <div className="max-w-4xl mx-auto space-y-6 pb-40 px-4 pt-6">
+      {/* --- HUD HEADER --- */}
+      <header className="flex justify-between items-center bg-slate-900 dark:bg-slate-900 p-6 rounded-[2.5rem] text-white shadow-2xl overflow-hidden relative">
+        <div className="relative z-10">
+          <div className="flex items-center gap-2 mb-1">
+            <div className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+            <span className="text-[9px] font-black uppercase tracking-[0.3em] text-slate-400">
+              Registry Deployment
             </span>
           </div>
-          <h1 className="text-5xl md:text-7xl font-black tracking-tighter dark:text-white leading-none">
-            Enrollment <span className="text-primary-700">Terminal</span>
+          <h1 className="text-3xl font-black tracking-tighter italic">
+            Orion<span className="text-primary-400">Terminal</span>
           </h1>
         </div>
-
-        {selectedStudentIds.length > 0 && (
-          <motion.div
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-          >
-            <Button
-              onClick={handleEnroll}
-              disabled={isPending}
-              className="h-20 px-12 rounded-[2rem] bg-slate-900 dark:bg-white text-white dark:text-slate-900 font-black text-xl shadow-2xl hover:scale-105 transition-all"
-            >
-              {isPending ? (
-                <Loader2 className="animate-spin mr-2" />
-              ) : (
-                <Zap className="mr-3 h-6 w-6 text-gold" />
-              )}
-              INITIATE BULK INJECTION ({selectedStudentIds.length})
-            </Button>
-          </motion.div>
-        )}
+        <ShieldCheck className="h-12 w-12 text-primary-500/20 absolute -right-2 -bottom-2" />
       </header>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-        {/* --- LEFT COLUMN: CLASS SELECTION --- */}
-        <div className="lg:col-span-4 space-y-6">
-          <div className="institutional-card glass-surface p-8 space-y-6">
-            <h3 className="text-xl font-black tracking-tight uppercase">
-              1. Select Target Node
-            </h3>
-            <div className="space-y-3 max-h-[60vh] overflow-y-auto no-scrollbar">
-              {classes.map((c: any) => (
-                <div
-                  key={c.id}
-                  onClick={() => setSelectedClassId(c.id)}
-                  className={`p-5 rounded-[2rem] border-2 cursor-pointer transition-all ${
-                    selectedClassId === c.id
-                      ? "bg-primary-700 border-primary-700 text-white shadow-royal scale-[1.02]"
-                      : "bg-white dark:bg-slate-900 border-transparent hover:border-primary-100"
-                  }`}
-                >
-                  <div className="flex justify-between items-start mb-4">
-                    <Badge
-                      className={
-                        selectedClassId === c.id
-                          ? "bg-white/20"
-                          : "bg-primary-50 text-primary-700"
-                      }
-                    >
-                      {c.code}
-                    </Badge>
-                    <Users
-                      className={`h-4 w-4 ${selectedClassId === c.id ? "text-primary-200" : "text-slate-300"}`}
-                    />
-                  </div>
-                  <p className="text-lg font-black leading-tight">{c.name}</p>
-                  <div className="mt-4 space-y-2">
-                    <div className="flex justify-between text-[9px] font-black uppercase">
-                      <span>Capacity</span>
-                      <span>
-                        {c._count.enrollments} / {c.capacity}
-                      </span>
-                    </div>
-                    <Progress
-                      value={(c._count.enrollments / c.capacity) * 100}
-                      className={selectedClassId === c.id ? "bg-white/20" : ""}
-                    />
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-
-        {/* --- RIGHT COLUMN: STUDENT SELECTION --- */}
-        <div className="lg:col-span-8 space-y-6">
-          <div className="institutional-card bg-white dark:bg-slate-900 p-8 md:p-12 shadow-2xl min-h-[70vh] flex flex-col">
-            <div className="flex flex-col md:flex-row justify-between items-center gap-6 mb-10 pb-8 border-b dark:border-slate-800">
-              <div>
-                <h3 className="text-2xl font-black tracking-tight uppercase">
-                  2. Identify Available Nodes
-                </h3>
-                <p className="text-xs font-bold text-slate-400 mt-1">
-                  Showing {availableStudents.length} candidates for injection
-                </p>
-              </div>
-              <div className="relative w-full md:w-80 group">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
-                <input
-                  placeholder="Search by name or ID..."
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  className="w-full h-14 pl-12 glass-surface rounded-2xl outline-none focus:ring-2 ring-primary-700/10 dark:bg-slate-800"
+      {/* --- STEP 1: TARGET SELECTION --- */}
+      <section className="space-y-4">
+        <h3 className="text-[10px] font-black uppercase text-slate-400 tracking-widest ml-4 flex items-center gap-2">
+          <Layers className="h-3 w-3" /> Target Class Node
+        </h3>
+        <div className="flex gap-3 overflow-x-auto no-scrollbar pb-2">
+          {classes.map((c: any) => (
+            <button
+              key={c.id}
+              onClick={() => {
+                setTargetClassId(c.id);
+                setSelectedPool([]);
+              }}
+              className={`flex-shrink-0 px-6 py-4 rounded-[2rem] border-2 transition-all text-left min-w-[180px] ${
+                targetClassId === c.id
+                  ? "bg-primary-700 border-primary-700 text-white shadow-royal scale-105"
+                  : "glass-surface border-transparent"
+              }`}
+            >
+              <p className="text-[8px] font-black uppercase opacity-60 mb-1">
+                {c.code}
+              </p>
+              <p className="text-sm font-black truncate">{c.name}</p>
+              <div className="mt-3 flex items-center justify-between">
+                <span className="text-[9px] font-bold">
+                  {c._count.enrollments}/{c.capacity}
+                </span>
+                <Progress
+                  value={(c._count.enrollments / c.capacity) * 100}
+                  className={`h-1 w-12 ${targetClassId === c.id ? "bg-white/20" : ""}`}
                 />
               </div>
-            </div>
+            </button>
+          ))}
+        </div>
+      </section>
 
-            {!selectedClassId ? (
-              <div className="flex-1 flex flex-col items-center justify-center opacity-20 text-center space-y-4">
-                <ShieldCheck className="h-24 w-24" />
-                <p className="font-black uppercase tracking-[0.3em]">
-                  Locked: Select Target Class First
-                </p>
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <AnimatePresence mode="popLayout">
-                  {availableStudents.map((s: any) => (
-                    <motion.div
-                      layout
-                      key={s.id}
-                      onClick={() => toggleStudent(s.id)}
-                      className={`p-4 rounded-[2rem] border-2 cursor-pointer flex items-center justify-between group transition-all ${
-                        selectedStudentIds.includes(s.id)
-                          ? "bg-emerald-500/10 border-emerald-500 shadow-lg shadow-emerald-500/10"
-                          : "bg-slate-50 dark:bg-slate-800 border-transparent hover:border-slate-200"
-                      }`}
-                    >
-                      <div className="flex items-center gap-4">
-                        <div className="relative">
-                          <Avatar className="h-12 w-12 border-2 border-white dark:border-slate-700">
-                            <AvatarImage src={s.user.image} />
-                            <AvatarFallback className="font-black">
-                              {s.user.name[0]}
-                            </AvatarFallback>
-                          </Avatar>
-                          {selectedStudentIds.includes(s.id) && (
-                            <div className="absolute -top-1 -right-1 h-5 w-5 bg-emerald-500 rounded-full flex items-center justify-center text-white border-2 border-white">
-                              <CheckCircle2 className="h-3 w-3" />
-                            </div>
-                          )}
-                        </div>
-                        <div>
-                          <p className="text-sm font-black dark:text-white leading-none mb-1">
-                            {s.user.name}
-                          </p>
-                          <p className="text-[10px] font-bold text-slate-400 uppercase">
-                            {s.studentId}
-                          </p>
-                        </div>
-                      </div>
-                      <Badge
-                        variant="outline"
-                        className="text-[8px] opacity-0 group-hover:opacity-100 transition-opacity font-black"
-                      >
-                        SELECT NODE
-                      </Badge>
-                    </motion.div>
-                  ))}
-                </AnimatePresence>
-              </div>
-            )}
+      {/* --- STEP 2: SEARCH & FILTER --- */}
+      <section className="space-y-4">
+        <div className="relative group">
+          <Search className="absolute left-5 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400 group-focus-within:text-primary-700 transition-colors" />
+          <input
+            placeholder="Identify Students by Name or ID..."
+            className="w-full h-16 pl-14 glass-surface rounded-[2rem] border-0 outline-none focus:ring-4 ring-primary-700/10 font-bold dark:bg-slate-900"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+        </div>
+      </section>
 
-            {selectedClassId && availableStudents.length === 0 && (
-              <div className="flex-1 flex flex-col items-center justify-center text-slate-300">
-                <GraduationCap className="h-16 w-16 mb-4 opacity-10" />
-                <p className="font-bold uppercase text-xs">
-                  No eligible students found for this class node
-                </p>
-              </div>
-            )}
+      {/* --- STEP 3: THE POOL --- */}
+      <main className="space-y-3">
+        {!targetClassId ? (
+          <div className="p-20 text-center glass-surface rounded-[3rem] border-dashed border-slate-200">
+            <Fingerprint className="h-12 w-12 mx-auto mb-4 text-slate-300" />
+            <p className="text-[10px] font-black uppercase text-slate-400">
+              Security Locked: Select Class
+            </p>
           </div>
-        </div>
-      </div>
+        ) : (
+          <div className="grid gap-3">
+            <AnimatePresence mode="popLayout">
+              {studentPool.map((s: any) => (
+                <motion.div
+                  layout
+                  key={s.id}
+                  onClick={() => toggleNode(s.id)}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className={`p-5 rounded-[2.2rem] border-2 transition-all flex items-center justify-between group ${
+                    selectedPool.includes(s.id)
+                      ? "bg-emerald-500/10 border-emerald-500 shadow-lg"
+                      : "glass-surface border-transparent dark:bg-slate-900/50"
+                  }`}
+                >
+                  <div className="flex items-center gap-4">
+                    <div className="relative">
+                      <Avatar className="h-14 w-14 border-2 border-white dark:border-slate-800">
+                        <AvatarImage src={s.user.image} />
+                        <AvatarFallback className="font-black text-primary-700">
+                          {s.user.name[0]}
+                        </AvatarFallback>
+                      </Avatar>
+                      {selectedPool.includes(s.id) && (
+                        <div className="absolute -top-1 -right-1 h-6 w-6 bg-emerald-500 rounded-full flex items-center justify-center text-white border-2 border-white">
+                          <CheckCircle2 className="h-3.5 w-3.5" />
+                        </div>
+                      )}
+                    </div>
+                    <div>
+                      <p className="text-base font-black dark:text-white leading-none mb-1">
+                        {s.user.name}
+                      </p>
+                      <div className="flex items-center gap-2">
+                        <Badge
+                          variant="outline"
+                          className="text-[8px] font-black border-slate-200 dark:border-slate-800"
+                        >
+                          {s.studentId}
+                        </Badge>
+                        <span className="text-[9px] font-bold text-slate-400 uppercase tracking-tighter">
+                          {s.academicYear}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    className={`h-8 w-8 rounded-full flex items-center justify-center transition-all ${
+                      selectedPool.includes(s.id)
+                        ? "bg-emerald-500 text-white"
+                        : "bg-slate-100 dark:bg-slate-800 text-slate-400"
+                    }`}
+                  >
+                    {selectedPool.includes(s.id) ? (
+                      <CheckCircle2 className="h-4 w-4" />
+                    ) : (
+                      <Plus className="h-4 w-4" />
+                    )}
+                  </div>
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </div>
+        )}
+      </main>
 
-      {/* --- MOBILE ACTION BAR --- */}
-      {selectedStudentIds.length > 0 && (
-        <div className="fixed bottom-8 left-1/2 -translate-x-1/2 z-50 w-[90%] md:hidden">
-          <Button
-            onClick={handleEnroll}
-            disabled={isPending}
-            className="w-full h-16 rounded-2xl bg-primary-700 text-white font-black shadow-royal"
+      {/* --- STEP 4: DEPLOYMENT DRAWER (STICKY MOBILE) --- */}
+      <AnimatePresence>
+        {selectedPool.length > 0 && (
+          <motion.div
+            initial={{ y: 200 }}
+            animate={{ y: 0 }}
+            exit={{ y: 200 }}
+            className="fixed bottom-6 left-4 right-4 z-50"
           >
-            {isPending
-              ? "INJECTING..."
-              : `ENROLL ${selectedStudentIds.length} NODES`}
-          </Button>
-        </div>
-      )}
+            <div className="bg-slate-900 text-white p-6 rounded-[3rem] shadow-[0_20px_50px_rgba(0,0,0,0.4)] border border-white/10 flex flex-col gap-4">
+              <div className="flex justify-between items-center border-b border-white/10 pb-4">
+                <div className="flex items-center gap-3">
+                  <div className="bg-primary-500 h-10 w-10 rounded-2xl flex items-center justify-center font-black text-lg shadow-lg">
+                    {selectedPool.length}
+                  </div>
+                  <div>
+                    <p className="text-xs font-black uppercase">
+                      Nodes in Queue
+                    </p>
+                    <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">
+                      Injecting into {targetClass?.name}
+                    </p>
+                  </div>
+                </div>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setSelectedPool([])}
+                  className="text-slate-400"
+                >
+                  <X />
+                </Button>
+              </div>
+
+              <div className="grid grid-cols-2 gap-3">
+                <div className="space-y-1">
+                  <p className="text-[8px] font-black uppercase text-slate-500 ml-2">
+                    Mapping Type
+                  </p>
+                  <Select
+                    value={config.type}
+                    onValueChange={(v) => setConfig({ ...config, type: v })}
+                  >
+                    <SelectTrigger className="h-12 rounded-2xl bg-white/5 border-0 font-bold text-xs">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent className="rounded-2xl border-0 shadow-2xl">
+                      <SelectItem value="REGULAR" className="font-bold py-3">
+                        REGULAR
+                      </SelectItem>
+                      <SelectItem value="TRIAL" className="font-bold py-3">
+                        TRIAL
+                      </SelectItem>
+                      <SelectItem value="AUDIT" className="font-bold py-3">
+                        AUDIT
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-1">
+                  <p className="text-[8px] font-black uppercase text-slate-500 ml-2">
+                    Node Status
+                  </p>
+                  <Select
+                    value={config.status}
+                    onValueChange={(v) => setConfig({ ...config, status: v })}
+                  >
+                    <SelectTrigger className="h-12 rounded-2xl bg-white/5 border-0 font-bold text-xs">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent className="rounded-2xl border-0 shadow-2xl">
+                      <SelectItem
+                        value="ACTIVE"
+                        className="font-bold py-3 text-emerald-500"
+                      >
+                        ACTIVE
+                      </SelectItem>
+                      <SelectItem
+                        value="PENDING"
+                        className="font-bold py-3 text-amber-500"
+                      >
+                        PENDING
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              <Button
+                disabled={isPending}
+                onClick={handleDeployment}
+                className="h-20 w-full rounded-[2rem] bg-white text-slate-900 hover:bg-gold hover:text-white font-black text-xl shadow-2xl group transition-all"
+              >
+                {isPending ? (
+                  <Loader2 className="animate-spin h-6 w-6" />
+                ) : (
+                  <span className="flex items-center gap-3">
+                    EXECUTE DEPLOYMENT{" "}
+                    <ArrowRight className="h-6 w-6 group-hover:translate-x-2 transition-transform" />
+                  </span>
+                )}
+              </Button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

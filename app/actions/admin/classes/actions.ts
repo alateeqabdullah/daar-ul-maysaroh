@@ -4,52 +4,51 @@ import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
 
-export async function manageClass(data: any) {
+export async function manageClassNode(data: any) {
   const session = await auth();
-  if (!session || !["ADMIN", "SUPER_ADMIN"].includes(session.user.role)) {
-    throw new Error("Unauthorized Access");
-  }
+  if (!session || !["ADMIN", "SUPER_ADMIN"].includes(session.user.role))
+    throw new Error("Unauthorized");
 
-  // STRICT TYPE CASTING (Prevents Database Handshake Errors)
+  // ATOMIC DATA CONVERSION
   const payload = {
     name: String(data.name),
     code: String(data.code).toUpperCase(),
     level: String(data.level),
     capacity: parseInt(data.capacity) || 20,
+    academicYear: String(data.academicYear),
     teacherId: String(data.teacherId),
-    academicYear: String(data.academicYear || "2025/2026"),
     isActive: data.isActive === "true" || data.isActive === true,
     createdById: session.user.id,
   };
 
   try {
     if (data.id) {
-      await prisma.class.update({
-        where: { id: data.id },
-        data: payload,
-      });
+      await prisma.class.update({ where: { id: data.id }, data: payload });
     } else {
       await prisma.class.create({ data: payload });
     }
     revalidatePath("/admin/classes");
     return { success: true };
   } catch (error: any) {
-    console.error("Class Action Error:", error);
-    if (error.code === "P2002") throw new Error("Class Code already exists.");
-    throw new Error("Database Handshake Failed");
+    if (error.code === "P2002")
+      throw new Error("Registry Conflict: Code already exists.");
+    throw new Error("Handshake Failed");
   }
 }
 
-export async function unenrollStudent(enrollmentId: string) {
-  await prisma.enrollment.delete({ where: { id: enrollmentId } });
+export async function enrollStudentNode(classId: string, studentId: string) {
+  await prisma.enrollment.create({
+    data: { classId, studentId, status: "ACTIVE" },
+  });
   revalidatePath("/admin/classes");
   return { success: true };
 }
 
-export async function toggleClassStatus(id: string, currentStatus: boolean) {
-  await prisma.class.update({
-    where: { id },
-    data: { isActive: !currentStatus },
-  });
+export async function decommissionClass(id: string) {
+  const session = await auth();
+  if (session?.user.role !== "SUPER_ADMIN")
+    throw new Error("Super Admin clearance required");
+  await prisma.class.delete({ where: { id } });
   revalidatePath("/admin/classes");
+  return { success: true };
 }

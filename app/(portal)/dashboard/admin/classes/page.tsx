@@ -69,38 +69,37 @@
 //   }
 // }
 
-
-
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
-import ClassManagementClient from "@/components/admin/class-management-client";
+import ClassTerminalClient from "@/components/admin/class-terminal-client";
 
 export default async function ClassesPage() {
   const session = await auth();
   if (!session) redirect("/login");
 
-  const [classesRaw, teachersRaw] = await Promise.all([
+  const [classesRaw, teachersRaw, studentsRaw] = await Promise.all([
     prisma.class.findMany({
       include: {
         teacher: { include: { user: true } },
-        enrollments: { include: { student: { include: { user: true } } } },
         subjects: { include: { teacher: { include: { user: true } } } },
+        enrollments: { include: { student: { include: { user: true } } } },
         schedules: true,
         _count: { select: { enrollments: true } },
       },
-      orderBy: { createdAt: "desc" },
+      orderBy: { level: "asc" },
     }),
     prisma.teacher.findMany({ include: { user: true } }),
+    prisma.student.findMany({ include: { user: true } }),
   ]);
 
-  // Serialization to prevent Date/Decimal errors
-  const classes = JSON.parse(JSON.stringify(classesRaw));
-  const teachers = JSON.parse(JSON.stringify(teachersRaw));
-
   return (
-    <div className="min-h-screen p-4 md:p-8 bg-slate-50/50 dark:bg-slate-950">
-      <ClassManagementClient initialClasses={classes} teachers={teachers} />
+    <div className="min-h-screen bg-slate-50/50 dark:bg-slate-950 p-4 md:p-10">
+      <ClassTerminalClient
+        initialClasses={JSON.parse(JSON.stringify(classesRaw))}
+        teachers={JSON.parse(JSON.stringify(teachersRaw))}
+        allStudents={JSON.parse(JSON.stringify(studentsRaw))}
+      />
     </div>
   );
 }
