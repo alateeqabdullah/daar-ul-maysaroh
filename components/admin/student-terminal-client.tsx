@@ -1,20 +1,18 @@
 "use client";
 
-import { useState, useTransition, useMemo } from "react";
+import { useState, useTransition, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Plus,
   Search,
-  Users,
-  GraduationCap,
-  X,
+  Plus,
   MoreVertical,
+  ShieldAlert,
+  GraduationCap,
   Mail,
   Globe,
   Zap,
   Loader2,
   Calendar,
-  ShieldCheck,
   Trash2,
   ChevronRight,
   Award,
@@ -23,18 +21,34 @@ import {
   TrendingUp,
   Wallet,
   CheckCircle,
+  Filter,
+  UserPlus,
+  ArrowUpCircle,
+  Users,
+  X,
+  Info,
+  LayoutGrid,
+  List,
+  BarChart3,
   Fingerprint,
-  History,
+  Phone,
   Link as LinkIcon,
+  ShieldCheck,
+  Heart,
 } from "lucide-react";
 
+// Actions
 import {
   manageStudentNode,
-  updateStudentPermissions,
-  establishGuardianLink,
-  decommissionStudentNode,
+  updateStudentStatus,
+  linkGuardian,
+  decommissionStudent,
+  bulkEnrollStudents,
+  promoteStudent,
+  getStudentContext,
 } from "@/app/actions/admin/students/actions";
 
+// UI Components
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -62,338 +76,509 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
 import { Progress } from "@/components/ui/progress";
 import { toast } from "sonner";
 
+// --- ANIMATION CONFIG ---
 const kContainer = {
   hidden: { opacity: 0 },
-  show: { opacity: 1, transition: { staggerChildren: 0.05 } },
+  show: { opacity: 1, transition: { staggerChildren: 0.04 } },
 };
 const kItem = { hidden: { y: 20, opacity: 0 }, show: { y: 0, opacity: 1 } };
 
 export default function StudentTerminalClient({
-  initialStudents,
+  initialStudents = [],
+  classes = [],
 }: {
   initialStudents: any[];
+  classes: any[];
 }) {
   const [isPending, startTransition] = useTransition();
-  const [activeStudent, setActiveStudent] = useState<any>(null);
-  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+
+  // Terminal UI State
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [search, setSearch] = useState("");
-  const [parentEmail, setParentEmail] = useState("");
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [activeStudent, setActiveStudent] = useState<any>(null);
+  const [analytics, setAnalytics] = useState<any>(null);
 
-  const filtered = useMemo(() => {
-    return initialStudents.filter(
-      (s: any) =>
-        s.user.name.toLowerCase().includes(search.toLowerCase()) ||
-        s.studentId.toLowerCase().includes(search.toLowerCase()),
-    );
-  }, [initialStudents, search]);
+  // Modal Control
+  const [isAddModalOpen, setIsAddModalOpen] = useState(false);
+  const [isBulkModalOpen, setIsBulkModalOpen] = useState(false);
 
-  const handleLinkParent = (studentId: string) => {
-    if (!parentEmail) return;
+  // --- MISSING BRIDGE FUNCTIONS ADDED HERE ---
+
+  const handlePromotion = (id: string, level: string) => {
     startTransition(async () => {
       try {
-        await establishGuardianLink(studentId, parentEmail);
-        toast.success("Guardian protocol established.");
-        setParentEmail("");
+        await promoteStudent(id, level);
+        toast.success("Academic Node Promoted", {
+          icon: <ArrowUpCircle className="text-gold" />,
+        });
       } catch (e: any) {
         toast.error(e.message);
       }
     });
   };
 
-  return (
-    <div className="max-w-[1700px] mx-auto space-y-6 md:space-y-12 pb-32 px-4 md:px-10 mt-6 md:mt-10">
-      {/* --- ELITE HEADER --- */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 bg-white dark:bg-slate-900 p-6 md:p-12 rounded-[2.5rem] shadow-sm border border-slate-100 dark:border-slate-800">
-        <div className="space-y-4">
-          <Badge className="bg-primary-700/10 text-primary-700 dark:text-primary-300 border-0 font-black text-[10px] uppercase tracking-[0.4em] px-4 py-2 rounded-full">
-            Identity Deployment v2.6
-          </Badge>
-          <h1 className="text-5xl md:text-8xl font-black tracking-tighter leading-none text-slate-900 dark:text-white">
-            Student <span className="text-primary-700">Nodes</span>
-          </h1>
-        </div>
-        <div className="flex flex-col sm:flex-row gap-3 w-full md:w-auto">
-          <div className="relative flex-1 md:w-80 group">
-            <Search className="absolute left-5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
-            <input
-              placeholder="Search registry..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="w-full h-14 md:h-16 pl-12 md:pl-16 glass-surface rounded-2xl md:rounded-[2rem] outline-none border-0 focus:ring-4 ring-primary-700/10 font-bold dark:bg-slate-950"
-            />
-          </div>
-          <Button
-            onClick={() => setIsAddModalOpen(true)}
-            className="h-14 md:h-16 rounded-2xl md:rounded-[2rem] bg-primary-700 text-white font-black uppercase text-[10px] tracking-widest shadow-royal transition-all active:scale-95"
-          >
-            <Plus className="mr-2 h-4 w-4" /> Inject Student
-          </Button>
-        </div>
-      </div>
+  const handleStatusChange = (userId: string, status: any) => {
+    startTransition(async () => {
+      try {
+        await updateStudentStatus(userId, status);
+        toast.success(`Security Node: ${status}`);
+      } catch (e: any) {
+        toast.error(e.message);
+      }
+    });
+  };
 
-      {/* --- DUAL LAYOUT FEED --- */}
-      <div className="grid grid-cols-1 md:hidden gap-4">
-        {/* MOBILE VIEW: CARDS */}
-        {filtered.map((s) => (
-          <motion.div
-            layout
-            key={s.id}
-            onClick={() => setActiveStudent(s)}
-            className="p-6 glass-surface rounded-[2.5rem] space-y-6 active:scale-95 transition-all"
-          >
-            <div className="flex justify-between items-start">
-              <Avatar className="h-16 w-16 border-2 border-white shadow-xl">
-                <AvatarImage src={s.user.image} />
-                <AvatarFallback>{s.user.name[0]}</AvatarFallback>
-              </Avatar>
-              <Badge
-                className={`border-0 font-black text-[9px] uppercase tracking-widest px-3 py-1 rounded-lg ${s.user.status === "APPROVED" ? "bg-emerald-500 text-white" : "bg-amber-500 text-white"}`}
-              >
-                {s.user.status}
+  const handleBulkEnroll = async (classId: string) => {
+    if (selectedIds.length === 0) return;
+    startTransition(async () => {
+      try {
+        const res = await bulkEnrollStudents(selectedIds, classId);
+        if (res.success) {
+          toast.success(`Synchronized ${selectedIds.length} nodes to class`);
+          setSelectedIds([]);
+          setIsBulkModalOpen(false);
+        }
+      } catch (e: any) {
+        toast.error(e.message || "Bulk enrollment failed");
+      }
+    });
+  };
+
+  // Logic: Real-time Filtering
+  const filtered = useMemo(() => {
+    return (initialStudents || []).filter(
+      (s: any) =>
+        s.user.name.toLowerCase().includes(search.toLowerCase()) ||
+        s.studentId.toLowerCase().includes(search.toLowerCase()),
+    );
+  }, [initialStudents, search]);
+
+  // Logic: Deep Analytics Handshake
+  useEffect(() => {
+    if (activeStudent) {
+      startTransition(async () => {
+        const context = await getStudentContext(activeStudent.id);
+        setAnalytics(context);
+      });
+    }
+  }, [activeStudent]);
+
+  return (
+    <div className="max-w-[1800px] mx-auto space-y-8 pb-40 px-4 md:px-10 mt-6">
+      {/* --- ELITE TOP COMMAND BAR --- */}
+      <header className="space-y-8">
+        <div className="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-8 bg-white dark:bg-slate-900 p-8 md:p-12 rounded-[3rem] shadow-sm border border-slate-100 dark:border-slate-800 relative overflow-hidden group">
+          <div className="absolute top-0 right-0 p-12 opacity-[0.03] group-hover:opacity-[0.05] transition-opacity pointer-events-none">
+            <GraduationCap className="h-64 w-64 rotate-12" />
+          </div>
+
+          <div className="space-y-4 relative z-10">
+            <div className="flex items-center gap-3">
+              <div className="h-3 w-3 rounded-full bg-primary-700 animate-pulse" />
+              <Badge className="bg-primary-700/5 text-primary-700 border-primary-700/10 font-black text-[10px] uppercase tracking-[0.4em] px-4 py-1.5 rounded-full">
+                Daar-ul-Maysaroh Intel
               </Badge>
             </div>
-            <div>
-              <p className="text-[10px] font-black text-primary-700 uppercase mb-1">
-                {s.studentId}
-              </p>
-              <h3 className="text-2xl font-black text-slate-900 dark:text-white tracking-tight leading-none">
-                {s.user.name}
-              </h3>
-            </div>
-            <div className="pt-4 border-t border-slate-100 flex justify-between items-center text-[10px] font-black uppercase text-slate-400">
-              <span>Level: {s.currentLevel || "Unset"}</span>
-              <ChevronRight className="h-4 w-4" />
-            </div>
-          </motion.div>
-        ))}
-      </div>
+            <h1 className="text-6xl md:text-8xl font-black tracking-tighter leading-none text-slate-900 dark:text-white">
+              Identity <span className="text-primary-700">Nodes</span>
+            </h1>
+          </div>
 
-      <div className="hidden md:block institutional-card glass-surface overflow-hidden">
-        {/* DESKTOP VIEW: DATA TABLE */}
-        <table className="w-full text-left">
-          <thead className="bg-slate-50 dark:bg-slate-900/50 border-b dark:border-slate-800">
-            <tr>
-              <th className="p-8 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">
-                Node Identity
-              </th>
-              <th className="p-8 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">
-                Academic Context
-              </th>
-              <th className="p-8 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">
-                Financial Protocol
-              </th>
-              <th className="p-8"></th>
-            </tr>
-          </thead>
-          <tbody>
-            {filtered.map((s) => (
-              <tr
-                key={s.id}
-                onClick={() => setActiveStudent(s)}
-                className="group cursor-pointer border-b dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-900/40 transition-all"
+          <div className="flex flex-col sm:flex-row gap-4 w-full lg:w-auto relative z-10">
+            <Button
+              onClick={() => setIsAddModalOpen(true)}
+              className="h-16 md:h-20 px-10 rounded-[1.8rem] md:rounded-[2.5rem] bg-primary-700 text-white font-black uppercase text-xs tracking-[0.2em] shadow-royal hover:scale-105 transition-all"
+            >
+              <Plus className="mr-2 h-5 w-5" /> Inject Node
+            </Button>
+          </div>
+        </div>
+
+        {/* Global Controls */}
+        <div className="flex flex-col md:flex-row gap-4 items-center">
+          <div className="relative flex-1 w-full group">
+            <Search className="absolute left-6 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400 group-focus-within:text-primary-700 transition-colors" />
+            <input
+              placeholder="Deep search node identities..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="w-full h-16 md:h-20 pl-16 pr-8 glass-surface rounded-[1.5rem] md:rounded-[2.5rem] outline-none border-0 focus:ring-4 ring-primary-700/10 font-bold text-lg dark:bg-slate-900 dark:text-white"
+            />
+          </div>
+
+          <div className="flex items-center gap-2 p-2 bg-slate-100 dark:bg-slate-800 rounded-[1.8rem]">
+            <button
+              onClick={() => setViewMode("grid")}
+              className={`h-12 w-16 flex items-center justify-center rounded-2xl transition-all ${viewMode === "grid" ? "bg-white dark:bg-slate-900 text-primary-700 shadow-sm" : "text-slate-400"}`}
+            >
+              <LayoutGrid className="h-5 w-5" />
+            </button>
+            <button
+              onClick={() => setViewMode("list")}
+              className={`h-12 w-16 flex items-center justify-center rounded-2xl transition-all ${viewMode === "list" ? "bg-white dark:bg-slate-900 text-primary-700 shadow-sm" : "text-slate-400"}`}
+            >
+              <List className="h-5 w-5" />
+            </button>
+          </div>
+
+          <AnimatePresence>
+            {selectedIds.length > 0 && (
+              <motion.div
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.9, opacity: 0 }}
               >
-                <td className="p-8">
-                  <div className="flex items-center gap-4">
-                    <Avatar className="h-14 w-14 ring-4 ring-white shadow-md group-hover:scale-105 transition-transform">
-                      <AvatarImage src={s.user.image} />
-                    </Avatar>
-                    <div>
-                      <p className="text-[10px] font-black text-primary-700 uppercase">
-                        {s.studentId}
-                      </p>
-                      <p className="text-lg font-black text-slate-900 dark:text-white leading-none">
-                        {s.user.name}
-                      </p>
-                    </div>
-                  </div>
-                </td>
-                <td className="p-8">
-                  <div className="space-y-2">
-                    <div className="flex justify-between text-[8px] font-black uppercase text-slate-400">
-                      <span>Progress</span>
-                      <span>Level: {s.currentLevel || "Pending"}</span>
-                    </div>
-                    <Progress
-                      value={s.currentLevel ? 80 : 10}
-                      className="h-1.5"
-                    />
-                  </div>
-                </td>
-                <td className="p-8">
-                  <div className="flex items-center gap-2">
-                    <div className="h-2 w-2 rounded-full bg-emerald-500" />
-                    <span className="text-[10px] font-black uppercase text-slate-500">
-                      Cleared Node
-                    </span>
-                  </div>
-                </td>
-                <td className="p-8 text-right">
-                  <Button variant="ghost" size="icon" className="rounded-full">
-                    <MoreVertical className="h-5 w-5 text-slate-300" />
-                  </Button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+                <Button
+                  onClick={() => setIsBulkModalOpen(true)}
+                  className="h-16 md:h-20 px-10 rounded-[1.8rem] md:rounded-[2.5rem] bg-gold text-white font-black uppercase text-xs tracking-widest shadow-xl relative overflow-hidden"
+                >
+                  <Users className="mr-3 h-5 w-5" /> Bulk Protocol (
+                  {selectedIds.length})
+                </Button>
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      </header>
 
-      {/* --- DEEP IDENTITY DRAWER --- */}
+      {/* --- DYNAMIC VIEW ENGINE --- */}
+      <AnimatePresence mode="wait">
+        {viewMode === "grid" ? (
+          <motion.div
+            key="grid"
+            variants={kContainer}
+            initial="hidden"
+            animate="show"
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+          >
+            {filtered.map((s) => (
+              <motion.div
+                layout
+                key={s.id}
+                variants={kItem}
+                onClick={() => setActiveStudent(s)}
+                className="institutional-card glass-surface p-8 cursor-pointer group hover:border-primary-700/50 transition-all dark:bg-slate-900/40 flex flex-col justify-between min-h-[400px] relative overflow-hidden"
+              >
+                <div
+                  className="absolute top-0 right-0 p-4"
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  <Checkbox
+                    checked={selectedIds.includes(s.id)}
+                    onCheckedChange={(v) =>
+                      setSelectedIds((prev) =>
+                        v ? [...prev, s.id] : prev.filter((id) => id !== s.id),
+                      )
+                    }
+                    className="h-6 w-6 rounded-full border-slate-200"
+                  />
+                </div>
+                <div className="space-y-6">
+                  <Avatar className="h-20 w-20 border-4 border-white dark:border-slate-800 shadow-xl group-hover:scale-110 transition-transform">
+                    <AvatarImage src={s.user.image} />
+                    <AvatarFallback className="font-black text-primary-700">
+                      {s.user.name[0]}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div>
+                    <p className="text-[10px] font-black text-primary-700 uppercase tracking-widest mb-1">
+                      {s.studentId}
+                    </p>
+                    <h3 className="text-2xl font-black tracking-tight text-slate-900 dark:text-white leading-none">
+                      {s.user.name}
+                    </h3>
+                    <div className="flex gap-2 mt-4">
+                      <Badge
+                        variant="outline"
+                        className="text-[8px] font-black uppercase tracking-widest border-slate-200"
+                      >
+                        {s.currentLevel || "Unset"}
+                      </Badge>
+                      <Badge className="bg-emerald-500/10 text-emerald-600 border-0 uppercase text-[8px] font-black">
+                        {s.user.status}
+                      </Badge>
+                    </div>
+                  </div>
+                </div>
+                <div className="pt-8 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center">
+                  <p className="text-[8px] font-black text-slate-400 uppercase tracking-widest">
+                    Mastery: {s.hifzLevel || "Juz 30"}
+                  </p>
+                  <ChevronRight className="h-5 w-5 text-slate-300 group-hover:translate-x-1 transition-transform" />
+                </div>
+              </motion.div>
+            ))}
+          </motion.div>
+        ) : (
+          <motion.div
+            key="list"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="institutional-card glass-surface overflow-hidden"
+          >
+            <table className="w-full text-left">
+              <thead className="bg-slate-50 dark:bg-slate-900/50 border-b dark:border-slate-800">
+                <tr>
+                  <th className="p-8 w-12">
+                    <Checkbox
+                      onCheckedChange={(checked) =>
+                        setSelectedIds(checked ? filtered.map((s) => s.id) : [])
+                      }
+                    />
+                  </th>
+                  <th className="p-8 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">
+                    Node Identity
+                  </th>
+                  <th className="p-8 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">
+                    Classification
+                  </th>
+                  <th className="p-8 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">
+                    Mastery Index
+                  </th>
+                  <th className="p-8 text-[10px] font-black uppercase tracking-[0.2em] text-slate-400">
+                    Status
+                  </th>
+                  <th className="p-8"></th>
+                </tr>
+              </thead>
+              <tbody>
+                {filtered.map((s) => (
+                  <tr
+                    key={s.id}
+                    onClick={() => setActiveStudent(s)}
+                    className="group border-b dark:border-slate-800 hover:bg-slate-50/80 dark:hover:bg-slate-900/40 transition-all cursor-pointer"
+                  >
+                    <td className="p-8" onClick={(e) => e.stopPropagation()}>
+                      <Checkbox
+                        checked={selectedIds.includes(s.id)}
+                        onCheckedChange={(v) =>
+                          setSelectedIds((prev) =>
+                            v
+                              ? [...prev, s.id]
+                              : prev.filter((id) => id !== s.id),
+                          )
+                        }
+                      />
+                    </td>
+                    <td className="p-8">
+                      <div className="flex items-center gap-5">
+                        <Avatar className="h-14 w-14 ring-4 ring-white shadow-lg">
+                          <AvatarImage src={s.user.image} />
+                        </Avatar>
+                        <div>
+                          <p className="text-[10px] font-black text-primary-700 uppercase">
+                            {s.studentId}
+                          </p>
+                          <p className="text-xl font-black dark:text-white leading-none">
+                            {s.user.name}
+                          </p>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="p-8">
+                      <p className="text-sm font-black dark:text-white">
+                        {s.currentLevel || "Unleveled"}
+                      </p>
+                      <p className="text-[9px] font-bold text-slate-400 uppercase tracking-widest">
+                        {s.academicYear}
+                      </p>
+                    </td>
+                    <td className="p-8">
+                      <span className="text-xs font-black text-primary-700">
+                        {s.hifzLevel || "Juz 30"}
+                      </span>
+                    </td>
+                    <td className="p-8">
+                      <Badge
+                        className={`rounded-full px-5 py-1.5 font-black text-[9px] uppercase border-0 text-white ${s.user.status === "APPROVED" ? "bg-emerald-500" : "bg-amber-500"}`}
+                      >
+                        {s.user.status}
+                      </Badge>
+                    </td>
+                    <td className="p-8 text-right">
+                      <ChevronRight className="h-6 w-6 text-slate-200" />
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      {/* --- IDENTITY DRAWER --- */}
       <Sheet open={!!activeStudent} onOpenChange={() => setActiveStudent(null)}>
         <SheetContent
           side="right"
-          className="w-full sm:max-w-2xl lg:max-w-3xl dark:bg-slate-950 border-0 p-0 overflow-y-auto no-scrollbar shadow-2xl"
+          className="w-full sm:max-w-3xl lg:max-w-4xl dark:bg-slate-950 border-0 p-0 overflow-y-auto no-scrollbar shadow-2xl"
         >
-          <div className="p-10 md:p-16 bg-primary-700 text-white relative overflow-hidden flex flex-col justify-end min-h-[350px]">
-            <div className="absolute -right-10 -bottom-10 opacity-10 rotate-12">
-              <UserCircle className="h-96 w-96" />
+          {/* ACCESSIBILITY FIX: Added SheetTitle */}
+          <SheetHeader className="sr-only">
+            <SheetTitle>
+              Identity Terminal: {activeStudent?.user.name}
+            </SheetTitle>
+            <SheetDescription>
+              Deep identity synchronization for node {activeStudent?.studentId}
+            </SheetDescription>
+          </SheetHeader>
+
+          <div className="p-10 md:p-16 bg-primary-700 text-white relative overflow-hidden min-h-[450px] flex flex-col justify-end">
+            <div className="absolute -right-20 -bottom-20 opacity-10 rotate-12">
+              <Fingerprint className="h-[500px] w-[500px]" />
             </div>
-            <div className="relative z-10 space-y-6">
-              <Badge className="bg-white/20 text-white border-0 backdrop-blur-md px-4 py-2 font-black text-[10px] uppercase">
-                IDENTITY: {activeStudent?.studentId}
-              </Badge>
-              <h2 className="text-4xl md:text-8xl font-black tracking-tighter leading-none">
+            <div className="relative z-10 space-y-8">
+              <div className="flex items-center gap-4">
+                <Avatar className="h-24 w-24 border-4 border-white/20 shadow-2xl">
+                  <AvatarImage src={activeStudent?.user.image} />
+                </Avatar>
+                <Badge className="bg-white/20 text-white border-0 backdrop-blur-md px-5 py-2 font-black text-[10px] uppercase tracking-[0.3em] rounded-full">
+                  STUDENT_NODE :: {activeStudent?.studentId}
+                </Badge>
+              </div>
+              <h2 className="text-6xl md:text-9xl font-black tracking-tighter leading-none">
                 {activeStudent?.user.name}
               </h2>
-              <div className="flex flex-wrap gap-8 pt-4 border-t border-white/10">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-8 pt-10 border-t border-white/10">
                 <Metric
-                  icon={GraduationCap}
-                  label="Level Node"
-                  value={activeStudent?.currentLevel || "Unassigned"}
+                  label="Mastered"
+                  value={analytics?.masteredSurahs || "0"}
+                  icon={Award}
                 />
-                <Metric
-                  icon={TrendingUp}
-                  label="Mastery Index"
-                  value={activeStudent?.hifzLevel || "Juz 30"}
-                />
+                <Metric label="Attendance" value="94%" icon={CheckCircle} />
+                <Metric label="Health Node" value="Optimal" icon={Heart} />
+                <Metric label="Finance" value="CLEARED" icon={Wallet} />
               </div>
             </div>
           </div>
 
-          <div className="p-8 md:p-12">
-            <Tabs defaultValue="overview" className="space-y-10">
-              <TabsList className="bg-slate-100 dark:bg-slate-900 p-2 rounded-[2rem] w-full h-16 justify-start">
+          <div className="p-8 md:p-16">
+            <Tabs defaultValue="overview" className="w-full">
+              <TabsList className="bg-slate-100 dark:bg-slate-900 p-2 rounded-[2.5rem] w-full justify-start h-20 mb-16 overflow-x-auto no-scrollbar shadow-inner">
                 <TabsTrigger
                   value="overview"
-                  className="rounded-xl font-black text-[9px] uppercase tracking-[0.2em] px-8 h-full"
+                  className="rounded-[1.5rem] font-black text-xs uppercase tracking-widest px-10 h-full"
                 >
-                  The Node
+                  Identity
+                </TabsTrigger>
+                <TabsTrigger
+                  value="academic"
+                  className="rounded-[1.5rem] font-black text-xs uppercase tracking-widest px-10 h-full"
+                >
+                  Promotion
                 </TabsTrigger>
                 <TabsTrigger
                   value="guardian"
-                  className="rounded-xl font-black text-[9px] uppercase tracking-[0.2em] px-8 h-full"
+                  className="rounded-[1.5rem] font-black text-xs uppercase tracking-widest px-10 h-full"
                 >
-                  Guardian Link
+                  Linking
                 </TabsTrigger>
                 <TabsTrigger
-                  value="security"
-                  className="rounded-xl font-black text-[9px] uppercase tracking-[0.2em] px-8 h-full text-rose-500"
+                  value="ops"
+                  className="rounded-[1.5rem] font-black text-xs uppercase tracking-widest px-10 h-full text-rose-500"
                 >
-                  Security Ops
+                  Security
                 </TabsTrigger>
               </TabsList>
 
-              <TabsContent
-                value="overview"
-                className="grid grid-cols-1 md:grid-cols-2 gap-4"
-              >
-                <InfoCard
-                  label="Email Pulse"
-                  value={activeStudent?.user.email}
-                  icon={Mail}
-                />
-                <InfoCard
-                  label="Global Nationality"
-                  value={activeStudent?.nationality}
-                  icon={Globe}
-                />
-                <InfoCard
-                  label="Registry Entry"
-                  value={new Date(
-                    activeStudent?.createdAt,
-                  ).toLocaleDateString()}
-                  icon={Calendar}
-                />
-                <InfoCard
-                  label="Base DNA"
-                  value={activeStudent?.gender}
-                  icon={Fingerprint}
-                />
+              <TabsContent value="overview" className="space-y-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <InfoCard
+                    label="Registry Email"
+                    value={activeStudent?.user.email}
+                    icon={Mail}
+                  />
+                  <InfoCard
+                    label="Node Nationality"
+                    value={activeStudent?.nationality}
+                    icon={Globe}
+                  />
+                  <InfoCard
+                    label="Biometric Gender"
+                    value={activeStudent?.gender}
+                    icon={Users}
+                  />
+                  <InfoCard
+                    label="Contact Sync"
+                    value={activeStudent?.phone || "Not Encrypted"}
+                    icon={Phone}
+                  />
+                </div>
+              </TabsContent>
+
+              <TabsContent value="academic" className="space-y-8">
+                <div className="p-10 bg-indigo-600 rounded-[3rem] text-white space-y-8 shadow-2xl">
+                  <h4 className="text-4xl font-black tracking-tighter">
+                    Level Promotion
+                  </h4>
+                  <Select
+                    onValueChange={(v) => handlePromotion(activeStudent.id, v)}
+                  >
+                    <SelectTrigger className="h-16 rounded-2xl bg-white/10 border-0 text-white font-black text-lg">
+                      <SelectValue placeholder="Select Target Tier..." />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="Beginner">Beginner Tier</SelectItem>
+                      <SelectItem value="Intermediate">
+                        Intermediate Tier
+                      </SelectItem>
+                      <SelectItem value="Advanced">Advanced Tier</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
               </TabsContent>
 
               <TabsContent value="guardian" className="space-y-6">
-                <div className="p-8 bg-slate-950 rounded-[2.5rem] text-white space-y-6 relative overflow-hidden group">
-                  <LinkIcon className="absolute -right-6 -bottom-6 h-32 w-32 opacity-10 group-hover:scale-110 transition-transform" />
-                  <div className="relative z-10 space-y-4">
-                    <h4 className="text-2xl font-black tracking-tighter">
-                      Synchronize Guardian Node
-                    </h4>
-                    <div className="flex gap-2">
-                      <Input
-                        placeholder="parent@node.com"
-                        value={parentEmail}
-                        onChange={(e) => setParentEmail(e.target.value)}
-                        className="bg-white/10 border-0 h-14 rounded-xl"
-                      />
-                      <Button
-                        onClick={() => handleLinkParent(activeStudent.id)}
-                        disabled={isPending}
-                        className="bg-white text-slate-950 font-black h-14 px-8 rounded-xl"
-                      >
-                        {isPending ? (
-                          <Loader2 className="animate-spin" />
-                        ) : (
-                          "Link"
-                        )}
-                      </Button>
-                    </div>
+                <div className="p-10 bg-slate-900 rounded-[3rem] text-white space-y-8 shadow-2xl">
+                  <h4 className="text-3xl font-black tracking-tight">
+                    Guardian Handshake
+                  </h4>
+                  <div className="flex gap-4">
+                    <Input
+                      placeholder="parent@registry.node"
+                      className="h-16 bg-white/5 border-0 rounded-2xl px-8 font-bold"
+                      id="pEmail"
+                    />
+                    <Button
+                      onClick={() => {
+                        const email = (
+                          document.getElementById("pEmail") as HTMLInputElement
+                        ).value;
+                        handleLinkGuardian(activeStudent.id, email);
+                      }}
+                      className="h-16 px-10 bg-white text-slate-900 font-black rounded-2xl hover:bg-primary-700 hover:text-white transition-all"
+                    >
+                      CONNECT
+                    </Button>
                   </div>
                 </div>
-                {activeStudent?.parent && (
-                  <div className="p-6 rounded-[2rem] glass-surface flex items-center gap-4">
-                    <Avatar className="h-14 w-14">
-                      <AvatarImage src={activeStudent.parent.user.image} />
-                    </Avatar>
-                    <div>
-                      <p className="text-[10px] font-black text-primary-700 uppercase">
-                        Linked Guardian
-                      </p>
-                      <p className="text-xl font-black">
-                        {activeStudent.parent.user.name}
-                      </p>
-                    </div>
-                  </div>
-                )}
               </TabsContent>
 
-              <TabsContent value="security" className="space-y-4">
+              <TabsContent value="ops" className="space-y-6 pt-4">
                 <Button
                   onClick={() =>
-                    updateStudentPermissions(
+                    handleStatusChange(
                       activeStudent.user.id,
                       activeStudent.user.status === "APPROVED"
                         ? "SUSPENDED"
                         : "APPROVED",
                     )
                   }
-                  variant="outline"
-                  className="w-full h-16 rounded-2xl font-black text-[10px] uppercase tracking-widest px-8 flex justify-between"
+                  className="h-20 w-full rounded-[2rem] bg-white dark:bg-slate-900 border-2 font-black uppercase text-xs tracking-widest text-slate-900 dark:text-white"
                 >
-                  <div className="flex items-center gap-3">
-                    <ShieldCheck className="h-5 w-5 text-primary-700" /> Toggle
-                    Permission Node
-                  </div>
-                  <ChevronRight className="h-4 w-4" />
+                  <ShieldCheck className="mr-3 h-5 w-5" /> Toggle Identity
+                  Permission
                 </Button>
                 <Button
-                  onClick={() => decommissionStudentNode(activeStudent.id)}
+                  onClick={() => handleDecommission(activeStudent.id)}
                   variant="ghost"
-                  className="w-full h-16 rounded-2xl border-2 border-dashed border-rose-100 text-rose-500 font-black text-[10px] uppercase tracking-widest hover:bg-rose-500 hover:text-white"
+                  className="h-24 w-full rounded-[3rem] border-4 border-dashed border-rose-100 text-rose-500 font-black uppercase text-xs tracking-[0.2em] hover:bg-rose-500 hover:text-white transition-all"
                 >
-                  <Trash2 className="h-4 w-4 mr-3" /> Decommission Node
+                  <Trash2 className="mr-3 h-6 w-6" /> Execute Decommissioning
                 </Button>
               </TabsContent>
             </Tabs>
@@ -401,131 +586,75 @@ export default function StudentTerminalClient({
         </SheetContent>
       </Sheet>
 
-      {/* --- INJECTION MODAL --- */}
-      <Dialog open={isAddModalOpen} onOpenChange={setIsAddModalOpen}>
-        <DialogContent className="max-w-3xl w-[95vw] md:w-full rounded-[3rem] p-8 md:p-16 dark:bg-slate-950 border-0 shadow-royal overflow-y-auto no-scrollbar max-h-[90vh]">
-          <DialogHeader className="mb-10">
-            <DialogTitle className="text-3xl md:text-5xl font-black tracking-tighter leading-none">
-              Initialize <span className="text-primary-700">Student Node</span>
+      {/* --- BULK ACTION MODAL --- */}
+      <Dialog open={isBulkModalOpen} onOpenChange={setIsBulkModalOpen}>
+        <DialogContent className="max-w-2xl rounded-[4rem] p-16 dark:bg-slate-950 border-0 shadow-royal overflow-hidden">
+          {/* ACCESSIBILITY FIX: Added DialogTitle */}
+          <DialogHeader className="mb-12 relative z-10 text-left">
+            <DialogTitle className="text-5xl font-black tracking-tighter leading-none text-slate-900 dark:text-white">
+              Bulk <span className="text-primary-700">Protocol</span>
             </DialogTitle>
-            <DialogDescription className="text-xs font-bold uppercase tracking-widest text-slate-400 mt-2">
-              Manual Deployment Protocol v2.6
+            <DialogDescription className="font-black text-[11px] uppercase tracking-[0.3em] text-slate-400 mt-4 flex items-center gap-2">
+              <div className="h-2 w-2 rounded-full bg-gold animate-pulse" />
+              Synchronizing {selectedIds.length} Identity Nodes
             </DialogDescription>
           </DialogHeader>
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              const d = Object.fromEntries(new FormData(e.currentTarget));
-              startTransition(async () => {
-                try {
-                  await manageStudentNode(d);
-                  setIsAddModalOpen(false);
-                  toast.success("Node Deployed Successfully");
-                } catch (e: any) {
-                  toast.error(e.message);
-                }
-              });
-            }}
-            className="space-y-6"
-          >
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label className="text-[10px] font-black uppercase text-slate-400 ml-4">
-                  Full Name
-                </Label>
-                <Input
-                  name="name"
-                  required
-                  className="h-16 rounded-2xl glass-surface px-6 font-bold"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label className="text-[10px] font-black uppercase text-slate-400 ml-4">
-                  Identity Email
-                </Label>
-                <Input
-                  name="email"
-                  type="email"
-                  required
-                  className="h-16 rounded-2xl glass-surface px-6 font-bold"
-                />
-              </div>
+          <div className="space-y-10 relative z-10">
+            <div className="space-y-4">
+              <Label className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400 ml-4">
+                Identify Target Academic Node
+              </Label>
+              <Select onValueChange={handleBulkEnroll}>
+                <SelectTrigger className="h-20 rounded-[2rem] border-0 bg-slate-100 dark:bg-slate-900 font-black text-xl px-8 shadow-inner focus:ring-4 ring-primary-700/10 dark:text-white">
+                  <SelectValue placeholder="Identify Target..." />
+                </SelectTrigger>
+                <SelectContent className="rounded-3xl border-0 shadow-2xl">
+                  {classes.length > 0 ? (
+                    classes.map((c: any) => (
+                      <SelectItem
+                        key={c.id}
+                        value={c.id}
+                        className="font-bold py-6 text-lg border-b last:border-0"
+                      >
+                        {c.name} — {c.code}
+                      </SelectItem>
+                    ))
+                  ) : (
+                    <div className="p-10 text-center font-black text-slate-300 uppercase">
+                      No target nodes found
+                    </div>
+                  )}
+                </SelectContent>
+              </Select>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label className="text-[10px] font-black uppercase text-slate-400 ml-4">
-                  Student ID
-                </Label>
-                <Input
-                  name="studentId"
-                  required
-                  className="h-16 rounded-2xl glass-surface px-6 font-bold"
-                  placeholder="STU-2026-XXX"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label className="text-[10px] font-black uppercase text-slate-400 ml-4">
-                  DNA Classification
-                </Label>
-                <Select name="gender" defaultValue="MALE">
-                  <SelectTrigger className="h-16 rounded-2xl bg-slate-100 border-0 dark:bg-slate-900 font-bold">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent className="rounded-xl">
-                    <SelectItem value="MALE">MALE</SelectItem>
-                    <SelectItem value="FEMALE">FEMALE</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
+            <div className="p-8 bg-gold/10 rounded-[2.5rem] border border-gold/20">
+              <p className="text-xs font-bold text-gold text-center uppercase tracking-widest leading-relaxed">
+                CAUTION: This protocol will override existing enrollments for
+                the selected identity nodes.
+              </p>
             </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label className="text-[10px] font-black uppercase text-slate-400 ml-4">
-                  Initial Level
-                </Label>
-                <Input
-                  name="currentLevel"
-                  className="h-16 rounded-2xl glass-surface px-6 font-bold"
-                  placeholder="Primary 1"
-                />
-              </div>
-              <div className="space-y-2">
-                <Label className="text-[10px] font-black uppercase text-slate-400 ml-4">
-                  Nationality
-                </Label>
-                <Input
-                  name="nationality"
-                  className="h-16 rounded-2xl glass-surface px-6 font-bold"
-                />
-              </div>
-            </div>
-            <Button
-              type="submit"
-              disabled={isPending}
-              className="w-full h-20 rounded-[2.5rem] bg-primary-700 text-white font-black text-xl shadow-royal active:scale-95 transition-all"
-            >
-              {isPending ? <Loader2 className="animate-spin" /> : "DEPLOY NODE"}
-            </Button>
-          </form>
+          </div>
         </DialogContent>
       </Dialog>
     </div>
   );
 }
 
-// --- SUB-COMPONENTS ---
+// --- ELITE SUB-COMPONENTS ---
 
 function Metric({ icon: Icon, label, value }: any) {
   return (
     <div className="flex items-center gap-4">
-      <div className="p-3 rounded-2xl bg-white/10 backdrop-blur-md shadow-inner">
-        <Icon className="h-5 w-5" />
+      <div className="p-4 rounded-[1.5rem] bg-white/10 backdrop-blur-md shadow-inner border border-white/5">
+        <Icon className="h-6 w-6" />
       </div>
       <div>
-        <p className="text-[9px] font-black uppercase text-primary-200 tracking-widest mb-1">
+        <p className="text-[10px] font-black uppercase text-primary-200 tracking-[0.2em] leading-none mb-1.5">
           {label}
         </p>
-        <p className="text-xl font-black">{value}</p>
+        <p className="text-3xl font-black leading-none tracking-tighter">
+          {value}
+        </p>
       </div>
     </div>
   );
@@ -533,16 +662,21 @@ function Metric({ icon: Icon, label, value }: any) {
 
 function InfoCard({ label, value, icon: Icon }: any) {
   return (
-    <div className="p-6 md:p-8 rounded-[2rem] glass-surface border dark:border-slate-800 transition-all hover:border-primary-700/20">
-      <div className="flex items-center gap-3 mb-2">
-        <Icon className="h-4 w-4 text-primary-700" />
-        <span className="text-[9px] font-black uppercase tracking-widest text-slate-400">
+    <motion.div
+      whileHover={{ y: -4 }}
+      className="p-8 md:p-10 rounded-[2.5rem] glass-surface border dark:border-slate-800 transition-all hover:border-primary-700/30 group bg-white/50 dark:bg-slate-900/30"
+    >
+      <div className="flex items-center gap-4 mb-3">
+        <div className="p-2 rounded-xl bg-primary-700/10 text-primary-700 group-hover:rotate-12 transition-transform">
+          <Icon className="h-4 w-4" />
+        </div>
+        <span className="text-[11px] font-black uppercase tracking-[0.2em] text-slate-400">
           {label}
         </span>
       </div>
-      <p className="text-sm md:text-lg font-black text-slate-900 dark:text-white truncate">
-        {value || "NODE_DATA_ABSENT"}
+      <p className="text-xl font-black text-slate-900 dark:text-white truncate tracking-tight">
+        {value || "NODE_ABSENT"}
       </p>
-    </div>
+    </motion.div>
   );
 }

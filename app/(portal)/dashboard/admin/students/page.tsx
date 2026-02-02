@@ -133,19 +133,30 @@ export default async function StudentsPage() {
   if (!session || !["ADMIN", "SUPER_ADMIN"].includes(session.user.role))
     redirect("/login");
 
-  const studentsRaw = await prisma.student.findMany({
-    include: {
-      user: true,
-      parent: { include: { user: true } },
-    },
-    orderBy: { createdAt: "desc" },
-  });
+  // FETCH BOTH DATA NODES
+  const [studentsRaw, classesRaw] = await Promise.all([
+    prisma.student.findMany({
+      include: {
+        user: true,
+        parent: { include: { user: true } },
+      },
+      orderBy: { createdAt: "desc" },
+    }),
+    // YOU WERE MISSING THIS FETCH:
+    prisma.class.findMany({
+      where: { isActive: true },
+      select: { id: true, name: true, code: true },
+    }),
+  ]);
 
+  // Serialization for Next.js 16
   const students = JSON.parse(JSON.stringify(studentsRaw));
+  const classes = JSON.parse(JSON.stringify(classesRaw));
 
   return (
     <div className="min-h-screen p-4 md:p-8">
-      <StudentTerminalClient initialStudents={students} />
+      {/* PASS THE CLASSES PROP HERE */}
+      <StudentTerminalClient initialStudents={students} classes={classes} />
     </div>
   );
 }
