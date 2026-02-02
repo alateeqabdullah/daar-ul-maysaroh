@@ -7,89 +7,99 @@ import bcrypt from "bcryptjs";
 import { ContractType } from "@/app/generated/prisma/enums";
 
 /**
- * 1. DEPLOY/UPDATE TEACHER NODE
- * Handles the creation of a User + Teacher Profile in one transaction.
+ * 1. MANAGE TEACHER NODE (UPSERT)
+ * The primary engine for creating or updating a Faculty Member.
+ * Handles the User account and the Teacher Profile in one transaction.
  */
 export async function manageTeacherNode(data: any) {
   const session = await auth();
   if (!session || !["ADMIN", "SUPER_ADMIN"].includes(session.user.role)) {
-    throw new Error("Unauthorized Access: Administrative clearance required.");
+    throw new Error("Unauthorized: Administrative clearance required.");
   }
 
-  const teacherId = String(data.teacherId).toUpperCase();
-  const email = String(data.email).toLowerCase();
+  // Data Sanitization
+  const email = String(data.email).toLowerCase().trim();
+  const name = String(data.name).trim();
+  const teacherId = String(data.teacherId).toUpperCase().trim();
+  const salary = isNaN(parseFloat(data.salary)) ? 0 : parseFloat(data.salary);
+  const expYears = isNaN(parseInt(data.experienceYears))
+    ? 0
+    : parseInt(data.experienceYears);
+  const maxStudents = isNaN(parseInt(data.maxStudents))
+    ? 20
+    : parseInt(data.maxStudents);
 
-  // Process expertise from comma-separated string to array
-  const expertiseArray = data.expertise
-    ? data.expertise
-        .split(",")
-        .map((s: string) => s.trim())
-        .filter(Boolean)
-    : [];
+  const expertiseArray =
+    typeof data.expertise === "string"
+      ? data.expertise
+          .split(",")
+          .map((s: string) => s.trim())
+          .filter(Boolean)
+      : [];
 
   try {
     return await prisma.$transaction(async (tx) => {
-      // Step A: Upsert the User account first
+      // Create/Update User account
       const user = await tx.user.upsert({
         where: { email },
-        update: {
-          name: data.name,
-          role: "TEACHER",
-          status: "APPROVED",
-        },
+        update: { name, role: "TEACHER", status: "APPROVED" },
         create: {
-          name: data.name,
+          name,
           email,
           role: "TEACHER",
           status: "APPROVED",
-          password: await bcrypt.hash("AlMaysaroh2026!", 10), // Default temp password
-          image: `https://api.dicebear.com/7.x/initials/svg?seed=${data.name}`,
+          password: await bcrypt.hash("AlMaysaroh2026!", 10),
+          image: `https://api.dicebear.com/7.x/initials/svg?seed=${name}`,
         },
       });
 
-      // Step B: Upsert the Teacher Profile linked to that User
+      // Create/Update Teacher Profile
       const teacherProfile = await tx.teacher.upsert({
         where: { userId: user.id },
         update: {
           teacherId,
-          qualification: data.qualification,
-          specialization: data.specialization,
-          experienceYears: parseInt(data.experienceYears) || 0,
-          contractType: data.contractType as ContractType,
-          salary: parseFloat(data.salary) || 0,
-          isAvailable: data.isAvailable === "true" || data.isAvailable === true,
+          qualification: data.qualification || null,
+          specialization: data.specialization || null,
+          experienceYears: expYears,
+          bio: data.bio || null,
           expertise: expertiseArray,
-          bio: data.bio,
+          contractType: data.contractType as ContractType,
+          salary,
+          maxStudents,
+          teachingStyle: data.teachingStyle || null,
+          isAvailable: data.isAvailable === "true" || data.isAvailable === true,
         },
         create: {
           userId: user.id,
           teacherId,
-          qualification: data.qualification,
-          specialization: data.specialization,
-          experienceYears: parseInt(data.experienceYears) || 0,
-          contractType: data.contractType as ContractType,
-          salary: parseFloat(data.salary) || 0,
-          isAvailable: true,
+          qualification: data.qualification || null,
+          specialization: data.specialization || null,
+          experienceYears: expYears,
+          bio: data.bio || null,
           expertise: expertiseArray,
-          bio: data.bio,
           joiningDate: new Date(),
+          contractType: (data.contractType as ContractType) || "FULL_TIME",
+          salary,
+          maxStudents,
+          teachingStyle: data.teachingStyle || null,
+          isAvailable: true,
         },
       });
 
       revalidatePath("/admin/teachers");
-      return { success: true, teacherId: teacherProfile.id };
+      return { success: true, id: teacherProfile.id };
     });
   } catch (error: any) {
-    console.error("Teacher Action Error:", error);
+    console.error("Teacher Management Error:", error);
     if (error.code === "P2002")
-      throw new Error("ID Conflict: Teacher ID or Email already registered.");
-    throw new Error("Handshake Failed: Unable to synchronize faculty node.");
+      throw new Error("ID Conflict: Email or Teacher ID already exists.");
+    throw new Error(`Handshake Failed: ${error.message}`);
   }
 }
 
 /**
- * 2. TOGGLE FIELD AVAILABILITY
- * Quickly toggle if a teacher can be assigned to new classes.
+ * 2. TOGGLE AVAILABILITY
+ * Quickly toggle a teacher's status for new assignments.
  */
 export async function toggleTeacherAvailability(
   id: string,
@@ -104,43 +114,38 @@ export async function toggleTeacherAvailability(
   });
 
   revalidatePath("/admin/teachers");
-  return { success: true };
 }
 
 /**
- * 3. GENERATE PAYROLL NODE
- * Creates a financial record for the teacher for the current month.
+ * 3. GENERATE MONTHLY PAYROLL
+ * Creates a pending payment record for the teacher.
  */
 export async function generateTeacherPayroll(
   teacherId: string,
   amount: number,
 ) {
   const session = await auth();
-  if (!session || !["ADMIN", "SUPER_ADMIN"].includes(session.user.role)) {
+  if (!session || !["ADMIN", "SUPER_ADMIN"].includes(session.user.role))
     throw new Error("Unauthorized");
-  }
 
-  const currentMonth = new Date().toLocaleString("default", {
+  const month = new Date().toLocaleString("default", {
     month: "long",
     year: "numeric",
   });
 
-  // Check if payroll already exists for this month to prevent double payment
+  // Prevent duplicate payroll for the same month
   const existing = await prisma.payroll.findFirst({
-    where: { teacherId, month: currentMonth },
+    where: { teacherId, month },
   });
 
-  if (existing)
-    throw new Error(
-      `Payroll for ${currentMonth} already exists for this node.`,
-    );
+  if (existing) throw new Error(`Payroll for ${month} already initialized.`);
 
   await prisma.payroll.create({
     data: {
       teacherId,
       amount,
-      month: currentMonth,
-      status: "PENDING", // Becomes COMPLETED once bursar confirms
+      month,
+      status: "PENDING",
     },
   });
 
@@ -149,55 +154,77 @@ export async function generateTeacherPayroll(
 }
 
 /**
- * 4. DECOMMISSION FACULTY NODE
- * Super Admin only: Removes teacher and user account.
+ * 4. PROCESS PAYROLL PAYMENT
+ * Mark a payroll node as COMPLETED (Paid).
+ */
+export async function processPayrollPayment(payrollId: string) {
+  await prisma.payroll.update({
+    where: { id: payrollId },
+    data: {
+      status: "COMPLETED",
+      paidAt: new Date(),
+    },
+  });
+  revalidatePath("/admin/teachers");
+}
+
+/**
+ * 5. DECOMMISSION TEACHER NODE
+ * Permanently removes the teacher and their associated user account.
  */
 export async function decommissionTeacherNode(teacherId: string) {
   const session = await auth();
-  if (session?.user.role !== "SUPER_ADMIN") {
-    throw new Error(
-      "Critical Access Denied: Super Admin clearance required for decommissioning.",
-    );
-  }
+  if (session?.user.role !== "SUPER_ADMIN")
+    throw new Error("Super Admin clearance required.");
 
-  // Find the user ID associated with this teacher first
   const teacher = await prisma.teacher.findUnique({
     where: { id: teacherId },
     select: { userId: true },
   });
 
-  if (!teacher) throw new Error("Node not found.");
-
-  // Delete the User (Cascade will handle teacher profile if configured,
-  // but we delete user to be thorough)
-  await prisma.user.delete({
-    where: { id: teacher.userId },
-  });
+  if (teacher) {
+    await prisma.user.delete({ where: { id: teacher.userId } });
+  }
 
   revalidatePath("/admin/teachers");
   return { success: true };
 }
 
 /**
- * 5. GET TEACHER ANALYTICS (Internal)
- * Fetches stats for a specific teacher for the Identity Drawer.
+ * 6. ASSIGN TEACHER TO CLASS
+ * Directly links a teacher node to an academic class.
  */
-export async function getTeacherDeepStats(teacherId: string) {
-  const stats = await prisma.teacher.findUnique({
+export async function assignTeacherToClass(teacherId: string, classId: string) {
+  await prisma.class.update({
+    where: { id: classId },
+    data: { teacherId },
+  });
+  revalidatePath("/admin/teachers");
+}
+
+/**
+ * 7. GET DEEP ANALYTICS
+ * Fetches teaching load and history for the Identity Drawer.
+ */
+export async function getTeacherAnalytics(teacherId: string) {
+  return await prisma.teacher.findUnique({
     where: { id: teacherId },
     include: {
-      _count: {
+      classes: {
         select: {
-          classes: true,
-          courses: true,
-          hifzLogsReviewed: true,
+          name: true,
+          code: true,
+          level: true,
+          currentEnrollment: true,
         },
       },
       payrolls: {
-        take: 5,
+        take: 12,
         orderBy: { createdAt: "desc" },
+      },
+      _count: {
+        select: { classes: true, courses: true, hifzLogsReviewed: true },
       },
     },
   });
-  return stats;
 }
