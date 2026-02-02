@@ -122,3 +122,62 @@ export async function decommissionStudent(studentId: string) {
   revalidatePath("/admin/students");
   return { success: true };
 }
+
+
+
+/**
+ * 1. BULK CLASS ENROLLMENT
+ * Enroll multiple student nodes into a class node at once.
+ */
+export async function bulkEnrollStudents(studentIds: string[], classId: string) {
+  const session = await auth();
+  if (!session || !["ADMIN", "SUPER_ADMIN"].includes(session.user.role)) throw new Error("Unauthorized");
+
+  await prisma.enrollment.createMany({
+    data: studentIds.map(id => ({
+      studentId: id,
+      classId: classId,
+      enrollmentType: "REGULAR",
+      status: "ACTIVE"
+    })),
+    skipDuplicates: true
+  });
+
+  revalidatePath("/admin/students");
+  return { success: true };
+}
+
+/**
+ * 2. PROMOTE STUDENT LEVEL
+ * Shift a student node to a higher academic level.
+ */
+export async function promoteStudent(studentId: string, newLevel: string) {
+  await prisma.student.update({
+    where: { id: studentId },
+    data: { currentLevel: newLevel }
+  });
+  revalidatePath("/admin/students");
+}
+
+/**
+ * 3. GET DEEP ANALYTICS (For the Identity Drawer)
+ * Fetches attendance and financial health in one handshake.
+ */
+export async function getStudentContext(studentId: string) {
+  const [attendance, invoices, progress] = await Promise.all([
+    prisma.attendance.groupBy({
+      by: ['status'],
+      where: { studentId },
+      _count: true
+    }),
+    prisma.invoice.findMany({
+      where: { parent: { students: { some: { id: studentId } } } },
+      orderBy: { dueDate: 'desc' }
+    }),
+    prisma.quranProgress.count({
+      where: { studentId, status: "MASTERED" }
+    })
+  ]);
+
+  return { attendance, invoices, masteredSurahs: progress };
+}
