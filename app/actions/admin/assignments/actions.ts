@@ -116,6 +116,11 @@
 //   revalidatePath("/admin/assignments");
 // }
 
+
+
+
+
+
 "use server";
 
 import { prisma } from "@/lib/prisma";
@@ -123,44 +128,108 @@ import { auth } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
 import { AssignmentType } from "@/app/generated/prisma/enums";
 
+
+
+
+
 /**
- * 1. DEPLOY/UPDATE ASSIGNMENT
+ * 1. MANAGE ASSIGNMENT (CREATE / UPDATE)
+ * Fixed the attachment typo and added strict type conversion.
  */
 export async function manageAssignmentNode(data: any) {
   const session = await auth();
-  if (
-    !session ||
-    !["ADMIN", "TEACHER", "SUPER_ADMIN"].includes(session.user.role)
-  ) {
+  if (!session || !["ADMIN", "TEACHER", "SUPER_ADMIN"].includes(session.user.role)) {
     throw new Error("Administrative clearance required.");
   }
 
+  // Deep Sanitization
+  const id = data.id || undefined;
+  const totalMarks = parseFloat(data.totalMarks) || 100;
+  const weightage = parseFloat(data.weightage) || 10;
+  const dueDate = new Date(data.dueDate);
+
   const payload = {
-    title: String(data.title),
-    description: String(data.description || ""),
+    title: String(data.title).trim(),
+    description: String(data.description || "").trim(),
     subjectId: String(data.subjectId),
-    dueDate: new Date(data.dueDate),
-    totalMarks: parseFloat(data.totalMarks) || 100,
-    weightage: parseFloat(data.weightage) || 10,
+    dueDate,
+    totalMarks,
+    weightage,
     type: data.type as AssignmentType,
-    instructions: data.instructions || "",
-    rubric: data.rubric || "",
-    attachments: data.attachments ? data.expertise.split(",") : [],
+    instructions: String(data.instructions || "").trim(),
+    rubric: String(data.rubric || "").trim(),
+    // Cleanly split attachments string into array
+    attachments: typeof data.attachments === 'string' 
+      ? data.attachments.split(",").map((s: string) => s.trim()).filter(Boolean) 
+      : [],
     createdById: session.user.id,
   };
 
   try {
-    if (data.id) {
-      await prisma.assignment.update({ where: { id: data.id }, data: payload });
+    if (id) {
+      await prisma.assignment.update({ where: { id }, data: payload });
     } else {
       await prisma.assignment.create({ data: payload });
     }
     revalidatePath("/admin/assignments");
     return { success: true };
   } catch (error: any) {
+    console.error("Assignment Action Error:", error);
     throw new Error(`Deployment Failed: ${error.message}`);
   }
 }
+
+/**
+ * 2. CLONE TASK (DUPLICATE)
+ * Creates a carbon copy of an existing assignment for quick deployment.
+ */
+export async function cloneAssignment(id: string) {
+  const source = await prisma.assignment.findUnique({ where: { id } });
+  if (!source) throw new Error("Source node not found.");
+
+  const { id: _, createdAt, updatedAt, ...rest } = source;
+  
+  await prisma.assignment.create({
+    data: {
+      ...rest,
+      title: `${rest.title} (Clone)`,
+      dueDate: new Date(new Date().getTime() + 7 * 24 * 60 * 60 * 1000), // Default to +7 days
+    }
+  });
+
+  revalidatePath("/admin/assignments");
+  return { success: true };
+}
+
+/**
+ * 3. RESET SUBMISSION NODE
+ * Deletes a student's submission so they can re-upload their work.
+ */
+export async function resetSubmission(submissionId: string) {
+  await prisma.assignmentSubmission.delete({ where: { id: submissionId } });
+  revalidatePath("/admin/assignments");
+  return { success: true };
+}
+
+/**
+ * 4. BULK EXTEND DEADLINE
+ */
+export async function bulkExtendDeadline(assignmentId: string, days: number) {
+  const task = await prisma.assignment.findUnique({ where: { id: assignmentId } });
+  if (!task) throw new Error("Task not found");
+
+  const newDate = new Date(task.dueDate.getTime() + (days * 24 * 60 * 60 * 1000));
+  
+  await prisma.assignment.update({
+    where: { id: assignmentId },
+    data: { dueDate: newDate }
+  });
+
+  revalidatePath("/admin/assignments");
+  return { success: true };
+}
+
+
 
 /**
  * 2. COMMIT EVALUATION (GRADING)
