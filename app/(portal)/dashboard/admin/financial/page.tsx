@@ -180,67 +180,58 @@ import { redirect } from "next/navigation";
 import FinancialTerminalClient from "@/components/admin/financial-terminal-client";
 
 export default async function FinancialPage() {
-  // 1. SECURITY HANDSHAKE
   const session = await auth();
-  if (!session || !["ADMIN", "SUPER_ADMIN"].includes(session.user.role)) {
+  if (!session || !["ADMIN", "SUPER_ADMIN"].includes(session.user.role))
     redirect("/login");
-  }
 
-  // 2. DATA ORCHESTRATION (Parallel Fetching for Performance)
-  const [invoicesRaw, revenueAgg, pendingAgg, totalCount, completedCount] =
-    await Promise.all([
-      // Fetch latest 100 invoices with deep parent/user relations
-      prisma.invoice.findMany({
-        take: 100,
-        orderBy: { createdAt: "desc" },
-        include: {
-          parent: {
-            include: {
-              user: {
-                select: { name: true, image: true, email: true },
-              },
-            },
+  // Parallel Fetching for Zero-Latency Handshake
+  const [invoicesRaw, parentsRaw, revenueAgg, pendingAgg] = await Promise.all([
+    prisma.invoice.findMany({
+      orderBy: { createdAt: "desc" },
+      include: {
+        parent: {
+          include: {
+            user: { select: { name: true, image: true, email: true } },
           },
         },
-      }),
-      // Calculate Total Realized Revenue (Completed Payments)
-      prisma.payment.aggregate({
-        _sum: { amount: true },
-        where: { status: "COMPLETED" },
-      }),
-      // Calculate Total Revenue Leakage (Pending Invoices)
-      prisma.invoice.aggregate({
-        _sum: { amount: true },
-        where: { status: "PENDING" },
-      }),
-      // Counts for Collection Rate Calculation
-      prisma.invoice.count(),
-      prisma.invoice.count({ where: { status: "COMPLETED" } }),
-    ]);
+        payments: true,
+      },
+    }),
+    prisma.parent.findMany({
+      include: { user: { select: { name: true, email: true } } },
+    }),
+    prisma.payment.aggregate({
+      _sum: { amount: true },
+      where: { status: "COMPLETED" },
+    }),
+    prisma.invoice.aggregate({
+      _sum: { amount: true },
+      where: { status: "PENDING" },
+    }),
+  ]);
 
-  // 3. ANALYTICS ENGINE
-  const revenue = Number(revenueAgg._sum.amount) || 0;
-  const pending = Number(pendingAgg._sum.amount) || 0;
-
-  // Calculate Collection Rate (Percentage of invoices successfully paid)
+  // Analytics Calculation
+  const totalRevenue = Number(revenueAgg._sum.amount) || 0;
+  const totalLeakage = Number(pendingAgg._sum.amount) || 0;
+  const totalInvoiced = totalRevenue + totalLeakage;
   const collectionRate =
-    totalCount > 0 ? Math.round((completedCount / totalCount) * 100) : 0;
+    totalInvoiced > 0 ? Math.round((totalRevenue / totalInvoiced) * 100) : 0;
 
   const stats = {
-    revenue: revenue.toLocaleString(),
-    pending: pending.toLocaleString(),
+    revenue: totalRevenue.toLocaleString(),
+    pending: totalLeakage.toLocaleString(),
     rate: collectionRate,
   };
 
-  // 4. SERIALIZATION (Next.js 16/Turbopack Handshake)
-  // Ensures Decimal and Date types from Prisma don't crash the Client Component
+  // Turbo-Safe Serialization
   const initialInvoices = JSON.parse(JSON.stringify(invoicesRaw));
+  const parents = JSON.parse(JSON.stringify(parentsRaw));
 
   return (
     <div className="min-h-screen bg-slate-50/50 dark:bg-slate-950 p-4 md:p-8">
-      {/* Branded Section Header is handled within the Client for better animation control */}
       <FinancialTerminalClient
         initialInvoices={initialInvoices}
+        parents={parents}
         stats={stats}
       />
     </div>

@@ -110,3 +110,110 @@ export async function voidInvoiceNode(id: string) {
   });
   revalidatePath("/admin/finance");
 }
+
+
+
+/**
+ * 1. MANUAL INVOICE INJECTION (FIXED)
+ * Creates a custom invoice not tied to a subscription (e.g., Book Fees, Uniforms)
+ */
+export async function createManualInvoice(data: any) {
+  const session = await auth();
+  if (!session || !["ADMIN", "SUPER_ADMIN"].includes(session.user.role)) throw new Error("Unauthorized");
+
+  const invoice = await prisma.invoice.create({
+    data: {
+      parentId: data.parentId,
+      amount: parseFloat(data.amount),
+      month: data.month,
+      dueDate: new Date(data.dueDate),
+      status: "PENDING",
+    }
+  });
+
+  revalidatePath("/admin/finance");
+  return { success: true, id: invoice.id };
+}
+
+/**
+ * 2. APPLY INSTITUTIONAL DISCOUNT
+ */
+export async function applyDiscount(invoiceId: string, discountAmount: number) {
+  const invoice = await prisma.invoice.findUnique({ where: { id: invoiceId } });
+  if (!invoice) throw new Error("Node not found");
+
+  const newAmount = Math.max(0, Number(invoice.amount) - discountAmount);
+
+  await prisma.invoice.update({
+    where: { id: invoiceId },
+    data: { amount: newAmount }
+  });
+
+  revalidatePath("/admin/finance");
+  return { success: true };
+}
+
+/**
+ * 3. EXECUTE REFUND PROTOCOL
+ */
+export async function processRefund(paymentId: string, reason: string) {
+  const payment = await prisma.payment.findUnique({ 
+    where: { id: paymentId },
+    include: { invoice: true }
+  });
+
+  if (!payment) throw new Error("Payment node absent");
+
+  return await prisma.$transaction(async (tx) => {
+    // A. Update Payment to REFUNDED
+    await tx.payment.update({
+      where: { id: paymentId },
+      data: { 
+        status: "REFUNDED",
+        refundReason: reason,
+        refundedAt: new Date(),
+        refundedAmount: payment.amount 
+      }
+    });
+
+    // B. Re-open the Invoice
+    if (payment.invoiceId) {
+      await tx.invoice.update({
+        where: { id: payment.invoiceId },
+        data: { status: "PENDING" }
+      });
+    }
+
+    revalidatePath("/admin/finance");
+    return { success: true };
+  });
+}
+
+/**
+ * 4. BULK OVERDUE RECOVERY (NUDGE ALL)
+ */
+export async function bulkNudgeOverdue() {
+  const overdueInvoices = await prisma.invoice.findMany({
+    where: { 
+      status: "PENDING",
+      dueDate: { lt: new Date() }
+    },
+    include: { parent: { include: { user: true } } }
+  });
+
+  const nudges = overdueInvoices.map(inv => 
+    prisma.notification.create({
+      data: {
+        userId: inv.parent.userId,
+        title: "CRITICAL: Outstanding Fees",
+        message: `System Alert: Your balance of $${inv.amount} for ${inv.month} is overdue.`,
+        type: "PAYMENT",
+        priority: "URGENT"
+      }
+    })
+  );
+
+  await Promise.all(nudges);
+  return { success: true, count: nudges.length };
+}
+
