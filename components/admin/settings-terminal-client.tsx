@@ -1,33 +1,22 @@
 "use client";
 
-import { useState, useTransition } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useTransition } from "react";
+import { motion } from "framer-motion";
 import {
   Settings,
   Shield,
   User,
-  Bell,
-  Globe,
   Lock,
-  Save,
   Loader2,
   Zap,
   Database,
-  ChevronRight,
-  School,
   CreditCard,
   Cloud,
   RefreshCcw,
   Mail,
   Palette,
-  Hash,
   LayoutGrid,
   ShieldCheck,
-  AlertTriangle,
-  KeyRound,
-  BarChart3,
-  Moon,
-  Image as ImageIcon,
   CheckCircle2,
   GraduationCap,
   Award,
@@ -35,12 +24,10 @@ import {
 
 // All 12 Actions Integrated
 import {
-  updateSystemSetting,
   updateAdminProfile,
   toggleMaintenanceMode,
   updateAcademicTerm,
   togglePublicRegistration,
-  updateGradingThresholds,
   updateFinancialConfig,
   updateAdminPassword,
   purgeNotifications,
@@ -56,7 +43,6 @@ import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
