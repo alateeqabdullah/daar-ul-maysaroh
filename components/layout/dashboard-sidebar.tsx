@@ -194,7 +194,7 @@ export default function DashboardSidebar({ user }: DashboardSidebarProps) {
           },
           {
             name: "Grades",
-            href: "/admin/grades",
+            href: "/dashboard/admin/grades",
             icon: TrendingUp,
             description: "Performance analytics",
           },

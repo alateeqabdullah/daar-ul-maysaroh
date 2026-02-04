@@ -3,16 +3,12 @@
 import { useState, useTransition, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Wallet,
   TrendingUp,
   AlertCircle,
   Plus,
   Search,
   ChevronRight,
   Banknote,
-  Clock,
-  ShieldAlert,
-  X,
   Loader2,
   Send,
   Zap,
@@ -20,11 +16,7 @@ import {
   History,
   Gift,
   RotateCcw,
-  UserPlus,
   Fingerprint,
-  Receipt,
-  CheckCircle2,
-  Download,
   Trash2,
   ArrowUpRight,
 } from "lucide-react";
@@ -32,16 +24,13 @@ import {
 import {
   createManualInvoice,
   recordManualPayment,
-  bulkNudgeOverdue,
-  applyDiscount,
-  processRefund,
   voidInvoiceNode,
   generateMonthlyInvoices,
 } from "@/app/actions/admin/finance/actions";
 
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import {
   Sheet,
   SheetContent,
@@ -143,31 +132,6 @@ export default function FinancialTerminalClient({
 
   return (
     <div className="max-w-[1700px] mx-auto space-y-6 md:space-y-12 pb-40 px-2 md:px-10">
-      {/* --- ELITE ANALYTICS (Horizontal Swipe Mobile) --- */}
-      <div className="flex md:grid md:grid-cols-3 gap-4 overflow-x-auto no-scrollbar pb-4 md:pb-0">
-        <SummaryCard
-          label="Gross Realized"
-          value={`$${stats.revenue}`}
-          icon={TrendingUp}
-          color="emerald"
-          trend="Real-time Revenue"
-        />
-        <SummaryCard
-          label="Active Leakage"
-          value={`$${stats.pending}`}
-          icon={AlertCircle}
-          color="rose"
-          trend="Outstanding Dues"
-        />
-        <SummaryCard
-          label="Recovery Rate"
-          value={`${stats.rate}%`}
-          icon={Zap}
-          color="purple"
-          trend="Institutional Efficiency"
-        />
-      </div>
-
       {/* --- COMMAND CENTER HEADER --- */}
       <header className="flex flex-col gap-8">
         <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
@@ -196,6 +160,31 @@ export default function FinancialTerminalClient({
           </div>
         </div>
 
+        {/* --- ELITE ANALYTICS (Horizontal Swipe Mobile) --- */}
+        <div className="flex md:grid md:grid-cols-3 gap-4 overflow-x-auto no-scrollbar pb-4 md:pb-0">
+          <SummaryCard
+            label="Gross Realized"
+            value={`$${stats.revenue}`}
+            icon={TrendingUp}
+            color="emerald"
+            trend="Real-time Revenue"
+          />
+          <SummaryCard
+            label="Active Leakage"
+            value={`$${stats.pending}`}
+            icon={AlertCircle}
+            color="rose"
+            trend="Outstanding Dues"
+          />
+          <SummaryCard
+            label="Recovery Rate"
+            value={`${stats.rate}%`}
+            icon={Zap}
+            color="purple"
+            trend="Institutional Efficiency"
+          />
+        </div>
+
         <div className="relative group">
           <Search className="absolute left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-slate-400 group-focus-within:text-primary-700" />
           <input
@@ -212,7 +201,7 @@ export default function FinancialTerminalClient({
         variants={kContainer}
         initial="hidden"
         animate="show"
-        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8"
+        className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 md:gap-8"
       >
         <AnimatePresence mode="popLayout">
           {filtered.map((inv: any) => (
