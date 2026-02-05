@@ -31,10 +31,13 @@ import {
   EyeOff,
   UserPlus,
   Hash,
+  LayoutGrid,
+  MessageCirclePlus,
+  History,
   Globe,
 } from "lucide-react";
 
-// Handshake with your 11 Actions
+// Actions Handshake
 import {
   manageAnnouncement,
   deleteAnnouncement,
@@ -77,9 +80,10 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Progress } from "@/components/ui/progress";
 import { toast } from "sonner";
+import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@radix-ui/react-dropdown-menu";
 
+// Animation Logic
 const kContainer = {
   hidden: { opacity: 0 },
   show: { opacity: 1, transition: { staggerChildren: 0.04 } },
@@ -96,76 +100,81 @@ export default function CommunicationTerminalClient({
   const [activeTab, setActiveTab] = useState("broadcasts");
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  // --- STATE NODES ---
+  // --- LOCAL STATE NODES (For Refresh-less experience) ---
   const [announcements, setAnnouncements] = useState(initialAnnouncements);
   const [messages, setMessages] = useState(initialMessages);
   const [search, setSearch] = useState("");
 
-  // Direct Messaging States
+  // Chat Specifics
   const [selectedThreadId, setSelectedThreadId] = useState<string | null>(null);
   const [currentThreadHistory, setCurrentThreadHistory] = useState<any[]>([]);
   const [replyContent, setReplyContent] = useState("");
   const [isHistoryLoading, setIsHistoryLoading] = useState(false);
 
-  // Modal Controllers
-  const [isAddAnnouncementOpen, setIsAddAnnouncementOpen] = useState(false);
-  const [isDiscoveryOpen, setIsDiscoveryOpen] = useState(false);
+  // Modals
+  const [activeModal, setActiveModal] = useState<
+    "BROADCAST" | "DISCOVERY" | null
+  >(null);
   const [discoverySearch, setDiscoverySearch] = useState("");
   const [discoveredUser, setDiscoveredUser] = useState<any>(null);
 
-  // --- ANALYTICS HANDSHAKE ---
-  const stats = useMemo(
-    () => ({
-      announcements: announcements.filter((a: any) => a.isPublished).length,
-      unreadMessages: messages.filter((m: any) => !m.isRead).length,
-      totalUsers: users.length,
-    }),
-    [announcements, messages, users],
-  );
-
-  // --- AUTO-SCROLL CHAT ---
+  // --- AUTO-SCROLL LOGIC ---
   useEffect(() => {
     if (scrollRef.current)
       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
   }, [currentThreadHistory]);
 
-  // --- ACTION HANDLERS ---
+  // --- ANALYTICS HANDSHAKE ---
+  const stats = useMemo(
+    () => ({
+      announcements: announcements.filter((a: any) => a.isPublished).length,
+      unread: messages.filter((m: any) => !m.isRead).length,
+      online: users.length,
+    }),
+    [announcements, messages, users],
+  );
 
-  // 1. Fetch Thread Context
+  // --- HANDLERS (Linked to 11 Sovereign Actions) ---
+
   const handleSelectThread = async (msg: any) => {
     setSelectedThreadId(msg.id);
     setIsHistoryLoading(true);
     try {
       const history = await getThreadHistory(msg.id);
       setCurrentThreadHistory(history);
-      if (!msg.isRead) await markMessageRead(msg.id);
+      if (!msg.isRead) {
+        await markMessageRead(msg.id);
+        setMessages((prev) =>
+          prev.map((m) => (m.id === msg.id ? { ...m, isRead: true } : m)),
+        );
+      }
     } catch (e) {
-      toast.error("Thread Sync Failed");
+      toast.error("Thread Handshake Failed");
     } finally {
       setIsHistoryLoading(false);
     }
   };
 
-  // 2. Deploy New Announcement
-  const onDeployAnnouncement = (e: React.FormEvent<HTMLFormElement>) => {
+  const onDeployBroadcast = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const d = Object.fromEntries(new FormData(e.currentTarget));
     startTransition(async () => {
       try {
-        await manageAnnouncement({
+        const res = await manageAnnouncement({
           ...d,
-          isPublished: "true",
-          targetAudience: ["ALL"],
+          isPublished: true,
+          targetAudience: "ALL",
         });
-        setIsAddAnnouncementOpen(false);
-        toast.success("Broadcast Node Active");
-      } catch (e: any) {
-        toast.error(e.message);
+        if (res.success) {
+          toast.success("Broadcast Node Active");
+          setActiveModal(null);
+        }
+      } catch (err: any) {
+        toast.error(err.message);
       }
     });
   };
 
-  // 3. Dispatch DM Reply
   const onSendReply = () => {
     if (!replyContent || !selectedThreadId) return;
     startTransition(async () => {
@@ -173,25 +182,21 @@ export default function CommunicationTerminalClient({
         const res = await replyToThread(selectedThreadId, replyContent);
         setCurrentThreadHistory((prev) => [...prev, res.message]);
         setReplyContent("");
-        toast.success("Payload Delivered");
       } catch (e: any) {
         toast.error(e.message);
       }
     });
   };
 
-  // 4. Identity Discovery (Start New Conversation)
-  const onStartNewThread = () => {
+  const onStartNewDM = () => {
     if (!replyContent || !discoveredUser) return;
     startTransition(async () => {
       try {
         const res = await startNewConversation(discoveredUser.id, replyContent);
         setMessages((prev) => [res.message, ...prev]);
-        setIsDiscoveryOpen(false);
-        setReplyContent("");
-        setSelectedThreadId(res.message.id);
-        setCurrentThreadHistory([res.message]);
-        toast.success("New Handshake Established");
+        setActiveModal(null);
+        handleSelectThread(res.message);
+        toast.success("Identity Handshake Established");
       } catch (e: any) {
         toast.error(e.message);
       }
@@ -199,93 +204,94 @@ export default function CommunicationTerminalClient({
   };
 
   return (
-    <div className="max-w-7xl mx-auto space-y-6 md:space-y-10 pb-40 px-2 md:px-6 mt-4 md:mt-10">
-      {/* --- SOVEREIGN HUD --- */}
-      <header className="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-6 px-2">
-        <div className="space-y-3">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full glass-surface border-primary-100 dark:border-primary-900/50">
-            <Zap className="h-3 w-3 text-gold animate-pulse" />
-            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary-700 dark:text-primary-300">
+    <div className="w-full max-w-7xl mx-auto space-y-4 md:space-y-8 pb-32">
+      {/* --- ELITE HEADER: SIDEBAR RESPONSIVE --- */}
+      <header className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 px-4 pt-6 md:px-0">
+        <div className="space-y-2">
+          <div className="flex items-center gap-2">
+            <div className="h-2 w-2 rounded-full bg-primary-700 animate-pulse" />
+            <span className="text-[10px] font-black uppercase tracking-[0.3em] text-slate-400">
               Institutional Comms Terminal
             </span>
           </div>
-          <h1 className="text-5xl md:text-8xl font-black tracking-tighter leading-none text-slate-900 dark:text-white">
-            Sovereign <span className="text-primary-700">Comms</span>
+          <h1 className="text-4xl md:text-7xl font-black tracking-tighter leading-none text-slate-900 dark:text-white">
+            Sovereign <span className="text-primary-700">Voice</span>
           </h1>
         </div>
-        <div className="flex gap-2 w-full lg:w-auto">
+        <div className="flex gap-2 w-full md:w-auto">
           <Button
-            onClick={() => setIsDiscoveryOpen(true)}
+            onClick={() => setActiveModal("DISCOVERY")}
             variant="outline"
-            className="flex-1 md:flex-none h-14 md:h-16 rounded-2xl border-2 font-black uppercase text-[10px] tracking-widest active:scale-95"
+            className="flex-1 md:flex-none h-12 md:h-14 rounded-2xl border-2 font-black uppercase text-[10px] tracking-widest"
           >
-            <UserPlus className="mr-2 h-4 w-4" /> Start New DM
+            <MessageCirclePlus className="mr-2 h-4 w-4" /> Start DM
           </Button>
           <Button
-            onClick={() => setIsAddAnnouncementOpen(true)}
-            className="flex-1 md:flex-none h-14 md:h-16 px-8 rounded-2xl bg-primary-700 text-white font-black uppercase text-[10px] shadow-royal active:scale-95"
+            onClick={() => setActiveModal("BROADCAST")}
+            className="flex-1 md:flex-none h-12 md:h-14 px-8 rounded-2xl bg-primary-700 text-white font-black uppercase text-[10px] shadow-royal"
           >
             <Megaphone className="mr-2 h-4 w-4" /> Broadcast
           </Button>
         </div>
       </header>
 
-      {/* --- STATS RIBBON --- */}
-      <div className="grid grid-cols-3 gap-3 md:gap-6 px-2">
-        <StatBadge
+      {/* --- STATS RIBBON (Mobile Horizontal) --- */}
+      <div className="flex md:grid md:grid-cols-3 gap-3 overflow-x-auto no-scrollbar px-4 md:px-0">
+        <MiniStat
           label="Unread DMs"
-          value={stats.unreadMessages}
+          value={stats.unread}
+          icon={Mail}
           color="rose"
-          icon={MessageSquare}
         />
-        <StatBadge
-          label="Live Broadcasts"
+        <MiniStat
+          label="Broadcasts"
           value={stats.announcements}
+          icon={Zap}
           color="purple"
-          icon={Megaphone}
         />
-        <StatBadge
-          label="Network Nodes"
-          value={stats.totalUsers}
-          color="emerald"
+        <MiniStat
+          label="Nodes"
+          value={stats.online}
           icon={Users}
+          color="emerald"
         />
       </div>
 
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        {/* MOBILE STICKY NAV */}
-        <div className="sticky top-0 z-30 bg-slate-50/80 dark:bg-black/80 backdrop-blur-xl py-2 -mx-2 px-2">
-          <TabsList className="bg-white dark:bg-slate-900 h-16 p-1.5 rounded-[1.5rem] border w-full md:w-fit justify-start overflow-x-auto no-scrollbar gap-2 shadow-sm">
-            <TabsTrigger
-              value="broadcasts"
-              className="rounded-xl font-black text-[10px] uppercase px-10 h-full gap-2 transition-all data-[state=active]:bg-primary-700 data-[state=active]:text-white"
-            >
-              <Globe className="h-4 w-4" /> Global
-            </TabsTrigger>
-            <TabsTrigger
-              value="direct"
-              className="rounded-xl font-black text-[10px] uppercase px-10 h-full gap-2 transition-all data-[state=active]:bg-primary-700 data-[state=active]:text-white"
-            >
-              <Inbox className="h-4 w-4" /> Direct
-            </TabsTrigger>
-            <TabsTrigger
-              value="alerts"
-              className="rounded-xl font-black text-[10px] uppercase px-10 h-full gap-2 transition-all data-[state=active]:bg-primary-700 data-[state=active]:text-white"
-            >
-              <Bell className="h-4 w-4" /> Alerts
-            </TabsTrigger>
-          </TabsList>
-        </div>
+      <Tabs
+        value={activeTab}
+        onValueChange={setActiveTab}
+        className="w-full px-4 md:px-0"
+      >
+        <TabsList className="bg-white dark:bg-slate-900 h-14 md:h-16 p-1 rounded-2xl md:rounded-[2rem] border w-full md:w-fit justify-start gap-2 shadow-sm mb-6">
+          <TabsTrigger
+            value="broadcasts"
+            className="rounded-xl font-black text-[10px] uppercase px-8 h-full gap-2"
+          >
+            <Globe className="h-4 w-4" /> Global
+          </TabsTrigger>
+          <TabsTrigger
+            value="direct"
+            className="rounded-xl font-black text-[10px] uppercase px-8 h-full gap-2"
+          >
+            <Inbox className="h-4 w-4" /> Direct
+          </TabsTrigger>
+          <TabsTrigger
+            value="alerts"
+            className="rounded-xl font-black text-[10px] uppercase px-8 h-full gap-2"
+          >
+            <Bell className="h-4 w-4" /> System
+          </TabsTrigger>
+        </TabsList>
 
-        {/* --- TAB 1: ANNOUNCEMENTS --- */}
-        <TabsContent value="broadcasts" className="mt-8 space-y-6 px-2">
-          <div className="relative group max-w-2xl">
+        {/* --- 1. BROADCASTS TAB --- */}
+        <TabsContent value="broadcasts" className="space-y-6 outline-none">
+          <div className="relative group max-w-xl">
             <Search className="absolute left-5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
             <input
               placeholder="Deep search registry broadcast..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full h-14 md:h-16 pl-14 glass-surface rounded-2xl md:rounded-[2.5rem] border-0 outline-none focus:ring-4 ring-primary-700/10 font-bold dark:bg-slate-900"
+              className="w-full h-12 md:h-14 pl-12 glass-surface rounded-2xl border-0 focus:ring-4 ring-primary-700/10 font-bold dark:bg-slate-900"
             />
           </div>
 
@@ -293,96 +299,114 @@ export default function CommunicationTerminalClient({
             variants={kContainer}
             initial="hidden"
             animate="show"
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6"
           >
-            {announcements.map((ann: any) => (
-              <motion.div
-                key={ann.id}
-                variants={kItem}
-                className="institutional-card glass-surface p-8 md:p-10 flex flex-col justify-between min-h-[350px] relative overflow-hidden group"
-              >
-                <div className="space-y-4 relative z-10">
-                  <div className="flex justify-between items-start">
-                    <Badge className="bg-primary-700/10 text-primary-700 border-0 font-black text-[8px] uppercase tracking-widest px-3 py-1 rounded-lg">
-                      {ann.type}
-                    </Badge>
-                    <div className="flex gap-1">
-                      <Button
-                        onClick={() =>
-                          toggleAnnouncementLive(ann.id, !ann.isPublished)
-                        }
-                        variant="ghost"
-                        size="icon"
-                        className="h-9 w-9 rounded-xl bg-white dark:bg-slate-800 shadow-sm border border-slate-100"
-                      >
-                        {ann.isPublished ? (
-                          <Eye className="h-4 w-4 text-emerald-500" />
-                        ) : (
-                          <EyeOff className="h-4 w-4 text-slate-300" />
-                        )}
-                      </Button>
-                      <Button
-                        onClick={() => deleteAnnouncement(ann.id)}
-                        variant="ghost"
-                        size="icon"
-                        className="h-9 w-9 rounded-xl bg-rose-50 text-rose-500 border border-rose-100"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
+            {announcements
+              .filter((a: any) =>
+                a.title.toLowerCase().includes(search.toLowerCase()),
+              )
+              .map((ann: any) => (
+                <motion.div
+                  key={ann.id}
+                  variants={kItem}
+                  className="institutional-card glass-surface p-6 md:p-8 flex flex-col justify-between min-h-[320px] relative overflow-hidden group"
+                >
+                  <div className="space-y-4 relative z-10">
+                    <div className="flex justify-between items-start">
+                      <Badge className="bg-primary-700/10 text-primary-700 border-0 font-black text-[8px] uppercase tracking-[0.2em]">
+                        {ann.type}
+                      </Badge>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8 rounded-full hover:bg-white"
+                          >
+                            <MoreVertical className="h-4 w-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent
+                          align="end"
+                          className="rounded-2xl p-2 border-0 shadow-royal"
+                        >
+                          <DropdownMenuItem
+                            onClick={() =>
+                              toggleAnnouncementLive(ann.id, !ann.isPublished)
+                            }
+                            className="rounded-xl py-3 font-bold text-xs gap-2"
+                          >
+                            {ann.isPublished ? (
+                              <>
+                                <EyeOff className="h-4 w-4" /> Hide
+                              </>
+                            ) : (
+                              <>
+                                <Eye className="h-4 w-4" /> Publish
+                              </>
+                            )}
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() => deleteAnnouncement(ann.id)}
+                            className="rounded-xl py-3 font-bold text-rose-500 gap-2"
+                          >
+                            <Trash2 className="h-4 w-4" /> Decommission
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
                     </div>
-                  </div>
-                  <h3 className="text-2xl font-black text-slate-900 dark:text-white leading-tight tracking-tight">
-                    {ann.title}
-                  </h3>
-                  <p className="text-sm font-medium text-slate-500 leading-relaxed line-clamp-4">
-                    {ann.content}
-                  </p>
-                </div>
-                <div className="pt-6 border-t dark:border-slate-800 flex justify-between items-center relative z-10">
-                  <div className="flex items-center gap-3">
-                    <Avatar className="h-8 w-8 border-2 border-primary-50">
-                      <AvatarImage src={ann.createdBy.image} />
-                    </Avatar>
-                    <p className="text-[10px] font-black uppercase text-slate-400">
-                      {ann.createdBy.name}
+                    <h3 className="text-xl md:text-2xl font-black dark:text-white leading-tight tracking-tight">
+                      {ann.title}
+                    </h3>
+                    <p className="text-sm font-medium text-slate-500 leading-relaxed line-clamp-4">
+                      {ann.content}
                     </p>
                   </div>
-                  <span className="text-[9px] font-black text-primary-700 uppercase tracking-widest">
-                    {new Date(ann.createdAt).toLocaleDateString()}
-                  </span>
-                </div>
-              </motion.div>
-            ))}
+                  <div className="pt-6 border-t dark:border-slate-800 flex justify-between items-center relative z-10">
+                    <div className="flex items-center gap-2">
+                      <Avatar className="h-6 w-6 border border-primary-50">
+                        <AvatarImage src={ann.createdBy.image} />
+                      </Avatar>
+                      <span className="text-[10px] font-black uppercase text-slate-400">
+                        {ann.createdBy.name}
+                      </span>
+                    </div>
+                    <span className="text-[8px] font-bold text-slate-300 uppercase">
+                      {new Date(ann.createdAt).toLocaleDateString()}
+                    </span>
+                  </div>
+                </motion.div>
+              ))}
           </motion.div>
         </TabsContent>
 
-        {/* --- TAB 2: DIRECT MESSAGING (CHAT UI) --- */}
-        <TabsContent value="direct" className="mt-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 h-[70vh] lg:h-[80vh]">
-            {/* Sidebar: Mobile horizontal list, Desktop vertical sidebar */}
-            <div className="lg:col-span-4 flex flex-row lg:flex-col gap-3 overflow-x-auto lg:overflow-y-auto no-scrollbar pb-2 lg:pb-0 px-2 lg:px-0">
+        {/* --- 2. DIRECT MESSAGING TAB --- */}
+        <TabsContent value="direct" className="space-y-6 outline-none">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 h-[75vh]">
+            {/* Sidebar Nodes */}
+            <div className="lg:col-span-4 flex flex-row lg:flex-col gap-2 overflow-x-auto lg:overflow-y-auto no-scrollbar pb-2 lg:pb-0">
               {messages.map((msg: any) => (
                 <button
                   key={msg.id}
                   onClick={() => handleSelectThread(msg)}
-                  className={`p-4 md:p-6 rounded-[2rem] lg:rounded-[2.5rem] transition-all border-2 shrink-0 w-64 lg:w-full flex items-center gap-4 text-left ${
+                  className={`p-4 rounded-2xl lg:rounded-3xl transition-all border-2 shrink-0 w-64 lg:w-full flex items-center gap-4 text-left ${
                     selectedThreadId === msg.id
                       ? "bg-primary-700 border-primary-700 text-white shadow-royal scale-[1.02]"
                       : "glass-surface border-transparent hover:bg-slate-50"
                   }`}
                 >
                   <div className="relative">
-                    <Avatar className="h-12 w-12 border-2 border-white/20">
+                    <Avatar className="h-10 w-10 border-2 border-white/20">
                       <AvatarImage src={msg.sender.image} />
                     </Avatar>
                     {!msg.isRead && (
-                      <div className="absolute -top-1 -right-1 h-4 w-4 bg-rose-500 rounded-full border-2 border-white animate-bounce" />
+                      <div className="absolute -top-1 -right-1 h-3.5 w-3.5 bg-rose-500 rounded-full border-2 border-white animate-bounce" />
                     )}
                   </div>
                   <div className="truncate">
-                    <p className="font-black text-sm">{msg.sender.name}</p>
+                    <p className="font-black text-xs">{msg.sender.name}</p>
                     <p
-                      className={`text-[10px] truncate opacity-60 ${selectedThreadId === msg.id ? "text-white" : "text-slate-500"}`}
+                      className={`text-[9px] truncate opacity-60 ${selectedThreadId === msg.id ? "text-white" : "text-slate-500"}`}
                     >
                       {msg.content}
                     </p>
@@ -391,8 +415,8 @@ export default function CommunicationTerminalClient({
               ))}
             </div>
 
-            {/* Chat Terminal Area */}
-            <div className="lg:col-span-8 institutional-card glass-surface flex flex-col h-full relative overflow-hidden">
+            {/* Chat Matrix */}
+            <div className="lg:col-span-8 institutional-card glass-surface flex flex-col h-full overflow-hidden">
               <AnimatePresence mode="wait">
                 {selectedThreadId ? (
                   <motion.div
@@ -400,10 +424,9 @@ export default function CommunicationTerminalClient({
                     animate={{ opacity: 1 }}
                     className="flex-1 flex flex-col h-full"
                   >
-                    {/* Thread Header */}
-                    <div className="p-6 md:p-8 border-b dark:border-slate-800 flex justify-between items-center bg-slate-50/50 dark:bg-slate-900/50 backdrop-blur-md">
+                    <div className="p-4 md:p-6 border-b dark:border-slate-800 flex justify-between items-center bg-white/50 dark:bg-slate-900/50">
                       <div className="flex items-center gap-4">
-                        <Avatar className="h-12 w-12 border-4 border-white">
+                        <Avatar className="h-10 w-10 border-2 border-white">
                           <AvatarImage
                             src={
                               messages.find(
@@ -413,16 +436,16 @@ export default function CommunicationTerminalClient({
                           />
                         </Avatar>
                         <div>
-                          <h3 className="text-xl font-black text-slate-900 dark:text-white leading-none">
+                          <h3 className="text-sm font-black dark:text-white leading-none">
                             {
                               messages.find(
                                 (m: any) => m.id === selectedThreadId,
                               )?.sender.name
                             }
                           </h3>
-                          <p className="text-[10px] font-black uppercase text-emerald-500 tracking-widest mt-1.5 flex items-center gap-1">
-                            <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />{" "}
-                            Active Node
+                          <p className="text-[9px] font-black uppercase text-emerald-500 tracking-widest mt-1 flex items-center gap-1">
+                            <div className="h-1 w-1 rounded-full bg-emerald-500 animate-pulse" />{" "}
+                            Live node
                           </p>
                         </div>
                       </div>
@@ -430,20 +453,19 @@ export default function CommunicationTerminalClient({
                         variant="ghost"
                         size="icon"
                         onClick={() => deleteMessageNode(selectedThreadId)}
-                        className="text-rose-500 hover:bg-rose-50"
+                        className="text-rose-500 h-10 w-10 rounded-xl hover:bg-rose-50"
                       >
-                        <Trash2 className="h-5 w-5" />
+                        <Trash2 size={18} />
                       </Button>
                     </div>
 
-                    {/* Messages Feed */}
                     <div
                       ref={scrollRef}
-                      className="flex-1 overflow-y-auto p-6 md:p-10 space-y-6 no-scrollbar bg-white/30 dark:bg-black/20"
+                      className="flex-1 overflow-y-auto p-4 md:p-8 space-y-6 no-scrollbar bg-slate-50/20 dark:bg-black/10"
                     >
                       {isHistoryLoading ? (
                         <div className="flex justify-center py-20">
-                          <Loader2 className="animate-spin h-10 w-10 text-primary-700" />
+                          <Loader2 className="animate-spin text-primary-700" />
                         </div>
                       ) : (
                         currentThreadHistory.map((h: any) => (
@@ -451,13 +473,13 @@ export default function CommunicationTerminalClient({
                             key={h.id}
                             initial={{
                               opacity: 0,
-                              x: h.senderId === currentUser.id ? 20 : -20,
+                              x: h.senderId === currentUser.id ? 10 : -10,
                             }}
                             animate={{ opacity: 1, x: 0 }}
                             className={`flex ${h.senderId === currentUser.id ? "justify-end" : "justify-start"}`}
                           >
                             <div
-                              className={`max-w-[85%] md:max-w-[70%] p-5 md:p-6 rounded-[2rem] shadow-sm ${
+                              className={`max-w-[85%] md:max-w-[70%] p-4 rounded-2xl shadow-sm ${
                                 h.senderId === currentUser.id
                                   ? "bg-primary-700 text-white rounded-br-none"
                                   : "bg-white dark:bg-slate-800 border dark:border-slate-700 rounded-bl-none"
@@ -467,9 +489,8 @@ export default function CommunicationTerminalClient({
                                 {h.content}
                               </p>
                               <div
-                                className={`mt-2 flex items-center gap-2 text-[8px] font-black uppercase opacity-40 ${h.senderId === currentUser.id ? "justify-end" : "justify-start"}`}
+                                className={`mt-2 text-[8px] font-black uppercase opacity-40 ${h.senderId === currentUser.id ? "text-right" : "text-left"}`}
                               >
-                                <Clock className="h-2 w-2" />{" "}
                                 {new Date(h.createdAt).toLocaleTimeString([], {
                                   hour: "2-digit",
                                   minute: "2-digit",
@@ -481,309 +502,206 @@ export default function CommunicationTerminalClient({
                       )}
                     </div>
 
-                    {/* Input Protocol */}
-                    <div className="p-6 md:p-8 border-t dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 backdrop-blur-xl">
-                      <div className="flex gap-3 items-center">
+                    <div className="p-4 md:p-6 border-t dark:border-slate-800 bg-white dark:bg-slate-900">
+                      <div className="flex gap-2">
                         <Input
-                          placeholder="Synchronize response payload..."
+                          placeholder="Synchronize response..."
                           value={replyContent}
                           onChange={(e) => setReplyContent(e.target.value)}
-                          className="h-16 rounded-[1.5rem] glass-surface border-0 px-8 font-bold text-base focus:ring-4 ring-primary-700/10"
+                          className="h-14 rounded-xl glass-surface border-0 px-6 font-bold"
                           onKeyDown={(e) => e.key === "Enter" && onSendReply()}
                         />
                         <Button
                           onClick={onSendReply}
                           disabled={isPending || !replyContent}
-                          className="h-16 w-16 md:w-24 rounded-[1.5rem] bg-primary-700 text-white shadow-royal active:scale-90 transition-all"
+                          className="h-14 w-14 rounded-xl bg-primary-700 text-white shadow-xl active:scale-90 transition-all shrink-0"
                         >
                           {isPending ? (
                             <Loader2 className="animate-spin" />
                           ) : (
-                            <Send className="h-6 w-6" />
+                            <Send size={20} />
                           )}
                         </Button>
                       </div>
                     </div>
                   </motion.div>
                 ) : (
-                  <div className="flex-1 flex flex-col items-center justify-center space-y-6 opacity-30">
-                    <div className="p-10 rounded-full bg-slate-100 dark:bg-slate-800 animate-pulse">
-                      <Inbox size={64} />
+                  <div className="flex-1 flex flex-col items-center justify-center opacity-30">
+                    <div className="p-10 rounded-full bg-slate-100 dark:bg-slate-800 mb-4 animate-pulse">
+                      <Inbox size={48} />
                     </div>
-                    <div className="text-center">
-                      <p className="font-black text-lg uppercase tracking-widest">
-                        Identify Message Node
-                      </p>
-                      <p className="text-xs font-bold uppercase mt-1">
-                        Select a thread to begin synchronization
-                      </p>
-                    </div>
+                    <p className="font-black uppercase tracking-widest text-[10px]">
+                      Identify Node to Synchronize
+                    </p>
                   </div>
                 )}
               </AnimatePresence>
             </div>
           </div>
         </TabsContent>
-
-        {/* --- TAB 3: SYSTEM NOTIFICATIONS (ALERTS) --- */}
-        <TabsContent value="alerts" className="mt-8 space-y-6 px-2">
-          <div className="flex justify-between items-center mb-4">
-            <h3 className="text-xs font-black uppercase tracking-widest text-slate-400">
-              Node Activity Feed
-            </h3>
-            <Button
-              onClick={() => purgeNotificationNodes()}
-              variant="ghost"
-              className="text-rose-500 font-black text-[10px] uppercase gap-2 hover:bg-rose-50 transition-all"
-            >
-              <RefreshCcw className="h-3 w-3" /> Purge Read Nodes
-            </Button>
-          </div>
-          <div className="grid gap-3">
-            {/* Mapping of System Notifications would go here */}
-            <div className="p-6 institutional-card glass-surface border-primary-100 border-l-8 border-l-primary-700 flex items-center justify-between group cursor-default">
-              <div className="flex items-center gap-4">
-                <div className="h-12 w-12 rounded-2xl bg-primary-50 dark:bg-primary-900/30 flex items-center justify-center text-primary-700">
-                  <Bell />
-                </div>
-                <div>
-                  <p className="font-black text-slate-900 dark:text-white">
-                    New Enrollment Protocol Initiated
-                  </p>
-                  <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
-                    Source: Registration Node 402 • Just now
-                  </p>
-                </div>
-              </div>
-              <Button
-                variant="ghost"
-                size="icon"
-                className="opacity-0 group-hover:opacity-100"
-              >
-                <ChevronRight />
-              </Button>
-            </div>
-          </div>
-        </TabsContent>
       </Tabs>
 
-      {/* --- BROADCAST DEPLOYMENT DIALOG --- */}
-      <Dialog
-        open={isAddAnnouncementOpen}
-        onOpenChange={setIsAddAnnouncementOpen}
-      >
-        <DialogContent className="max-w-2xl w-full h-[100dvh] md:h-auto md:max-h-[90vh] rounded-none md:rounded-[4rem] p-8 md:p-16 dark:bg-slate-950 border-0 shadow-royal overflow-y-auto no-scrollbar">
-          <DialogHeader className="mb-10 text-left">
-            <div className="flex justify-between items-start md:block">
-              <DialogTitle className="text-4xl md:text-6xl font-black tracking-tighter leading-none">
-                Deploy <span className="text-primary-700">Broadcast</span>
-              </DialogTitle>
-              <Button
-                variant="ghost"
-                onClick={() => setIsAddAnnouncementOpen(false)}
-                className="md:hidden h-12 w-12 rounded-full bg-slate-100 dark:bg-slate-900"
-              >
-                <X />
-              </Button>
-            </div>
-            <DialogDescription className="font-bold text-slate-400 uppercase text-[10px] tracking-widest pt-2">
-              Global Institutional Communication Node
-            </DialogDescription>
-          </DialogHeader>
-
-          <form
-            onSubmit={onDeployAnnouncement}
-            className="space-y-8 md:space-y-12"
+      {/* --- OVERLAYS (MOBILE FULL SCREEN ADAPTIVE) --- */}
+      <AnimatePresence>
+        {activeModal === "BROADCAST" && (
+          <Modal
+            title="Broadcast Transmission"
+            close={() => setActiveModal(null)}
           >
-            <div className="space-y-2">
-              <Label className="text-[10px] font-black uppercase text-slate-400 ml-6">
-                Transmission Header
-              </Label>
-              <Input
-                name="title"
-                required
-                className="h-16 rounded-[1.5rem] md:rounded-[2.5rem] glass-surface border-0 px-10 font-black text-xl"
-                placeholder="Eid-ul-Fitr Break Announcement"
-              />
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <form onSubmit={onDeployBroadcast} className="space-y-6">
               <div className="space-y-2">
-                <Label className="text-[10px] font-black uppercase text-slate-400 ml-6">
-                  Priority Scale
+                <Label className="text-[10px] font-black uppercase text-slate-400 ml-4">
+                  Header
                 </Label>
-                <Select name="priority" defaultValue="NORMAL">
-                  <SelectTrigger className="h-16 rounded-2xl bg-slate-100 dark:bg-slate-900 border-0 font-bold px-8 text-base">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent className="rounded-2xl shadow-2xl">
-                    <SelectItem value="NORMAL" className="font-bold">
-                      NORMAL Node
-                    </SelectItem>
-                    <SelectItem
-                      value="URGENT"
-                      className="font-bold text-rose-500 uppercase"
-                    >
-                      URGENT Dispatch
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
+                <Input
+                  name="title"
+                  required
+                  className="h-14 rounded-xl glass-surface border-0 px-6 font-bold"
+                  placeholder="Eid-ul-Fitr Protocol"
+                />
               </div>
-              <div className="space-y-2">
-                <Label className="text-[10px] font-black uppercase text-slate-400 ml-6">
-                  Classification
-                </Label>
-                <Select name="type" defaultValue="GENERAL">
-                  <SelectTrigger className="h-16 rounded-2xl bg-slate-100 dark:bg-slate-900 border-0 font-bold px-8 text-base">
-                    <SelectValue />
-                  </SelectTrigger>
-                  <SelectContent className="rounded-2xl shadow-2xl">
-                    <SelectItem value="GENERAL" className="font-bold">
-                      GENERAL Handshake
-                    </SelectItem>
-                    <SelectItem value="ACADEMIC" className="font-bold">
-                      ACADEMIC Hub
-                    </SelectItem>
-                    <SelectItem
-                      value="HOLIDAY"
-                      className="font-bold text-indigo-500"
-                    >
-                      HOLIDAY Protocol
-                    </SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-            </div>
-            <div className="space-y-2">
-              <Label className="text-[10px] font-black uppercase text-slate-400 ml-6">
-                Payload Content
-              </Label>
-              <Textarea
-                name="content"
-                required
-                className="rounded-[3rem] bg-slate-100 dark:bg-slate-900 border-0 p-10 min-h-[250px] font-medium text-lg"
-                placeholder="Enter transmission body here..."
-              />
-            </div>
-            <Button
-              type="submit"
-              disabled={isPending}
-              className="w-full h-24 rounded-[3.5rem] bg-primary-700 text-white font-black text-xl shadow-royal transition-all active:scale-95 group"
-            >
-              {isPending ? (
-                <Loader2 className="animate-spin h-8 w-8" />
-              ) : (
-                <span className="flex items-center gap-4">
-                  INITIALIZE TRANSMISSION{" "}
-                  <ArrowUpRight className="h-8 w-8 group-hover:translate-x-2 group-hover:-translate-y-2 transition-transform" />
-                </span>
-              )}
-            </Button>
-          </form>
-        </DialogContent>
-      </Dialog>
-
-      {/* --- NODE DISCOVERY / NEW MESSAGE DIALOG --- */}
-      <Dialog open={isDiscoveryOpen} onOpenChange={setIsDiscoveryOpen}>
-        <DialogContent className="max-w-xl w-full h-[100dvh] md:h-auto md:max-h-[85vh] rounded-none md:rounded-[3rem] p-0 dark:bg-slate-950 border-0 shadow-royal overflow-hidden flex flex-col">
-          <DialogHeader className="p-8 border-b dark:border-slate-800">
-            <div className="flex justify-between items-center mb-6">
-              <DialogTitle className="text-3xl font-black tracking-tighter">
-                Node <span className="text-primary-700">Discovery</span>
-              </DialogTitle>
-              <Button
-                variant="ghost"
-                onClick={() => setIsDiscoveryOpen(false)}
-                className="rounded-full"
-              >
-                <X />
-              </Button>
-            </div>
-            <div className="relative">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
-              <input
-                placeholder="Search by name, role, or identity..."
-                value={discoverySearch}
-                onChange={(e) => setDiscoverySearch(e.target.value)}
-                className="w-full h-12 pl-12 glass-surface rounded-xl border-0 font-bold text-sm outline-none focus:ring-2 ring-primary-500"
-              />
-            </div>
-          </DialogHeader>
-
-          <div className="flex-1 overflow-y-auto p-4 space-y-2 no-scrollbar bg-slate-50/50 dark:bg-black/20">
-            {users
-              .filter((u: any) =>
-                u.name.toLowerCase().includes(discoverySearch.toLowerCase()),
-              )
-              .map((u: any) => (
-                <div
-                  key={u.id}
-                  onClick={() => setDiscoveredUser(u)}
-                  className={`p-4 rounded-2xl cursor-pointer transition-all flex items-center justify-between border-2 ${
-                    discoveredUser?.id === u.id
-                      ? "bg-primary-700/10 border-primary-700"
-                      : "hover:bg-white dark:hover:bg-slate-900 border-transparent"
-                  }`}
-                >
-                  <div className="flex items-center gap-4">
-                    <Avatar className="h-10 w-10 border-2 border-white">
-                      <AvatarImage src={u.image} />
-                    </Avatar>
-                    <div>
-                      <p className="text-sm font-black dark:text-white">
-                        {u.name}
-                      </p>
-                      <Badge
-                        variant="outline"
-                        className="text-[8px] font-black uppercase opacity-60 px-2"
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label className="text-[10px] font-black uppercase text-slate-400 ml-4">
+                    Priority
+                  </Label>
+                  <Select name="priority" defaultValue="NORMAL">
+                    <SelectTrigger className="h-14 rounded-xl bg-slate-100 dark:bg-slate-800 border-0 font-bold px-6">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent className="rounded-xl">
+                      <SelectItem value="NORMAL" className="font-bold">
+                        NORMAL
+                      </SelectItem>
+                      <SelectItem
+                        value="URGENT"
+                        className="font-bold text-rose-500 uppercase"
                       >
-                        {u.role}
-                      </Badge>
-                    </div>
-                  </div>
-                  {discoveredUser?.id === u.id && (
-                    <CheckCircle2 className="h-5 w-5 text-primary-700" />
-                  )}
+                        URGENT
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
                 </div>
-              ))}
-          </div>
-
-          {discoveredUser && (
-            <div className="p-8 bg-white dark:bg-slate-900 border-t dark:border-slate-800 animate-in slide-in-from-bottom-4">
-              <div className="space-y-4">
-                <Label className="text-[10px] font-black uppercase text-slate-400 ml-2">
-                  Initial Payload to {discoveredUser.name}
+                <div className="space-y-2">
+                  <Label className="text-[10px] font-black uppercase text-slate-400 ml-4">
+                    Type
+                  </Label>
+                  <Select name="type" defaultValue="GENERAL">
+                    <SelectTrigger className="h-14 rounded-xl bg-slate-100 dark:bg-slate-800 border-0 font-bold px-6">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent className="rounded-xl">
+                      <SelectItem value="GENERAL" className="font-bold">
+                        GENERAL
+                      </SelectItem>
+                      <SelectItem value="ACADEMIC" className="font-bold">
+                        ACADEMIC
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+              <div className="space-y-2">
+                <Label className="text-[10px] font-black uppercase text-slate-400 ml-4">
+                  Payload
                 </Label>
-                <div className="flex gap-3">
+                <Textarea
+                  name="content"
+                  required
+                  className="rounded-2xl bg-slate-100 dark:bg-slate-900 border-0 p-6 min-h-[180px] font-medium"
+                />
+              </div>
+              <Button
+                type="submit"
+                disabled={isPending}
+                className="w-full h-16 rounded-[1.5rem] bg-primary-700 text-white font-black shadow-royal transition-all active:scale-95"
+              >
+                {isPending ? (
+                  <Loader2 className="animate-spin" />
+                ) : (
+                  "EXECUTE TRANSMISSION"
+                )}
+              </Button>
+            </form>
+          </Modal>
+        )}
+
+        {activeModal === "DISCOVERY" && (
+          <Modal title="Node Discovery" close={() => setActiveModal(null)}>
+            <div className="space-y-6">
+              <div className="relative">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+                <input
+                  placeholder="Search registry identities..."
+                  value={discoverySearch}
+                  onChange={(e) => setDiscoverySearch(e.target.value)}
+                  className="w-full h-12 pl-12 glass-surface rounded-xl border-0 font-bold text-sm outline-none focus:ring-2 ring-primary-500"
+                />
+              </div>
+              <div className="max-h-[40vh] overflow-y-auto no-scrollbar space-y-2">
+                {users
+                  .filter((u: any) =>
+                    u.name
+                      .toLowerCase()
+                      .includes(discoverySearch.toLowerCase()),
+                  )
+                  .map((u: any) => (
+                    <div
+                      key={u.id}
+                      onClick={() => setDiscoveredUser(u)}
+                      className={`p-4 rounded-2xl cursor-pointer transition-all flex items-center justify-between border-2 ${discoveredUser?.id === u.id ? "bg-primary-700/10 border-primary-700" : "glass-surface border-transparent"}`}
+                    >
+                      <div className="flex items-center gap-3">
+                        <Avatar className="h-10 w-10">
+                          <AvatarImage src={u.image} />
+                        </Avatar>
+                        <div>
+                          <p className="text-sm font-black dark:text-white leading-none">
+                            {u.name}
+                          </p>
+                          <p className="text-[10px] font-bold text-slate-400 uppercase mt-1">
+                            {u.role}
+                          </p>
+                        </div>
+                      </div>
+                      {discoveredUser?.id === u.id && (
+                        <CheckCircle2 className="h-5 w-5 text-primary-700" />
+                      )}
+                    </div>
+                  ))}
+              </div>
+              {discoveredUser && (
+                <motion.div
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="pt-6 border-t dark:border-slate-800 space-y-4"
+                >
                   <Input
-                    placeholder="Synchronize message..."
+                    placeholder={`Initial payload to ${discoveredUser.name}...`}
                     value={replyContent}
                     onChange={(e) => setReplyContent(e.target.value)}
                     className="h-14 rounded-xl glass-surface border-0 font-bold px-6"
                   />
                   <Button
-                    onClick={onStartNewThread}
+                    onClick={onStartNewDM}
                     disabled={isPending || !replyContent}
-                    className="h-14 w-14 rounded-xl bg-primary-700 text-white shadow-xl"
+                    className="w-full h-16 rounded-[1.5rem] bg-primary-700 text-white font-black shadow-royal active:scale-95 transition-all"
                   >
-                    {isPending ? (
-                      <Loader2 className="animate-spin" />
-                    ) : (
-                      <Send className="h-5 w-5" />
-                    )}
+                    START CONVERSATION
                   </Button>
-                </div>
-              </div>
+                </motion.div>
+              )}
             </div>
-          )}
-        </DialogContent>
-      </Dialog>
+          </Modal>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
 
 // --- SUB-COMPONENTS ---
 
-function StatBadge({ label, value, icon: Icon, color }: any) {
+function MiniStat({ label, value, icon: Icon, color }: any) {
   const styles: any = {
     rose: "bg-rose-500/10 text-rose-600 border-rose-500/20 shadow-rose-500/5",
     emerald:
@@ -793,19 +711,879 @@ function StatBadge({ label, value, icon: Icon, color }: any) {
   };
   return (
     <div
-      className={`p-4 md:p-6 rounded-[1.8rem] md:rounded-[2.5rem] border ${styles[color]} glass-surface flex items-center justify-between group transition-all hover:-translate-y-1 relative overflow-hidden`}
+      className={`p-4 rounded-[1.5rem] border ${styles[color]} glass-surface flex items-center justify-between group transition-all shrink-0 min-w-[140px] md:min-w-0`}
     >
-      <div className="space-y-1 relative z-10">
-        <p className="text-[8px] md:text-[10px] font-black uppercase text-slate-400 tracking-widest">
+      <div className="space-y-1">
+        <p className="text-[8px] font-black uppercase text-slate-400 tracking-widest">
           {label}
         </p>
-        <h4 className="text-xl md:text-3xl font-black dark:text-white leading-none tracking-tighter">
+        <h4 className="text-xl font-black dark:text-white leading-none tracking-tighter">
           {value}
         </h4>
       </div>
-      <div className="p-2.5 md:p-4 rounded-xl bg-white dark:bg-slate-900 shadow-sm border border-slate-100 dark:border-slate-800 transition-transform group-hover:rotate-12 relative z-10">
-        <Icon className="h-4 w-4 md:h-5 md:w-5" />
+      <div className="p-2 rounded-lg bg-white dark:bg-slate-900 shadow-sm border border-slate-100 dark:border-slate-800">
+        <Icon size={16} />
       </div>
     </div>
   );
 }
+
+function Modal({ children, title, close }: any) {
+  return (
+    <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center p-0 sm:p-4">
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        className="absolute inset-0 bg-slate-950/60 backdrop-blur-xl"
+        onClick={close}
+      />
+      <motion.div
+        initial={{ y: "100%" }}
+        animate={{ y: 0 }}
+        exit={{ y: "100%" }}
+        transition={{ type: "spring", damping: 30, stiffness: 300 }}
+        className="relative bg-white dark:bg-slate-950 w-full max-w-xl rounded-t-[3.5rem] sm:rounded-[3rem] shadow-2xl border-t sm:border dark:border-slate-800 overflow-hidden"
+      >
+        <div className="p-8 border-b dark:border-slate-800 flex justify-between items-center bg-slate-50/50 dark:bg-slate-900/50">
+          <h2 className="text-xl font-black tracking-tight dark:text-white">
+            {title}
+          </h2>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={close}
+            className="rounded-full h-12 w-12 text-slate-900 dark:text-white hover:bg-white dark:hover:bg-slate-800"
+          >
+            <X />
+          </Button>
+        </div>
+        <div className="p-8 pb-12 overflow-y-auto no-scrollbar max-h-[85vh]">
+          {children}
+        </div>
+      </motion.div>
+    </div>
+  );
+}
+
+
+
+
+
+
+
+
+
+
+
+// "use client";
+
+// import { useState, useTransition, useMemo, useEffect, useRef } from "react";
+// import { motion, AnimatePresence } from "framer-motion";
+// import {
+//   Send,
+//   Bell,
+//   MessageSquare,
+//   Megaphone,
+//   Plus,
+//   Search,
+//   MoreVertical,
+//   X,
+//   Loader2,
+//   Trash2,
+//   ShieldAlert,
+//   CheckCircle2,
+//   Users,
+//   GraduationCap,
+//   User,
+//   Clock,
+//   ChevronRight,
+//   ArrowUpRight,
+//   Inbox,
+//   Mail,
+//   Zap,
+//   Filter,
+//   ShieldCheck,
+//   RefreshCcw,
+//   Eye,
+//   EyeOff,
+//   UserPlus,
+//   Hash,
+//   Globe,
+// } from "lucide-react";
+
+// // Handshake with your 11 Actions
+// import {
+//   manageAnnouncement,
+//   deleteAnnouncement,
+//   sendPrivateMessage,
+//   toggleAnnouncementLive,
+//   purgeNotificationNodes,
+//   markMessageRead,
+//   deleteMessageNode,
+//   getThreadHistory,
+//   startNewConversation,
+//   replyToThread,
+// } from "@/app/actions/admin/communication/actions";
+
+// // UI System
+// import { Button } from "@/components/ui/button";
+// import { Badge } from "@/components/ui/badge";
+// import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+// import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+// import {
+//   Sheet,
+//   SheetContent,
+//   SheetHeader,
+//   SheetTitle,
+//   SheetDescription,
+// } from "@/components/ui/sheet";
+// import {
+//   Dialog,
+//   DialogContent,
+//   DialogHeader,
+//   DialogTitle,
+//   DialogDescription,
+// } from "@/components/ui/dialog";
+// import { Input } from "@/components/ui/input";
+// import { Label } from "@/components/ui/label";
+// import { Textarea } from "@/components/ui/textarea";
+// import {
+//   Select,
+//   SelectContent,
+//   SelectItem,
+//   SelectTrigger,
+//   SelectValue,
+// } from "@/components/ui/select";
+// import { Progress } from "@/components/ui/progress";
+// import { toast } from "sonner";
+
+// const kContainer = {
+//   hidden: { opacity: 0 },
+//   show: { opacity: 1, transition: { staggerChildren: 0.04 } },
+// };
+// const kItem = { hidden: { y: 20, opacity: 0 }, show: { y: 0, opacity: 1 } };
+
+// export default function CommunicationTerminalClient({
+//   initialAnnouncements,
+//   initialMessages,
+//   users,
+//   currentUser,
+// }: any) {
+//   const [isPending, startTransition] = useTransition();
+//   const [activeTab, setActiveTab] = useState("broadcasts");
+//   const scrollRef = useRef<HTMLDivElement>(null);
+
+//   // --- STATE NODES ---
+//   const [announcements, setAnnouncements] = useState(initialAnnouncements);
+//   const [messages, setMessages] = useState(initialMessages);
+//   const [search, setSearch] = useState("");
+
+//   // Direct Messaging States
+//   const [selectedThreadId, setSelectedThreadId] = useState<string | null>(null);
+//   const [currentThreadHistory, setCurrentThreadHistory] = useState<any[]>([]);
+//   const [replyContent, setReplyContent] = useState("");
+//   const [isHistoryLoading, setIsHistoryLoading] = useState(false);
+
+//   // Modal Controllers
+//   const [isAddAnnouncementOpen, setIsAddAnnouncementOpen] = useState(false);
+//   const [isDiscoveryOpen, setIsDiscoveryOpen] = useState(false);
+//   const [discoverySearch, setDiscoverySearch] = useState("");
+//   const [discoveredUser, setDiscoveredUser] = useState<any>(null);
+
+//   // --- ANALYTICS HANDSHAKE ---
+//   const stats = useMemo(
+//     () => ({
+//       announcements: announcements.filter((a: any) => a.isPublished).length,
+//       unreadMessages: messages.filter((m: any) => !m.isRead).length,
+//       totalUsers: users.length,
+//     }),
+//     [announcements, messages, users],
+//   );
+
+//   // --- AUTO-SCROLL CHAT ---
+//   useEffect(() => {
+//     if (scrollRef.current)
+//       scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+//   }, [currentThreadHistory]);
+
+//   // --- ACTION HANDLERS ---
+
+//   // 1. Fetch Thread Context
+//   const handleSelectThread = async (msg: any) => {
+//     setSelectedThreadId(msg.id);
+//     setIsHistoryLoading(true);
+//     try {
+//       const history = await getThreadHistory(msg.id);
+//       setCurrentThreadHistory(history);
+//       if (!msg.isRead) await markMessageRead(msg.id);
+//     } catch (e) {
+//       toast.error("Thread Sync Failed");
+//     } finally {
+//       setIsHistoryLoading(false);
+//     }
+//   };
+
+//   // 2. Deploy New Announcement
+//   const onDeployAnnouncement = (e: React.FormEvent<HTMLFormElement>) => {
+//     e.preventDefault();
+//     const d = Object.fromEntries(new FormData(e.currentTarget));
+//     startTransition(async () => {
+//       try {
+//         await manageAnnouncement({
+//           ...d,
+//           isPublished: "true",
+//           targetAudience: ["ALL"],
+//         });
+//         setIsAddAnnouncementOpen(false);
+//         toast.success("Broadcast Node Active");
+//       } catch (e: any) {
+//         toast.error(e.message);
+//       }
+//     });
+//   };
+
+//   // 3. Dispatch DM Reply
+//   const onSendReply = () => {
+//     if (!replyContent || !selectedThreadId) return;
+//     startTransition(async () => {
+//       try {
+//         const res = await replyToThread(selectedThreadId, replyContent);
+//         setCurrentThreadHistory((prev) => [...prev, res.message]);
+//         setReplyContent("");
+//         toast.success("Payload Delivered");
+//       } catch (e: any) {
+//         toast.error(e.message);
+//       }
+//     });
+//   };
+
+//   // 4. Identity Discovery (Start New Conversation)
+//   const onStartNewThread = () => {
+//     if (!replyContent || !discoveredUser) return;
+//     startTransition(async () => {
+//       try {
+//         const res = await startNewConversation(discoveredUser.id, replyContent);
+//         setMessages((prev) => [res.message, ...prev]);
+//         setIsDiscoveryOpen(false);
+//         setReplyContent("");
+//         setSelectedThreadId(res.message.id);
+//         setCurrentThreadHistory([res.message]);
+//         toast.success("New Handshake Established");
+//       } catch (e: any) {
+//         toast.error(e.message);
+//       }
+//     });
+//   };
+
+//   return (
+//     <div className="max-w-7xl mx-auto space-y-6 md:space-y-10 pb-40 px-2 md:px-6 mt-4 md:mt-10">
+//       {/* --- SOVEREIGN HUD --- */}
+//       <header className="flex flex-col lg:flex-row justify-between items-start lg:items-end gap-6 px-2">
+//         <div className="space-y-3">
+//           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full glass-surface border-primary-100 dark:border-primary-900/50">
+//             <Zap className="h-3 w-3 text-gold animate-pulse" />
+//             <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary-700 dark:text-primary-300">
+//               Institutional Comms Terminal
+//             </span>
+//           </div>
+//           <h1 className="text-5xl md:text-8xl font-black tracking-tighter leading-none text-slate-900 dark:text-white">
+//             Sovereign <span className="text-primary-700">Comms</span>
+//           </h1>
+//         </div>
+//         <div className="flex gap-2 w-full lg:w-auto">
+//           <Button
+//             onClick={() => setIsDiscoveryOpen(true)}
+//             variant="outline"
+//             className="flex-1 md:flex-none h-14 md:h-16 rounded-2xl border-2 font-black uppercase text-[10px] tracking-widest active:scale-95"
+//           >
+//             <UserPlus className="mr-2 h-4 w-4" /> Start New DM
+//           </Button>
+//           <Button
+//             onClick={() => setIsAddAnnouncementOpen(true)}
+//             className="flex-1 md:flex-none h-14 md:h-16 px-8 rounded-2xl bg-primary-700 text-white font-black uppercase text-[10px] shadow-royal active:scale-95"
+//           >
+//             <Megaphone className="mr-2 h-4 w-4" /> Broadcast
+//           </Button>
+//         </div>
+//       </header>
+
+//       {/* --- STATS RIBBON --- */}
+//       <div className="grid grid-cols-3 gap-3 md:gap-6 px-2">
+//         <StatBadge
+//           label="Unread DMs"
+//           value={stats.unreadMessages}
+//           color="rose"
+//           icon={MessageSquare}
+//         />
+//         <StatBadge
+//           label="Live Broadcasts"
+//           value={stats.announcements}
+//           color="purple"
+//           icon={Megaphone}
+//         />
+//         <StatBadge
+//           label="Network Nodes"
+//           value={stats.totalUsers}
+//           color="emerald"
+//           icon={Users}
+//         />
+//       </div>
+
+//       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+//         {/* MOBILE STICKY NAV */}
+//         <div className="sticky top-0 z-30 bg-slate-50/80 dark:bg-black/80 backdrop-blur-xl py-2 -mx-2 px-2">
+//           <TabsList className="bg-white dark:bg-slate-900 h-16 p-1.5 rounded-[1.5rem] border w-full md:w-fit justify-start overflow-x-auto no-scrollbar gap-2 shadow-sm">
+//             <TabsTrigger
+//               value="broadcasts"
+//               className="rounded-xl font-black text-[10px] uppercase px-10 h-full gap-2 transition-all data-[state=active]:bg-primary-700 data-[state=active]:text-white"
+//             >
+//               <Globe className="h-4 w-4" /> Global
+//             </TabsTrigger>
+//             <TabsTrigger
+//               value="direct"
+//               className="rounded-xl font-black text-[10px] uppercase px-10 h-full gap-2 transition-all data-[state=active]:bg-primary-700 data-[state=active]:text-white"
+//             >
+//               <Inbox className="h-4 w-4" /> Direct
+//             </TabsTrigger>
+//             <TabsTrigger
+//               value="alerts"
+//               className="rounded-xl font-black text-[10px] uppercase px-10 h-full gap-2 transition-all data-[state=active]:bg-primary-700 data-[state=active]:text-white"
+//             >
+//               <Bell className="h-4 w-4" /> Alerts
+//             </TabsTrigger>
+//           </TabsList>
+//         </div>
+
+//         {/* --- TAB 1: ANNOUNCEMENTS --- */}
+//         <TabsContent value="broadcasts" className="mt-8 space-y-6 px-2">
+//           <div className="relative group max-w-2xl">
+//             <Search className="absolute left-5 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+//             <input
+//               placeholder="Deep search registry broadcast..."
+//               value={search}
+//               onChange={(e) => setSearch(e.target.value)}
+//               className="w-full h-14 md:h-16 pl-14 glass-surface rounded-2xl md:rounded-[2.5rem] border-0 outline-none focus:ring-4 ring-primary-700/10 font-bold dark:bg-slate-900"
+//             />
+//           </div>
+
+//           <motion.div
+//             variants={kContainer}
+//             initial="hidden"
+//             animate="show"
+//             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+//           >
+//             {announcements.map((ann: any) => (
+//               <motion.div
+//                 key={ann.id}
+//                 variants={kItem}
+//                 className="institutional-card glass-surface p-8 md:p-10 flex flex-col justify-between min-h-[350px] relative overflow-hidden group"
+//               >
+//                 <div className="space-y-4 relative z-10">
+//                   <div className="flex justify-between items-start">
+//                     <Badge className="bg-primary-700/10 text-primary-700 border-0 font-black text-[8px] uppercase tracking-widest px-3 py-1 rounded-lg">
+//                       {ann.type}
+//                     </Badge>
+//                     <div className="flex gap-1">
+//                       <Button
+//                         onClick={() =>
+//                           toggleAnnouncementLive(ann.id, !ann.isPublished)
+//                         }
+//                         variant="ghost"
+//                         size="icon"
+//                         className="h-9 w-9 rounded-xl bg-white dark:bg-slate-800 shadow-sm border border-slate-100"
+//                       >
+//                         {ann.isPublished ? (
+//                           <Eye className="h-4 w-4 text-emerald-500" />
+//                         ) : (
+//                           <EyeOff className="h-4 w-4 text-slate-300" />
+//                         )}
+//                       </Button>
+//                       <Button
+//                         onClick={() => deleteAnnouncement(ann.id)}
+//                         variant="ghost"
+//                         size="icon"
+//                         className="h-9 w-9 rounded-xl bg-rose-50 text-rose-500 border border-rose-100"
+//                       >
+//                         <Trash2 className="h-4 w-4" />
+//                       </Button>
+//                     </div>
+//                   </div>
+//                   <h3 className="text-2xl font-black text-slate-900 dark:text-white leading-tight tracking-tight">
+//                     {ann.title}
+//                   </h3>
+//                   <p className="text-sm font-medium text-slate-500 leading-relaxed line-clamp-4">
+//                     {ann.content}
+//                   </p>
+//                 </div>
+//                 <div className="pt-6 border-t dark:border-slate-800 flex justify-between items-center relative z-10">
+//                   <div className="flex items-center gap-3">
+//                     <Avatar className="h-8 w-8 border-2 border-primary-50">
+//                       <AvatarImage src={ann.createdBy.image} />
+//                     </Avatar>
+//                     <p className="text-[10px] font-black uppercase text-slate-400">
+//                       {ann.createdBy.name}
+//                     </p>
+//                   </div>
+//                   <span className="text-[9px] font-black text-primary-700 uppercase tracking-widest">
+//                     {new Date(ann.createdAt).toLocaleDateString()}
+//                   </span>
+//                 </div>
+//               </motion.div>
+//             ))}
+//           </motion.div>
+//         </TabsContent>
+
+//         {/* --- TAB 2: DIRECT MESSAGING (CHAT UI) --- */}
+//         <TabsContent value="direct" className="mt-8">
+//           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 h-[70vh] lg:h-[80vh]">
+//             {/* Sidebar: Mobile horizontal list, Desktop vertical sidebar */}
+//             <div className="lg:col-span-4 flex flex-row lg:flex-col gap-3 overflow-x-auto lg:overflow-y-auto no-scrollbar pb-2 lg:pb-0 px-2 lg:px-0">
+//               {messages.map((msg: any) => (
+//                 <button
+//                   key={msg.id}
+//                   onClick={() => handleSelectThread(msg)}
+//                   className={`p-4 md:p-6 rounded-[2rem] lg:rounded-[2.5rem] transition-all border-2 shrink-0 w-64 lg:w-full flex items-center gap-4 text-left ${
+//                     selectedThreadId === msg.id
+//                       ? "bg-primary-700 border-primary-700 text-white shadow-royal scale-[1.02]"
+//                       : "glass-surface border-transparent hover:bg-slate-50"
+//                   }`}
+//                 >
+//                   <div className="relative">
+//                     <Avatar className="h-12 w-12 border-2 border-white/20">
+//                       <AvatarImage src={msg.sender.image} />
+//                     </Avatar>
+//                     {!msg.isRead && (
+//                       <div className="absolute -top-1 -right-1 h-4 w-4 bg-rose-500 rounded-full border-2 border-white animate-bounce" />
+//                     )}
+//                   </div>
+//                   <div className="truncate">
+//                     <p className="font-black text-sm">{msg.sender.name}</p>
+//                     <p
+//                       className={`text-[10px] truncate opacity-60 ${selectedThreadId === msg.id ? "text-white" : "text-slate-500"}`}
+//                     >
+//                       {msg.content}
+//                     </p>
+//                   </div>
+//                 </button>
+//               ))}
+//             </div>
+
+//             {/* Chat Terminal Area */}
+//             <div className="lg:col-span-8 institutional-card glass-surface flex flex-col h-full relative overflow-hidden">
+//               <AnimatePresence mode="wait">
+//                 {selectedThreadId ? (
+//                   <motion.div
+//                     initial={{ opacity: 0 }}
+//                     animate={{ opacity: 1 }}
+//                     className="flex-1 flex flex-col h-full"
+//                   >
+//                     {/* Thread Header */}
+//                     <div className="p-6 md:p-8 border-b dark:border-slate-800 flex justify-between items-center bg-slate-50/50 dark:bg-slate-900/50 backdrop-blur-md">
+//                       <div className="flex items-center gap-4">
+//                         <Avatar className="h-12 w-12 border-4 border-white">
+//                           <AvatarImage
+//                             src={
+//                               messages.find(
+//                                 (m: any) => m.id === selectedThreadId,
+//                               )?.sender.image
+//                             }
+//                           />
+//                         </Avatar>
+//                         <div>
+//                           <h3 className="text-xl font-black text-slate-900 dark:text-white leading-none">
+//                             {
+//                               messages.find(
+//                                 (m: any) => m.id === selectedThreadId,
+//                               )?.sender.name
+//                             }
+//                           </h3>
+//                           <p className="text-[10px] font-black uppercase text-emerald-500 tracking-widest mt-1.5 flex items-center gap-1">
+//                             <div className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />{" "}
+//                             Active Node
+//                           </p>
+//                         </div>
+//                       </div>
+//                       <Button
+//                         variant="ghost"
+//                         size="icon"
+//                         onClick={() => deleteMessageNode(selectedThreadId)}
+//                         className="text-rose-500 hover:bg-rose-50"
+//                       >
+//                         <Trash2 className="h-5 w-5" />
+//                       </Button>
+//                     </div>
+
+//                     {/* Messages Feed */}
+//                     <div
+//                       ref={scrollRef}
+//                       className="flex-1 overflow-y-auto p-6 md:p-10 space-y-6 no-scrollbar bg-white/30 dark:bg-black/20"
+//                     >
+//                       {isHistoryLoading ? (
+//                         <div className="flex justify-center py-20">
+//                           <Loader2 className="animate-spin h-10 w-10 text-primary-700" />
+//                         </div>
+//                       ) : (
+//                         currentThreadHistory.map((h: any) => (
+//                           <motion.div
+//                             key={h.id}
+//                             initial={{
+//                               opacity: 0,
+//                               x: h.senderId === currentUser.id ? 20 : -20,
+//                             }}
+//                             animate={{ opacity: 1, x: 0 }}
+//                             className={`flex ${h.senderId === currentUser.id ? "justify-end" : "justify-start"}`}
+//                           >
+//                             <div
+//                               className={`max-w-[85%] md:max-w-[70%] p-5 md:p-6 rounded-[2rem] shadow-sm ${
+//                                 h.senderId === currentUser.id
+//                                   ? "bg-primary-700 text-white rounded-br-none"
+//                                   : "bg-white dark:bg-slate-800 border dark:border-slate-700 rounded-bl-none"
+//                               }`}
+//                             >
+//                               <p className="text-sm font-medium leading-relaxed">
+//                                 {h.content}
+//                               </p>
+//                               <div
+//                                 className={`mt-2 flex items-center gap-2 text-[8px] font-black uppercase opacity-40 ${h.senderId === currentUser.id ? "justify-end" : "justify-start"}`}
+//                               >
+//                                 <Clock className="h-2 w-2" />{" "}
+//                                 {new Date(h.createdAt).toLocaleTimeString([], {
+//                                   hour: "2-digit",
+//                                   minute: "2-digit",
+//                                 })}
+//                               </div>
+//                             </div>
+//                           </motion.div>
+//                         ))
+//                       )}
+//                     </div>
+
+//                     {/* Input Protocol */}
+//                     <div className="p-6 md:p-8 border-t dark:border-slate-800 bg-white/50 dark:bg-slate-900/50 backdrop-blur-xl">
+//                       <div className="flex gap-3 items-center">
+//                         <Input
+//                           placeholder="Synchronize response payload..."
+//                           value={replyContent}
+//                           onChange={(e) => setReplyContent(e.target.value)}
+//                           className="h-16 rounded-[1.5rem] glass-surface border-0 px-8 font-bold text-base focus:ring-4 ring-primary-700/10"
+//                           onKeyDown={(e) => e.key === "Enter" && onSendReply()}
+//                         />
+//                         <Button
+//                           onClick={onSendReply}
+//                           disabled={isPending || !replyContent}
+//                           className="h-16 w-16 md:w-24 rounded-[1.5rem] bg-primary-700 text-white shadow-royal active:scale-90 transition-all"
+//                         >
+//                           {isPending ? (
+//                             <Loader2 className="animate-spin" />
+//                           ) : (
+//                             <Send className="h-6 w-6" />
+//                           )}
+//                         </Button>
+//                       </div>
+//                     </div>
+//                   </motion.div>
+//                 ) : (
+//                   <div className="flex-1 flex flex-col items-center justify-center space-y-6 opacity-30">
+//                     <div className="p-10 rounded-full bg-slate-100 dark:bg-slate-800 animate-pulse">
+//                       <Inbox size={64} />
+//                     </div>
+//                     <div className="text-center">
+//                       <p className="font-black text-lg uppercase tracking-widest">
+//                         Identify Message Node
+//                       </p>
+//                       <p className="text-xs font-bold uppercase mt-1">
+//                         Select a thread to begin synchronization
+//                       </p>
+//                     </div>
+//                   </div>
+//                 )}
+//               </AnimatePresence>
+//             </div>
+//           </div>
+//         </TabsContent>
+
+//         {/* --- TAB 3: SYSTEM NOTIFICATIONS (ALERTS) --- */}
+//         <TabsContent value="alerts" className="mt-8 space-y-6 px-2">
+//           <div className="flex justify-between items-center mb-4">
+//             <h3 className="text-xs font-black uppercase tracking-widest text-slate-400">
+//               Node Activity Feed
+//             </h3>
+//             <Button
+//               onClick={() => purgeNotificationNodes()}
+//               variant="ghost"
+//               className="text-rose-500 font-black text-[10px] uppercase gap-2 hover:bg-rose-50 transition-all"
+//             >
+//               <RefreshCcw className="h-3 w-3" /> Purge Read Nodes
+//             </Button>
+//           </div>
+//           <div className="grid gap-3">
+//             {/* Mapping of System Notifications would go here */}
+//             <div className="p-6 institutional-card glass-surface border-primary-100 border-l-8 border-l-primary-700 flex items-center justify-between group cursor-default">
+//               <div className="flex items-center gap-4">
+//                 <div className="h-12 w-12 rounded-2xl bg-primary-50 dark:bg-primary-900/30 flex items-center justify-center text-primary-700">
+//                   <Bell />
+//                 </div>
+//                 <div>
+//                   <p className="font-black text-slate-900 dark:text-white">
+//                     New Enrollment Protocol Initiated
+//                   </p>
+//                   <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+//                     Source: Registration Node 402 • Just now
+//                   </p>
+//                 </div>
+//               </div>
+//               <Button
+//                 variant="ghost"
+//                 size="icon"
+//                 className="opacity-0 group-hover:opacity-100"
+//               >
+//                 <ChevronRight />
+//               </Button>
+//             </div>
+//           </div>
+//         </TabsContent>
+//       </Tabs>
+
+//       {/* --- BROADCAST DEPLOYMENT DIALOG --- */}
+//       <Dialog
+//         open={isAddAnnouncementOpen}
+//         onOpenChange={setIsAddAnnouncementOpen}
+//       >
+//         <DialogContent className="max-w-2xl w-full h-[100dvh] md:h-auto md:max-h-[90vh] rounded-none md:rounded-[4rem] p-8 md:p-16 dark:bg-slate-950 border-0 shadow-royal overflow-y-auto no-scrollbar">
+//           <DialogHeader className="mb-10 text-left">
+//             <div className="flex justify-between items-start md:block">
+//               <DialogTitle className="text-4xl md:text-6xl font-black tracking-tighter leading-none">
+//                 Deploy <span className="text-primary-700">Broadcast</span>
+//               </DialogTitle>
+//               <Button
+//                 variant="ghost"
+//                 onClick={() => setIsAddAnnouncementOpen(false)}
+//                 className="md:hidden h-12 w-12 rounded-full bg-slate-100 dark:bg-slate-900"
+//               >
+//                 <X />
+//               </Button>
+//             </div>
+//             <DialogDescription className="font-bold text-slate-400 uppercase text-[10px] tracking-widest pt-2">
+//               Global Institutional Communication Node
+//             </DialogDescription>
+//           </DialogHeader>
+
+//           <form
+//             onSubmit={onDeployAnnouncement}
+//             className="space-y-8 md:space-y-12"
+//           >
+//             <div className="space-y-2">
+//               <Label className="text-[10px] font-black uppercase text-slate-400 ml-6">
+//                 Transmission Header
+//               </Label>
+//               <Input
+//                 name="title"
+//                 required
+//                 className="h-16 rounded-[1.5rem] md:rounded-[2.5rem] glass-surface border-0 px-10 font-black text-xl"
+//                 placeholder="Eid-ul-Fitr Break Announcement"
+//               />
+//             </div>
+//             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+//               <div className="space-y-2">
+//                 <Label className="text-[10px] font-black uppercase text-slate-400 ml-6">
+//                   Priority Scale
+//                 </Label>
+//                 <Select name="priority" defaultValue="NORMAL">
+//                   <SelectTrigger className="h-16 rounded-2xl bg-slate-100 dark:bg-slate-900 border-0 font-bold px-8 text-base">
+//                     <SelectValue />
+//                   </SelectTrigger>
+//                   <SelectContent className="rounded-2xl shadow-2xl">
+//                     <SelectItem value="NORMAL" className="font-bold">
+//                       NORMAL Node
+//                     </SelectItem>
+//                     <SelectItem
+//                       value="URGENT"
+//                       className="font-bold text-rose-500 uppercase"
+//                     >
+//                       URGENT Dispatch
+//                     </SelectItem>
+//                   </SelectContent>
+//                 </Select>
+//               </div>
+//               <div className="space-y-2">
+//                 <Label className="text-[10px] font-black uppercase text-slate-400 ml-6">
+//                   Classification
+//                 </Label>
+//                 <Select name="type" defaultValue="GENERAL">
+//                   <SelectTrigger className="h-16 rounded-2xl bg-slate-100 dark:bg-slate-900 border-0 font-bold px-8 text-base">
+//                     <SelectValue />
+//                   </SelectTrigger>
+//                   <SelectContent className="rounded-2xl shadow-2xl">
+//                     <SelectItem value="GENERAL" className="font-bold">
+//                       GENERAL Handshake
+//                     </SelectItem>
+//                     <SelectItem value="ACADEMIC" className="font-bold">
+//                       ACADEMIC Hub
+//                     </SelectItem>
+//                     <SelectItem
+//                       value="HOLIDAY"
+//                       className="font-bold text-indigo-500"
+//                     >
+//                       HOLIDAY Protocol
+//                     </SelectItem>
+//                   </SelectContent>
+//                 </Select>
+//               </div>
+//             </div>
+//             <div className="space-y-2">
+//               <Label className="text-[10px] font-black uppercase text-slate-400 ml-6">
+//                 Payload Content
+//               </Label>
+//               <Textarea
+//                 name="content"
+//                 required
+//                 className="rounded-[3rem] bg-slate-100 dark:bg-slate-900 border-0 p-10 min-h-[250px] font-medium text-lg"
+//                 placeholder="Enter transmission body here..."
+//               />
+//             </div>
+//             <Button
+//               type="submit"
+//               disabled={isPending}
+//               className="w-full h-24 rounded-[3.5rem] bg-primary-700 text-white font-black text-xl shadow-royal transition-all active:scale-95 group"
+//             >
+//               {isPending ? (
+//                 <Loader2 className="animate-spin h-8 w-8" />
+//               ) : (
+//                 <span className="flex items-center gap-4">
+//                   INITIALIZE TRANSMISSION{" "}
+//                   <ArrowUpRight className="h-8 w-8 group-hover:translate-x-2 group-hover:-translate-y-2 transition-transform" />
+//                 </span>
+//               )}
+//             </Button>
+//           </form>
+//         </DialogContent>
+//       </Dialog>
+
+//       {/* --- NODE DISCOVERY / NEW MESSAGE DIALOG --- */}
+//       <Dialog open={isDiscoveryOpen} onOpenChange={setIsDiscoveryOpen}>
+//         <DialogContent className="max-w-xl w-full h-[100dvh] md:h-auto md:max-h-[85vh] rounded-none md:rounded-[3rem] p-0 dark:bg-slate-950 border-0 shadow-royal overflow-hidden flex flex-col">
+//           <DialogHeader className="p-8 border-b dark:border-slate-800">
+//             <div className="flex justify-between items-center mb-6">
+//               <DialogTitle className="text-3xl font-black tracking-tighter">
+//                 Node <span className="text-primary-700">Discovery</span>
+//               </DialogTitle>
+//               <Button
+//                 variant="ghost"
+//                 onClick={() => setIsDiscoveryOpen(false)}
+//                 className="rounded-full"
+//               >
+//                 <X />
+//               </Button>
+//             </div>
+//             <div className="relative">
+//               <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400" />
+//               <input
+//                 placeholder="Search by name, role, or identity..."
+//                 value={discoverySearch}
+//                 onChange={(e) => setDiscoverySearch(e.target.value)}
+//                 className="w-full h-12 pl-12 glass-surface rounded-xl border-0 font-bold text-sm outline-none focus:ring-2 ring-primary-500"
+//               />
+//             </div>
+//           </DialogHeader>
+
+//           <div className="flex-1 overflow-y-auto p-4 space-y-2 no-scrollbar bg-slate-50/50 dark:bg-black/20">
+//             {users
+//               .filter((u: any) =>
+//                 u.name.toLowerCase().includes(discoverySearch.toLowerCase()),
+//               )
+//               .map((u: any) => (
+//                 <div
+//                   key={u.id}
+//                   onClick={() => setDiscoveredUser(u)}
+//                   className={`p-4 rounded-2xl cursor-pointer transition-all flex items-center justify-between border-2 ${
+//                     discoveredUser?.id === u.id
+//                       ? "bg-primary-700/10 border-primary-700"
+//                       : "hover:bg-white dark:hover:bg-slate-900 border-transparent"
+//                   }`}
+//                 >
+//                   <div className="flex items-center gap-4">
+//                     <Avatar className="h-10 w-10 border-2 border-white">
+//                       <AvatarImage src={u.image} />
+//                     </Avatar>
+//                     <div>
+//                       <p className="text-sm font-black dark:text-white">
+//                         {u.name}
+//                       </p>
+//                       <Badge
+//                         variant="outline"
+//                         className="text-[8px] font-black uppercase opacity-60 px-2"
+//                       >
+//                         {u.role}
+//                       </Badge>
+//                     </div>
+//                   </div>
+//                   {discoveredUser?.id === u.id && (
+//                     <CheckCircle2 className="h-5 w-5 text-primary-700" />
+//                   )}
+//                 </div>
+//               ))}
+//           </div>
+
+//           {discoveredUser && (
+//             <div className="p-8 bg-white dark:bg-slate-900 border-t dark:border-slate-800 animate-in slide-in-from-bottom-4">
+//               <div className="space-y-4">
+//                 <Label className="text-[10px] font-black uppercase text-slate-400 ml-2">
+//                   Initial Payload to {discoveredUser.name}
+//                 </Label>
+//                 <div className="flex gap-3">
+//                   <Input
+//                     placeholder="Synchronize message..."
+//                     value={replyContent}
+//                     onChange={(e) => setReplyContent(e.target.value)}
+//                     className="h-14 rounded-xl glass-surface border-0 font-bold px-6"
+//                   />
+//                   <Button
+//                     onClick={onStartNewThread}
+//                     disabled={isPending || !replyContent}
+//                     className="h-14 w-14 rounded-xl bg-primary-700 text-white shadow-xl"
+//                   >
+//                     {isPending ? (
+//                       <Loader2 className="animate-spin" />
+//                     ) : (
+//                       <Send className="h-5 w-5" />
+//                     )}
+//                   </Button>
+//                 </div>
+//               </div>
+//             </div>
+//           )}
+//         </DialogContent>
+//       </Dialog>
+//     </div>
+//   );
+// }
+
+// // --- SUB-COMPONENTS ---
+
+// function StatBadge({ label, value, icon: Icon, color }: any) {
+//   const styles: any = {
+//     rose: "bg-rose-500/10 text-rose-600 border-rose-500/20 shadow-rose-500/5",
+//     emerald:
+//       "bg-emerald-500/10 text-emerald-600 border-emerald-500/20 shadow-emerald-500/5",
+//     purple:
+//       "bg-primary-700/10 text-primary-700 border-primary-700/20 shadow-primary-700/5",
+//   };
+//   return (
+//     <div
+//       className={`p-4 md:p-6 rounded-[1.8rem] md:rounded-[2.5rem] border ${styles[color]} glass-surface flex items-center justify-between group transition-all hover:-translate-y-1 relative overflow-hidden`}
+//     >
+//       <div className="space-y-1 relative z-10">
+//         <p className="text-[8px] md:text-[10px] font-black uppercase text-slate-400 tracking-widest">
+//           {label}
+//         </p>
+//         <h4 className="text-xl md:text-3xl font-black dark:text-white leading-none tracking-tighter">
+//           {value}
+//         </h4>
+//       </div>
+//       <div className="p-2.5 md:p-4 rounded-xl bg-white dark:bg-slate-900 shadow-sm border border-slate-100 dark:border-slate-800 transition-transform group-hover:rotate-12 relative z-10">
+//         <Icon className="h-4 w-4 md:h-5 md:w-5" />
+//       </div>
+//     </div>
+//   );
+// }
