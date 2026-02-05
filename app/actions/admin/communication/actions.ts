@@ -130,3 +130,26 @@ export async function getThreadHistory(parentId: string) {
     include: { sender: true },
   });
 }
+
+
+/** 11. INITIATE NEW CONVERSATION */
+export async function startNewConversation(receiverId: string, content: string) {
+  const session = await auth();
+  if (!session) throw new Error("Unauthorized");
+
+  const newMessage = await prisma.message.create({
+    data: {
+      senderId: session.user.id,
+      receiverId: receiverId,
+      content: content,
+      messageType: "TEXT",
+    },
+    include: {
+      sender: { select: { name: true, image: true } },
+      receiver: { select: { name: true, image: true } }
+    }
+  });
+
+  revalidatePath("/admin/communication");
+  return { success: true, message: JSON.parse(JSON.stringify(newMessage)) };
+}
