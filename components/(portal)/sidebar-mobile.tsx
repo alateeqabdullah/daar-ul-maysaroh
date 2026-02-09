@@ -79,11 +79,11 @@ export default function SidebarMobile({ role }: { role: string }) {
                           <p className="font-black uppercase text-[11px] tracking-widest">
                             {item.name}
                           </p>
-                          <p
+                          {/* <p
                             className={`text-[8px] font-bold uppercase tracking-tighter opacity-60 ${isActive ? "text-white" : "text-slate-400"}`}
                           >
                             {item.desc}
-                          </p>
+                          </p> */}
                         </div>
                         {item.badge && (
                           <Badge
