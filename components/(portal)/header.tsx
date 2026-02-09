@@ -141,7 +141,7 @@ export default function Header({ user }: HeaderProps) {
               </p>
             </div>
             <DropdownMenuItem className="rounded-xl py-4 font-bold text-xs gap-3 cursor-pointer">
-              <Link href="/profile" className="flex items-center gap-3">
+              <Link href="/dashboard/profile" className="flex items-center gap-3">
                 <User size={18} className="text-primary-700" /> Identity Vault
               </Link>
             </DropdownMenuItem>
