@@ -298,12 +298,7 @@ export type HifzProgressOrderByWithRelationInput = {
 
 export type HifzProgressWhereUniqueInput = Prisma.AtLeast<{
   id?: string
-  studentId_date_surah?: Prisma.HifzProgressStudentIdDateSurahCompoundUniqueInput
   studentId_date_surah_startAyah_endAyah?: Prisma.HifzProgressStudentIdDateSurahStartAyahEndAyahCompoundUniqueInput
-  studentId_date_surah_startAyah_endAyah_mistakes?: Prisma.HifzProgressStudentIdDateSurahStartAyahEndAyahMistakesCompoundUniqueInput
-  studentId_date_surah_startAyah_endAyah_comments?: Prisma.HifzProgressStudentIdDateSurahStartAyahEndAyahCommentsCompoundUniqueInput
-  studentId_date_surah_startAyah_endAyah_status?: Prisma.HifzProgressStudentIdDateSurahStartAyahEndAyahStatusCompoundUniqueInput
-  studentId_date_surah_startAyah_endAyah_teacherId?: Prisma.HifzProgressStudentIdDateSurahStartAyahEndAyahTeacherIdCompoundUniqueInput
   AND?: Prisma.HifzProgressWhereInput | Prisma.HifzProgressWhereInput[]
   OR?: Prisma.HifzProgressWhereInput[]
   NOT?: Prisma.HifzProgressWhereInput | Prisma.HifzProgressWhereInput[]
@@ -319,7 +314,7 @@ export type HifzProgressWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"HifzProgress"> | Date | string
   student?: Prisma.XOR<Prisma.StudentScalarRelationFilter, Prisma.StudentWhereInput>
   teacher?: Prisma.XOR<Prisma.TeacherNullableScalarRelationFilter, Prisma.TeacherWhereInput> | null
-}, "id" | "studentId_date_surah" | "studentId_date_surah_startAyah_endAyah" | "studentId_date_surah_startAyah_endAyah_mistakes" | "studentId_date_surah_startAyah_endAyah_comments" | "studentId_date_surah_startAyah_endAyah_status" | "studentId_date_surah_startAyah_endAyah_teacherId">
+}, "id" | "studentId_date_surah_startAyah_endAyah">
 
 export type HifzProgressOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -463,54 +458,12 @@ export type HifzProgressOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
-export type HifzProgressStudentIdDateSurahCompoundUniqueInput = {
-  studentId: string
-  date: Date | string
-  surah: number
-}
-
 export type HifzProgressStudentIdDateSurahStartAyahEndAyahCompoundUniqueInput = {
   studentId: string
   date: Date | string
   surah: number
   startAyah: number
   endAyah: number
-}
-
-export type HifzProgressStudentIdDateSurahStartAyahEndAyahMistakesCompoundUniqueInput = {
-  studentId: string
-  date: Date | string
-  surah: number
-  startAyah: number
-  endAyah: number
-  mistakes: number
-}
-
-export type HifzProgressStudentIdDateSurahStartAyahEndAyahCommentsCompoundUniqueInput = {
-  studentId: string
-  date: Date | string
-  surah: number
-  startAyah: number
-  endAyah: number
-  comments: string
-}
-
-export type HifzProgressStudentIdDateSurahStartAyahEndAyahStatusCompoundUniqueInput = {
-  studentId: string
-  date: Date | string
-  surah: number
-  startAyah: number
-  endAyah: number
-  status: $Enums.HifzStatus
-}
-
-export type HifzProgressStudentIdDateSurahStartAyahEndAyahTeacherIdCompoundUniqueInput = {
-  studentId: string
-  date: Date | string
-  surah: number
-  startAyah: number
-  endAyah: number
-  teacherId: string
 }
 
 export type HifzProgressCountOrderByAggregateInput = {

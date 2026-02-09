@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Book,
@@ -9,23 +8,19 @@ import {
   Target,
   AlertTriangle,
   Search,
-  Plus,
   MoreVertical,
   Clock,
-  CheckCircle2,
-  XCircle,
   Loader2,
-  Play,
   LayoutGrid,
   List as ListIcon,
   Download,
   ArrowLeft,
   Mic,
-  Save,
   History,
   X,
+  ChevronRight,
 } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
@@ -39,18 +34,41 @@ import {
 } from "@/components/ui/select";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { toast } from "sonner";
-import { getInitials, cn } from "@/lib/utils";
+import { getInitials } from "@/lib/utils";
 import { Counter } from "@/components/admin/dashboard-ui";
 
 // Import Strict Types
-import { QuranStudent, QuranLog, QuranStats } from "@/types/quran";
+// --- TYPES ---
+export interface QuranStudent {
+  id: string;
+  name: string;
+  email: string;
+  image: string | null;
+  hifzLevel: string;
+  currentSurah: string;
+  lastRecited: string;
+  goal: string;
+  status: "Active" | "At Risk" | "Inactive";
+}
+
+export interface QuranLog {
+  id: string;
+  studentId: string;
+  surah: string;
+  startAyah: number;
+  endAyah: number;
+  rating: "EXCELLENT" | "PASS" | "NEEDS_PRACTICE" | "FAIL";
+  mistakes: number;
+  date: string;
+}
+
+export interface QuranStats {
+  activeReciters: number;
+  totalJuzCompleted: number;
+  needsAttention: number;
+  totalStudents: number;
+}
 
 // --- ANIMATION ---
 const containerVariants = {
@@ -65,7 +83,7 @@ const slideUpVariants = {
   hidden: { y: "100%" },
   visible: {
     y: 0,
-    transition: { type: "spring", damping: 25, stiffness: 200 },
+    transition: { type: "spring" as const, damping: 25, stiffness: 200 },
   },
 };
 
@@ -164,7 +182,7 @@ export default function QuranTrackerClient({
         status: "PASS",
         comments: "",
       });
-    } catch (e) {
+    } catch {
       toast.error("Failed to save");
     } finally {
       setIsLoading(false);
@@ -259,14 +277,14 @@ export default function QuranTrackerClient({
             <div className="flex items-center bg-muted p-1 rounded-lg border">
               <Button
                 size="icon"
-                variant={viewMode === "grid" ? "white" : "ghost"}
+                variant={viewMode === "grid" ? "default" : "ghost"}
                 onClick={() => setViewMode("grid")}
               >
                 <LayoutGrid className="h-4 w-4" />
               </Button>
               <Button
                 size="icon"
-                variant={viewMode === "list" ? "white" : "ghost"}
+                variant={viewMode === "list" ? "default" : "ghost"}
                 onClick={() => setViewMode("list")}
               >
                 <ListIcon className="h-4 w-4" />
@@ -276,7 +294,7 @@ export default function QuranTrackerClient({
               <Download className="h-4 w-4 mr-2" /> Export
             </Button>
             <Button
-              className="bg-gradient-to-r from-emerald-600 to-teal-600 text-white shadow-md hover:scale-105 transition-all gap-2"
+              className="bg-linear-to-r from-emerald-600 to-teal-600 text-white shadow-md hover:scale-105 transition-all gap-2"
               onClick={() => {
                 setFormData({ ...formData, studentId: "" });
                 setMode("LOG");
@@ -296,7 +314,7 @@ export default function QuranTrackerClient({
             <motion.div key={i} variants={itemVariants}>
               <Card className="border-none shadow-sm bg-white/50 backdrop-blur-sm dark:bg-slate-900/50 hover:shadow-md transition-all relative overflow-hidden">
                 <div
-                  className={`absolute top-0 right-0 w-20 h-20 bg-gradient-to-br ${stat.color} opacity-10 rounded-bl-full`}
+                  className={`absolute top-0 right-0 w-20 h-20 bg-linear-to-br ${stat.color} opacity-10 rounded-bl-full`}
                 />
                 <CardContent className="p-6 relative z-10 flex items-center justify-between">
                   <div>
@@ -308,7 +326,7 @@ export default function QuranTrackerClient({
                     </div>
                   </div>
                   <div
-                    className={`p-3 rounded-xl bg-gradient-to-br ${stat.color} text-white ${stat.shadow} shadow-lg`}
+                    className={`p-3 rounded-xl bg-linear-to-br ${stat.color} text-white ${stat.shadow} shadow-lg`}
                   >
                     <stat.icon className="h-6 w-6" />
                   </div>
@@ -439,7 +457,7 @@ export default function QuranTrackerClient({
                           </td>
                           <td className="px-6 py-4 text-right">
                             <Button variant="ghost" size="icon">
-                              <ChevronRight className="h-4 w-4 text-muted-foreground" />
+                              <ChevronRight  className="h-4 w-4 text-muted-foreground" />
                             </Button>
                           </td>
                         </motion.tr>
@@ -469,7 +487,7 @@ export default function QuranTrackerClient({
                 onClick={(e) => e.stopPropagation()}
                 className="w-full max-w-xl bg-background h-full shadow-2xl border-l flex flex-col"
               >
-                <div className="h-40 bg-gradient-to-br from-emerald-600 to-teal-700 p-8 flex flex-col justify-end relative shrink-0">
+                <div className="h-40 bg-linear-to-br from-emerald-600 to-teal-700 p-8 flex flex-col justify-end relative shrink-0">
                   <Button
                     size="icon"
                     variant="ghost"
@@ -646,7 +664,7 @@ export default function QuranTrackerClient({
                 <Label>Rating</Label>
                 <Select
                   value={formData.status}
-                  onValueChange={(v: any) =>
+                  onValueChange={(v: "EXCELLENT" | "PASS" | "NEEDS_PRACTICE" | "FAIL") =>
                     setFormData({ ...formData, status: v })
                   }
                 >

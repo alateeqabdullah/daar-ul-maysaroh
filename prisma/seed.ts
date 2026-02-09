@@ -1,5 +1,5 @@
 // prisma/seed.ts
-import { PrismaClient, Prisma } from "../app/generated/prisma/client";
+import { PrismaClient, Prisma, Student, Teacher } from "../app/generated/prisma/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 import "dotenv/config";
 import { hash } from "bcryptjs";
@@ -647,8 +647,9 @@ export async function main() {
 
   // Arrays to hold created entities for linking later
   // We use 'any' here for simplicity in the seed file, but in a real app these would be typed
-  const createdStudents: any[] = [];
-  const createdTeachers: any[] = [];
+  const createdStudents: Student[] = [];
+  const createdTeachers: Teacher[] = [];
+  const createdPlans: Prisma.PricingPlanCreateInput[] = [];
 
   try {
     // Clear existing data
@@ -729,7 +730,7 @@ export async function main() {
         data: enrollment,
       });
       console.log(
-        `✅ Created enrollment for ${enrollment.student.connect?.userId}`
+        `✅ Created enrollment for ${enrollment.student.connect?.userId}`,
       );
     }
 
@@ -973,7 +974,7 @@ export async function main() {
         data: progress,
       });
       console.log(
-        `✅ Created Quran progress for ${progress.student.connect?.userId}`
+        `✅ Created Quran progress for ${progress.student.connect?.userId}`,
       );
     }
 

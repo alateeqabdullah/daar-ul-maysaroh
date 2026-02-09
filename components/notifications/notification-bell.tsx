@@ -15,34 +15,36 @@ interface Notification {
   actionUrl?: string;
 }
 
+const initialNotifications: Notification[] = [
+  {
+    id: "1",
+    title: "Welcome to Admin Portal",
+    message: "You have successfully logged in as administrator",
+    type: "success",
+    read: false,
+    createdAt: new Date(),
+  },
+  {
+    id: "2",
+    title: "New Student Registration",
+    message: "Mohammed Ali just registered for Quran Reading Basics",
+    type: "info",
+    read: false,
+    createdAt: new Date(Date.now() - 1000 * 60 * 30), // 30 minutes ago
+  },
+  {
+    id: "3",
+    title: "Payment Received",
+    message: "Payment of $70.00 received from Sara Ahmed",
+    type: "success",
+    read: true,
+    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 2), // 2 hours ago
+  },
+];
+
 export function NotificationBell() {
   const [isOpen, setIsOpen] = useState(false);
-  const [notifications, setNotifications] = useState<Notification[]>([
-    {
-      id: "1",
-      title: "Welcome to Admin Portal",
-      message: "You have successfully logged in as administrator",
-      type: "success",
-      read: false,
-      createdAt: new Date(),
-    },
-    {
-      id: "2",
-      title: "New Student Registration",
-      message: "Mohammed Ali just registered for Quran Reading Basics",
-      type: "info",
-      read: false,
-      createdAt: new Date(Date.now() - 1000 * 60 * 30), // 30 minutes ago
-    },
-    {
-      id: "3",
-      title: "Payment Received",
-      message: "Payment of $70.00 received from Sara Ahmed",
-      type: "success",
-      read: true,
-      createdAt: new Date(Date.now() - 1000 * 60 * 60 * 2), // 2 hours ago
-    },
-  ]);
+  const [notifications, setNotifications] = useState<Notification[]>(initialNotifications);
 
   const dropdownRef = useRef<HTMLDivElement>(null);
 

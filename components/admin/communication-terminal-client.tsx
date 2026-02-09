@@ -81,7 +81,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { toast } from "sonner";
-import { DropdownMenu, DropdownMenuTrigger, DropdownMenuContent, DropdownMenuItem } from "@radix-ui/react-dropdown-menu";
+import {
+  DropdownMenu,
+  DropdownMenuTrigger,
+  DropdownMenuContent,
+  DropdownMenuItem,
+} from "@radix-ui/react-dropdown-menu";
 
 // Animation Logic
 const kContainer = {
@@ -94,7 +99,7 @@ export default function CommunicationTerminalClient({
   initialAnnouncements,
   initialMessages,
   users,
-  currentUser,
+  currentUser = { id: ""},
 }: any) {
   const [isPending, startTransition] = useTransition();
   const [activeTab, setActiveTab] = useState("broadcasts");
@@ -443,10 +448,10 @@ export default function CommunicationTerminalClient({
                               )?.sender.name
                             }
                           </h3>
-                          <p className="text-[9px] font-black uppercase text-emerald-500 tracking-widest mt-1 flex items-center gap-1">
-                            <div className="h-1 w-1 rounded-full bg-emerald-500 animate-pulse" />{" "}
+                          <div className="text-[9px] font-black uppercase text-emerald-500 tracking-widest mt-1 flex items-center gap-1">
+                            <p className="h-1 w-1 rounded-full bg-emerald-500 animate-pulse" />{" "}
                             Live node
-                          </p>
+                          </div>
                         </div>
                       </div>
                       <Button
@@ -476,11 +481,11 @@ export default function CommunicationTerminalClient({
                               x: h.senderId === currentUser.id ? 10 : -10,
                             }}
                             animate={{ opacity: 1, x: 0 }}
-                            className={`flex ${h.senderId === currentUser.id ? "justify-end" : "justify-start"}`}
+                            className={`flex ${h.senderId === currentUser?.id ? "justify-end" : "justify-start"}`}
                           >
                             <div
                               className={`max-w-[85%] md:max-w-[70%] p-4 rounded-2xl shadow-sm ${
-                                h.senderId === currentUser.id
+                                h.senderId === currentUser?.id
                                   ? "bg-primary-700 text-white rounded-br-none"
                                   : "bg-white dark:bg-slate-800 border dark:border-slate-700 rounded-bl-none"
                               }`}
@@ -765,16 +770,6 @@ function Modal({ children, title, close }: any) {
     </div>
   );
 }
-
-
-
-
-
-
-
-
-
-
 
 // "use client";
 

@@ -34,31 +34,3 @@ export const useSidebarStore = create<SidebarStore>((set, get) => ({
 ));
 
 
-
-
-
-// import { persist } from "zustand/middleware";
-
-
-// export const useSidebarStore = create<SidebarStore>()(
-//   persist(
-//     (set, get) => ({
-//       isOpen: true,
-//       width: 320, // Default width
-//       setOpen: (open) => set({ isOpen: open }),
-//       toggle: () => set((state) => ({ isOpen: !state.isOpen })),
-//       initialize: () => {
-//         // Initialize based on screen size
-//         if (typeof window !== "undefined") {
-//           const isDesktop = window.innerWidth >= 1024;
-//           if (get().isOpen !== isDesktop) {
-//             set({ isOpen: isDesktop });
-//           }
-//         }
-//       },
-//     }),
-//     {
-//       name: "sidebar-storage",
-//     },
-//   ),
-// );
