@@ -22,7 +22,7 @@ export default function AboutPage() {
               </h1>
               <p className="text-2xl text-muted-foreground font-medium leading-relaxed">
                {` Al-Maysaroh Institute bridges the gap between the classical
-                scholarly rigor of Al-Azhar and the 21st-century digital world.
+                scholarly rigor methods and the 21st-century digital world.
                 We don't just teach books; we preserve the light of the Quran.`}
               </p>
               <div className="grid grid-cols-2 gap-6">

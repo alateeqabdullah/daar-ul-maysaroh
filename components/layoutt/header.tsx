@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useSession, signOut } from "next-auth/react";
 import { useTheme } from "next-themes";
 import { motion, AnimatePresence } from "framer-motion";
+import Logo from "@/public/logo.png"
 import {
   BookOpen,
   ChevronDown,
@@ -17,6 +18,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import Image from "next/image";
 
 const navigation = [
   { name: "Home", href: "/" },
@@ -51,12 +53,12 @@ const navigation = [
 ];
 
 // Throttle function for scroll performance
-function throttle<T extends (...args: any[]) => any>(
+function throttle<T extends (...args: unknown[]) => unknown>(
   func: T,
   limit: number,
 ): (...args: Parameters<T>) => void {
   let inThrottle: boolean;
-  return function (this: any, ...args: Parameters<T>) {
+  return function (this: unknown, ...args: Parameters<T>) {
     if (!inThrottle) {
       func.apply(this, args);
       inThrottle = true;
@@ -138,23 +140,30 @@ export function Header() {
             href="/"
             className="flex items-center space-x-3 md:space-x-4 relative z-60 group outline-none min-h-11 min-w-11"
             onClick={() => setMobileMenuOpen(false)}
-            aria-label="AL-MAYSAROH International Institute - Home"
+            aria-label="AL-MAYSAROH Institute - Home"
           >
-            <div className="w-10 h-10 md:w-12 md:h-12 bg-primary-700 rounded-2xl flex items-center justify-center shadow-2xl group-hover:rotate-6 group-focus-visible:rotate-6 transition-transform">
+            <Image
+              src={Logo}
+              width={100}
+              height={100}
+              alt="logo"
+              className="w-10 h-10 md:w-12 md:h-12 bg-primary-700 rounded-2xl flex items-center justify-center shadow-2xl group-hover:rotate-6 group-focus-visible:rotate-6 transition-transform"
+            />
+            {/* <div className="w-10 h-10 md:w-12 md:h-12 bg-primary-700 rounded-2xl flex items-center justify-center shadow-2xl group-hover:rotate-6 group-focus-visible:rotate-6 transition-transform">
               <BookOpen className="h-5 w-5 md:h-6 md:w-6 text-white" />
-            </div>
-            <div className="flex flex-col">
+            </div> */}
+            <div className="hidden lg:flex flex-col ">
               <h1 className="text-lg md:text-xl lg:text-2xl font-black tracking-tighter leading-none">
                 AL-MAYSAROH
               </h1>
-              <p className="text-[8px] md:text-[10px] text-primary-700 font-bold tracking-[0.2em] md:tracking-[0.3em] uppercase">
-                International Institute
+              <p className="text-[8px] md:text-[10px] text-primary-700 font-bold tracking-[0.2em] md:tracking-[1.5em] uppercase">
+                Institute.
               </p>
             </div>
           </Link>
 
           {/* --- DESKTOP NAVIGATION --- */}
-          <ul className="hidden lg:flex items-center space-x-1">
+          <ul className="hidden xl:flex items-center space-x-1">
             {navigation.map((item) => {
               const isActive =
                 pathname === item.href ||
@@ -307,7 +316,7 @@ export function Header() {
             <Button
               variant="ghost"
               size="icon"
-              className="lg:hidden rounded-xl bg-primary-700/10 text-primary-700 w-11 h-11 border border-primary-700/20 touch-target-lg"
+              className="xl:hidden rounded-xl bg-primary-700/10 text-primary-700 w-11 h-11 border border-primary-700/20 touch-target-lg"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               aria-expanded={mobileMenuOpen}
               aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
@@ -332,7 +341,7 @@ export function Header() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setMobileMenuOpen(false)}
-              className="fixed inset-0 bg-black/60 backdrop-blur-md z-90 lg:hidden"
+              className="fixed inset-0 bg-black/60 backdrop-blur-md z-90 xl:hidden"
               aria-hidden="true"
             />
 
@@ -341,7 +350,7 @@ export function Header() {
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="fixed inset-y-0 right-0 z-100 w-full max-w-full sm:max-w-sm bg-background shadow-3xl lg:hidden flex flex-col p-4 sm:p-6 md:p-8 pt-24 sm:pt-28 md:pt-32 min-h-dvh"
+              className="fixed inset-y-0 right-0 z-100 w-full max-w-full sm:max-w-sm bg-background shadow-3xl xl:hidden flex flex-col p-4 sm:p-6 md:p-8 pt-24 sm:pt-28 md:pt-32 min-h-dvh"
               style={{
                 paddingBottom: "calc(2rem + env(safe-area-inset-bottom))",
               }}

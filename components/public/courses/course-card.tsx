@@ -6,8 +6,7 @@ import {
   Award,
   Sparkles,
   Zap,
-  CheckCircle2,
-  Users,
+
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -70,7 +69,7 @@ export function CourseCard({
       </div>
 
       {/* 2. CONTENT AREA */}
-      <div className="flex-grow space-y-6 w-full">
+      <div className="grow space-y-6 w-full">
         <div>
           <h3 className="text-3xl font-black uppercase tracking-tighter leading-none group-hover:text-primary-700 transition-colors mb-2">
             {program.name}
@@ -81,7 +80,7 @@ export function CourseCard({
         </div>
 
         <p className="text-muted-foreground font-medium leading-relaxed line-clamp-3 text-sm italic">
-          {`"{program.description}"`}
+          {`${program.description}`}
         </p>
 
         {/* Technical Specs Grid */}
@@ -148,7 +147,7 @@ export function CourseCard({
             <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
           </span>
           {/* Institutional Shimmer Animation */}
-          <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12 -translate-x-full group-hover/btn:animate-shimmer" />
+          <div className="absolute inset-0 bg-linear-to-r from-transparent via-white/20 to-transparent -skew-x-12 -translate-x-full group-hover/btn:animate-shimmer" />
         </Button>
       </div>
 
