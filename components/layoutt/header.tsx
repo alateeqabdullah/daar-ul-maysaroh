@@ -49,7 +49,10 @@ const navigation = [
     ],
   },
   { name: "Faculty", href: "/faculty" },
-  { name: "Admissions", href: "/pricing" },
+  // { name: "Admissions", href: "/pricing" },
+  { name: "Pricing", href: "/pricing" },
+  { name: "About", href: "/about" },
+  { name: "Contact", href: "/contact" },
 ];
 
 // Throttle function for scroll performance
