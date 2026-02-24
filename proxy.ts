@@ -100,9 +100,9 @@
 
 
 
-import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
 import { auth } from "@/lib/auth";
+import type { NextRequest } from "next/server";
+import { NextResponse } from "next/server";
 
 // 1. Configuration Constants - UPDATED to use /portal routes
 const ROLE_PORTAL_HOMES: Record<string, string> = {
@@ -119,9 +119,11 @@ const PUBLIC_ROUTES = [
   "/about",
   "/blog",
   "/admissions",
-  "/admissions/apply",
-  "/admissions/apply",
-  "/admissions/children/qiro'ah-group",
+  "/news",
+  "/gallery",
+  "/videos",
+  "/testimonials",
+  "methodology",
   "events",
   "/resources",
   "/contact",

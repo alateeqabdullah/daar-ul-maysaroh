@@ -31,7 +31,7 @@ const FEATURED_COURSES = [
       "Perfect your Quranic pronunciation with rules-based methodology.",
     icon: Star,
     duration: "6 Months",
-    students: "Small Groups",
+    students: "1-on-1",
     level: "Beginner+",
     href: "/courses/tajweed",
     features: ["Live Correction", "Audio Analysis"],
@@ -42,7 +42,7 @@ const FEATURED_COURSES = [
     description: "Understand Quran in its original language.",
     icon: Users,
     duration: "1 Year",
-    students: "Group Sessions",
+    students: "1-on-1",
     level: "Beginner",
     href: "/courses/arabic",
     features: ["Grammar", "Vocabulary", "Tafsir"],
@@ -145,27 +145,27 @@ export function FeaturedCourses() {
                   {/* Footer */}
                   <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pt-6 border-t border-border/50">
                     <div className="flex items-center gap-6 w-full sm:w-auto">
-                      <div className="space-y-1">
+                      {/* <div className="space-y-1">
                         <div className="text-xs font-black text-muted-foreground uppercase tracking-widest">
                           FORMAT
                         </div>
                         <div className="text-base sm:text-lg font-black">
                           {course.students}
                         </div>
-                      </div>
+                      </div> */}
 
                       <div className="space-y-1">
                         <div className="text-xs font-black text-muted-foreground uppercase tracking-widest">
                           LEVEL
                         </div>
-                        <div className="text-base sm:text-lg font-black">
+                        <div className="text-base sm:text-md font-black">
                           {course.level}
                         </div>
                       </div>
                     </div>
 
                     <Link href={course.href} className="w-full sm:w-auto">
-                      <Button className="w-full rounded-full px-6 py-3 sm:px-8 sm:py-4 font-black bg-primary-700 hover:bg-primary-800 text-sm sm:text-base group/btn">
+                      <Button className="w-full rounded-full px-6 py-3 sm:px-8 sm:py-4 font-black text-white bg-primary-700 hover:bg-primary-800 text-sm sm:text-base group/btn">
                         <span className="flex items-center gap-2 sm:gap-3">
                           EXPLORE
                           <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 transition-transform group-hover/btn:translate-x-2" />
@@ -189,7 +189,7 @@ export function FeaturedCourses() {
               </div>
 
               <Link href="/courses">
-                <Button className="rounded-full px-8 py-4 sm:px-10 sm:py-5 md:px-12 md:py-6 text-base sm:text-lg md:text-xl font-black bg-primary-700 hover:bg-primary-800 transition-all duration-500 group min-h-11 min-w-11">
+                <Button className="rounded-full px-8 py-4 sm:px-10 sm:py-5 md:px-12 md:py-6 text-base sm:text-md md:text-md font-black bg-primary-700 text-white hover:bg-primary-800 transition-all duration-500 group min-h-11 min-w-11">
                   <span className="flex items-center gap-3 sm:gap-4">
                     VIEW ALL PROGRAMS
                     <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 transition-all duration-500 group-hover:translate-x-2" />

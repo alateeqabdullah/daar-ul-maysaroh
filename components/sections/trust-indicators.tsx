@@ -120,7 +120,7 @@
 
 "use client";
 
-import { motion, useInView, useAnimation } from "framer-motion";
+import { motion, useInView, useAnimation, Variants } from "framer-motion";
 import {
   ShieldCheck,
   Landmark,
@@ -143,10 +143,10 @@ const TRUST_SEALS = [
   },
   {
     icon: Landmark,
-    label: "Global Council",
-    sub: "Al-Azhar Affiliated",
+    label: "Scholarly Council",
+    sub: "Traditional Sanad Lineage", // ✅ Sanad-focused
     description:
-      "Faculty certified by Al-Azhar University with international recognition",
+      "Faculty with authenticated chains of transmission to the Prophet (ﷺ)", // ✅ Islamic authentication
     color: "from-blue-500 to-cyan-600",
     bgColor: "blue",
   },
@@ -192,7 +192,7 @@ export function TrustIndicators() {
     },
   };
 
-  const itemVariants = {
+  const itemVariants: Variants = {
     hidden: {
       opacity: 0,
       y: 30,
@@ -225,7 +225,7 @@ export function TrustIndicators() {
       rotate: 0,
       scale: 1,
       transition: {
-        type: "spring",
+        type: "spring" as const,
         stiffness: 200,
         damping: 15,
       },
