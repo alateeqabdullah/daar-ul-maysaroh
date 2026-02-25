@@ -44,7 +44,7 @@ export function CTA() {
                     { value: "98%", label: "Completion" },
                     { value: "14:1", label: "Ratio" },
                     { value: "1400+", label: "Years" },
-                    { value: "30-Day", label: "Guarantee" },
+                    // { value: "30-Day", label: "Guarantee" },
                   ].map((stat, index) => (
                     <motion.div
                       key={index}
@@ -68,7 +68,7 @@ export function CTA() {
                   {[
                     {
                       icon: CheckCircle,
-                      title: "Free Trial",
+                      title: "Free Assessment",
                       desc: "Experience methodology",
                     },
                     {
@@ -110,7 +110,7 @@ export function CTA() {
                   transition={{ delay: 0.4 }}
                   className="flex flex-col sm:flex-row gap-4 sm:gap-6 justify-center items-center pt-6 sm:pt-8"
                 >
-                  <Link href="/register" className="w-full sm:w-auto">
+                  <Link href="/admissions" className="w-full sm:w-auto">
                     <Button className="w-full rounded-full px-6 py-4 sm:px-8 sm:py-5 md:px-10 md:py-6 text-base sm:text-lg font-black bg-primary-700 hover:bg-primary-800 min-h-11 min-w-11">
                       <span className="flex items-center gap-3 sm:gap-4">
                         <Calendar className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -138,9 +138,9 @@ export function CTA() {
                     <Shield className="w-6 h-6 sm:w-8 sm:h-8 text-primary-700" />
                     <span>
                       <span className="font-black text-primary-700">
-                        30-Day Guarantee
+                      Commit 30 Days.
                       </span>{" "}
-                      – Full refund if not satisfied.
+                      See the Difference.
                     </span>
                   </div>
                 </div>
