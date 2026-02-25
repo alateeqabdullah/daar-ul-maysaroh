@@ -357,7 +357,7 @@ export function FAQ() {
                         Email • 2-4 Hours
                       </div>
                       <div className="text-sm md:text-base font-semibold text-foreground truncate">
-                        admissions@almaysaroh.com
+                        info.almaysaroh@gmail.com
                       </div>
                     </div>
                   </div>
@@ -377,10 +377,10 @@ export function FAQ() {
                     </div>
                     <div className="min-w-0">
                       <div className="text-xs font-bold text-primary-700 uppercase tracking-wider mb-1">
-                        Call • 10AM-8PM GMT
+                        whatsApp • 10AM-8PM GMT
                       </div>
                       <div className="text-sm md:text-base font-semibold text-foreground">
-                        +1 (123) 456-7890
+                         (+234) 703-117-0308
                       </div>
                     </div>
                   </div>
@@ -394,9 +394,9 @@ export function FAQ() {
               <div className="mt-6 pt-6 border-t border-border/20">
                 <p className="text-xs md:text-sm text-muted-foreground font-light text-center">
                   <span className="font-bold text-primary-700">
-                    Free consultations
+                    Free Assessment Session
                   </span>{" "}
-                  with 30-day guarantee
+                  Visible Progress in30 Das - In Shaa Allaah.
                 </p>
               </div>
             </div>
