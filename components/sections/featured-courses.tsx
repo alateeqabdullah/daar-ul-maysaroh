@@ -25,6 +25,17 @@ const FEATURED_COURSES = [
     features: ["Ijazah", "24/7 Portal", "Analytics"],
   },
   {
+    title: "Qiro'ah (Reading) Program",
+    subtitle: "Quran Reading",
+    description: "Complete Quran reading and recitation with certification.",
+    icon: BookOpen,
+    duration: "6 - 12 Months",
+    students: "1-on-1",
+    level: "Beginner+",
+    href: "/courses/qiroah",
+    features: ["Certificate", "24/7 Portal", "Analytics"],
+  },
+  {
     title: "Tajweed Mastery",
     subtitle: "Scientific Recitation",
     description:
@@ -32,7 +43,8 @@ const FEATURED_COURSES = [
     icon: Star,
     duration: "6 Months",
     students: "1-on-1",
-    level: "Beginner+",
+    // level: "Beginner+",
+    level: "All Levels",
     href: "/courses/tajweed",
     features: ["Live Correction", "Audio Analysis"],
   },
@@ -43,7 +55,9 @@ const FEATURED_COURSES = [
     icon: Users,
     duration: "1 Year",
     students: "1-on-1",
-    level: "Beginner",
+    // level: "Beginner",
+    level: "All Levels",
+
     href: "/courses/arabic",
     features: ["Grammar", "Vocabulary", "Tafsir"],
   },

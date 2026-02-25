@@ -237,7 +237,7 @@ const SANAD_LINEAGE = [
   },
 ];
 
-export function Methodology() {
+export default function Methodology() {
   return (
     <section className="py-16 sm:py-20 md:py-24 lg:py-32 bg-linear-to-b from-background to-primary-50/5 dark:to-primary-950/5 relative overflow-hidden">
       {/* Background Pattern */}
