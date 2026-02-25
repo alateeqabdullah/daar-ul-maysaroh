@@ -279,7 +279,7 @@ export default function Methodology() {
                     <div key={index} className="flex items-center">
                       <div className="text-center">
                         <div className="w-12 h-12 sm:w-16 sm:h-16 rounded-full bg-primary-50 dark:bg-primary-950/40 flex items-center justify-center mx-auto mb-2 border-2 border-primary-700/30">
-                          <Icon className="w-5 h-5 sm:w-6 sm:h-6 text-primary-700" />
+                          <Icon href="Book" className="w-5 h-5 sm:w-6 sm:h-6 text-primary-700" />
                         </div>
                         <div className="text-xs font-black uppercase tracking-tight">
                           {item.generation}

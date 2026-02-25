@@ -4,10 +4,10 @@ import { Reveal } from "@/components/shared/section-animation";
 import { Globe, Users, BookMarked, Award } from "lucide-react";
 
 const STATS = [
-  { label: "Noble Students", value: "500+", icon: Users },
-  { label: "Global Nations", value: "50+", icon: Globe },
-  { label: "Sanad Scholars", value: "24+", icon: Award },
-  { label: "Surahs Completed", value: "12k+", icon: BookMarked },
+  { label: "Noble Students", value: "100+", icon: Users },
+  { label: "Global Nations", value: "6+", icon: Globe },
+  { label: "Sanad Scholars", value: "8+", icon: Award },
+  { label: "Surahs Completed", value: "114", icon: BookMarked },
 ];
 
 export function Stats() {
