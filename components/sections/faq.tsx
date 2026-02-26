@@ -148,20 +148,20 @@
 
 "use client";
 
-import { useState } from "react";
 import { Reveal } from "@/components/shared/section-animation";
+import { AnimatePresence, motion } from "framer-motion";
 import {
-  ChevronDown,
-  HelpCircle,
   BookOpen,
-  Users,
+  ChevronDown,
   Clock,
-  Shield,
+  HelpCircle,
+  Mail,
   MessageCircle,
   Phone,
-  Mail,
+  Shield,
+  Users,
 } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState } from "react";
 
 const FAQ_ITEMS = [
   {
@@ -396,7 +396,7 @@ export function FAQ() {
                   <span className="font-bold text-primary-700">
                     Free Assessment Session
                   </span>{" "}
-                  Visible Progress in30 Das - In Shaa Allaah.
+                  Visible Progress in 30 Days -In Shaa Allaah.
                 </p>
               </div>
             </div>
