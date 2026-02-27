@@ -2,13 +2,11 @@
 
 import { Reveal } from "@/components/shared/section-animation";
 import {
-  Mail,
-  MessageCircle,
+ 
   Globe,
   Send,
   Landmark,
   ShieldCheck,
-  ArrowUpRight,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -43,7 +41,7 @@ export function Contact() {
                     Admissions Council
                   </h4>
                   <p className="text-xs text-muted-foreground font-bold">
-                    admissions@almaysaroh.com
+                    info.almaysaroh@gmail.com
                   </p>
                 </div>
               </Reveal>
@@ -54,7 +52,7 @@ export function Contact() {
                     Technical Registrar
                   </h4>
                   <p className="text-xs text-muted-foreground font-bold">
-                    systems@almaysaroh.com
+                   info.ysaroh.com
                   </p>
                 </div>
               </Reveal>
@@ -72,7 +70,7 @@ export function Contact() {
                 </div>
                 <p className="text-sm font-bold text-muted-foreground">
                   Our council currently serves{" "}
-                  <span className="text-foreground">50+ Nations</span> across
+                  <span className="text-foreground">5+ Nations</span> across
                   all major timezones.
                 </p>
               </div>

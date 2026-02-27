@@ -380,7 +380,7 @@ export function FAQ() {
                         whatsApp • 10AM-8PM GMT
                       </div>
                       <div className="text-sm md:text-base font-semibold text-foreground">
-                         (+234) 703-117-0308
+                         (+234) 911-016-3930
                       </div>
                     </div>
                   </div>
@@ -394,9 +394,9 @@ export function FAQ() {
               <div className="mt-6 pt-6 border-t border-border/20">
                 <p className="text-xs md:text-sm text-muted-foreground font-light text-center">
                   <span className="font-bold text-primary-700">
-                    Free Assessment Session
+                    Free Assessment Session.
                   </span>{" "}
-                  Visible Progress in 30 Days -In Shaa Allaah.
+                  Visible Progress in 30 Days - In Shaa Allaah.
                 </p>
               </div>
             </div>
