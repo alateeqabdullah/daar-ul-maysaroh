@@ -119,6 +119,7 @@ const PUBLIC_ROUTES = [
   "/about",
   "/blog",
   "/admissions",
+  "/research",
   "/news",
   "/gallery",
   "/videos",
