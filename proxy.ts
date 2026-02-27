@@ -96,10 +96,6 @@
 
 
 
-
-
-
-
 import { auth } from "@/lib/auth";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
@@ -124,7 +120,7 @@ const PUBLIC_ROUTES = [
   "/gallery",
   "/videos",
   "/testimonials",
-"  /teachers",
+  "/teachers", // ✅ Fixed the typo
   "/methodology",
   "/events",
   "/resources",
@@ -139,7 +135,11 @@ const PUBLIC_ROUTES = [
   "/pending",
   "/account-status",
   "/legal",
-  
+
+  "/maintenance",
+  "/coming-soon",
+  "/offline",
+  "/unauthorized",
 ];
 
 const AUTH_ROUTES = [
@@ -150,6 +150,16 @@ const AUTH_ROUTES = [
 ];
 
 export default async function proxy(request: NextRequest) {
+  // 🚨 Maintenance mode check (add this FIRST)
+  const MAINTENANCE_MODE = process.env.MAINTENANCE_MODE === "true";
+
+  if (
+    MAINTENANCE_MODE &&
+    !request.nextUrl.pathname.startsWith("/maintenance")
+  ) {
+    return NextResponse.redirect(new URL("/maintenance", request.url));
+  }
+
   const session = await auth();
   const { pathname } = request.nextUrl;
 
@@ -163,10 +173,23 @@ export default async function proxy(request: NextRequest) {
   );
   const isPendingRoute = pathname.startsWith("/pending");
   const isStatusRoute = pathname.startsWith("/account-status");
-  const isPortalRoute = pathname.startsWith("/dashboard"); // ADD THIS
+  const isPortalRoute = pathname.startsWith("/dashboard");
+
+  // ✅ Add check for utility pages (they're public)
+  const isUtilityPage = [
+    "/maintenance",
+    "/coming-soon",
+    "/offline",
+    "/unauthorized",
+  ].some((route) => pathname.startsWith(route));
 
   // 3. Logic for Unauthenticated Users
   if (!session) {
+    // Allow access to utility pages even without session
+    if (isUtilityPage) {
+      return NextResponse.next();
+    }
+
     if (!isAuthRoute && !isPublicRoute) {
       const callbackUrl = encodeURIComponent(pathname);
       return NextResponse.redirect(
@@ -181,9 +204,9 @@ export default async function proxy(request: NextRequest) {
   const userRole = user?.role || "STUDENT";
   const userStatus = user?.status || "PENDING";
 
-  // 4a. Redirect away from Auth routes to PORTAL (not /admin, /teacher, etc.)
+  // 4a. Redirect away from Auth routes to PORTAL
   if (isAuthRoute) {
-    return NextResponse.redirect(new URL("/dashboard", request.url)); // CHANGED HERE
+    return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
   // 4b. Handle Account Status
@@ -206,18 +229,22 @@ export default async function proxy(request: NextRequest) {
   }
 
   // 4c. Handle Pending Approval
-  if (userStatus === "PENDING" && !isPendingRoute && !isPublicRoute) {
+  if (
+    userStatus === "PENDING" &&
+    !isPendingRoute &&
+    !isPublicRoute &&
+    !isUtilityPage
+  ) {
     return NextResponse.redirect(new URL("/pending", request.url));
   }
 
   // 4d. Prevent Approved users from seeing the Pending page
   if (userStatus === "APPROVED" && isPendingRoute) {
-    return NextResponse.redirect(new URL("/dashboard", request.url)); // CHANGED HERE
+    return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
   // 5. Role-Based Access Control for Portal Routes
   if (isPortalRoute) {
-    // Define which roles can access which portal sub-routes
     const PORTAL_ROLE_PERMISSIONS: Record<string, string[]> = {
       SUPER_ADMIN: ["/dashboard", "/dashboard/admin"],
       ADMIN: ["/dashboard", "/dashboard/admin"],
@@ -229,38 +256,45 @@ export default async function proxy(request: NextRequest) {
 
     const allowedRoutes = PORTAL_ROLE_PERMISSIONS[userRole] || ["/dashboard"];
 
-    // Check if current path is allowed for this role
     const isRouteAllowed = allowedRoutes.some(
       (route) => pathname === route || pathname.startsWith(route + "/"),
     );
 
     if (!isRouteAllowed) {
-      // User trying to access a portal route not allowed for their role
       return NextResponse.redirect(new URL("/dashboard", request.url));
     }
   }
 
-  // 6. Elite Role-Based Access Control (RBAC) - FOR LEGACY ROUTES
-  // This section catches attempts to access old routes like /admin, /teacher directly
+  // 6. Legacy Role-Based Access Control
   const legacyRoleProtectedRoutes = [
     {
       path: "/admin",
       allowed: ["SUPER_ADMIN", "ADMIN"],
       redirectTo: "/dashboard/admin",
     },
-    { path: "/teacher", allowed: ["TEACHER"], redirectTo: "/dashboard/teacher" },
-    { path: "/student", allowed: ["STUDENT"], redirectTo: "/dashboard/student" },
+    {
+      path: "/teacher",
+      allowed: ["TEACHER"],
+      redirectTo: "/dashboard/teacher",
+    },
+    {
+      path: "/student",
+      allowed: ["STUDENT"],
+      redirectTo: "/dashboard/student",
+    },
     { path: "/parent", allowed: ["PARENT"], redirectTo: "/dashboard/parent" },
-    { path: "/support", allowed: ["SUPPORT"], redirectTo: "/dashboard/support" },
+    {
+      path: "/support",
+      allowed: ["SUPPORT"],
+      redirectTo: "/dashboard/support",
+    },
   ];
 
   for (const route of legacyRoleProtectedRoutes) {
     if (pathname.startsWith(route.path)) {
       if (!route.allowed.includes(userRole)) {
-        // User not allowed for this legacy route, redirect to portal
         return NextResponse.redirect(new URL("/dashboard", request.url));
       } else {
-        // User is allowed, redirect to new portal version of the route
         return NextResponse.redirect(new URL(route.redirectTo, request.url));
       }
     }
@@ -271,6 +305,6 @@ export default async function proxy(request: NextRequest) {
 
 export const config = {
   matcher: [
-    "/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|public).*)",
+    "/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|public|maintenance|coming-soon|unauthorized).*)",
   ],
 };

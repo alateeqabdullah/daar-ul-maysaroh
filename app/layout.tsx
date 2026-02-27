@@ -9,6 +9,7 @@ import {
 } from "next/font/google";
 import { Toaster } from "sonner";
 import "./globals.css";
+import { OfflineDetector } from "@/components/providers/offline-detector";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const noto = Noto_Sans_Arabic({ subsets: ["arabic"], variable: "--font-noto" });
@@ -147,7 +148,9 @@ export default function RootLayout({
       >
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
           <AuthProvider>
-            {children}
+            <OfflineDetector>
+              {children}
+            </OfflineDetector>
             <Toaster position="top-center" richColors />
           </AuthProvider>
         </ThemeProvider>
