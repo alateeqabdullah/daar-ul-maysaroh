@@ -1,7 +1,7 @@
+// app/not-found.tsx
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Reveal } from "@/components/shared/section-animation";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import {
@@ -9,10 +9,8 @@ import {
   Home,
   Search,
   BookOpen,
-  HelpCircle,
   ArrowLeft,
   ArrowRight,
-  Sparkles,
   Moon,
   Star,
 } from "lucide-react";
@@ -41,103 +39,117 @@ export default function NotFoundPage() {
       <div className="container mx-auto px-4 sm:px-6 min-h-screen flex items-center justify-center py-12 sm:py-16 md:py-20">
         <div className="max-w-4xl mx-auto text-center space-y-8 sm:space-y-10">
           {/* 404 Number */}
-          <Reveal>
-            <div className="relative inline-block">
-              <div className="text-8xl sm:text-9xl md:text-[200px] font-black font-heading leading-none">
-                <span className="text-primary-700/20">4</span>
-                <span className="text-primary-700 relative inline-block animate-pulse">
-                  0
-                </span>
-                <span className="text-primary-700/20">4</span>
-              </div>
+          <div className="relative inline-block">
+            <motion.div
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 0.5 }}
+              className="text-8xl sm:text-9xl md:text-[200px] font-black font-heading leading-none"
+            >
+              <span className="text-primary-700/20">4</span>
+              <span className="text-primary-700 relative inline-block animate-pulse">
+                0
+              </span>
+              <span className="text-primary-700/20">4</span>
+            </motion.div>
 
-              {/* Compass Decoration */}
-              <motion.div
-                animate={{ rotate: 360 }}
-                transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                className="absolute -top-10 -right-10 sm:-top-20 sm:-right-20 opacity-10"
-              >
-                <Compass className="w-32 h-32 sm:w-48 sm:h-48 text-primary-700" />
-              </motion.div>
-            </div>
-          </Reveal>
+            {/* Compass Decoration */}
+            <motion.div
+              animate={{ rotate: 360 }}
+              transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+              className="absolute -top-10 -right-10 sm:-top-20 sm:-right-20 opacity-10"
+            >
+              <Compass className="w-32 h-32 sm:w-48 sm:h-48 text-primary-700" />
+            </motion.div>
+          </div>
 
           {/* Message */}
-          <Reveal delay={0.1}>
-            <div className="space-y-4">
-              <h1 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter font-heading">
-                Page <span className="text-primary-700 italic">Not Found</span>
-              </h1>
-              <p className="text-lg sm:text-xl text-muted-foreground font-light max-w-2xl mx-auto">
-              {`  The page you're looking for seems to have wandered off like a
-                lost traveler in the desert. Let's guide you back to familiar
-                grounds.`}
-              </p>
-            </div>
-          </Reveal>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="space-y-4"
+          >
+            <h1 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter font-heading">
+              Page <span className="text-primary-700 italic">Not Found</span>
+            </h1>
+            <p className="text-lg sm:text-xl text-muted-foreground font-light max-w-2xl mx-auto">
+           {`   The page you're looking for seems to have wandered off like a lost
+              traveler in the desert. Let's guide you back to familiar grounds.`}
+            </p>
+          </motion.div>
 
           {/* Quick Links */}
-          <Reveal delay={0.2}>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-3xl mx-auto py-8">
-              {[
-                { icon: Home, label: "Home", href: "/" },
-                { icon: BookOpen, label: "Courses", href: "/courses" },
-                { icon: Search, label: "Search", href: "/search" },
-              ].map((link, index) => (
-                <Link key={index} href={link.href}>
-                  <motion.div
-                    whileHover={{ scale: 1.05 }}
-                    className="institutional-card p-4 sm:p-6 flex flex-col items-center gap-3 cursor-pointer group"
-                  >
-                    <link.icon className="w-6 h-6 sm:w-8 sm:h-8 text-primary-700 group-hover:rotate-12 transition-transform" />
-                    <span className="font-black text-sm uppercase tracking-tight">
-                      {link.label}
-                    </span>
-                  </motion.div>
-                </Link>
-              ))}
-            </div>
-          </Reveal>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-3xl mx-auto py-8"
+          >
+            {[
+              { icon: Home, label: "Home", href: "/" },
+              { icon: BookOpen, label: "Courses", href: "/courses" },
+              { icon: Search, label: "Search", href: "/search" },
+            ].map((link, index) => (
+              <Link key={index} href={link.href}>
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  className="institutional-card p-4 sm:p-6 flex flex-col items-center gap-3 cursor-pointer group"
+                >
+                  <link.icon className="w-6 h-6 sm:w-8 sm:h-8 text-primary-700 group-hover:rotate-12 transition-transform" />
+                  <span className="font-black text-sm uppercase tracking-tight">
+                    {link.label}
+                  </span>
+                </motion.div>
+              </Link>
+            ))}
+          </motion.div>
 
           {/* Action Buttons */}
-          <Reveal delay={0.3}>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <Button
-                onClick={() => window.history.back()}
-                variant="outline"
-                className="rounded-full px-6 py-3 sm:px-8 sm:py-4 font-black text-sm sm:text-base min-h-[44px]"
-              >
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="flex flex-col sm:flex-row gap-4 justify-center items-center"
+          >
+            <Button
+              onClick={() => window.history.back()}
+              variant="outline"
+              className="rounded-full px-6 py-3 sm:px-8 sm:py-4 font-black text-sm sm:text-base min-h-11"
+            >
+              <span className="flex items-center gap-2">
+                <ArrowLeft className="w-4 h-4" />
+                GO BACK
+              </span>
+            </Button>
+
+            <Link href="/">
+              <Button className="rounded-full px-6 py-3 sm:px-8 sm:py-4 font-black bg-primary-700 hover:bg-primary-800 text-sm sm:text-base min-h-11">
                 <span className="flex items-center gap-2">
-                  <ArrowLeft className="w-4 h-4" />
-                  GO BACK
+                  RETURN HOME
+                  <ArrowRight className="w-4 h-4" />
                 </span>
               </Button>
-
-              <Link href="/">
-                <Button className="rounded-full px-6 py-3 sm:px-8 sm:py-4 font-black bg-primary-700 hover:bg-primary-800 text-sm sm:text-base min-h-[44px]">
-                  <span className="flex items-center gap-2">
-                    RETURN HOME
-                    <ArrowRight className="w-4 h-4" />
-                  </span>
-                </Button>
-              </Link>
-            </div>
-          </Reveal>
+            </Link>
+          </motion.div>
 
           {/* Help Text */}
-          <Reveal delay={0.4}>
-            <div className="pt-8 text-center">
-              <p className="text-sm text-muted-foreground">
-                Need assistance?{" "}
-                <Link
-                  href="/contact"
-                  className="text-primary-700 font-black hover:underline"
-                >
-                  Contact our support team
-                </Link>
-              </p>
-            </div>
-          </Reveal>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.4 }}
+            className="pt-8 text-center"
+          >
+            <p className="text-sm text-muted-foreground">
+              Need assistance?{" "}
+              <Link
+                href="/contact"
+                className="text-primary-700 font-black hover:underline"
+              >
+                Contact our support team
+              </Link>
+            </p>
+          </motion.div>
         </div>
       </div>
     </main>
