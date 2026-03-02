@@ -1,11 +1,18 @@
 import { Footer } from "@/components/layoutt/footer";
 import { Header } from "@/components/layoutt/header";
 
-export default function MarketingLayout({
+export  default async function MarketingLayout({
+
+
+
+
   children,
 }: {
   children: React.ReactNode;
 }) {
+
+  await new Promise((resolve) => setTimeout(resolve, 2000));
+  
   return (
     <>
       <Header />

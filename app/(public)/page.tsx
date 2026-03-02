@@ -14,7 +14,7 @@ import { FAQ } from "@/components/sections/faq";
 
 export default async function HomePage() {
 
-  await new Promise((resolve) => setTimeout(resolve, 2000));
+  // await new Promise((resolve) => setTimeout(resolve, 2000));
   
   return (
     <main className="min-h-screen">
