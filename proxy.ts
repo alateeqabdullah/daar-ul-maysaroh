@@ -138,7 +138,6 @@ const PUBLIC_ROUTES = [
 
   "/maintenance",
   "/coming-soon",
-  "/offline",
   "/unauthorized",
 ];
 
