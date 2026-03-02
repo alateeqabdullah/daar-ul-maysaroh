@@ -1,59 +1,59 @@
-// components/providers/offline-detector.tsx
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter, usePathname } from "next/navigation";
+import { toast } from "sonner";
 
-export function OfflineDetector({ children }: { children: React.ReactNode }) {
-  const router = useRouter();
-  const pathname = usePathname();
+export function OfflineProvider({ children }: { children: React.ReactNode }) {
   const [isOffline, setIsOffline] = useState(false);
 
   useEffect(() => {
-    // Don't run during server-side rendering
-    if (typeof window === "undefined") return;
-
-    // Check if we're in development mode
-    const isDevelopment = process.env.NODE_ENV === "development";
+    const handleOnline = () => {
+      setIsOffline(false);
+      toast.dismiss("offline-toast");
+      toast.success("Back online", { description: "You can now continue." });
+    };
 
     const handleOffline = () => {
       setIsOffline(true);
-      // Don't redirect if already on offline page
-      if (pathname !== "/offline") {
-        router.push("/offline");
-      }
+      toast.error("You are offline", {
+        id: "offline-toast",
+        description: "App functionality is paused until connection returns.",
+        duration: Infinity,
+      });
     };
 
-    const handleOnline = () => {
-      setIsOffline(false);
-      // If we're on the offline page and come back online, go home
-      if (pathname === "/offline") {
-        router.push("/");
-      }
-    };
+    // Initial check
+    if (!navigator.onLine) handleOffline();
 
-    // Add event listeners
-    window.addEventListener("offline", handleOffline);
     window.addEventListener("online", handleOnline);
-
-    // Initial check - but with a delay to avoid hydration issues
-    const timer = setTimeout(() => {
-      // Only redirect if:
-      // 1. We're actually offline
-      // 2. Not in development (or if in development, only if really offline)
-      // 3. Not already on offline page
-      if (!navigator.onLine && !isDevelopment && pathname !== "/offline") {
-        router.push("/offline");
-      }
-    }, 1000); // Delay to ensure everything is loaded
+    window.addEventListener("offline", handleOffline);
 
     return () => {
-      window.removeEventListener("offline", handleOffline);
       window.removeEventListener("online", handleOnline);
-      clearTimeout(timer);
+      window.removeEventListener("offline", handleOffline);
     };
-  }, [router, pathname]);
+  }, []);
 
-  // Don't render anything special, just children
-  return <>{children}</>;
+  return (
+    <div className={isOffline ? "app-offline-freeze" : ""}>
+      {children}
+
+      <style jsx global>{`
+        /* The Magic: Gray out and disable EVERYTHING inside this div */
+        .app-offline-freeze {
+          filter: grayscale(0.8) opacity(0.8);
+          pointer-events: none; /* Disables all clicks/inputs */
+          user-select: none; /* Prevents highlighting text */
+          cursor: not-allowed;
+          transition: filter 0.3s ease;
+        }
+
+        /* EXCEPT the Sonner Toaster - we must keep this interactive! */
+        [data-sonner-toaster] {
+          filter: none !important;
+          pointer-events: auto !important;
+        }
+      `}</style>
+    </div>
+  );
 }

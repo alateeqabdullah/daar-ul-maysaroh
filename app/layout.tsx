@@ -9,7 +9,7 @@ import {
 } from "next/font/google";
 import { Toaster } from "sonner";
 import "./globals.css";
-import { OfflineDetector } from "@/components/providers/offline-detector";
+import { OfflineProvider } from "@/components/providers/offline-detector";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const noto = Noto_Sans_Arabic({ subsets: ["arabic"], variable: "--font-noto" });
@@ -99,7 +99,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Al-Maysaroh Quran Institute | Online Quranic Excellence",
+    title: "Al-Maysaroh Institute | Online Quranic Excellence",
     description:
       "Preserving the sacred tradition of Quranic recitation through scholarly excellence.",
   },
@@ -149,9 +149,9 @@ export default async function RootLayout({
       >
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
           <AuthProvider>
-            <OfflineDetector>
+            <OfflineProvider>
               {children}
-            </OfflineDetector>
+            </OfflineProvider>
             <Toaster position="top-center" richColors />
           </AuthProvider>
         </ThemeProvider>
