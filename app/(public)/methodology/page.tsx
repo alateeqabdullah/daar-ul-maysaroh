@@ -214,7 +214,7 @@ const HUMAN_LINEAGE = [
 
 export default function Methodology() {
   return (
-    <section className="py-24 sm:py-32 bg-background relative overflow-hidden">
+    <section className="py-32 sm:py-32 bg-background relative overflow-hidden">
       {/* Visual Depth */}
       <div className="absolute top-0 -left-20 w-96 h-96 bg-primary-700/10 rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute bottom-0 -right-20 w-96 h-96 bg-gold/5 rounded-full blur-[120px] pointer-events-none" />
