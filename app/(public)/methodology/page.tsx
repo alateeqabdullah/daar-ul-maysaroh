@@ -239,7 +239,7 @@ const SANAD_LINEAGE = [
 
 export default function Methodology() {
   return (
-    <section className="py-16 sm:py-20 md:py-24 lg:py-32 bg-linear-to-b from-background to-primary-50/5 dark:to-primary-950/5 relative overflow-hidden">
+    <section className="py-40 sm:py-32 bg-linear-to-b from-background to-primary-50/5 dark:to-primary-950/5 relative overflow-hidden">
       {/* Background Pattern */}
       <div
         className="absolute inset-0 opacity-[0.02] bg-[url('/islamic-pattern.svg')] bg-center bg-repeat pointer-events-none"
