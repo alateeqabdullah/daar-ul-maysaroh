@@ -670,7 +670,7 @@ export function Footer() {
       <div className="container mx-auto px-6 py-10 flex flex-col md:flex-row justify-between items-center gap-6">
         <div className="flex items-center gap-2 text-xs font-bold text-slate-500">
           <span>
-            &copy; {currentYear} Al-Maysaroh International Institute. All Rights
+            &copy; {currentYear} Al-Maysaroh Institute. All Rights
             Reserved.
           </span>
           <Heart className="w-3 h-3 text-red-900 fill-current" />

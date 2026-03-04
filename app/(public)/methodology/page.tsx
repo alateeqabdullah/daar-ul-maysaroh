@@ -3,34 +3,33 @@
 import { Reveal } from "@/components/shared/section-animation";
 import { Button } from "@/components/ui/button";
 import {
-  GraduationCap,
-  Users,
-  Target,
-  Sparkles,
-  Shield,
-  Globe,
-  Award,
-  CheckCircle2,
   ArrowRight,
-  Layers,
-  Crown,
-  Star,
-  Heart,
-  Mic,
-  Repeat,
+  Award,
   BarChart3,
-  Sparkle,
-  Database,
-  Monitor,
-  Smartphone,
-  Video,
-  Headphones as HeadphonesIcon,
   Brain,
-  Link as LinkIcon,
+  CheckCircle2,
   ChevronRight,
+  Crown,
+  Database,
+  Globe,
+  GraduationCap,
+  Headphones as HeadphonesIcon,
+  Heart,
+  Layers,
+  Link as LinkIcon,
+  Mic,
+  Monitor,
+  Repeat,
+  Shield,
+  Smartphone,
+  Sparkle,
+  Sparkles,
+  Star,
+  Target,
+  Users,
+  Video,
 } from "lucide-react";
 import Link from "next/link";
-import { cn } from "@/lib/utils";
 
 // --- FULL DATA PRESERVATION ---
 
@@ -60,7 +59,7 @@ const METHODOLOGY_STEPS = [
       "Teaching style compatibility",
       "Schedule alignment",
       "Gender preference respected",
-      "Free trial session with match",
+      "Free assessment session with match",
     ],
   },
   {
@@ -175,7 +174,7 @@ const TECHNOLOGY_FEATURES = [
   },
   {
     icon: Smartphone,
-    title: "Mobile App",
+    title: "Mobile App (Coming Soon)",
     description:
       "Practice anytime, anywhere with our mobile learning application.",
   },
@@ -188,7 +187,7 @@ const TECHNOLOGY_FEATURES = [
   {
     icon: Video,
     title: "Session Recording",
-    description: "Review all lessons with cloud-recorded sessions and notes.",
+    description: "Record and Review all lessons with cloud-recorded sessions and notes.",
   },
   {
     icon: Database,
@@ -248,7 +247,7 @@ export default function Methodology() {
           <Reveal delay={0.2}>
             <div className="institutional-card p-8 md:p-12 mb-32 border-primary-700/10 bg-card/40 backdrop-blur-xl relative group">
               <div className="text-center mb-16">
-                <h3 className="text-2xl font-black uppercase tracking-widest text-primary-700/40 mb-2">
+                <h3 className="text-2xl font-black uppercase tracking-widest text-primary-700 mb-2">
                   The Unbroken Chain
                 </h3>
                 <div className="h-px w-24 bg-gold/30 mx-auto" />
@@ -392,7 +391,7 @@ export default function Methodology() {
           <div className="mb-32 bg-primary-950 p-8 md:p-16 rounded-[3rem] text-white relative overflow-hidden">
             <div className="absolute top-0 right-0 w-64 h-64 bg-primary-700/20 blur-[100px]" />
             <Reveal>
-              <h3 className="text-3xl md:text-5xl font-black tracking-tighter mb-16 text-center italic">
+              <h3 className="text-3xl md:text-5xl text-primary-700 dark:text-white font-black tracking-tighter mb-16 text-center italic">
                 <span className="text-gold">Technology</span> That Enhances
               </h3>
             </Reveal>
@@ -403,10 +402,10 @@ export default function Methodology() {
                   <div className="flex flex-col gap-4 p-6 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors group">
                     <tech.icon className="w-8 h-8 text-gold group-hover:scale-110 transition-transform" />
                     <div>
-                      <h4 className="font-black text-sm uppercase tracking-widest mb-1">
+                      <h4 className="font-black text-black dark:text-white text-sm uppercase tracking-widest mb-1">
                         {tech.title}
                       </h4>
-                      <p className="text-xs text-white/60 leading-relaxed">
+                      <p className="text-xs text-black dark:text-white leading-relaxed">
                         {tech.description}
                       </p>
                     </div>
