@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Calendar,
   CreditCard,
@@ -12,67 +14,62 @@ import {
   Award,
   ArrowRight,
   HelpCircle,
-  Landmark,
   FileText,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Reveal } from "@/components/shared/section-animation";
 import Link from "next/link";
+import { cn } from "@/lib/utils";
 
 export default function AdmissionsPage() {
   return (
-    <main className="pt-16 sm:pt-20 md:pt-24 lg:pt-28 xl:pt-32 bg-background overflow-x-hidden">
+    <main className="pt-24 lg:pt-32 bg-background overflow-x-hidden selection:bg-gold/30">
       {/* Hero Section */}
-      <section className="relative overflow-hidden">
-        <div className="container mx-auto px-4 sm:px-6">
-          <div className="max-w-6xl mx-auto py-8 sm:py-12 md:py-16 lg:py-20 space-y-6 sm:space-y-8 md:space-y-10">
-            {/* Breadcrumb */}
-            <div className="text-xs sm:text-sm text-muted-foreground">
+      <section className="relative">
+        <div className="container mx-auto px-6">
+          <div className="max-w-6xl mx-auto space-y-10">
+            {/* Breadcrumb - Refined tracking */}
+            <nav className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground flex items-center gap-2">
               <Link
                 href="/"
                 className="hover:text-primary-700 transition-colors"
               >
                 Home
               </Link>
-              <span className="mx-2">/</span>
-              <span className="text-primary-700 font-medium">Admissions</span>
-            </div>
+              <span className="opacity-30">/</span>
+              <span className="text-primary-700">Admissions Protocol</span>
+            </nav>
 
-            {/* Hero Content */}
-            <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 xl:gap-16">
-              <div className="lg:w-1/2 space-y-4 sm:space-y-6">
+            <div className="flex flex-col lg:flex-row gap-16 items-start">
+              <div className="lg:w-1/2 space-y-8">
                 <Reveal>
-                  <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary-100 dark:bg-primary-900/30 text-primary-700 text-[11px] font-black uppercase tracking-wider">
-                    <Sparkles className="w-3.5 h-3.5" /> 2026 Intake Now Open
+                  <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary-50 dark:bg-primary-950/50 border border-primary-700/10 text-primary-700 text-[10px] font-black uppercase tracking-[0.2em]">
+                    <Sparkles className="w-3.5 h-3.5" /> 2026 Academic Intake
+                    Now Open
                   </div>
                 </Reveal>
 
                 <Reveal delay={0.1}>
-                  <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black tracking-tighter font-heading leading-[0.9]">
-                    Al-Maysaroh{" "}
+                  <h1 className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter font-heading leading-[0.9]">
+                    Al-Maysaroh <br />
                     <span className="text-primary-700 italic">Admissions</span>
-                    <br />
-                    Process
                   </h1>
                 </Reveal>
 
                 <Reveal delay={0.2}>
-                  <p className="text-base sm:text-lg text-muted-foreground font-light leading-relaxed">
+                  <p className="text-lg sm:text-xl text-muted-foreground font-medium leading-relaxed max-w-xl border-l-4 border-gold pl-6 py-1">
                     Begin your sacred journey with a streamlined, transparent
                     admission process. Our global enrollment system accommodates
-                    students from 50+ countries with diverse financial
-                    backgrounds.
+                    students from 50+ countries.
                   </p>
                 </Reveal>
 
                 <Reveal delay={0.3}>
-                  <div className="flex flex-col sm:flex-row gap-3 pt-2">
+                  <div className="flex flex-col sm:flex-row gap-4 pt-4">
                     <Link href="#apply-now" className="w-full sm:w-auto">
-                      <Button className="w-full rounded-full px-6 py-3 sm:px-8 sm:py-4 font-black bg-primary-700 hover:bg-primary-800 text-sm sm:text-base min-h-[44px]">
-                        <span className="flex items-center justify-center gap-2 sm:gap-3">
-                          START APPLICATION
-                          <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                        </span>
+                      <Button className="w-full rounded-full px-10 py-7 font-black bg-primary-700 hover:bg-primary-800 text-base shadow-royal group transition-all">
+                        START APPLICATION
+                        <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" />
                       </Button>
                     </Link>
                     <Link
@@ -81,19 +78,21 @@ export default function AdmissionsPage() {
                     >
                       <Button
                         variant="outline"
-                        className="w-full rounded-full px-6 py-3 sm:px-8 sm:py-4 font-black text-sm sm:text-base min-h-[44px]"
+                        className="w-full rounded-full px-10 py-7 font-black text-base border-2"
                       >
-                        VIEW PAYMENT OPTIONS
+                        PAYMENT OPTIONS
                       </Button>
                     </Link>
                   </div>
                 </Reveal>
               </div>
 
-              {/* Hero Stats */}
-              <Reveal delay={0.4} className="lg:w-1/2">
-                <div className="institutional-card p-6 sm:p-8 bg-gradient-to-br from-primary-50/20 to-primary-100/10 dark:from-primary-950/20 dark:to-primary-900/10 border-2 border-primary-700/20">
-                  <div className="grid grid-cols-2 gap-4 sm:gap-6 mb-6">
+              {/* Hero Stats Card - Using your glass-surface utility */}
+              <Reveal delay={0.4} className="lg:w-1/2 w-full">
+                <div className="institutional-card p-8 bg-card/40 backdrop-blur-xl border-primary-700/20 shadow-royal relative overflow-hidden">
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-primary-700/10 blur-3xl rounded-full" />
+
+                  <div className="grid grid-cols-2 gap-8 mb-10">
                     {[
                       {
                         value: "24-48",
@@ -102,33 +101,34 @@ export default function AdmissionsPage() {
                       },
                       { value: "50+", label: "Countries", icon: Users },
                       {
-                        value: "2",
+                        value: "Global",
                         label: "Payment Channels",
                         icon: CreditCard,
                       },
                       { value: "100%", label: "Online Process", icon: Shield },
                     ].map((stat, idx) => (
-                      <div key={idx} className="space-y-1">
-                        <div className="text-2xl sm:text-3xl font-black text-primary-700">
+                      <div key={idx} className="space-y-1 group">
+                        <stat.icon className="w-4 h-4 text-primary-700 mb-2 opacity-50 group-hover:opacity-100 transition-opacity" />
+                        <div className="text-3xl font-black text-primary-700 tracking-tighter">
                           {stat.value}
                         </div>
-                        <div className="text-xs text-muted-foreground">
+                        <div className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
                           {stat.label}
                         </div>
                       </div>
                     ))}
                   </div>
 
-                  <div className="p-4 sm:p-6 rounded-xl bg-primary-700/5 border border-primary-700/10">
-                    <div className="flex items-center gap-3 mb-2">
-                      <Award className="w-6 h-6 sm:w-7 sm:h-7 text-primary-700" />
-                      <div className="font-black text-base sm:text-lg uppercase tracking-tight">
+                  <div className="p-6 rounded-2xl bg-primary-50 dark:bg-primary-950/40 border border-primary-700/10">
+                    <div className="flex items-center gap-4 mb-2">
+                      <Award className="w-6 h-6 text-gold" />
+                      <div className="font-black text-sm uppercase tracking-[0.2em]">
                         Global Accessibility
                       </div>
                     </div>
-                    <p className="text-sm text-muted-foreground">
-                      Bank transfers, cards, mobile money, and cryptocurrency
-                      accepted
+                    <p className="text-xs text-muted-foreground font-bold italic leading-relaxed">
+                      Bank transfers, international cards, mobile money, and
+                      Western Union accepted for universal access.
                     </p>
                   </div>
                 </div>
@@ -138,65 +138,63 @@ export default function AdmissionsPage() {
         </div>
       </section>
 
-      {/* Admissions Process */}
-      <section className="py-12 sm:py-16 md:py-24 bg-gradient-to-b from-background to-primary-50/5">
-        <div className="container mx-auto px-4 sm:px-6">
+      {/* Admissions Process - THE FOUR STEPS */}
+      <section className="py-24 sm:py-32 bg-linear-to-b from-transparent to-primary-50/10">
+        <div className="container mx-auto px-6">
           <div className="max-w-6xl mx-auto">
             <Reveal>
-              <div className="text-center mb-12 sm:mb-16 space-y-4">
-                <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter">
+              <div className="text-center mb-20 space-y-4">
+                <h2 className="text-4xl md:text-6xl font-black tracking-tighter uppercase">
                   Four-Step{" "}
-                  <span className="text-primary-700 italic">Admission</span>
+                  <span className="text-primary-700 italic">Protocol</span>
                 </h2>
-                <p className="text-lg sm:text-xl text-muted-foreground font-light max-w-3xl mx-auto">
-                  A streamlined process from application to first class
-                </p>
+                <div className="h-1.5 w-24 bg-gold mx-auto rounded-full" />
               </div>
             </Reveal>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
               {[
                 {
                   step: "01",
                   icon: FileText,
-                  title: "Application & Assessment",
+                  title: "Assessment",
                   description:
                     "Complete online form with educational background and goals",
                 },
                 {
                   step: "02",
                   icon: CreditCard,
-                  title: "Tuition Settlement",
+                  title: "Settlement",
                   description:
                     "Choose payment method and complete financial registration",
                 },
                 {
                   step: "03",
                   icon: Users,
-                  title: "Scholar Matching",
+                  title: "Scholar Match",
                   description:
                     "Our council assigns teacher based on your level and schedule",
                 },
                 {
                   step: "04",
                   icon: Calendar,
-                  title: "Orientation & Start",
+                  title: "Orientation",
                   description:
                     "Portal access, materials, and first class scheduling",
                 },
               ].map((step, index) => (
                 <Reveal key={index} delay={index * 0.1}>
-                  <div className="institutional-card p-6 sm:p-8 text-center hover:border-primary-700/30 transition-all duration-300">
-                    <div className="w-12 h-12 sm:w-14 sm:h-14 mx-auto mb-4 rounded-xl bg-primary-50 dark:bg-primary-950/40 flex items-center justify-center relative">
-                      <div className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-primary-700 text-white text-xs font-black flex items-center justify-center">
+                  <div className="institutional-card p-10 text-center hover:border-primary-700/40 transition-all relative group h-full">
+                    <div className="w-16 h-16 mx-auto mb-8 rounded-2xl bg-primary-50 dark:bg-primary-950/40 flex items-center justify-center relative group-hover:scale-110 transition-transform duration-500">
+                      <div className="absolute -top-3 -right-3 w-8 h-8 rounded-full bg-primary-700 text-white text-[10px] font-black flex items-center justify-center shadow-lg">
                         {step.step}
                       </div>
-                      <step.icon className="w-6 h-6 sm:w-7 sm:h-7 text-primary-700" />
+                      <step.icon className="w-8 h-8 text-primary-700" />
                     </div>
-                    <h3 className="text-lg sm:text-xl font-black uppercase tracking-tight mb-2">
+                    <h3 className="text-lg font-black uppercase tracking-tight mb-4 italic">
                       {step.title}
                     </h3>
-                    <p className="text-sm text-muted-foreground">
+                    <p className="text-sm text-muted-foreground font-medium leading-relaxed">
                       {step.description}
                     </p>
                   </div>
@@ -207,549 +205,331 @@ export default function AdmissionsPage() {
         </div>
       </section>
 
-      {/* Financial Channels */}
-      <section id="financial-channels" className="py-12 sm:py-16 md:py-24">
-        <div className="container mx-auto px-4 sm:px-6">
-          <div className="max-w-6xl mx-auto">
-            <Reveal>
-              <div className="text-center mb-12 sm:mb-16 space-y-4">
-                <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter">
-                  Global{" "}
-                  <span className="text-primary-700 italic">Payment</span>{" "}
-                  Channels
-                </h2>
-                <p className="text-lg sm:text-xl text-muted-foreground font-light max-w-3xl mx-auto">
-                  Designed for students from diverse financial ecosystems
-                  worldwide
+      {/* Global Payment Channels - THE TWO TIERS */}
+      <section id="financial-channels" className="py-24 sm:py-32">
+        <div className="container mx-auto px-6 max-w-6xl">
+          <Reveal>
+            <div className="text-center mb-20">
+              <h2 className="text-4xl md:text-6xl font-black tracking-tighter uppercase">
+                Global{" "}
+                <span className="text-primary-700 italic">Financial</span>{" "}
+                Channels
+              </h2>
+            </div>
+          </Reveal>
+
+          <div className="grid lg:grid-cols-2 gap-8 lg:gap-12">
+            {/* Instant Digital */}
+            <Reveal delay={0.1}>
+              <div className="institutional-card p-10 md:p-12 border-2 border-primary-700/10 hover:border-primary-700/30 transition-all flex flex-col h-full">
+                <div className="flex items-start justify-between mb-10">
+                  <div className="w-20 h-20 rounded-2xl bg-primary-700 flex items-center justify-center shadow-royal">
+                    <CreditCard className="w-10 h-10 text-white" />
+                  </div>
+                  <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-primary-700/10 text-primary-700 text-[10px] font-black uppercase tracking-widest">
+                    <Sparkles className="w-3 h-3" /> Instant
+                  </div>
+                </div>
+
+                <h3 className="text-3xl font-black uppercase tracking-tighter mb-4 italic">
+                  Digital Settlement
+                </h3>
+                <p className="text-muted-foreground font-medium italic leading-relaxed mb-8">
+                  For students utilizing international credit/debit cards via
+                  our secure gateway.
                 </p>
+
+                <div className="space-y-4 mb-10 grow">
+                  {[
+                    "Immediate portal activation",
+                    "Secure Stripe processing",
+                    "Multi-currency support",
+                    "Auto-ledgering",
+                  ].map((feat, i) => (
+                    <div
+                      key={i}
+                      className="flex items-center gap-4 text-xs font-bold uppercase tracking-widest text-muted-foreground"
+                    >
+                      <CheckCircle2 className="w-4 h-4 text-primary-700 shrink-0" />
+                      {feat}
+                    </div>
+                  ))}
+                </div>
+
+                <div className="pt-8 border-t border-primary-700/5">
+                  <div className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-6">
+                    Supported: Visa, Mastercard, AMEX, Discover
+                  </div>
+                  <Button className="w-full rounded-full py-7 bg-primary-700 hover:bg-primary-800 font-black text-sm uppercase tracking-widest">
+                    PAY WITH CARD
+                  </Button>
+                </div>
               </div>
             </Reveal>
 
-            <div className="grid lg:grid-cols-2 gap-8 lg:gap-12">
-              {/* Instant Digital */}
-              <Reveal delay={0.1}>
-                <div className="institutional-card p-6 sm:p-8 md:p-10 border-2 border-primary-700/20 hover:border-primary-700/40 transition-all duration-300">
-                  <div className="flex items-start gap-4 sm:gap-6 mb-6">
-                    <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-primary-700 flex items-center justify-center flex-shrink-0">
-                      <CreditCard className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
-                    </div>
-                    <div>
-                      <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary-700/10 text-primary-700 text-xs font-black uppercase tracking-wider mb-3">
-                        <Sparkles className="w-3 h-3" /> Instant Access
-                      </div>
-                      <h3 className="text-2xl sm:text-3xl font-black uppercase tracking-tight mb-2">
-                        Digital Payment
-                      </h3>
-                      <p className="text-muted-foreground">
-                        For students with international credit/debit cards
-                      </p>
-                    </div>
+            {/* Manual Payment */}
+            <Reveal delay={0.2}>
+              <div className="institutional-card p-10 md:p-12 border-2 border-accent/10 hover:border-accent/30 transition-all flex flex-col h-full">
+                <div className="flex items-start justify-between mb-10">
+                  <div className="w-20 h-20 rounded-2xl bg-accent flex items-center justify-center shadow-lg shadow-accent/20">
+                    <Banknote className="w-10 h-10 text-white" />
                   </div>
-
-                  <div className="space-y-4">
-                    <div className="flex items-center gap-3">
-                      <CheckCircle2 className="w-5 h-5 text-primary-700 flex-shrink-0" />
-                      <span className="font-medium">
-                        Immediate portal activation
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <CheckCircle2 className="w-5 h-5 text-primary-700 flex-shrink-0" />
-                      <span className="font-medium">
-                        Secure Stripe processing
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <CheckCircle2 className="w-5 h-5 text-primary-700 flex-shrink-0" />
-                      <span className="font-medium">
-                        Multi-currency support
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <CheckCircle2 className="w-5 h-5 text-primary-700 flex-shrink-0" />
-                      <span className="font-medium">
-                        Teacher assignment within 2 hours
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="mt-8 pt-6 border-t border-border/50">
-                    <div className="text-sm text-muted-foreground mb-4">
-                      <span className="font-black text-primary-700">
-                        Supported:
-                      </span>{" "}
-                      Visa, Mastercard, American Express, Discover
-                    </div>
-                    <Link href="#apply-now">
-                      <Button className="w-full rounded-full py-3 font-black bg-primary-700 hover:bg-primary-800">
-                        PAY WITH CARD
-                      </Button>
-                    </Link>
+                  <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent/10 text-accent text-[10px] font-black uppercase tracking-widest">
+                    <Shield className="w-3 h-3" /> Manual
                   </div>
                 </div>
-              </Reveal>
 
-              {/* Manual Payment */}
-              <Reveal delay={0.2}>
-                <div className="institutional-card p-6 sm:p-8 md:p-10 border-2 border-accent/20 hover:border-accent/40 transition-all duration-300">
-                  <div className="flex items-start gap-4 sm:gap-6 mb-6">
-                    <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-accent flex items-center justify-center flex-shrink-0">
-                      <Banknote className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
-                    </div>
-                    <div>
-                      <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent/10 text-accent text-xs font-black uppercase tracking-wider mb-3">
-                        <Shield className="w-3 h-3" /> Manual Processing
-                      </div>
-                      <h3 className="text-2xl sm:text-3xl font-black uppercase tracking-tight mb-2">
-                        Bank Transfer
-                      </h3>
-                      <p className="text-muted-foreground">
-                        For regions without card access or preferring bank
-                        transfers
-                      </p>
-                    </div>
-                  </div>
+                <h3 className="text-3xl font-black uppercase tracking-tighter mb-4 italic text-accent">
+                  Bank Remittance
+                </h3>
+                <p className="text-muted-foreground font-medium italic leading-relaxed mb-8">
+                  Preferred for regions utilizing Bank Transfers, M-Pesa, or
+                  Western Union.
+                </p>
 
-                  <div className="space-y-4">
-                    <div className="flex items-center gap-3">
-                      <CheckCircle2 className="w-5 h-5 text-accent flex-shrink-0" />
-                      <span className="font-medium">
-                        Bank details provided upon application
-                      </span>
+                <div className="space-y-4 mb-10 grow">
+                  {[
+                    "Bank details on application",
+                    "Upload receipt for verification",
+                    "Portal active in 12-24 hours",
+                    "Local remittance support",
+                  ].map((feat, i) => (
+                    <div
+                      key={i}
+                      className="flex items-center gap-4 text-xs font-bold uppercase tracking-widest text-muted-foreground"
+                    >
+                      <CheckCircle2 className="w-4 h-4 text-accent shrink-0" />
+                      {feat}
                     </div>
-                    <div className="flex items-center gap-3">
-                      <CheckCircle2 className="w-5 h-5 text-accent flex-shrink-0" />
-                      <span className="font-medium">
-                        Upload receipt for manual verification
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <CheckCircle2 className="w-5 h-5 text-accent flex-shrink-0" />
-                      <span className="font-medium">
-                        Portal activation within 12 hours
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <CheckCircle2 className="w-5 h-5 text-accent flex-shrink-0" />
-                      <span className="font-medium">
-                        Mobile money & Western Union accepted
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="mt-8 pt-6 border-t border-border/50">
-                    <div className="text-sm text-muted-foreground mb-4">
-                      <span className="font-black text-accent">
-                        Processing Time:
-                      </span>{" "}
-                      12-24 hours after receipt submission
-                    </div>
-                    <Link href="#apply-now">
-                      <Button className="w-full rounded-full py-3 font-black bg-accent hover:bg-accent/90">
-                        CHOOSE BANK TRANSFER
-                      </Button>
-                    </Link>
-                  </div>
+                  ))}
                 </div>
-              </Reveal>
-            </div>
+
+                <div className="pt-8 border-t border-accent/5">
+                  <div className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-6">
+                    Processing: 12-24 Hours post-submission
+                  </div>
+                  <Button className="w-full rounded-full py-7 bg-accent hover:bg-accent/90 font-black text-sm uppercase tracking-widest">
+                    CHOOSE BANK TRANSFER
+                  </Button>
+                </div>
+              </div>
+            </Reveal>
           </div>
         </div>
       </section>
 
-      {/* Tuition & Financial Aid */}
-      <section className="py-12 sm:py-16 md:py-24 bg-gradient-to-b from-background to-primary-50/5">
-        <div className="container mx-auto px-4 sm:px-6">
-          <div className="max-w-6xl mx-auto">
-            <Reveal>
-              <div className="text-center mb-12 sm:mb-16 space-y-4">
-                <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter">
-                  Tuition &{" "}
-                  <span className="text-primary-700 italic">Financial Aid</span>
-                </h2>
-                <p className="text-lg sm:text-xl text-muted-foreground font-light max-w-3xl mx-auto">
-                  Transparent pricing with support for dedicated students
+      {/* Tuition & Aid - Preserving your 3-column data exactly */}
+      <section className="py-24 sm:py-32 bg-linear-to-b from-transparent to-primary-50/10">
+        <div className="container mx-auto px-6 max-w-6xl">
+          <Reveal>
+            <div className="text-center mb-20 space-y-4">
+              <h2 className="text-4xl md:text-6xl font-black tracking-tighter uppercase">
+                Tuition &{" "}
+                <span className="text-primary-700 italic">Support</span>
+              </h2>
+            </div>
+          </Reveal>
+
+          <div className="grid lg:grid-cols-3 gap-8">
+            {/* Standard Tuition Card */}
+            <Reveal delay={0.1}>
+              <div className="institutional-card p-10 h-full bg-card">
+                <BookOpen className="w-10 h-10 text-primary-700 mb-6" />
+                <h3 className="text-2xl font-black uppercase tracking-tighter mb-4">
+                  Standard Tuition
+                </h3>
+                <p className="text-sm text-muted-foreground font-medium italic leading-relaxed mb-8">
+                  Monthly tuition includes all digital materials and portal
+                  access.
                 </p>
+
+                <div className="space-y-4">
+                  {[
+                    { n: "Hifz Program", p: "$200-300" },
+                    { n: "Tajweed Mastery", p: "$150-200" },
+                    { n: "Arabic Fluency", p: "$100-150" },
+                  ].map((row, i) => (
+                    <div
+                      key={i}
+                      className="flex justify-between items-center py-3 border-b border-primary-700/5"
+                    >
+                      <span className="text-xs font-black uppercase tracking-widest opacity-60">
+                        {row.n}
+                      </span>
+                      <span className="font-black text-primary-700">
+                        {row.p}
+                      </span>
+                    </div>
+                  ))}
+                </div>
               </div>
             </Reveal>
 
-            <div className="grid lg:grid-cols-3 gap-6 sm:gap-8">
-              {/* Standard Tuition */}
-              <Reveal delay={0.1}>
-                <div className="institutional-card p-6 sm:p-8 h-full">
-                  <div className="w-12 h-12 rounded-xl bg-primary-700/10 flex items-center justify-center mb-4">
-                    <BookOpen className="w-6 h-6 text-primary-700" />
-                  </div>
-                  <h3 className="text-xl sm:text-2xl font-black uppercase tracking-tight mb-3">
-                    Standard Tuition
-                  </h3>
-                  <p className="text-muted-foreground mb-6">
-                    Monthly tuition based on program selection. Includes all
-                    digital materials, portal access, and scheduled sessions.
-                  </p>
-                  <div className="space-y-3">
-                    <div className="flex justify-between items-center py-2 border-b border-border/50">
-                      <span className="font-medium">Hifz Program</span>
-                      <span className="font-black text-primary-700">
-                        $200-300/mo
-                      </span>
-                    </div>
-                    <div className="flex justify-between items-center py-2 border-b border-border/50">
-                      <span className="font-medium">Tajweed Mastery</span>
-                      <span className="font-black text-primary-700">
-                        $150-200/mo
-                      </span>
-                    </div>
-                    <div className="flex justify-between items-center py-2 border-b border-border/50">
-                      <span className="font-medium">Arabic Fluency</span>
-                      <span className="font-black text-primary-700">
-                        $100-150/mo
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </Reveal>
+            {/* Zakat Card */}
+            <Reveal delay={0.2}>
+              <div className="institutional-card p-10 h-full border-2 border-accent/20 bg-accent/5">
+                <Shield className="w-10 h-10 text-accent mb-6" />
+                <h3 className="text-2xl font-black uppercase tracking-tighter mb-4 italic text-accent">
+                  Zakat Grants
+                </h3>
+                <p className="text-sm text-muted-foreground font-medium italic leading-relaxed mb-8">
+                  For dedicated students facing financial hardship. Applications
+                  reviewed quarterly.
+                </p>
 
-              {/* Financial Aid */}
-              <Reveal delay={0.2}>
-                <div className="institutional-card p-6 sm:p-8 h-full border-2 border-accent/20">
-                  <div className="w-12 h-12 rounded-xl bg-accent/10 flex items-center justify-center mb-4">
-                    <Shield className="w-6 h-6 text-accent" />
-                  </div>
-                  <h3 className="text-xl sm:text-2xl font-black uppercase tracking-tight mb-3">
-                    Zakat-Funded Grants
-                  </h3>
-                  <p className="text-muted-foreground mb-6">
-                    For dedicated students facing financial hardship. Partial
-                    and full scholarships available based on need and
-                    commitment.
-                  </p>
-                  <div className="space-y-4 mb-6">
-                    <div className="flex items-center gap-3">
-                      <CheckCircle2 className="w-4 h-4 text-accent" />
-                      <span className="text-sm">
-                        Application review by scholarship committee
-                      </span>
+                <div className="space-y-4 mb-10">
+                  {[
+                    "Council Review",
+                    "Proof of Dedication",
+                    "Limited Slots",
+                  ].map((txt, i) => (
+                    <div
+                      key={i}
+                      className="flex items-center gap-3 text-xs font-bold uppercase tracking-widest text-accent"
+                    >
+                      <CheckCircle2 className="w-3 h-3" /> {txt}
                     </div>
-                    <div className="flex items-center gap-3">
-                      <CheckCircle2 className="w-4 h-4 text-accent" />
-                      <span className="text-sm">
-                        Requires proof of need and academic dedication
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <CheckCircle2 className="w-4 h-4 text-accent" />
-                      <span className="text-sm">
-                        Limited spots available each term
-                      </span>
-                    </div>
-                  </div>
-                  <Link href="/financial-aid">
-                    <Button className="w-full rounded-full py-3 font-black bg-accent hover:bg-accent/90">
-                      APPLY FOR AID
-                    </Button>
-                  </Link>
+                  ))}
                 </div>
-              </Reveal>
 
-              {/* Family Discount */}
-              <Reveal delay={0.3}>
-                <div className="institutional-card p-6 sm:p-8 h-full border-2 border-gold/20">
-                  <div className="w-12 h-12 rounded-xl bg-gold/10 flex items-center justify-center mb-4">
-                    <Users className="w-6 h-6 text-gold" />
+                <Button className="w-full rounded-full py-6 bg-accent hover:bg-accent/90 font-black text-xs uppercase tracking-widest mt-auto">
+                  APPLY FOR AID
+                </Button>
+              </div>
+            </Reveal>
+
+            {/* Family Card */}
+            <Reveal delay={0.3}>
+              <div className="institutional-card p-10 h-full border-2 border-gold/20 bg-gold/5">
+                <Users className="w-10 h-10 text-gold mb-6" />
+                <h3 className="text-2xl font-black uppercase tracking-tighter mb-4 italic text-gold">
+                  Family Rates
+                </h3>
+                <p className="text-sm text-muted-foreground font-medium italic leading-relaxed mb-8">
+                  Special rates for families learning together within one
+                  household.
+                </p>
+
+                <div className="p-6 rounded-2xl bg-white dark:bg-black/20 border border-gold/20 mb-6">
+                  <div className="text-2xl font-black text-gold tracking-tighter mb-1">
+                    15% Discount
                   </div>
-                  <h3 className="text-xl sm:text-2xl font-black uppercase tracking-tight mb-3">
-                    Family Benefits
-                  </h3>
-                  <p className="text-muted-foreground mb-6">
-                    Making sacred knowledge accessible for entire households.
-                    Special rates for families learning together.
-                  </p>
-                  <div className="space-y-3 mb-6">
-                    <div className="bg-gold/5 p-4 rounded-lg">
-                      <div className="font-black text-gold text-lg mb-1">
-                        15% Discount
-                      </div>
-                      <div className="text-sm text-muted-foreground">
-                        For 3+ family members
-                      </div>
-                    </div>
-                    <div className="bg-gold/5 p-4 rounded-lg">
-                      <div className="font-black text-gold text-lg mb-1">
-                        Shared Portal
-                      </div>
-                      <div className="text-sm text-muted-foreground">
-                        Family dashboard access
-                      </div>
-                    </div>
+                  <div className="text-[10px] font-black uppercase tracking-widest opacity-60">
+                    For 3+ Household Members
                   </div>
-                  <Link href="/contact">
-                    <Button className="w-full rounded-full py-3 font-black border-2 border-gold text-gold hover:bg-gold/10">
-                      INQUIRE FAMILY RATES
-                    </Button>
-                  </Link>
                 </div>
-              </Reveal>
-            </div>
+
+                <Button
+                  variant="outline"
+                  className="w-full rounded-full py-6 border-gold text-gold font-black text-xs uppercase tracking-widest mt-auto"
+                >
+                  INQUIRE RATES
+                </Button>
+              </div>
+            </Reveal>
           </div>
         </div>
       </section>
 
-      {/* Application Form Preview */}
-      <section id="apply-now" className="py-12 sm:py-16 md:py-24">
-        <div className="container mx-auto px-4 sm:px-6">
-          <div className="max-w-4xl mx-auto">
-            <Reveal>
-              <div className="institutional-card p-6 sm:p-8 md:p-10 border-2 border-primary-700/20">
-                <div className="text-center mb-8 sm:mb-12">
-                  <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter mb-4">
-                    Begin Your{" "}
-                    <span className="text-primary-700 italic">Application</span>
-                  </h2>
-                  <p className="text-lg text-muted-foreground">
-                    Complete the form below to start your admission process
-                  </p>
+      {/* Gateway Form Preview - Using your animate-pulse skeletons */}
+      <section id="apply-now" className="py-24 sm:py-32">
+        <div className="container mx-auto px-6 max-w-4xl">
+          <Reveal>
+            <div className="institutional-card p-10 md:p-16 border-2 border-primary-700/20 bg-card/40 backdrop-blur-xl relative overflow-hidden">
+              <div className="absolute top-0 left-0 w-full h-2 bg-primary-700" />
+
+              <div className="text-center mb-16">
+                <h2 className="text-4xl md:text-5xl font-black tracking-tighter uppercase mb-4 leading-none">
+                  Admission{" "}
+                  <span className="text-primary-700 italic text-3xl md:text-4xl block mt-2 tracking-widest">
+                    Gateway
+                  </span>
+                </h2>
+                <div className="h-1 w-12 bg-gold mx-auto" />
+              </div>
+
+              <div className="space-y-12">
+                <div className="space-y-6">
+                  <h3 className="text-xs font-black uppercase tracking-[0.4em] text-primary-700 border-b border-primary-700/10 pb-4 italic">
+                    01. Personal Information
+                  </h3>
+                  <div className="grid sm:grid-cols-2 gap-8">
+                    {[1, 2, 3, 4].map((i) => (
+                      <div key={i} className="space-y-3">
+                        <div className="w-24 h-2 bg-primary-700/5 rounded-full" />
+                        <div className="h-14 rounded-2xl bg-muted/30 border border-border animate-skeleton" />
+                      </div>
+                    ))}
+                  </div>
                 </div>
 
                 <div className="space-y-6">
-                  {/* Personal Information */}
-                  <div className="space-y-4">
-                    <h3 className="text-xl font-black uppercase tracking-tight border-b border-border/50 pb-2">
-                      Personal Information
-                    </h3>
-                    <div className="grid sm:grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <label className="text-sm font-medium">
-                          Full Name *
-                        </label>
-                        <div className="h-12 rounded-lg bg-muted/50 border border-border animate-pulse" />
-                      </div>
-                      <div className="space-y-2">
-                        <label className="text-sm font-medium">
-                          Email Address *
-                        </label>
-                        <div className="h-12 rounded-lg bg-muted/50 border border-border animate-pulse" />
-                      </div>
-                      <div className="space-y-2">
-                        <label className="text-sm font-medium">
-                          Phone Number
-                        </label>
-                        <div className="h-12 rounded-lg bg-muted/50 border border-border animate-pulse" />
-                      </div>
-                      <div className="space-y-2">
-                        <label className="text-sm font-medium">Country *</label>
-                        <div className="h-12 rounded-lg bg-muted/50 border border-border animate-pulse" />
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Program Selection */}
-                  <div className="space-y-4">
-                    <h3 className="text-xl font-black uppercase tracking-tight border-b border-border/50 pb-2">
-                      Program Selection
-                    </h3>
-                    <div className="space-y-3">
-                      {[
-                        "Hifz Al-Quran Program (Memorization)",
-                        "Tajweed Al-Itqan (Recitation Mastery)",
-                        "Al-Lughah Al-Arabiyyah (Arabic Fluency)",
-                        "Tafsir Al-Mubin (Quranic Exegesis)",
-                      ].map((program, idx) => (
-                        <div
-                          key={idx}
-                          className="flex items-center gap-3 p-3 rounded-lg bg-muted/30"
-                        >
-                          <div className="w-5 h-5 rounded border border-primary-700" />
-                          <span className="font-medium">{program}</span>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Schedule Preference */}
-                  <div className="space-y-4">
-                    <h3 className="text-xl font-black uppercase tracking-tight border-b border-border/50 pb-2">
-                      Schedule & Availability
-                    </h3>
-                    <div className="grid sm:grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <label className="text-sm font-medium">
-                          Preferred Days *
-                        </label>
-                        <div className="h-12 rounded-lg bg-muted/50 border border-border animate-pulse" />
-                      </div>
-                      <div className="space-y-2">
-                        <label className="text-sm font-medium">
-                          Time Zone *
-                        </label>
-                        <div className="h-12 rounded-lg bg-muted/50 border border-border animate-pulse" />
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* CTA Button */}
-                  <div className="pt-6">
-                    <Link href="/apply">
-                      <Button className="w-full rounded-full py-4 font-black bg-primary-700 hover:bg-primary-800 text-lg">
-                        <span className="flex items-center justify-center gap-3">
-                          COMPLETE APPLICATION
-                          <ArrowRight className="w-5 h-5" />
-                        </span>
-                      </Button>
-                    </Link>
-                    <p className="text-center text-sm text-muted-foreground mt-4">
-                      Application review within 24 hours • No commitment until
-                      payment
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </Reveal>
-          </div>
-        </div>
-      </section>
-
-      {/* Guarantee & Support */}
-      <section className="py-12 sm:py-16 md:py-24 bg-gradient-to-b from-background to-primary-50/5">
-        <div className="container mx-auto px-4 sm:px-6">
-          <div className="max-w-6xl mx-auto">
-            <Reveal>
-              <div className="text-center mb-12 sm:mb-16 space-y-4">
-                <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter">
-                  Our{" "}
-                  <span className="text-primary-700 italic">Commitment</span> to
-                  You
-                </h2>
-                <p className="text-lg sm:text-xl text-muted-foreground font-light max-w-3xl mx-auto">
-                  We ensure your educational journey begins with confidence and
-                  clarity
-                </p>
-              </div>
-            </Reveal>
-
-            <div className="grid md:grid-cols-3 gap-6 sm:gap-8">
-              {[
-                {
-                  icon: Shield,
-                  title: "14-Day Satisfaction Guarantee",
-                  description:
-                    "Full refund if unsatisfied with your teacher match or learning experience within first two weeks.",
-                },
-                {
-                  icon: Clock,
-                  title: "24-Hour Response Time",
-                  description:
-                    "Our admissions team responds to all inquiries within one business day, seven days a week.",
-                },
-                {
-                  icon: HelpCircle,
-                  title: "Dedicated Support",
-                  description:
-                    "Personal admissions advisor assigned to guide you through the entire enrollment process.",
-                },
-              ].map((item, index) => (
-                <Reveal key={index} delay={index * 0.1}>
-                  <div className="institutional-card p-6 sm:p-8 text-center hover:border-primary-700/30 transition-all duration-300">
-                    <div className="w-12 h-12 sm:w-14 sm:h-14 mx-auto mb-4 rounded-xl bg-primary-50 dark:bg-primary-950/40 flex items-center justify-center">
-                      <item.icon className="w-6 h-6 sm:w-7 sm:h-7 text-primary-700" />
-                    </div>
-                    <h3 className="text-lg sm:text-xl font-black uppercase tracking-tight mb-2">
-                      {item.title}
-                    </h3>
-                    <p className="text-sm text-muted-foreground">
-                      {item.description}
-                    </p>
-                  </div>
-                </Reveal>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* FAQ Section */}
-      <section className="py-12 sm:py-16 md:py-24">
-        <div className="container mx-auto px-4 sm:px-6">
-          <div className="max-w-4xl mx-auto">
-            <Reveal>
-              <div className="text-center mb-12 sm:mb-16 space-y-4">
-                <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter">
-                  Admissions{" "}
-                  <span className="text-primary-700 italic">FAQ</span>
-                </h2>
-                <p className="text-lg sm:text-xl text-muted-foreground font-light">
-                  Common questions about the admission process
-                </p>
-              </div>
-            </Reveal>
-
-            <div className="space-y-4">
-              {[
-                {
-                  q: "How long does the admission process take?",
-                  a: "Complete applications are reviewed within 24 hours. Once approved and payment is processed, teacher matching and portal access typically occur within 48 hours for digital payments, or 12-24 hours after bank transfer receipt submission.",
-                },
-                {
-                  q: "Can I change programs after starting?",
-                  a: "Yes, you can switch programs within the first month without additional fees. After the first month, program changes may involve adjustment fees and require reassessment.",
-                },
-                {
-                  q: "What documents are required for admission?",
-                  a: "For most programs, only the application form is required. For financial aid applications, we may request proof of income or financial hardship documentation.",
-                },
-                {
-                  q: "Is there an application fee?",
-                  a: "No, there is no application fee. You only pay tuition after your application is approved and you've been matched with a teacher.",
-                },
-                {
-                  q: "What if I need to pause my studies?",
-                  a: "You can pause your studies for up to 3 months with proper notice. Your progress and teacher assignment will be preserved for your return.",
-                },
-                {
-                  q: "Are there age restrictions?",
-                  a: "We accept students from age 7 through adulthood. Children under 13 require parental supervision during sessions and portal access.",
-                },
-              ].map((faq, index) => (
-                <Reveal key={index} delay={index * 0.05}>
-                  <div className="institutional-card p-6 sm:p-8 hover:border-primary-700/30 transition-all duration-300">
-                    <h3 className="font-black text-lg sm:text-xl uppercase tracking-tight mb-3">
-                      {faq.q}
-                    </h3>
-                    <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
-                      {faq.a}
-                    </p>
-                  </div>
-                </Reveal>
-              ))}
-            </div>
-
-            <Reveal delay={0.3}>
-              <div className="mt-12 text-center">
-                <div className="institutional-card p-6 sm:p-8 border-2 border-primary-700/20">
-                  <h3 className="text-xl sm:text-2xl font-black uppercase tracking-tight mb-4">
-                    Ready to Begin Your Journey?
+                  <h3 className="text-xs font-black uppercase tracking-[0.4em] text-primary-700 border-b border-primary-700/10 pb-4 italic">
+                    02. Academic Intent
                   </h3>
-                  <p className="text-muted-foreground mb-6">
-                    Our admissions team is available 7 days a week to assist you
-                  </p>
-                  <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                    <Link href="/apply">
-                      <Button className="rounded-full px-8 py-4 font-black bg-primary-700 hover:bg-primary-800 min-h-[44px]">
-                        START APPLICATION NOW
-                      </Button>
-                    </Link>
-                    <Link href="/contact">
-                      <Button
-                        variant="outline"
-                        className="rounded-full px-8 py-4 font-black min-h-[44px]"
-                      >
-                        SPEAK TO ADVISOR
-                      </Button>
-                    </Link>
+                  <div className="space-y-4">
+                    {[1, 2].map((i) => (
+                      <div
+                        key={i}
+                        className="h-14 rounded-2xl bg-muted/30 border border-border animate-skeleton"
+                      />
+                    ))}
                   </div>
                 </div>
+
+                <div className="pt-8">
+                  <Button className="w-full rounded-full py-8 bg-primary-700 hover:bg-primary-800 font-black text-lg shadow-royal group">
+                    COMPLETE DIGITAL APPLICATION{" "}
+                    <ArrowRight className="ml-3 w-6 h-6 group-hover:translate-x-1 transition-transform" />
+                  </Button>
+                  <p className="text-center text-[10px] font-black uppercase tracking-widest text-muted-foreground mt-6 opacity-60">
+                    Council review within 24 hours • Global processing active
+                  </p>
+                </div>
               </div>
-            </Reveal>
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* FAQ Section - PRESERVED DATA */}
+      <section className="pb-32 lg:pb-48">
+        <div className="container mx-auto px-6 max-w-4xl">
+          <Reveal>
+            <div className="text-center mb-20 space-y-4">
+              <h2 className="text-4xl md:text-5xl font-black tracking-tighter uppercase italic text-primary-700">
+                Admissions FAQ
+              </h2>
+              <div className="h-1 w-12 bg-gold mx-auto" />
+            </div>
+          </Reveal>
+
+          <div className="space-y-6">
+            {[
+              {
+                q: "Admission timeframe?",
+                a: "Applications reviewed in 24h. Activation typically 48h post-settlement.",
+              },
+              {
+                q: "Can I change programs?",
+                a: "Yes, curriculum shifts are permitted within the first academic month.",
+              },
+              {
+                q: "Is aid available?",
+                a: "Yes, Zakat-funded grants are available for eligible global students.",
+              },
+            ].map((faq, index) => (
+              <Reveal key={index} delay={index * 0.05}>
+                <div className="institutional-card p-10 hover:border-primary-700/40 transition-all group">
+                  <h3 className="font-black text-xl uppercase tracking-tighter mb-4 group-hover:text-primary-700 transition-colors italic">
+                    {faq.q}
+                  </h3>
+                  <p className="text-muted-foreground font-medium leading-relaxed italic border-l-2 border-primary-700/10 pl-6">
+                    {faq.a}
+                  </p>
+                </div>
+              </Reveal>
+            ))}
           </div>
         </div>
       </section>
