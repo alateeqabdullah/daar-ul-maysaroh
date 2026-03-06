@@ -14,6 +14,17 @@ import { motion } from "framer-motion";
 
 const FEATURED_COURSES = [
   {
+    title: "Qiro'ah Program",
+    subtitle: "Quran Reading",
+    description: "Complete Quran reading and recitation with certification.",
+    icon: BookOpen,
+    duration: "6 - 12 Months",
+    students: "1-on-1",
+    level: "Beginner+",
+    href: "/courses/qiroah",
+    features: ["Certificate", "24/7 Portal", "Analytics"],
+  },
+  {
     title: "Hifz Program",
     subtitle: "Quran Memorization",
     description: "Complete Quran memorization with Ijazah certification.",
@@ -24,17 +35,7 @@ const FEATURED_COURSES = [
     href: "/courses/hifz",
     features: ["Ijazah", "24/7 Portal", "Analytics"],
   },
-  {
-    title: "Qiro'ah (Reading) Program",
-    subtitle: "Quran Reading",
-    description: "Complete Quran reading and recitation with certification.",
-    icon: BookOpen,
-    duration: "6 - 12 Months",
-    students: "1-on-1",
-    level: "Beginner+",
-    href: "/courses/qiroah",
-    features: ["Certificate", "24/7 Portal", "Analytics"],
-  },
+
   {
     title: "Tajweed Mastery",
     subtitle: "Scientific Recitation",
@@ -48,19 +49,19 @@ const FEATURED_COURSES = [
     href: "/courses/tajweed",
     features: ["Live Correction", "Audio Analysis"],
   },
-  {
-    title: "Arabic Fluency",
-    subtitle: "Quranic Language",
-    description: "Understand Quran in its original language.",
-    icon: Users,
-    duration: "1 Year",
-    students: "1-on-1",
-    // level: "Beginner",
-    level: "All Levels",
+  // {
+  //   title: "Arabic Fluency",
+  //   subtitle: "Quranic Language",
+  //   description: "Understand Quran in its original language.",
+  //   icon: Users,
+  //   duration: "1 Year",
+  //   students: "1-on-1",
+  //   // level: "Beginner",
+  //   level: "All Levels",
 
-    href: "/courses/arabic",
-    features: ["Grammar", "Vocabulary", "Tafsir"],
-  },
+  //   href: "/courses/arabic",
+  //   features: ["Grammar", "Vocabulary", "Tafsir"],
+  // },
   {
     title: "Tafsir Studies",
     subtitle: "Quranic Exegesis",
@@ -127,7 +128,7 @@ export function FeaturedCourses() {
                     {/* Duration Badge */}
                     <div className="px-3 py-1 sm:px-4 sm:py-2 rounded-full bg-primary-700/10 border border-primary-700/20">
                       <span className="text-xs sm:text-sm font-black text-primary-700">
-                        {course.duration}
+                        {/* {course.duration} */}
                       </span>
                     </div>
                   </div>
@@ -197,8 +198,8 @@ export function FeaturedCourses() {
         <Reveal>
           <div className="text-center">
             <div className="inline-flex flex-col items-center gap-6 sm:gap-8">
-              <div className="text-base sm:text-lg text-muted-foreground font-light max-w-md px-4">
-                Each program includes Ijazah certification and scholarly
+              <div className="text-base sm:text-lg opacity-70 text-muted-foreground font-semibold max-w-md px-4">
+                Each program includes Ijazah / certification and scholarly
                 mentorship.
               </div>
 

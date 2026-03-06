@@ -188,6 +188,7 @@ model Teacher {
   payrolls          Payroll[]
 
   @@map("teachers")
+  sanadChains SanadChain[]
 }
 
 model Parent {
@@ -1893,4 +1894,24 @@ enum HifzStatus {
   NEEDS_PRACTICE
   FAIL
   EXCELLENT
+}
+
+
+model SanadChain {
+  id          String   @id @default(cuid())
+  teacherId   String
+  teacher     Teacher  @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+  
+  // Chain details
+  generation  Int      // 1 = current scholar, 2 = their teacher, etc.
+  scholarName String
+  bio         String?  // Brief info about this scholar in chain
+  era         String?  // e.g., "8th Century Hijri"
+  region      String?  // e.g., "Makka", "Madina", "Egypt"
+  
+  // Important scholars in chain
+  isFamous    Boolean @default(false) // For highlighting key figures
+  
+  @@unique([teacherId, generation])
+  @@map("sanad_chains")
 }

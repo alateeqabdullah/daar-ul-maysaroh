@@ -127,9 +127,9 @@ const PREVIEW_TEACHERS = [
     slug: "abubakar-abdurrozzaaq-al-maysari",
     fullBio:
       "With over 25 years of teaching experience, Sheikh Abubakar holds ijazah in all ten Qira'at with an unbroken chain reaching back to Prophet Muhammad (ﷺ). He has trained over 200 certified Qurra worldwide.",
-    students: "200+ certified Qurra",
-    experience: "25+ years",
-    sanad: "32 generations to Prophet (ﷺ)",
+    students: "100+ certified Qurra",
+    experience: "15+ years",
+    sanad: "Active Sanad to Prophet (ﷺ)",
   },
   {
     id: "ustadha-fatimah-zahrah-alagbada",
@@ -142,7 +142,7 @@ const PREVIEW_TEACHERS = [
       "Ustadha Fatimah specializes in female Hifz instruction with a focus on tajweed perfection and spiritual development. Her students consistently achieve mastery with proper makharij.",
     students: "150+ female graduates",
     experience: "15+ years",
-    sanad: "28 generations to Prophet (ﷺ)",
+    sanad: "Active Sanad to Prophet (ﷺ)",
   },
 ];
 
@@ -168,7 +168,7 @@ export function Teachers() {
             <Link href="/teachers">
               <Button
                 variant="outline"
-                className="h-12 sm:h-14 md:h-16 px-6 sm:px-8 md:px-10 rounded-xl sm:rounded-2xl border-2 font-black text-xs tracking-widest uppercase hover:bg-primary-700 hover:text-white transition-all min-h-[44px]"
+                className="h-12 sm:h-14 md:h-16 px-6 sm:px-8 md:px-10 rounded-xl sm:rounded-2xl border-2 font-black text-xs tracking-widest uppercase hover:bg-primary-700 hover:text-white transition-all min-h-11"
               >
                 View Full Faculty{" "}
                 <ArrowRight className="ml-2 w-3.5 h-3.5 sm:w-4 sm:h-4" />
@@ -193,7 +193,7 @@ export function Teachers() {
 
                   <div className="flex flex-col lg:flex-row gap-6 sm:gap-8 items-start">
                     {/* Portrait Placeholder - will be replaced with actual images */}
-                    <div className="w-full lg:w-40 h-48 sm:h-52 lg:h-56 bg-gradient-to-br from-primary-700/5 to-primary-900/10 rounded-2xl sm:rounded-3xl lg:rounded-4xl overflow-hidden relative border border-border group-hover:border-primary-700/30 transition-all">
+                    <div className="w-full lg:w-40 h-48 sm:h-52 lg:h-56 bg-linear-to-br from-primary-700/5 to-primary-900/10 rounded-2xl sm:rounded-3xl lg:rounded-4xl overflow-hidden relative border border-border group-hover:border-primary-700/30 transition-all">
                       <div className="absolute inset-0 flex items-center justify-center opacity-20 group-hover:opacity-30 transition-opacity">
                         <GraduationCap className="w-10 h-10 sm:w-12 sm:h-12" />
                       </div>
@@ -219,7 +219,7 @@ export function Teachers() {
                       </p>
 
                       <p className="text-xs sm:text-sm italic font-medium text-muted-foreground opacity-80 leading-relaxed">
-                        "{teacher.philosophy}"
+                       {` "{teacher.philosophy}"`}
                       </p>
 
                       <div className="flex flex-wrap gap-3 sm:gap-4 pt-2 sm:pt-4">
@@ -257,7 +257,7 @@ export function Teachers() {
         <Reveal delay={0.3}>
           <div className="mt-16 sm:mt-20 md:mt-24 text-center max-w-2xl mx-auto">
             <p className="text-sm sm:text-base text-muted-foreground font-medium border-t border-border/50 pt-8">
-              Our Dean personally matches each student with the perfect teacher
+              Our Dean personally matches each student with the perfect teacher after their assessment
               based on their learning style, goals, and spiritual journey.
             </p>
           </div>

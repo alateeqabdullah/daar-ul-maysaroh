@@ -4,7 +4,6 @@ import {
   Calendar,
   CreditCard,
   Banknote,
-  GraduationCap,
   CheckCircle2,
   Shield,
   Users,
@@ -13,13 +12,11 @@ import {
   Sparkles,
   Award,
   ArrowRight,
-  HelpCircle,
   FileText,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Reveal } from "@/components/shared/section-animation";
 import Link from "next/link";
-import { cn } from "@/lib/utils";
 
 export default function AdmissionsPage() {
   return (
