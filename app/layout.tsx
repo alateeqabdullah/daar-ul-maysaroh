@@ -10,6 +10,7 @@ import {
 import { Toaster } from "sonner";
 import "./globals.css";
 import { OfflineProvider } from "@/components/providers/offline-detector";
+import { GlobalScrollProgress } from "@/components/layoutt/globallScroll";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const noto = Noto_Sans_Arabic({ subsets: ["arabic"], variable: "--font-noto" });
@@ -149,6 +150,7 @@ export default async function RootLayout({
       >
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
           <AuthProvider>
+            <GlobalScrollProgress />
             {/* <OfflineProvider> */}
               {children}
             {/* </OfflineProvider> */}
