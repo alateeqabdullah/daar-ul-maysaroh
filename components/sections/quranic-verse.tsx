@@ -104,7 +104,6 @@ export function QuranicVerse() {
   // Trigger subtle interaction when verse comes into view
   useEffect(() => {
     if (isInView) {
-      // You could trigger a sound effect or analytics event here
       console.log("Quranic verse in view");
     }
   }, [isInView]);
@@ -113,9 +112,6 @@ export function QuranicVerse() {
   const opacity = useTransform(scrollYProgress, [0, 0.3], [0, 1]);
   const y = useTransform(scrollYProgress, [0, 0.5], [50, 0]);
 
-  // Styles for maintainability
-  const textGradient =
-    "bg-gradient-to-r from-amber-200 to-yellow-300 bg-clip-text text-transparent";
   const dividerGradient =
     "h-[1px] bg-gradient-to-r from-transparent via-amber-500/60 to-transparent";
 
@@ -141,21 +137,26 @@ export function QuranicVerse() {
 
       {/* Fallback pattern while loading */}
       {!patternLoaded && (
-        <div className="absolute inset-0 opacity-[0.02] bg-linear-to-br from-slate-900 via-slate-800 to-slate-900" />
+        <div className="absolute inset-0 opacity-[0.02] bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900" />
       )}
 
       <div className="container mx-auto px-6 relative z-10 text-center space-y-12">
         <motion.div style={{ scale, opacity, y }}>
-          {/* Arabic Bismillah with enhanced styling */}
+          {/* Arabic Verse - Surah Al-Hijr 15:9 - DIVINE PROTECTION */}
           <div
             className="quran-monumental mb-10 drop-shadow-[0_0_30px_rgba(212,175,55,0.3)] relative"
             dir="rtl"
             lang="ar"
-            aria-label="Bismillah Hir Rahman Nir Rahim - In the name of Allah, the Most Gracious, the Most Merciful"
+            aria-label="Surah Al-Hijr, Verse 9 - Indeed, it is We who sent down the Quran and indeed, We will be its guardian"
           >
-            <span className="text-3xl md:text-7xl lg:text-8xl tracking-wider leading-relaxed">
-              وَلَقَدْ يَسَّرْنَا ٱلْقُرْءَانَ لِلذِّكْرِ <br />فَهَلْ مِن مُّدَّكِرٍۢ
-              ١٧{" "}
+            <span className="text-4xl md:text-8xl lg:text-9xl tracking-wider leading-relaxed block">
+              إِنَّا نَحْنُ نَزَّلْنَا ٱلذِّكْرَ وَإِنَّا لَهُۥ
+            </span>
+            <span className="text-4xl md:text-8xl lg:text-9xl tracking-wider leading-relaxed block mt-2">
+              لَحَافِظُونَ
+            </span>
+            <span className="text-3xl md:text-5xl lg:text-6xl text-amber-400/70 block mt-4">
+              ۝ ٩
             </span>
 
             {/* Decorative dots */}
@@ -171,14 +172,14 @@ export function QuranicVerse() {
           </div>
 
           {/* Verse container */}
-          <div className="max-w-3xl mx-auto space-y-8">
+          <div className="max-w-4xl mx-auto space-y-8">
             {/* English translation */}
             <h2
-              className="text-3xl md:text-5xl font-heading italic text-white/90 leading-tight"
+              className="text-3xl md:text-5xl lg:text-6xl font-heading italic text-white/90 leading-tight"
               lang="en"
             >
               <span className="sr-only">Quranic Verse: </span>
-              {` "And We have certainly made the Quran easy for remembrance, so is there any who will remember?"`}
+              {`"Indeed, it is We who sent down the Quran and indeed, We will be its guardian."`}
             </h2>
 
             {/* Reference divider */}
@@ -191,9 +192,9 @@ export function QuranicVerse() {
               <div className="flex flex-col items-center gap-2">
                 <p
                   className="text-xs font-black text-amber-400 uppercase tracking-[0.4em]"
-                  aria-label="Chapter 54, Verse 17"
+                  aria-label="Chapter 15, Verse 9"
                 >
-                  Surah Al-Qamar: 17
+                  Surah Al-Hijr: 9
                 </p>
 
                 {/* Transliteration for accessibility */}
@@ -202,20 +203,31 @@ export function QuranicVerse() {
                   aria-hidden="true"
                   lang="ar-Latn"
                 >
-                  Surah Al-Qamar, Ayah 17
+                  Surah Al-Hijr, Ayah 9
                 </p>
               </div>
 
               <div className={dividerGradient + " w-12 md:w-20"} />
             </div>
 
+            {/* Reflection note - Divine Promise */}
+            <motion.p
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.7 }}
+              transition={{ delay: 0.5 }}
+              className="text-sm text-amber-300/50 italic max-w-2xl mx-auto"
+            >
+              A divine promise: The Quran is preserved, and so is every heart
+              that holds it.
+            </motion.p>
+
             {/* Optional: Add a subtle CTA */}
             <motion.button
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="mt-8 px-8 py-3 rounded-full bg-linear-to-r from-amber-900/20 to-amber-800/10 border border-amber-700/30 text-amber-300 hover:text-amber-200 hover:border-amber-500/50 transition-all duration-300 group"
+              className="mt-8 px-8 py-3 rounded-full bg-gradient-to-r from-amber-900/20 to-amber-800/10 border border-amber-700/30 text-amber-300 hover:text-amber-200 hover:border-amber-500/50 transition-all duration-300 group"
               aria-label="Learn more about this verse"
-              onClick={() => window.open("https://quran.com/54/17", "_blank")}
+              onClick={() => window.open("https://quran.com/15/9", "_blank")}
             >
               <span className="flex items-center gap-3">
                 <span className="text-sm font-semibold tracking-wide">
@@ -240,7 +252,7 @@ export function QuranicVerse() {
         </motion.div>
 
         {/* Ambient Glow - optimized for performance */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-[600px] h-[300px] bg-linear-to-br from-amber-900/10 via-primary-700/10 to-transparent blur-[100px] -z-10 rounded-full opacity-60" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-[600px] h-[300px] bg-gradient-to-br from-amber-900/10 via-primary-700/10 to-transparent blur-[100px] -z-10 rounded-full opacity-60" />
 
         {/* Performance-optimized floating particles */}
         <div className="absolute inset-0 overflow-hidden -z-10 pointer-events-none">
@@ -293,18 +305,6 @@ export function QuranicVerse() {
     </section>
   );
 }
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -523,7 +523,7 @@ export function QuranicVerse() {
 
 //               {/* Context */}
 //               <p className="text-white/50 text-sm sm:text-base max-w-2xl mx-auto">
-//                 The Prophet Muhammad ﷺ would frequently make this du'a after prayers, 
+//                 The Prophet Muhammad ﷺ would frequently make this du'a after prayers,
 //                 emphasizing that seeking knowledge is an endless journey.
 //               </p>
 

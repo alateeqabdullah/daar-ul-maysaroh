@@ -102,7 +102,7 @@ const navigation = [
       },
     ],
   },
-  { name: "Faculty", href: "/faculty" },
+  { name: "Faculty", href: "/teachers" },
   { name: "Pricing", href: "/pricing" },
   { name: "About", href: "/about" },
   { name: "Contact", href: "/contact" },
