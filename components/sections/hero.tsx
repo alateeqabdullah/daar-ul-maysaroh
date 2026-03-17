@@ -410,7 +410,7 @@ export function Hero() {
                 ))}
               </div>
               <div className="text-sm md:text-base">
-                <span className="font-black text-primary-700">1,00+</span>{" "}
+                <span className="font-black text-primary-700">100+</span>{" "}
                 <span className="text-muted-foreground">students taught</span>
               </div>
             </div>
@@ -480,7 +480,7 @@ export function Hero() {
 
           {/* PARENTS NOTE - Optional, only if needed */}
           <div className="text-xs text-muted-foreground/60 italic pt-2 border-t border-border/20">
-            Programs available for adults, professionals, and children ages 5+
+            Programs available for adults, professionals, and children (ages 5+)
           </div>
         </motion.div>
 
