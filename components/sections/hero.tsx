@@ -410,15 +410,15 @@ export function Hero() {
                 ))}
               </div>
               <div className="text-sm md:text-base">
-                <span className="font-black text-primary-700">1,200+</span>{" "}
-                <span className="text-muted-foreground">students enrolled</span>
+                <span className="font-black text-primary-700">1,00+</span>{" "}
+                <span className="text-muted-foreground">students taught</span>
               </div>
             </div>
 
             <div className="flex items-center gap-2">
               <Award className="w-4 h-4 md:w-5 md:h-5 text-gold" />
               <span className="text-xs md:text-sm text-muted-foreground">
-                <span className="font-semibold text-foreground">98%</span>{" "}
+                <span className="font-semibold text-foreground">90%</span>{" "}
                 completion rate
               </span>
             </div>
@@ -480,7 +480,7 @@ export function Hero() {
 
           {/* PARENTS NOTE - Optional, only if needed */}
           <div className="text-xs text-muted-foreground/60 italic pt-2 border-t border-border/20">
-            Programs available for adults, professionals, and children ages 7+
+            Programs available for adults, professionals, and children ages 5+
           </div>
         </motion.div>
 
