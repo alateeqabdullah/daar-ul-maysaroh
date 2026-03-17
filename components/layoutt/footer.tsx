@@ -488,14 +488,15 @@
 // //   );
 // // }
 
+
+
+
+
 "use client";
 
 import { motion } from "framer-motion";
 import {
   BookOpen,
-  Mail,
-  Phone,
-  MapPin,
   Facebook,
   Youtube,
   Instagram,
@@ -537,10 +538,10 @@ export function Footer() {
       { name: "Student Portal", href: "/dashboard" },
     ],
     Support: [
-      { name: "Help Center", href: "/help" },
+      { name: "Help Center", href: "/legal" },
       { name: "Contact Us", href: "/contact" },
-      { name: "Privacy Policy", href: "/privacy" },
-      { name: "Terms of Service", href: "/terms" },
+      { name: "Privacy Policy", href: "/legal" },
+      { name: "Terms of Service", href: "/legal" },
     ],
   };
 
