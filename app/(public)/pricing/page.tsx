@@ -177,10 +177,11 @@ export default async function AdmissionsPricingPage() {
             <div className="flex items-center gap-3 sm:gap-4 mb-3 sm:mb-4">
               <CheckCircle2 className="w-5 h-5 sm:w-6 sm:h-6 text-accent" />
               <p className="font-black text-xs sm:text-sm uppercase tracking-wider">
-                14-Day Refund Guarantee
+                30-Day result Guarantee
               </p>
             </div>
             <p className="text-xs sm:text-sm text-muted-foreground font-medium">
+              
               Not satisfied with your assigned scholar? We offer a full refund
               or a teacher change within the first 14 days of your journey.
             </p>

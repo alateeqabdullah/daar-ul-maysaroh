@@ -13,12 +13,13 @@ import Link from "next/link";
 // ELITE MOCK DATA (Used if Database is empty)
 const MOCK_PRICING_CONFIG = {
   subjects: [
-    { id: "quran", name: "Quran Recitation", baseFactor: 1.0 },
-    { id: "hifz", name: "Hifz (Memorization)", baseFactor: 1.3 },
-    { id: "arabic", name: "Classical Arabic", baseFactor: 1.1 },
+    { id: "quran", name: "Quran Recitation", baseFactor: 0.27 },
+    { id: "hifz", name: "Hifz (Memorization)", baseFactor: 0.3 },
+    { id: "Tajweed", name: "Tajweed (Phonetics)", baseFactor: 0.27 },
+    { id: "arabic", name: "Classical Arabic", baseFactor: 0.27 },
   ],
   durations: [30, 45, 60],
-  frequencies: [1, 2, 3, 5],
+  frequencies: [1, 2, 3, 4, 5],
   basePricePerMinute: 0.5, // $0.50 per minute
 };
 
