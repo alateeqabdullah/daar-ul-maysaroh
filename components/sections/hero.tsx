@@ -378,8 +378,8 @@ export function Hero() {
           <div className="space-y-4 md:space-y-5">
             <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tighter leading-[1.1] font-heading">
               Not Just Quran Classes. <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-gold via-primary-600 to-primary-800">
-                A Personal Connection to the Quran....
+              <span className="text-transparent bg-clip-text bg-linear-to-r from-gold via-primary-600 to-primary-800">
+                A Personal Connection to the Quran...
               </span>
             </h1>
 
@@ -479,7 +479,7 @@ export function Hero() {
           </div>
 
           {/* PARENTS NOTE - Optional, only if needed */}
-          <div className="text-xs text-muted-foreground/60 italic pt-2 border-t border-border/20">
+          <div className="text-xs text-muted-foreground/60 italic pt-2 pb-4 border-t border-border/20">
             Programs available for adults, professionals, and children (ages 5+)
           </div>
         </motion.div>
