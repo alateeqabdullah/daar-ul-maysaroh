@@ -14,13 +14,10 @@ import {
   Menu,
   X,
   Users,
-  User,
   Sparkles,
   BookMarked,
   Mic,
   Globe,
-  Clock,
-  Heart,
   Star,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -129,6 +126,9 @@ export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mobileDropdownOpen, setMobileDropdownOpen] = useState<string | null>(
+    null,
+  );
   const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
 
@@ -165,6 +165,7 @@ export function Header() {
   useEffect(() => {
     setMobileMenuOpen(false);
     setActiveDropdown(null);
+    setMobileDropdownOpen(null);
   }, [pathname]);
 
   // Handle escape key to close mobile menu
@@ -178,6 +179,11 @@ export function Header() {
     window.addEventListener("keydown", handleEscape);
     return () => window.removeEventListener("keydown", handleEscape);
   }, [mobileMenuOpen]);
+
+  // Toggle mobile dropdown
+  const toggleMobileDropdown = (name: string) => {
+    setMobileDropdownOpen(mobileDropdownOpen === name ? null : name);
+  };
 
   return (
     <>
@@ -202,14 +208,14 @@ export function Header() {
               src={Logo}
               width={100}
               height={100}
-              alt="logo"
+              alt="Al-Maysaroh Institute Logo"
               className="w-10 h-10 md:w-12 md:h-12 bg-primary-700 rounded-2xl flex items-center justify-center shadow-2xl group-hover:rotate-6 group-focus-visible:rotate-6 transition-transform"
             />
             <div className="hidden lg:flex flex-col">
               <h1 className="text-lg md:text-xl lg:text-2xl font-black tracking-tighter leading-none">
                 AL-MAYSAROH
               </h1>
-              <p className="text-[8px] md:text-[10px] text-primary-700 font-bold tracking-[0.2em] md:tracking-[1.5em] uppercase">
+              <p className="text-[8px] md:text-[10px] text-primary-700 font-bold tracking-[0.3em] md:tracking-[0.4em] uppercase">
                 Institute.
               </p>
             </div>
@@ -283,7 +289,7 @@ export function Header() {
                                   <div className="text-[10px] font-black text-primary-700/60 uppercase tracking-[0.3em] text-center">
                                     {sub.name}
                                   </div>
-                                  <div className="h-px bg-gradient-to-r from-transparent via-primary-700/20 to-transparent mt-1" />
+                                  <div className="h-px bg-linear-to-r from-transparent via-primary-700/20 to-transparent mt-1" />
                                 </div>
                               );
                             }
@@ -294,7 +300,7 @@ export function Header() {
                                 <Link
                                   key={sub.name}
                                   href={sub.href}
-                                  className="col-span-2 p-4 rounded-xl bg-gradient-to-br from-primary-700/5 to-primary-700/10 border border-primary-700/20 hover:border-primary-700/40 transition-all group"
+                                  className="col-span-2 p-4 rounded-xl bg-linear-to-br from-primary-700/5 to-primary-700/10 border border-primary-700/20 hover:border-primary-700/40 transition-all group"
                                   role="menuitem"
                                   aria-current={
                                     pathname === sub.href ? "page" : undefined
@@ -302,7 +308,7 @@ export function Header() {
                                 >
                                   <div className="flex items-center gap-4">
                                     <div className="w-10 h-10 rounded-lg bg-primary-700/20 flex items-center justify-center">
-                                      <sub.icon className="w-5 h-5 text-primary-700" />
+                                      {sub.icon && <sub.icon className="w-5 h-5 text-primary-700" />}
                                     </div>
                                     <div>
                                       <div className="font-black text-base group-hover:text-primary-700 uppercase tracking-tight">
@@ -336,7 +342,7 @@ export function Header() {
                               >
                                 <div className="flex items-start gap-3">
                                   <div className="w-8 h-8 rounded-lg bg-primary-700/10 flex items-center justify-center shrink-0 group-hover:bg-primary-700/20 transition-colors">
-                                    <sub.icon className="w-4 h-4 text-primary-700" />
+                                    {sub.icon && <sub.icon className="w-4 h-4 text-primary-700" />}
                                   </div>
                                   <div className="flex-1">
                                     <div className="flex items-center gap-2">
@@ -416,7 +422,7 @@ export function Header() {
                       DASHBOARD
                     </span>
                     <motion.div
-                      className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12"
+                      className="absolute inset-0 bg-linear-to-r from-transparent via-white/20 to-transparent -skew-x-12"
                       animate={{ x: ["-100%", "200%"] }}
                       transition={{
                         duration: 3,
@@ -440,7 +446,7 @@ export function Header() {
                     <Button className="rounded-xl font-black px-6 lg:px-8 bg-primary-700 hover:bg-primary-800 text-white shadow-lg text-[11px] tracking-widest relative overflow-hidden group min-h-11">
                       <span className="relative z-10">ADMISSIONS</span>
                       <motion.div
-                        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12"
+                        className="absolute inset-0 bg-linear-to-r from-transparent via-white/20 to-transparent -skew-x-12"
                         animate={{ x: ["-100%", "200%"] }}
                         transition={{
                           duration: 4,
@@ -474,7 +480,7 @@ export function Header() {
         </nav>
       </header>
 
-      {/* --- MOBILE DRAWER (simplified - uses same navigation data) --- */}
+      {/* --- MOBILE DRAWER (FIXED: Now togglable) --- */}
       <AnimatePresence>
         {mobileMenuOpen && (
           <>
@@ -522,106 +528,140 @@ export function Header() {
                     >
                       {item.dropdown ? (
                         <div className="space-y-3">
-                          <div className="font-black text-lg text-primary-700 uppercase tracking-tighter px-3">
-                            {item.name}
-                          </div>
-                          <div className="space-y-2 pl-2">
-                            {/* Featured All Programs */}
-                            {item.dropdown.find((d) => d.featured) && (
-                              <Link
-                                href="/courses"
-                                onClick={() => setMobileMenuOpen(false)}
-                                className="block p-4 rounded-xl bg-primary-700/10 border border-primary-700/20 mb-3"
-                              >
-                                <div className="font-black text-base">
-                                  ALL PROGRAMS
-                                </div>
-                                <div className="text-xs text-muted-foreground">
-                                  Browse complete catalog
-                                </div>
-                              </Link>
-                            )}
+                          {/* Dropdown Toggle Button */}
+                          <button
+                            onClick={() => toggleMobileDropdown(item.name)}
+                            className="flex items-center justify-between w-full text-lg font-black uppercase tracking-tighter px-3 py-2"
+                          >
+                            <span
+                              className={
+                                mobileDropdownOpen === item.name
+                                  ? "text-primary-700"
+                                  : ""
+                              }
+                            >
+                              {item.name}
+                            </span>
+                            <ChevronDown
+                              className={cn(
+                                "w-5 h-5 transition-transform duration-300",
+                                mobileDropdownOpen === item.name &&
+                                  "rotate-180",
+                              )}
+                            />
+                          </button>
 
-                            {/* 1-on-1 Programs */}
-                            <div className="text-xs font-black text-primary-700/60 uppercase tracking-wider mt-4 mb-2">
-                              1-on-1 PROGRAMS
-                            </div>
-                            <div className="grid grid-cols-1 gap-2">
-                              {[
-                                "Hifz Program",
-                                "Tajweed Mastery",
-                                "Arabic Language",
-                                "Tafsir Studies",
-                              ].map((name) => {
-                                const prog = item.dropdown?.find(
-                                  (d) => d.name === name,
-                                );
-                                if (!prog) return null;
-                                return (
+                          {/* Dropdown Content */}
+                          <AnimatePresence>
+                            {mobileDropdownOpen === item.name && (
+                              <motion.div
+                                initial={{ height: 0, opacity: 0 }}
+                                animate={{ height: "auto", opacity: 1 }}
+                                exit={{ height: 0, opacity: 0 }}
+                                className="overflow-hidden space-y-3 pl-2"
+                              >
+                                {/* Featured All Programs */}
+                                {item.dropdown.find((d) => d.featured) && (
                                   <Link
-                                    key={prog.name}
-                                    href={prog.href}
+                                    href="/courses"
                                     onClick={() => setMobileMenuOpen(false)}
-                                    className="flex items-start gap-3 p-3 rounded-xl bg-muted/30 hover:bg-primary-50 transition-colors"
+                                    className="block p-4 rounded-xl bg-primary-700/10 border border-primary-700/20 mb-3"
                                   >
-                                    <div className="w-8 h-8 rounded-lg bg-primary-700/10 flex items-center justify-center">
-                                      <prog.icon className="w-4 h-4 text-primary-700" />
+                                    <div className="font-black text-base">
+                                      ALL PROGRAMS
                                     </div>
-                                    <div>
-                                      <div className="font-black text-sm">
-                                        {prog.name}
-                                      </div>
-                                      <div className="text-xs text-muted-foreground">
-                                        {prog.desc}
-                                      </div>
+                                    <div className="text-xs text-muted-foreground">
+                                      Browse complete catalog
                                     </div>
                                   </Link>
-                                );
-                              })}
-                            </div>
+                                )}
 
-                            {/* Group Programs */}
-                            <div className="text-xs font-black text-primary-700/60 uppercase tracking-wider mt-6 mb-2">
-                              GROUP PROGRAMS (CHILDREN)
-                            </div>
-                            <div className="grid grid-cols-1 gap-2">
-                              {["Group Qiro'ah", "Juz Amma Group"].map(
-                                (name) => {
-                                  const prog = item.dropdown?.find(
-                                    (d) => d.name === name,
-                                  );
-                                  if (!prog) return null;
-                                  return (
-                                    <Link
-                                      key={prog.name}
-                                      href={prog.href}
-                                      onClick={() => setMobileMenuOpen(false)}
-                                      className="flex items-start gap-3 p-3 rounded-xl bg-muted/30 hover:bg-primary-50 transition-colors"
-                                    >
-                                      <div className="w-8 h-8 rounded-lg bg-primary-700/10 flex items-center justify-center">
-                                        <prog.icon className="w-4 h-4 text-primary-700" />
-                                      </div>
-                                      <div>
-                                        <div className="flex items-center gap-2">
+                                {/* 1-on-1 Programs */}
+                                <div className="text-xs font-black text-primary-700/60 uppercase tracking-wider mt-4 mb-2">
+                                  1-on-1 PROGRAMS
+                                </div>
+                                <div className="grid grid-cols-1 gap-2">
+                                  {[
+                                    "Hifz Program",
+                                    "Tajweed Mastery",
+                                    "Arabic Language",
+                                    "Tafsir Studies",
+                                  ].map((name) => {
+                                    const prog = item.dropdown?.find(
+                                      (d) => d.name === name,
+                                    );
+                                    if (!prog || !prog.icon) return null;
+                                    const Icon = prog.icon;
+                                    return (
+                                      <Link
+                                        key={prog.name}
+                                        href={prog.href ?? "#"}
+                                        onClick={() => setMobileMenuOpen(false)}
+                                        className="flex items-start gap-3 p-3 rounded-xl bg-muted/30 hover:bg-primary-50 transition-colors"
+                                      >
+                                        <div className="w-8 h-8 rounded-lg bg-primary-700/10 flex items-center justify-center">
+                                          <Icon className="w-4 h-4 text-primary-700" />
+                                        </div>
+                                        <div>
                                           <div className="font-black text-sm">
                                             {prog.name}
                                           </div>
-                                          {prog.badge && (
-                                            <span className="text-[8px] font-black px-1.5 py-0.5 rounded-full bg-gold/20 text-gold">
-                                              {prog.badge}
-                                            </span>
-                                          )}
+                                          <div className="text-xs text-muted-foreground">
+                                            {prog.desc}
+                                          </div>
                                         </div>
-                                        <div className="text-xs text-muted-foreground">
-                                          {prog.desc}
-                                        </div>
-                                      </div>
-                                    </Link>
-                                  );
-                                },
-                              )}
-                            </div>
-                          </div>
+                                      </Link>
+                                    );
+                                  })}
+                                </div>
+
+                                {/* Group Programs */}
+                                <div className="text-xs font-black text-primary-700/60 uppercase tracking-wider mt-6 mb-2">
+                                  GROUP PROGRAMS (CHILDREN)
+                                </div>
+                                <div className="grid grid-cols-1 gap-2">
+                                  {["Group Qiro'ah", "Juz Amma Group"].map(
+                                    (name) => {
+                                      const prog = item.dropdown?.find(
+                                        (d) => d.name === name,
+                                      );
+                                      if (!prog || !prog.icon) return null;
+                                      const Icon = prog.icon;
+                                      return (
+                                        <Link
+                                          key={prog.name}
+                                          href={prog.href ?? "#"}
+                                          onClick={() =>
+                                            setMobileMenuOpen(false)
+                                          }
+                                          className="flex items-start gap-3 p-3 rounded-xl bg-muted/30 hover:bg-primary-50 transition-colors"
+                                        >
+                                          <div className="w-8 h-8 rounded-lg bg-primary-700/10 flex items-center justify-center">
+                                            <Icon className="w-4 h-4 text-primary-700" />
+                                          </div>
+                                          <div>
+                                            <div className="flex items-center gap-2">
+                                              <div className="font-black text-sm">
+                                                {prog.name}
+                                              </div>
+                                              {prog.badge && (
+                                                <span className="text-[8px] font-black px-1.5 py-0.5 rounded-full bg-gold/20 text-gold">
+                                                  {prog.badge}
+                                                </span>
+                                              )}
+                                            </div>
+                                            <div className="text-xs text-muted-foreground">
+                                              {prog.desc}
+                                            </div>
+                                          </div>
+                                        </Link>
+                                      );
+                                    },
+                                  )}
+                                </div>
+                              </motion.div>
+                            )}
+                          </AnimatePresence>
                         </div>
                       ) : (
                         <Link
@@ -691,6 +731,9 @@ export function Header() {
     </>
   );
 }
+
+
+
 
 // "use client";
 
