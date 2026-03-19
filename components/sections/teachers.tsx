@@ -219,7 +219,7 @@ export function Teachers() {
                       </p>
 
                       <p className="text-xs sm:text-sm italic font-medium text-muted-foreground opacity-80 leading-relaxed">
-                       {` "${teacher.philosophy}"`} jjj
+                       {` "${teacher.philosophy}"`}
                       </p>
 
                       <div className="flex flex-wrap gap-3 sm:gap-4 pt-2 sm:pt-4">
