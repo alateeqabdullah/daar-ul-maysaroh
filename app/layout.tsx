@@ -151,9 +151,9 @@ export default async function RootLayout({
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
           <AuthProvider>
             <GlobalScrollProgress />
-            {/* <OfflineProvider> */}
+            <OfflineProvider>
               {children}
-            {/* </OfflineProvider> */}
+            </OfflineProvider>
             <Toaster position="top-center" richColors />
           </AuthProvider>
         </ThemeProvider>
