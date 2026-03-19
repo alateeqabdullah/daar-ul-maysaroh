@@ -140,8 +140,8 @@ const PREVIEW_TEACHERS = [
     slug: "fatimah-zahrah-alagbada",
     fullBio:
       "Ustadha Fatimah specializes in female Hifz instruction with a focus on tajweed perfection and spiritual development. Her students consistently achieve mastery with proper makharij.",
-    students: "150+ female graduates",
-    experience: "15+ years",
+    students: "50+ female qurra'",
+    experience: "10+ years",
     sanad: "Active Sanad to Prophet (ﷺ)",
   },
 ];
@@ -219,7 +219,7 @@ export function Teachers() {
                       </p>
 
                       <p className="text-xs sm:text-sm italic font-medium text-muted-foreground opacity-80 leading-relaxed">
-                       {` "{teacher.philosophy}"`}
+                       {` "${teacher.philosophy}"`} jjj
                       </p>
 
                       <div className="flex flex-wrap gap-3 sm:gap-4 pt-2 sm:pt-4">
