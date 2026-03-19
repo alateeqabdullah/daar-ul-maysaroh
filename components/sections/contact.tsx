@@ -153,6 +153,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 // Form validation schema
 const contactSchema = z.object({
@@ -189,7 +190,7 @@ export function Contact() {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch("/api/contact", {
+      const response = await fetch("/api/(public)/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
@@ -257,12 +258,12 @@ export function Contact() {
                   <h4 className="font-black uppercase text-xs tracking-widest mb-2">
                     Admissions Council
                   </h4>
-                  <a
-                    href="mailto:admissions@almaysaroh.org"
+                  <Link
+                    href="mailto:info.almaysaroh@gmail.com"
                     className="text-xs text-muted-foreground font-bold hover:text-primary-700 transition-colors break-all"
                   >
-                    admissions@almaysaroh.org
-                  </a>
+                    info.almaysaroh@gmail.com
+                  </Link>
                 </div>
               </Reveal>
 
@@ -272,12 +273,12 @@ export function Contact() {
                   <h4 className="font-black uppercase text-xs tracking-widest mb-2">
                     Technical Registrar
                   </h4>
-                  <a
-                    href="mailto:registrar@almaysaroh.org"
+                  <Link
+                    href="mailto:info.almaysaroh@gmail.com"
                     className="text-xs text-muted-foreground font-bold hover:text-accent transition-colors break-all"
                   >
-                    registrar@almaysaroh.org
-                  </a>
+                    info.almaysaroh@gmail.com
+                  </Link>
                 </div>
               </Reveal>
             </div>

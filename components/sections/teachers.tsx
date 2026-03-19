@@ -140,7 +140,7 @@ const PREVIEW_TEACHERS = [
     slug: "fatimah-zahrah-alagbada",
     fullBio:
       "Ustadha Fatimah specializes in female Hifz instruction with a focus on tajweed perfection and spiritual development. Her students consistently achieve mastery with proper makharij.",
-    students: "50+ female qurra'",
+    students: "50+ female graduates",
     experience: "10+ years",
     sanad: "Active Sanad to Prophet (ﷺ)",
   },
@@ -181,10 +181,10 @@ export function Teachers() {
         <div className="grid md:grid-cols-2 gap-6 sm:gap-8 md:gap-12">
           {PREVIEW_TEACHERS.map((teacher, index) => (
             <Reveal key={teacher.id} delay={index * 0.1}>
-              <Link
+              {/* <Link
                 href={`/teachers/${createSlug(teacher.name)}`}
                 className="block group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 rounded-3xl"
-              >
+              > */}
                 <div className="institutional-card p-6 sm:p-8 md:p-10 lg:p-12 relative bg-card hover:border-primary-700/50 transition-all duration-700 cursor-pointer h-full">
                   {/* Click Indicator - Subtle arrow that appears on hover */}
                   <div className="absolute top-6 right-6 sm:top-8 sm:right-8 md:top-10 md:right-10 opacity-0 group-hover:opacity-100 transition-all duration-300 group-hover:translate-x-1">
@@ -219,7 +219,7 @@ export function Teachers() {
                       </p>
 
                       <p className="text-xs sm:text-sm italic font-medium text-muted-foreground opacity-80 leading-relaxed">
-                       {`"${teacher.philosophy}"`}
+                       {` "${teacher.philosophy}"`}
                       </p>
 
                       <div className="flex flex-wrap gap-3 sm:gap-4 pt-2 sm:pt-4">
@@ -248,7 +248,7 @@ export function Teachers() {
                     </div>
                   </div>
                 </div>
-              </Link>
+              {/* </Link> */}
             </Reveal>
           ))}
         </div>

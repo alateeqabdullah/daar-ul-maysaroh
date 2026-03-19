@@ -21,7 +21,7 @@ export async function POST(req: Request) {
     await resend.emails.send({
       from: "Al-Maysaroh Contact <info.almaysaroh@gmail.com>", // Must be verified domain
       to: process.env.CONTACT_EMAIL || "info.almaysaroh@gmail.com",
-      cc: "dmissions@i.org",
+      cc: "info.almaysaroh@gmail.com", // Optional: CC to another email
       subject: `New Inquiry: ${academicInterest} - ${fullName}`,
       replyTo: email,
       html: `
