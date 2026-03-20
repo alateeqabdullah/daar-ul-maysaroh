@@ -19,8 +19,8 @@ export async function POST(req: Request) {
 
     // 1. Send email to Institute
     await resend.emails.send({
-      from: "Al-Maysaroh Contact <info.almaysaroh@gmail.com>", // Must be verified domain
-      to: process.env.CONTACT_EMAIL || "info.almaysaroh@gmail.com",
+      from: "Al-Maysaroh Contact <contact@almaysaroh.com>", // Must be verified domain
+      to: process.env.CONTACT_EMAIL || "contact@almaysaroh.com", // Primary recipient
       cc: "info.almaysaroh@gmail.com", // Optional: CC to another email
       subject: `New Inquiry: ${academicInterest} - ${fullName}`,
       replyTo: email,
@@ -88,7 +88,7 @@ export async function POST(req: Request) {
 
     // 2. Send auto-reply to Student
     await resend.emails.send({
-      from: "Al-Maysaroh Institute <info.almaysaroh@gmail.com>",
+      from: "Al-Maysaroh Institute <contact@almaysaroh.com>", // Must be verified domain
       to: email,
       subject: "We Received Your Inquiry | Al-Maysaroh Institute",
       html: `

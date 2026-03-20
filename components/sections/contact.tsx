@@ -136,9 +136,6 @@
 "use client";
 
 import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import { Reveal } from "@/components/shared/section-animation";
 import {
   Globe,
@@ -149,71 +146,97 @@ import {
   Mail,
   Phone,
   CheckCircle2,
+  XCircle,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
-import Link from "next/link";
-
-// Form validation schema
-const contactSchema = z.object({
-  fullName: z.string().min(2, "Name is required"),
-  email: z.string().email("Valid email is required"),
-  phone: z.string().optional(),
-  academicInterest: z.string().min(1, "Please select an option"),
-  message: z.string().min(10, "Message must be at least 10 characters"),
-});
-
-type ContactForm = z.infer<typeof contactSchema>;
 
 export function Contact() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    reset,
-  } = useForm<ContactForm>({
-    resolver: zodResolver(contactSchema),
-    defaultValues: {
-      fullName: "",
-      email: "",
-      phone: "",
-      academicInterest: "",
-      message: "",
-    },
+  const [formData, setFormData] = useState({
+    fullName: "",
+    email: "",
+    phone: "",
+    academicInterest: "",
+    message: "",
   });
 
-  const onSubmit = async (data: ContactForm) => {
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
+    >,
+  ) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
     setIsSubmitting(true);
 
+    // Create FormData object for Formspree
+    const formDataToSend = new FormData();
+    formDataToSend.append("fullName", formData.fullName);
+    formDataToSend.append("email", formData.email);
+    formDataToSend.append("phone", formData.phone);
+    formDataToSend.append("academicInterest", formData.academicInterest);
+    formDataToSend.append("message", formData.message);
+
+    // Your Formspree endpoint
+    const endpoint = "https://formspree.io/f/xgondqpk";
+
     try {
-      const response = await fetch("/api/(public)/contact", {
+      const response = await fetch(endpoint, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
+        body: formDataToSend,
+        headers: {
+          Accept: "application/json",
+        },
       });
 
-      const result = await response.json();
+      const data = await response.json();
 
-      if (!response.ok) {
-        throw new Error(result.error || "Failed to send");
+      if (response.ok) {
+        // Success!
+        setIsSuccess(true);
+        toast.success("Inquiry Sent!", {
+          description: "Our admissions council will respond within 24 hours.",
+          icon: <CheckCircle2 className="w-5 h-5 text-green-500" />,
+          duration: 5000,
+        });
+
+        // Reset form
+        setFormData({
+          fullName: "",
+          email: "",
+          phone: "",
+          academicInterest: "",
+          message: "",
+        });
+
+        // Hide success overlay after 5 seconds
+        setTimeout(() => {
+          setIsSuccess(false);
+        }, 5000);
+      } else {
+        // Formspree error
+        const errorMessage =
+          data.errors?.[0] || "Please check your information and try again.";
+        toast.error("Submission Failed", {
+          description: errorMessage,
+          icon: <XCircle className="w-5 h-5 text-red-500" />,
+          duration: 5000,
+        });
       }
-
-      setIsSuccess(true);
-      toast.success("Inquiry sent!", {
-        description: "Our admissions council will respond within 24 hours.",
-      });
-
-      reset();
-
-      // Reset success state after 5 seconds
-      setTimeout(() => setIsSuccess(false), 5000);
     } catch (error) {
-      toast.error("Something went wrong", {
-        description: "Please try again or email us directly.",
+      console.error("Form submission error:", error);
+      toast.error("Network Error", {
+        description:
+          "Unable to connect. Please check your internet connection and try again.",
+        icon: <XCircle className="w-5 h-5 text-red-500" />,
+        duration: 5000,
       });
     } finally {
       setIsSubmitting(false);
@@ -258,12 +281,12 @@ export function Contact() {
                   <h4 className="font-black uppercase text-xs tracking-widest mb-2">
                     Admissions Council
                   </h4>
-                  <Link
-                    href="mailto:info.almaysaroh@gmail.com"
+                  <a
+                    href="mailto:admissions@almaysaroh.org"
                     className="text-xs text-muted-foreground font-bold hover:text-primary-700 transition-colors break-all"
                   >
-                    info.almaysaroh@gmail.com
-                  </Link>
+                    admissions@almaysaroh.org
+                  </a>
                 </div>
               </Reveal>
 
@@ -273,12 +296,12 @@ export function Contact() {
                   <h4 className="font-black uppercase text-xs tracking-widest mb-2">
                     Technical Registrar
                   </h4>
-                  <Link
-                    href="mailto:info.almaysaroh@gmail.com"
+                  <a
+                    href="mailto:registrar@almaysaroh.org"
                     className="text-xs text-muted-foreground font-bold hover:text-accent transition-colors break-all"
                   >
-                    info.almaysaroh@gmail.com
-                  </Link>
+                    registrar@almaysaroh.org
+                  </a>
                 </div>
               </Reveal>
             </div>
@@ -315,13 +338,23 @@ export function Contact() {
 
               {/* Success overlay */}
               {isSuccess && (
-                <div className="absolute inset-0 bg-primary-700/5 backdrop-blur-sm z-20 flex items-center justify-center">
-                  <div className="bg-background/90 p-8 rounded-3xl text-center max-w-sm mx-4">
-                    <CheckCircle2 className="w-16 h-16 text-primary-700 mx-auto mb-4" />
-                    <h3 className="font-black text-xl mb-2">Inquiry Sent!</h3>
+                <div className="absolute inset-0 bg-background/95 backdrop-blur-sm z-20 flex items-center justify-center animate-in fade-in duration-300">
+                  <div className="bg-gradient-to-br from-primary-50 to-background dark:from-primary-950/30 dark:to-background p-8 rounded-3xl text-center max-w-sm mx-4 shadow-2xl border border-primary-700/20">
+                    <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-primary-700/10 flex items-center justify-center">
+                      <CheckCircle2 className="w-10 h-10 text-primary-700" />
+                    </div>
+                    <h3 className="font-black text-2xl mb-2">Inquiry Sent!</h3>
                     <p className="text-sm text-muted-foreground">
-                      Our admissions council will respond within 24 hours.
+                      Our admissions council will respond within 24 hours. You
+                      will receive a confirmation email shortly.
                     </p>
+                    <Button
+                      onClick={() => setIsSuccess(false)}
+                      variant="outline"
+                      className="mt-6 rounded-full px-6 py-2 text-sm font-black"
+                    >
+                      SEND ANOTHER
+                    </Button>
                   </div>
                 </div>
               )}
@@ -330,28 +363,22 @@ export function Contact() {
                 Official Inquiry
               </h3>
 
-              <form
-                onSubmit={handleSubmit(onSubmit)}
-                className="space-y-4 sm:space-y-6"
-              >
+              <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
                 {/* Full Name */}
                 <div className="space-y-2">
-                  <label className="text-[10px] font-black uppercase tracking-widest ml-1 opacity-60 flex justify-between">
-                    <span>Full Legal Name</span>
-                    {errors.fullName && (
-                      <span className="text-red-500 dark:text-red-400 opacity-100 text-[9px]">
-                        {errors.fullName.message}
-                      </span>
-                    )}
+                  <label
+                    htmlFor="fullName"
+                    className="text-[10px] font-black uppercase tracking-widest ml-1 opacity-60"
+                  >
+                    Full Legal Name *
                   </label>
                   <input
-                    {...register("fullName")}
-                    className={cn(
-                      "w-full h-12 sm:h-14 px-4 sm:px-6 rounded-xl sm:rounded-2xl bg-background border-2 outline-none font-bold text-sm transition-all shadow-inner",
-                      errors.fullName
-                        ? "border-red-500/50 focus:border-red-500"
-                        : "border-transparent focus:border-primary-700/30",
-                    )}
+                    id="fullName"
+                    name="fullName"
+                    value={formData.fullName}
+                    onChange={handleChange}
+                    required
+                    className="w-full h-12 sm:h-14 px-4 sm:px-6 rounded-xl sm:rounded-2xl bg-background border-2 border-transparent focus:border-primary-700/30 outline-none font-bold text-sm transition-all shadow-inner"
                     placeholder="Enter your full name"
                     disabled={isSubmitting}
                   />
@@ -359,25 +386,22 @@ export function Contact() {
 
                 {/* Email */}
                 <div className="space-y-2">
-                  <label className="text-[10px] font-black uppercase tracking-widest ml-1 opacity-60 flex justify-between">
-                    <span>Email Address</span>
-                    {errors.email && (
-                      <span className="text-red-500 dark:text-red-400 opacity-100 text-[9px]">
-                        {errors.email.message}
-                      </span>
-                    )}
+                  <label
+                    htmlFor="email"
+                    className="text-[10px] font-black uppercase tracking-widest ml-1 opacity-60"
+                  >
+                    Email Address *
                   </label>
                   <div className="relative">
                     <Mail className="absolute left-3 sm:left-4 top-3.5 sm:top-4 w-4 h-4 text-muted-foreground" />
                     <input
-                      {...register("email")}
+                      id="email"
+                      name="email"
                       type="email"
-                      className={cn(
-                        "w-full h-12 sm:h-14 pl-9 sm:pl-11 pr-4 sm:pr-6 rounded-xl sm:rounded-2xl bg-background border-2 outline-none font-bold text-sm transition-all shadow-inner",
-                        errors.email
-                          ? "border-red-500/50 focus:border-red-500"
-                          : "border-transparent focus:border-primary-700/30",
-                      )}
+                      value={formData.email}
+                      onChange={handleChange}
+                      required
+                      className="w-full h-12 sm:h-14 pl-9 sm:pl-11 pr-4 sm:pr-6 rounded-xl sm:rounded-2xl bg-background border-2 border-transparent focus:border-primary-700/30 outline-none font-bold text-sm transition-all shadow-inner"
                       placeholder="your@email.com"
                       disabled={isSubmitting}
                     />
@@ -386,14 +410,20 @@ export function Contact() {
 
                 {/* Phone (Optional) */}
                 <div className="space-y-2">
-                  <label className="text-[10px] font-black uppercase tracking-widest ml-1 opacity-60 flex justify-between">
-                    <span>Phone (Optional)</span>
+                  <label
+                    htmlFor="phone"
+                    className="text-[10px] font-black uppercase tracking-widest ml-1 opacity-60"
+                  >
+                    Phone (Optional)
                   </label>
                   <div className="relative">
                     <Phone className="absolute left-3 sm:left-4 top-3.5 sm:top-4 w-4 h-4 text-muted-foreground" />
                     <input
-                      {...register("phone")}
+                      id="phone"
+                      name="phone"
                       type="tel"
+                      value={formData.phone}
+                      onChange={handleChange}
                       className="w-full h-12 sm:h-14 pl-9 sm:pl-11 pr-4 sm:pr-6 rounded-xl sm:rounded-2xl bg-background border-2 border-transparent focus:border-primary-700/30 outline-none font-bold text-sm transition-all shadow-inner"
                       placeholder="+1 (555) 000-0000"
                       disabled={isSubmitting}
@@ -403,22 +433,19 @@ export function Contact() {
 
                 {/* Academic Interest */}
                 <div className="space-y-2">
-                  <label className="text-[10px] font-black uppercase tracking-widest ml-1 opacity-60 flex justify-between">
-                    <span>Academic Interest</span>
-                    {errors.academicInterest && (
-                      <span className="text-red-500 dark:text-red-400 opacity-100 text-[9px]">
-                        {errors.academicInterest.message}
-                      </span>
-                    )}
+                  <label
+                    htmlFor="academicInterest"
+                    className="text-[10px] font-black uppercase tracking-widest ml-1 opacity-60"
+                  >
+                    Academic Interest *
                   </label>
                   <select
-                    {...register("academicInterest")}
-                    className={cn(
-                      "w-full h-12 sm:h-14 px-4 sm:px-6 rounded-xl sm:rounded-2xl bg-background border-2 outline-none font-bold text-sm appearance-none cursor-pointer shadow-inner",
-                      errors.academicInterest
-                        ? "border-red-500/50 focus:border-red-500"
-                        : "border-transparent focus:border-primary-700/30",
-                    )}
+                    id="academicInterest"
+                    name="academicInterest"
+                    value={formData.academicInterest}
+                    onChange={handleChange}
+                    required
+                    className="w-full h-12 sm:h-14 px-4 sm:px-6 rounded-xl sm:rounded-2xl bg-background border-2 border-transparent focus:border-primary-700/30 outline-none font-bold text-sm appearance-none cursor-pointer shadow-inner"
                     disabled={isSubmitting}
                   >
                     <option value="">Select a program</option>
@@ -426,7 +453,7 @@ export function Contact() {
                     <option value="tajweed">Tajweed Phonetics</option>
                     <option value="arabic">Classical Arabic</option>
                     <option value="ijazah">Ijazah Certification</option>
-                    <option value="qiroah">Group Qiro'ah (Children)</option>
+                    <option value="qiroah">{`Group Qiro'ah (Children)`}</option>
                     <option value="juz-amma">Juz Amma (Children)</option>
                     <option value="other">Other Inquiry</option>
                   </select>
@@ -434,27 +461,27 @@ export function Contact() {
 
                 {/* Message */}
                 <div className="space-y-2">
-                  <label className="text-[10px] font-black uppercase tracking-widest ml-1 opacity-60 flex justify-between">
-                    <span>Message to the Council</span>
-                    {errors.message && (
-                      <span className="text-red-500 dark:text-red-400 opacity-100 text-[9px]">
-                        {errors.message.message}
-                      </span>
-                    )}
+                  <label
+                    htmlFor="message"
+                    className="text-[10px] font-black uppercase tracking-widest ml-1 opacity-60"
+                  >
+                    Message to the Council *
                   </label>
                   <textarea
-                    {...register("message")}
+                    id="message"
+                    name="message"
                     rows={4}
-                    className={cn(
-                      "w-full p-4 sm:p-6 rounded-xl sm:rounded-2xl bg-background border-2 outline-none font-medium text-sm transition-all shadow-inner resize-none",
-                      errors.message
-                        ? "border-red-500/50 focus:border-red-500"
-                        : "border-transparent focus:border-primary-700/30",
-                    )}
+                    value={formData.message}
+                    onChange={handleChange}
+                    required
+                    className="w-full p-4 sm:p-6 rounded-xl sm:rounded-2xl bg-background border-2 border-transparent focus:border-primary-700/30 outline-none font-medium text-sm transition-all shadow-inner resize-none"
                     placeholder="I'm interested in learning more about..."
                     disabled={isSubmitting}
                   />
                 </div>
+
+                {/* Honeypot spam protection (hidden) */}
+                <input type="text" name="_gotcha" style={{ display: "none" }} />
 
                 {/* Submit Button */}
                 <Button
@@ -487,7 +514,7 @@ export function Contact() {
 
               {/* Privacy Note */}
               <p className="text-[10px] text-center text-muted-foreground/50 mt-4">
-                🔒 We'll respond within 24 hours. Your information is protected.
+               {` 🔒 We'll respond within 24 hours. Your information is protected.`}
               </p>
             </div>
           </Reveal>
