@@ -187,11 +187,11 @@ export default function AboutPage() {
         <div className="mb-40 py-20 border-y border-primary-700/5">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-12 text-center">
             {[
-              { label: "Students Worldwide", val: "500+", icon: Users },
-              { label: "Represented Nations", val: "25+", icon: Globe },
+              { label: "Students Worldwide", val: "100+", icon: Users },
+              { label: "Represented Nations", val: "5+", icon: Globe },
               {
                 label: "Ijazah-Certified Scholars",
-                val: "40+",
+                val: "8+",
                 icon: GraduationCap,
               },
               { label: "Years of Tradition", val: "1400+", icon: ScrollText },
