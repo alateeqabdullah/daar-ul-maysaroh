@@ -349,7 +349,7 @@ export default function AdmissionsPricingPage() {
                 <Upload className="w-4 h-4 text-accent shrink-0 mt-0.5" />
                 <div>
                   <p className="text-xs font-black uppercase tracking-wider text-accent">After Transfer</p>
-                  <p className="text-xs text-muted-foreground mt-1">Upload receipt via Dashboard → Payments for activation within 12 hours.</p>
+                  <p className="text-xs text-muted-foreground mt-1">Upload receipt via email (info.almaysaroh@gmail.com) or WhatsApp (+2349110163930)</p>
                 </div>
               </div>
             </div>
