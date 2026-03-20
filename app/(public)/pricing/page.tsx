@@ -131,10 +131,10 @@ export default function AdmissionsPricingPage() {
           {/* Payment Methods */}
           <div className="flex flex-wrap justify-center gap-2 mt-8">
             {[
-              { icon: CreditCard, label: "Visa / Mastercard" },
+              // { icon: CreditCard, label: "Visa / Mastercard" },
               { icon: Banknote, label: "Bank Transfer" },
-              { icon: Globe, label: "Mobile Money" },
-              { icon: Building2, label: "Western Union" },
+              // { icon: Globe, label: "Mobile Money" },
+              // { icon: Building2, label: "Western Union" },
             ].map((method, i) => (
               <div
                 key={i}
