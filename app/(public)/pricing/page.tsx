@@ -392,12 +392,12 @@ export default function AdmissionsPricingPage() {
           <div className="flex items-center gap-6">
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <Phone className="w-4 h-4 text-primary-700" />
-              <span>+1 (555) 123-4567</span>
+              <span>(+234) 911-016-3930</span>
             </div>
             <div className="w-px h-4 bg-border" />
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <Mail className="w-4 h-4 text-primary-700" />
-              <span>admissions@almaysaroh.org</span>
+              <span>info.almaysaroh@gmail.com</span>
             </div>
           </div>
         </div>
