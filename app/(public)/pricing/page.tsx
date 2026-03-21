@@ -1,5 +1,6 @@
 "use client";
 
+import { PricingPlan } from "@/app/generated/prisma/client";
 import { PricingCalculator } from "@/components/public/pricing/pricing-calculator";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,7 +12,6 @@ import {
   Clock,
   Copy,
   CreditCard,
-  Globe,
   GraduationCap,
   Heart,
   HelpCircle,
@@ -25,7 +25,7 @@ import {
   Zap
 } from "lucide-react";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 // Copy Button Component
 function CopyButton({ text }: { text: string }) {
@@ -80,36 +80,39 @@ const FAQS = [
 ];
 
 export default function AdmissionsPricingPage() {
-  const [dbPlans, setDbPlans] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  // const [dbPlans, setDbPlans] = useState([]);
+  // const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    const fetchPlans = async () => {
-      try {
-        const response = await fetch("/api/pricing-plans");
-        const data = await response.json();
-        setDbPlans(data);
-      } catch (error) {
-        console.error("Failed to fetch pricing plans:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchPlans();
-  }, []);
+  // useEffect(() => {
+  //   const fetchPlans = async () => {
+  //     try {
+  //       const response = await fetch("/api/(public)/pricing-plans");
+  //       const data = await response.json();
+  //       setDbPlans(data);
+  //     } catch (error) {
+  //       console.error("Failed to fetch pricing plans:", error);
+  //     } finally {
+  //       setIsLoading(false);
+  //     }
+  //   };
+  //   fetchPlans();
+  // }, []);
 
-  if (isLoading) {
-    return (
-      <main className="pt-24 sm:pt-28 md:pt-32 pb-12 sm:pb-16 md:pb-20 bg-background min-h-screen">
-        <div className="container mx-auto px-4 sm:px-6 flex items-center justify-center min-h-[60vh]">
-          <div className="text-center">
-            <div className="w-12 h-12 border-4 border-primary-700 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
-            <p className="text-muted-foreground">Loading pricing information...</p>
-          </div>
-        </div>
-      </main>
-    );
-  }
+  // if (isLoading) {
+  //   return (
+  //     <main className="pt-24 sm:pt-28 md:pt-32 pb-12 sm:pb-16 md:pb-20 bg-background min-h-screen">
+  //       <div className="container mx-auto px-4 sm:px-6 flex items-center justify-center min-h-[60vh]">
+  //         <div className="text-center">
+  //           <div className="w-12 h-12 border-4 border-primary-700 border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+  //           <p className="text-muted-foreground">Loading pricing information...</p>
+  //         </div>
+  //       </div>
+  //     </main>
+  //   );
+  // }
+
+
+  const dbPlans: PricingPlan[] = [];
 
   return (
     <main className="pt-24 sm:pt-28 md:pt-32 pb-12 sm:pb-16 md:pb-20 bg-background">
