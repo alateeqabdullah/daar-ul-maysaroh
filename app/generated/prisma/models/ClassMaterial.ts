@@ -1794,6 +1794,11 @@ export type ClassMaterialFindManyArgs<ExtArgs extends runtime.Types.Extensions.I
    * Skip the first `n` ClassMaterials.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of ClassMaterials.
+   */
   distinct?: Prisma.ClassMaterialScalarFieldEnum | Prisma.ClassMaterialScalarFieldEnum[]
 }
 

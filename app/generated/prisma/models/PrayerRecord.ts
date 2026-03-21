@@ -1386,6 +1386,11 @@ export type PrayerRecordFindManyArgs<ExtArgs extends runtime.Types.Extensions.In
    * Skip the first `n` PrayerRecords.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of PrayerRecords.
+   */
   distinct?: Prisma.PrayerRecordScalarFieldEnum | Prisma.PrayerRecordScalarFieldEnum[]
 }
 

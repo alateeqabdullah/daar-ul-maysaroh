@@ -1368,6 +1368,11 @@ export type CourseAnnouncementFindManyArgs<ExtArgs extends runtime.Types.Extensi
    * Skip the first `n` CourseAnnouncements.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of CourseAnnouncements.
+   */
   distinct?: Prisma.CourseAnnouncementScalarFieldEnum | Prisma.CourseAnnouncementScalarFieldEnum[]
 }
 

@@ -1495,6 +1495,11 @@ export type GroupAnnouncementFindManyArgs<ExtArgs extends runtime.Types.Extensio
    * Skip the first `n` GroupAnnouncements.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of GroupAnnouncements.
+   */
   distinct?: Prisma.GroupAnnouncementScalarFieldEnum | Prisma.GroupAnnouncementScalarFieldEnum[]
 }
 

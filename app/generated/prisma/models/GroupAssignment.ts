@@ -1688,6 +1688,11 @@ export type GroupAssignmentFindManyArgs<ExtArgs extends runtime.Types.Extensions
    * Skip the first `n` GroupAssignments.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of GroupAssignments.
+   */
   distinct?: Prisma.GroupAssignmentScalarFieldEnum | Prisma.GroupAssignmentScalarFieldEnum[]
 }
 

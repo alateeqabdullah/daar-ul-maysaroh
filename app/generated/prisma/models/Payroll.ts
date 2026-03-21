@@ -1271,6 +1271,11 @@ export type PayrollFindManyArgs<ExtArgs extends runtime.Types.Extensions.Interna
    * Skip the first `n` Payrolls.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of Payrolls.
+   */
   distinct?: Prisma.PayrollScalarFieldEnum | Prisma.PayrollScalarFieldEnum[]
 }
 

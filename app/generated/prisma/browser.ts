@@ -252,3 +252,8 @@ export type CourseAnnouncement = Prisma.CourseAnnouncementModel
  * 
  */
 export type HifzProgress = Prisma.HifzProgressModel
+/**
+ * Model SanadChain
+ * 
+ */
+export type SanadChain = Prisma.SanadChainModel

@@ -1676,6 +1676,11 @@ export type GroupScheduleFindManyArgs<ExtArgs extends runtime.Types.Extensions.I
    * Skip the first `n` GroupSchedules.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of GroupSchedules.
+   */
   distinct?: Prisma.GroupScheduleScalarFieldEnum | Prisma.GroupScheduleScalarFieldEnum[]
 }
 

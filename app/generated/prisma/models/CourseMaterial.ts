@@ -1540,6 +1540,11 @@ export type CourseMaterialFindManyArgs<ExtArgs extends runtime.Types.Extensions.
    * Skip the first `n` CourseMaterials.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of CourseMaterials.
+   */
   distinct?: Prisma.CourseMaterialScalarFieldEnum | Prisma.CourseMaterialScalarFieldEnum[]
 }
 

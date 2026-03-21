@@ -142,7 +142,6 @@
 //     </main>
 //   );
 // }
-
 import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import { Reveal } from "@/components/shared/section-animation";
@@ -162,6 +161,9 @@ import {
   Clock,
   MapPin,
   Mail,
+  Calendar,
+  GraduationCap,
+  Heart,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -202,74 +204,6 @@ export async function generateMetadata({
   }
 }
 
-// Mock data for demonstration - Replace with actual SanadChain model queries
-const mockSanadChains = {
-  "scholar-1": [
-    {
-      generation: 1,
-      scholarName: "Dr. Abdullah Al-Makki",
-      bio: "Grand Mufti of Makkah",
-      era: "Contemporary",
-      region: "Makkah",
-      isFamous: true,
-    },
-    {
-      generation: 2,
-      scholarName: "Sheikh Muhammad Al-Madani",
-      bio: "Senior Scholar at Islamic University",
-      era: "15th Century Hijri",
-      region: "Madinah",
-    },
-    {
-      generation: 3,
-      scholarName: "Sheikh Ibrahim Al-Misri",
-      bio: "Renowned Quranic Scholar",
-      era: "14th Century Hijri",
-      region: "Cairo",
-      isFamous: true,
-    },
-    {
-      generation: 4,
-      scholarName: "Sheikh Yusuf Al-Andalusi",
-      bio: "Master of Qira'at",
-      era: "13th Century Hijri",
-      region: "Andalus",
-    },
-    {
-      generation: 5,
-      scholarName: "Sheikh Ahmad Al-Baghdadi",
-      bio: "Keeper of the Sanad",
-      era: "12th Century Hijri",
-      region: "Baghdad",
-    },
-    {
-      generation: 10,
-      scholarName: "Imam Al-Jazari",
-      bio: "Father of Tajweed Science",
-      era: "9th Century Hijri",
-      region: "Damascus",
-      isFamous: true,
-    },
-    {
-      generation: 25,
-      scholarName: "Imam Nafi' Al-Madani",
-      bio: "One of the Seven Qira'at Masters",
-      era: "2nd Century Hijri",
-      region: "Madinah",
-      isFamous: true,
-    },
-    {
-      generation: 35,
-      scholarName: "The Prophet Muhammad (ﷺ)",
-      bio: "Source of All Sanads",
-      era: "1st Century Hijri",
-      region: "Makkah/Madinah",
-      isFamous: true,
-    },
-  ],
-  // Add more mock chains for other teachers
-};
-
 export default async function ScholarProfilePage({
   params,
 }: {
@@ -278,19 +212,32 @@ export default async function ScholarProfilePage({
   const resolvedParams = await params;
   const id = resolvedParams.id;
 
-  // Fetch teacher data
+  // Fetch teacher data with SanadChain
   let teacher = null;
+  let sanadChain = [];
 
   try {
     teacher = await prisma.teacher.findUnique({
       where: { id },
       include: {
         user: true,
-        classes: true,
-        subjects: true,
-        assignedGrades: true,
+        classes: {
+          take: 3,
+          orderBy: { createdAt: "desc" },
+        },
+        subjects: {
+          take: 5,
+        },
+        sanadChains: {
+          orderBy: { generation: "asc" },
+        },
       },
     });
+
+    // If teacher has sanadChains in DB, use them
+    if (teacher?.sanadChains && teacher.sanadChains.length > 0) {
+      sanadChain = teacher.sanadChains;
+    }
   } catch (error) {
     console.error("Failed to fetch teacher:", error);
   }
@@ -300,16 +247,22 @@ export default async function ScholarProfilePage({
     notFound();
   }
 
-  // Get this teacher's sanad chain (from DB or mock)
-  const sanadChain =
-    mockSanadChains[id as keyof typeof mockSanadChains] ||
-    mockSanadChains["scholar-1"];
+  // If no sanad chain in DB, use mock data for demonstration
+  if (sanadChain.length === 0) {
+    sanadChain = getMockSanadChain();
+  }
 
-  // Group chain by eras
+  // Group chain by famous scholars
   const famousScholars = sanadChain.filter((s) => s.isFamous);
   const fullChain = sanadChain.sort((a, b) => a.generation - b.generation);
 
-  // Teacher data
+  // Calculate availability status
+  const currentStudents = teacher.classes?.length || 0;
+  const maxStudents = teacher.maxStudents || 20;
+  const isAvailable = teacher.isAvailable && currentStudents < maxStudents;
+  const availableSpots = maxStudents - currentStudents;
+
+  // Teacher data for display
   const teacherData = {
     id: teacher.id,
     name: teacher.user.name || "Scholar",
@@ -331,16 +284,18 @@ export default async function ScholarProfilePage({
     specialization: teacher.specialization || "Quranic Studies",
     experience: teacher.experienceYears || 20,
     qualification: teacher.qualification || "PhD in Quranic Sciences",
-    isAvailable: teacher.isAvailable ?? true,
+    isAvailable: isAvailable,
+    availableSpots: availableSpots,
     teachingStyle:
       teacher.teachingStyle || "Traditional with Modern Application",
-    maxStudents: teacher.maxStudents || 20,
-    currentStudents: teacher.classes?.length || 0,
-    studentsTaught: 500, // Add to schema later
+    maxStudents: maxStudents,
+    currentStudents: currentStudents,
+    studentsTaught: teacher.studentsTaught || 500,
     yearsActive: teacher.experienceYears || 20,
-    country: "Egypt", // Add to schema
-    city: "Cairo", // Add to schema
-    languages: ["Arabic", "English"], // Add to schema
+    // These would come from user or teacher profile fields
+    country: teacher.user?.location?.split(",")[1] || "Egypt",
+    city: teacher.user?.location?.split(",")[0] || "Cairo",
+    languages: ["Arabic", "English"], // Would come from teacher profile
   };
 
   return (
@@ -366,9 +321,9 @@ export default async function ScholarProfilePage({
           Back to Faculty
         </Link>
 
-        {/* Header Section */}
+        {/* ==================== HEADER SECTION ==================== */}
         <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 mb-16 lg:mb-20">
-          {/* Profile Image - Floating Card */}
+          {/* Profile Image */}
           <div className="lg:w-1/3">
             <div className="relative group">
               <div className="absolute -inset-1 bg-linear-to-r from-primary-700 via-gold to-primary-700 rounded-[2.5rem] blur opacity-20 group-hover:opacity-30 transition-opacity" />
@@ -388,7 +343,7 @@ export default async function ScholarProfilePage({
                 )}
 
                 {/* Verification Badge */}
-                {teacherData.isAvailable && (
+                {teacher.isAvailable && (
                   <div className="absolute top-4 left-4 bg-primary-700 text-white px-4 py-2 rounded-full text-xs font-black uppercase tracking-wider shadow-xl flex items-center gap-2">
                     <ShieldCheck className="w-4 h-4" />
                     Ijazah Certified
@@ -408,7 +363,7 @@ export default async function ScholarProfilePage({
             </Reveal>
 
             <Reveal delay={0.1}>
-              <h1 className="text-5xl sm:text-6xl lg:text-7xl font-black tracking-tighter font-heading leading-[0.9]">
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-black tracking-tighter font-heading leading-[0.9]">
                 {teacherData.name}
               </h1>
             </Reveal>
@@ -448,7 +403,7 @@ export default async function ScholarProfilePage({
                     value: `${teacherData.city}, ${teacherData.country}`,
                   },
                 ].map((stat, idx) => (
-                  <div key={idx} className="text-center">
+                  <div key={idx} className="text-center p-2">
                     <stat.icon className="w-5 h-5 mx-auto mb-2 text-primary-700" />
                     <p className="text-sm font-black">{stat.value}</p>
                     <p className="text-xs text-muted-foreground">
@@ -461,12 +416,12 @@ export default async function ScholarProfilePage({
           </div>
         </div>
 
-        {/* Quote Section */}
+        {/* ==================== QUOTE SECTION ==================== */}
         <Reveal delay={0.4}>
           <div className="max-w-4xl mx-auto mb-16 p-8 sm:p-10 glass-surface rounded-[2.5rem] border border-primary-700/20 relative">
             <Quote className="absolute top-6 left-6 w-12 h-12 text-primary-700/10" />
             <p className="text-xl sm:text-2xl md:text-3xl font-light italic text-center relative z-10">
-             {` "${teacherData.quote}"`}
+              {` "${teacherData.quote}"`}
             </p>
             <p className="text-center text-primary-700 font-black text-sm uppercase tracking-widest mt-4">
               — Personal Teaching Philosophy —
@@ -474,9 +429,9 @@ export default async function ScholarProfilePage({
           </div>
         </Reveal>
 
-        {/* Main Content Grid */}
+        {/* ==================== MAIN CONTENT GRID ==================== */}
         <div className="grid lg:grid-cols-12 gap-8 lg:gap-12">
-          {/* Left Column - Bio & Details */}
+          {/* LEFT COLUMN - Bio & Details */}
           <div className="lg:col-span-4 space-y-6">
             {/* Bio Card */}
             <Reveal delay={0.1}>
@@ -535,104 +490,131 @@ export default async function ScholarProfilePage({
                     </div>
                   </div>
                   <div className="pt-4 border-t border-border/50">
-                    <Button className="w-full rounded-full" variant="outline">
-                      <Mail className="w-4 h-4 mr-2" />
-                      Contact Scholar
-                    </Button>
+                    <Link href={`/contact?teacher=${teacherData.id}`}>
+                      <Button className="w-full rounded-full" variant="outline">
+                        <Mail className="w-4 h-4 mr-2" />
+                        Contact Scholar
+                      </Button>
+                    </Link>
                   </div>
                 </div>
               </div>
             </Reveal>
+
+            {/* Teaching Schedule Preview */}
+            {teacher.classes && teacher.classes.length > 0 && (
+              <Reveal delay={0.25}>
+                <div className="institutional-card p-6 sm:p-8">
+                  <h3 className="font-black text-lg uppercase tracking-tight mb-4 flex items-center gap-2">
+                    <Calendar className="w-5 h-5 text-primary-700" />
+                    Current Classes
+                  </h3>
+                  <div className="space-y-3">
+                    {teacher.classes.slice(0, 3).map((cls) => (
+                      <div key={cls.id} className="p-3 rounded-lg bg-muted/30">
+                        <p className="font-black text-sm">{cls.name}</p>
+                        <p className="text-xs text-muted-foreground">
+                          {cls.level} • {cls.section || "Main"}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </Reveal>
+            )}
           </div>
 
-          {/* Right Column - Sanad Chain & Teaching */}
+          {/* RIGHT COLUMN - Sanad Chain & Teaching */}
           <div className="lg:col-span-8 space-y-8">
             {/* Sanad Chain - Interactive Tree */}
             <Reveal delay={0.2}>
-              <div className="institutional-card p-8 lg:p-10 overflow-hidden relative">
+              <div className="institutional-card p-6 sm:p-8 lg:p-10 overflow-hidden relative">
                 {/* Background Arabic */}
                 <div className="absolute top-0 right-0 p-8 opacity-5 font-quran text-8xl">
                   سند
                 </div>
 
-                <h3 className="text-2xl font-black uppercase tracking-tight mb-2 flex items-center gap-3">
+                <h3 className="text-2xl font-black uppercase tracking-tight mb-4 flex items-center gap-3">
                   <ScrollText className="w-6 h-6 text-primary-700" />
                   Noble Chain of Transmission
                 </h3>
 
-                <p className="text-sm text-muted-foreground mb-8">
-                  {`              Explore the unbroken lineage of scholars that connects our esteemed faculty member to the Prophet Muhammad (ﷺ) through generations of dedicated transmitters of Quranic knowledge. Each link in this chain represents a scholar who has received and passed on the sacred knowledge with utmost precision, ensuring the preservation of the Quran's authentic recitation for over 1400 years.`}
-                </p>
-                <p className="text-sm text-muted-foreground mb-8">
-                  {`  ${teacherData.name}'s unbroken lineage to the 
-                Prophet (ﷺ)`}
+                <p className="text-sm text-muted-foreground mb-6">
+                  {teacherData.name}'s unbroken lineage to the Prophet Muhammad
+                  (ﷺ) through generations of dedicated scholars. Each link
+                  represents a carrier of the sacred trust, preserving the
+                  authentic recitation for over 1400 years.
                 </p>
 
                 {/* Famous Scholars Highlight */}
-                <div className="mb-8 p-4 rounded-xl bg-linear-to-r from-primary-700/10 to-transparent border border-primary-700/20">
-                  <p className="text-xs font-black uppercase tracking-widest text-primary-700 mb-3">
-                    KEY FIGURES IN THIS CHAIN
-                  </p>
-                  <div className="flex flex-wrap gap-3">
-                    {famousScholars.map((scholar) => (
-                      <div
-                        key={scholar.generation}
-                        className="flex items-center gap-2"
-                      >
-                        <Star className="w-4 h-4 text-gold fill-gold" />
-                        <span className="font-bold">{scholar.scholarName}</span>
-                        <span className="text-xs text-muted-foreground">
-                          ({scholar.era})
-                        </span>
-                      </div>
-                    ))}
+                {famousScholars.length > 0 && (
+                  <div className="mb-8 p-4 rounded-xl bg-linear-to-r from-primary-700/10 to-transparent border border-primary-700/20">
+                    <p className="text-xs font-black uppercase tracking-widest text-primary-700 mb-3">
+                      KEY FIGURES IN THIS CHAIN
+                    </p>
+                    <div className="flex flex-wrap gap-3">
+                      {famousScholars.slice(0, 5).map((scholar) => (
+                        <div
+                          key={scholar.generation}
+                          className="flex items-center gap-2"
+                        >
+                          <Star className="w-4 h-4 text-gold fill-gold" />
+                          <span className="font-bold">
+                            {scholar.scholarName}
+                          </span>
+                          <span className="text-xs text-muted-foreground">
+                            ({scholar.era})
+                          </span>
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                </div>
+                )}
 
                 {/* Chain Visualization */}
-                <div className="relative">
+                <div className="relative max-h-[600px] overflow-y-auto pr-4 custom-scrollbar">
                   {/* Vertical Line */}
-                  <div className="absolute left-6 top-0 bottom-0 w-0.5 bg-linear-to-b from-primary-700 via-primary-700/50 to-transparent" />
+                  <div className="absolute left-5 top-0 bottom-0 w-0.5 bg-linear-to-b from-primary-700 via-primary-700/50 to-transparent" />
 
                   <div className="space-y-6">
-                    {fullChain.map((link, index) => (
-                      <div key={index} className="relative flex gap-6">
+                    {fullChain.slice(0, 30).map((link, index) => (
+                      <div key={index} className="relative flex gap-4 sm:gap-6">
                         {/* Node */}
                         <div
                           className={`
-                          w-12 h-12 rounded-full border-4 flex items-center justify-center shrink-0 relative z-10
+                          w-10 h-10 sm:w-12 sm:h-12 rounded-full border-4 flex items-center justify-center shrink-0 relative z-10 bg-background
                           ${
                             link.isFamous
                               ? "border-gold bg-linear-to-br from-gold/20 to-gold/5"
-                              : "border-primary-700 bg-background"
+                              : "border-primary-700"
                           }
                         `}
                         >
                           {link.isFamous ? (
-                            <Star className="w-5 h-5 text-gold fill-gold/20" />
+                            <Star className="w-4 h-4 sm:w-5 sm:h-5 text-gold" />
                           ) : (
-                            <div className="w-2 h-2 rounded-full bg-primary-700" />
+                            <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-primary-700" />
                           )}
                         </div>
 
                         {/* Content */}
                         <div className="flex-1 pb-6">
-                          <div className="flex items-center gap-3 mb-1">
-                            <p className="font-black text-lg">
+                          <div className="flex flex-wrap items-center gap-2 mb-1">
+                            <p className="font-black text-base sm:text-lg">
                               {link.scholarName}
                             </p>
                             {link.isFamous && (
-                              <span className="px-2 py-0.5 rounded-full bg-gold/10 text-gold text-[10px] font-black uppercase tracking-wider">
+                              <span className="px-2 py-0.5 rounded-full bg-gold/10 text-gold text-[9px] sm:text-[10px] font-black uppercase tracking-wider">
                                 Renowned
                               </span>
                             )}
                           </div>
                           {link.bio && (
-                            <p className="text-sm text-muted-foreground mb-1">
+                            <p className="text-xs sm:text-sm text-muted-foreground mb-1">
                               {link.bio}
                             </p>
                           )}
-                          <div className="flex gap-3 text-xs">
+                          <div className="flex flex-wrap gap-2 sm:gap-3 text-xs">
                             <span className="text-primary-700 font-black">
                               {link.era}
                             </span>
@@ -641,15 +623,6 @@ export default async function ScholarProfilePage({
                               {link.region}
                             </span>
                           </div>
-
-                          {/* Generation indicator for early chain */}
-                          {link.generation < 5 && (
-                            <div className="mt-2 text-xs text-gold font-black">
-                              {link.generation === 35
-                                ? "Source of All Sanads"
-                                : `Generation ${link.generation}`}
-                            </div>
-                          )}
                         </div>
                       </div>
                     ))}
@@ -684,11 +657,11 @@ export default async function ScholarProfilePage({
               </div>
             </Reveal>
 
-            {/* Teaching Style & CTA */}
+            {/* Teaching Style & Availability */}
             <Reveal delay={0.3}>
               <div className="grid sm:grid-cols-2 gap-6">
-                <div className="institutional-card p-6">
-                  <h4 className="font-black text-sm uppercase mb-3 tracking-widest flex items-center gap-2">
+                <div className="institutional-card p-5 sm:p-6">
+                  <h4 className="font-black text-xs sm:text-sm uppercase mb-3 tracking-widest flex items-center gap-2">
                     <Mic className="w-4 h-4 text-primary-700" />
                     Teaching Style
                   </h4>
@@ -697,27 +670,134 @@ export default async function ScholarProfilePage({
                   </p>
                 </div>
 
-                <div className="institutional-card p-6 bg-primary-700 text-white">
-                  <h4 className="font-black text-sm uppercase mb-3 tracking-widest flex items-center gap-2">
+                <div
+                  className={cn(
+                    "institutional-card p-5 sm:p-6",
+                    teacherData.isAvailable
+                      ? "bg-primary-700 text-white"
+                      : "bg-muted/50",
+                  )}
+                >
+                  <h4
+                    className={cn(
+                      "font-black text-xs sm:text-sm uppercase mb-3 tracking-widest flex items-center gap-2",
+                      teacherData.isAvailable
+                        ? "text-white/80"
+                        : "text-primary-700",
+                    )}
+                  >
                     <Users className="w-4 h-4" />
                     Availability
                   </h4>
-                  <p className="text-sm text-white/80 mb-4">
+                  <p
+                    className={cn(
+                      "text-sm mb-4",
+                      teacherData.isAvailable
+                        ? "text-white/80"
+                        : "text-muted-foreground",
+                    )}
+                  >
                     {teacherData.isAvailable
-                      ? `${teacherData.currentStudents}/${teacherData.maxStudents} students enrolled`
+                      ? `${teacherData.availableSpots} of ${teacherData.maxStudents} spots available`
                       : "Currently at capacity"}
                   </p>
-                  <Button className="w-full bg-white text-primary-700 hover:bg-white/90 font-black text-xs tracking-widest uppercase rounded-xl">
-                    {teacherData.isAvailable
-                      ? "Request Assignment"
-                      : "Join Waitlist"}
-                  </Button>
+                  <Link href="/admissions">
+                    <Button
+                      className={cn(
+                        "w-full font-black text-xs tracking-widest uppercase rounded-xl",
+                        teacherData.isAvailable
+                          ? "bg-white text-primary-700 hover:bg-white/90"
+                          : "bg-primary-700 text-white hover:bg-primary-800",
+                      )}
+                    >
+                      {teacherData.isAvailable
+                        ? "Request Assignment"
+                        : "Join Waitlist"}
+                    </Button>
+                  </Link>
                 </div>
               </div>
             </Reveal>
+
+            {/* Subjects Taught */}
+            {teacher.subjects && teacher.subjects.length > 0 && (
+              <Reveal delay={0.35}>
+                <div className="institutional-card p-5 sm:p-6">
+                  <h4 className="font-black text-xs sm:text-sm uppercase mb-3 tracking-widest flex items-center gap-2">
+                    <GraduationCap className="w-4 h-4 text-primary-700" />
+                    Subjects Taught
+                  </h4>
+                  <div className="flex flex-wrap gap-2">
+                    {teacher.subjects.map((subject) => (
+                      <span
+                        key={subject.id}
+                        className="px-3 py-1.5 rounded-full bg-primary-50 dark:bg-primary-950/30 text-primary-700 text-xs font-black"
+                      >
+                        {subject.name}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </Reveal>
+            )}
           </div>
         </div>
       </div>
     </main>
   );
 }
+
+// Helper function for mock Sanad Chain
+function getMockSanadChain() {
+  return [
+    {
+      generation: 1,
+      scholarName: "Sheikh Muhammad Al-Madani",
+      bio: "Senior Scholar at Islamic University",
+      era: "15th Century Hijri",
+      region: "Madinah",
+      isFamous: false,
+    },
+    {
+      generation: 2,
+      scholarName: "Sheikh Ibrahim Al-Misri",
+      bio: "Renowned Quranic Scholar",
+      era: "14th Century Hijri",
+      region: "Cairo",
+      isFamous: true,
+    },
+    {
+      generation: 3,
+      scholarName: "Sheikh Yusuf Al-Andalusi",
+      bio: "Master of Qira'at",
+      era: "13th Century Hijri",
+      region: "Andalus",
+      isFamous: false,
+    },
+    {
+      generation: 8,
+      scholarName: "Imam Al-Jazari",
+      bio: "Father of Tajweed Science",
+      era: "9th Century Hijri",
+      region: "Damascus",
+      isFamous: true,
+    },
+    {
+      generation: 25,
+      scholarName: "Imam Nafi' Al-Madani",
+      bio: "One of the Seven Qira'at Masters",
+      era: "2nd Century Hijri",
+      region: "Madinah",
+      isFamous: true,
+    },
+    {
+      generation: 35,
+      scholarName: "The Prophet Muhammad (ﷺ)",
+      bio: "Source of All Sanads",
+      era: "1st Century Hijri",
+      region: "Makkah/Madinah",
+      isFamous: true,
+    },
+  ];
+}
+

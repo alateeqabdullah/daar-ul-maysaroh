@@ -1887,6 +1887,11 @@ export type ScheduledSessionFindManyArgs<ExtArgs extends runtime.Types.Extension
    * Skip the first `n` ScheduledSessions.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of ScheduledSessions.
+   */
   distinct?: Prisma.ScheduledSessionScalarFieldEnum | Prisma.ScheduledSessionScalarFieldEnum[]
 }
 

@@ -4958,6 +4958,11 @@ export type StudentFindManyArgs<ExtArgs extends runtime.Types.Extensions.Interna
    * Skip the first `n` Students.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of Students.
+   */
   distinct?: Prisma.StudentScalarFieldEnum | Prisma.StudentScalarFieldEnum[]
 }
 

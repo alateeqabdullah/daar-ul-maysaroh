@@ -1932,6 +1932,11 @@ export type QuranProgressFindManyArgs<ExtArgs extends runtime.Types.Extensions.I
    * Skip the first `n` QuranProgresses.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of QuranProgresses.
+   */
   distinct?: Prisma.QuranProgressScalarFieldEnum | Prisma.QuranProgressScalarFieldEnum[]
 }
 

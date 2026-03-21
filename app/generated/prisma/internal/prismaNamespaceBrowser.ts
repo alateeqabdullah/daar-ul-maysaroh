@@ -97,7 +97,8 @@ export const ModelName = {
   Course: 'Course',
   CourseMaterial: 'CourseMaterial',
   CourseAnnouncement: 'CourseAnnouncement',
-  HifzProgress: 'HifzProgress'
+  HifzProgress: 'HifzProgress',
+  SanadChain: 'SanadChain'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -1022,6 +1023,20 @@ export const HifzProgressScalarFieldEnum = {
 } as const
 
 export type HifzProgressScalarFieldEnum = (typeof HifzProgressScalarFieldEnum)[keyof typeof HifzProgressScalarFieldEnum]
+
+
+export const SanadChainScalarFieldEnum = {
+  id: 'id',
+  teacherId: 'teacherId',
+  generation: 'generation',
+  scholarName: 'scholarName',
+  bio: 'bio',
+  era: 'era',
+  region: 'region',
+  isFamous: 'isFamous'
+} as const
+
+export type SanadChainScalarFieldEnum = (typeof SanadChainScalarFieldEnum)[keyof typeof SanadChainScalarFieldEnum]
 
 
 export const SortOrder = {

@@ -1411,6 +1411,11 @@ export type GroupAttendanceFindManyArgs<ExtArgs extends runtime.Types.Extensions
    * Skip the first `n` GroupAttendances.
    */
   skip?: number
+  /**
+   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+   * 
+   * Filter by unique combinations of GroupAttendances.
+   */
   distinct?: Prisma.GroupAttendanceScalarFieldEnum | Prisma.GroupAttendanceScalarFieldEnum[]
 }
 

@@ -80,12 +80,12 @@ export type PrismaVersion = {
 }
 
 /**
- * Prisma Client JS version: 7.3.0
- * Query Engine version: 9d6ad21cbbceab97458517b147a6a09ff43aa735
+ * Prisma Client JS version: 7.5.0
+ * Query Engine version: 280c870be64f457428992c43c1f6d557fab6e29e
  */
 export const prismaVersion: PrismaVersion = {
-  client: "7.3.0",
-  engine: "9d6ad21cbbceab97458517b147a6a09ff43aa735"
+  client: "7.5.0",
+  engine: "280c870be64f457428992c43c1f6d557fab6e29e"
 }
 
 /**
@@ -430,7 +430,8 @@ export const ModelName = {
   Course: 'Course',
   CourseMaterial: 'CourseMaterial',
   CourseAnnouncement: 'CourseAnnouncement',
-  HifzProgress: 'HifzProgress'
+  HifzProgress: 'HifzProgress',
+  SanadChain: 'SanadChain'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -446,7 +447,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "student" | "teacher" | "parent" | "adminProfile" | "class" | "classSchedule" | "subject" | "enrollment" | "attendance" | "studentGroup" | "groupMember" | "groupSchedule" | "groupAttendance" | "groupAttendanceRecord" | "groupAnnouncement" | "groupAssignment" | "groupAssignmentSubmission" | "assignment" | "assignmentSubmission" | "grade" | "quranProgress" | "prayerRecord" | "invoice" | "payment" | "donation" | "expense" | "payroll" | "classMaterial" | "subjectMaterial" | "announcement" | "message" | "notification" | "certificate" | "session" | "account" | "verificationToken" | "systemSetting" | "event" | "pricingPlan" | "pricingTier" | "subscription" | "scheduledSession" | "course" | "courseMaterial" | "courseAnnouncement" | "hifzProgress"
+    modelProps: "user" | "student" | "teacher" | "parent" | "adminProfile" | "class" | "classSchedule" | "subject" | "enrollment" | "attendance" | "studentGroup" | "groupMember" | "groupSchedule" | "groupAttendance" | "groupAttendanceRecord" | "groupAnnouncement" | "groupAssignment" | "groupAssignmentSubmission" | "assignment" | "assignmentSubmission" | "grade" | "quranProgress" | "prayerRecord" | "invoice" | "payment" | "donation" | "expense" | "payroll" | "classMaterial" | "subjectMaterial" | "announcement" | "message" | "notification" | "certificate" | "session" | "account" | "verificationToken" | "systemSetting" | "event" | "pricingPlan" | "pricingTier" | "subscription" | "scheduledSession" | "course" | "courseMaterial" | "courseAnnouncement" | "hifzProgress" | "sanadChain"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -3928,6 +3929,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    SanadChain: {
+      payload: Prisma.$SanadChainPayload<ExtArgs>
+      fields: Prisma.SanadChainFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.SanadChainFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SanadChainPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.SanadChainFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SanadChainPayload>
+        }
+        findFirst: {
+          args: Prisma.SanadChainFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SanadChainPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.SanadChainFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SanadChainPayload>
+        }
+        findMany: {
+          args: Prisma.SanadChainFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SanadChainPayload>[]
+        }
+        create: {
+          args: Prisma.SanadChainCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SanadChainPayload>
+        }
+        createMany: {
+          args: Prisma.SanadChainCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.SanadChainCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SanadChainPayload>[]
+        }
+        delete: {
+          args: Prisma.SanadChainDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SanadChainPayload>
+        }
+        update: {
+          args: Prisma.SanadChainUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SanadChainPayload>
+        }
+        deleteMany: {
+          args: Prisma.SanadChainDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.SanadChainUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.SanadChainUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SanadChainPayload>[]
+        }
+        upsert: {
+          args: Prisma.SanadChainUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$SanadChainPayload>
+        }
+        aggregate: {
+          args: Prisma.SanadChainAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateSanadChain>
+        }
+        groupBy: {
+          args: Prisma.SanadChainGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SanadChainGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.SanadChainCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.SanadChainCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -4875,6 +4950,20 @@ export const HifzProgressScalarFieldEnum = {
 export type HifzProgressScalarFieldEnum = (typeof HifzProgressScalarFieldEnum)[keyof typeof HifzProgressScalarFieldEnum]
 
 
+export const SanadChainScalarFieldEnum = {
+  id: 'id',
+  teacherId: 'teacherId',
+  generation: 'generation',
+  scholarName: 'scholarName',
+  bio: 'bio',
+  era: 'era',
+  region: 'region',
+  isFamous: 'isFamous'
+} as const
+
+export type SanadChainScalarFieldEnum = (typeof SanadChainScalarFieldEnum)[keyof typeof SanadChainScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -5770,6 +5859,7 @@ export type GlobalOmitConfig = {
   courseMaterial?: Prisma.CourseMaterialOmit
   courseAnnouncement?: Prisma.CourseAnnouncementOmit
   hifzProgress?: Prisma.HifzProgressOmit
+  sanadChain?: Prisma.SanadChainOmit
 }
 
 /* Types for Logging */
