@@ -316,7 +316,7 @@ export default async function FacultyPage({ searchParams }: PageProps) {
           </div>
 
           {/* Specialization Filters */}
-          <div className="overflow-x-auto pb-2 scrollbar-hide">
+          {/* <div className="overflow-x-auto pb-2 scrollbar-hide">
             <div className="flex items-center gap-2 sm:gap-3 min-w-max">
               <div className="flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-muted-foreground mr-2 sticky left-0 bg-background pr-2">
                 <Filter className="w-3.5 h-3.5" />
@@ -337,7 +337,7 @@ export default async function FacultyPage({ searchParams }: PageProps) {
                 </Link>
               ))}
             </div>
-          </div>
+          </div> */}
 
           {/* Active Filters Display */}
           {(activeSpecialization !== "all" || searchQuery) && (

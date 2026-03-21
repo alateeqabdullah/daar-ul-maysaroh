@@ -8,10 +8,9 @@ import {
   Clock,
   Award,
   ArrowRight,
-  LayoutGrid,
   UserCheck,
-  Search,
-  Filter,
+  Loader2,
+  Users,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Reveal } from "@/components/shared/section-animation";
@@ -22,15 +21,15 @@ import Link from "next/link";
 const MOCK_FACULTY = [
   {
     id: "dean-ahmad",
-    name: "Sheikh Dr. Ahmad Al-Maysari",
+    name: "Sheikh Abubakar Al-Maysari",
     rank: "Dean of Faculty",
     credentials: [
-      "PhD Quranic Sciences",
+      "Quranic Sciences",
       "Ijazah in 10 Qira'at",
       "Authentic Sanad Holder",
     ],
     philosophy: "Memorization is the cultivation of the heart before the mind.",
-    availability: "Mon, Wed, Fri",
+    availability: "Sun - Sat",
     department: "Hifz & Qira'at",
     isMock: true,
   },
@@ -41,13 +40,13 @@ const MOCK_FACULTY = [
     credentials: ["Ijazah in Hafs 'an 'Asim", "Master's in Islamic Pedagogy"],
     philosophy:
       "Nurturing love for the Word through patience and consistent Sunnah.",
-    availability: "Tue, Thu, Sat",
-    department: "Hifz & Qira'at",
+    availability: "Mon - Fri",
+    department: "Hifz & Qira'ah",
     isMock: true,
   },
   {
-    id: "scholar-omar",
-    name: "Sheikh Omar Al-Farooq",
+    id: "scholar-aliyy",
+    name: "Ustadh Aliyy Abdurrozzaaq",
     rank: "Senior Tajweed Scholar",
     credentials: ["Expert in Al-Jazariyyah", "Certified in Phonetics"],
     philosophy:
@@ -56,9 +55,41 @@ const MOCK_FACULTY = [
     department: "Tajweed & Phonetics",
     isMock: true,
   },
+  {
+    id: "scholar-general",
+    name: "Ustadhah Robee'ah Abdurrazzaq",
+    rank: "Senior Islamic Studies Scholar",
+    credentials: [
+      "Islamic Studies",
+      "Certified in Islamic Jurisprudence",
+      "15+ Years Teaching Experience",
+    ],
+    philosophy:
+      "Understanding the Quran requires both heart and intellect working in harmony.",
+    availability: "Sun - Sat",
+    department: "General Studies",
+    isMock: true,
+  },
 ];
 
-export function FacultyListClient({ dbTeachers = [] }: { dbTeachers: any[] }) {
+interface TeacherDisplayData {
+  id: string;
+  name: string;
+  image?: string | null;
+  rank: string;
+  credentials: string[];
+  philosophy: string;
+  availability: string;
+  isMock: boolean;
+  department?: string;
+  yearsOfExperience?: number;
+}
+
+export function FacultyListClient({
+  dbTeachers = [],
+}: {
+  dbTeachers: TeacherDisplayData[];
+}) {
   const [activeDept, setActiveDept] = useState("ALL");
   const [isPending, startTransition] = useTransition();
 
@@ -82,6 +113,9 @@ export function FacultyListClient({ dbTeachers = [] }: { dbTeachers: any[] }) {
     "General Studies",
   ];
 
+  // Check if no teachers in filtered results
+  const hasNoResults = filteredFaculty.length === 0 && !isPending;
+
   return (
     <div className="space-y-16">
       {/* --- ACADEMIC FILTER COMMAND BAR --- */}
@@ -91,11 +125,13 @@ export function FacultyListClient({ dbTeachers = [] }: { dbTeachers: any[] }) {
             <button
               key={dept}
               onClick={() => startTransition(() => setActiveDept(dept))}
+              disabled={isPending}
               className={cn(
                 "px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-[0.2em] transition-all whitespace-nowrap",
                 activeDept === dept
                   ? "bg-primary-700 text-white shadow-lg scale-105"
                   : "text-muted-foreground hover:text-primary-700 hover:bg-primary-50",
+                isPending && "opacity-50 cursor-not-allowed",
               )}
             >
               {dept === "ALL" ? "Full Scholarly Council" : dept}
@@ -104,100 +140,129 @@ export function FacultyListClient({ dbTeachers = [] }: { dbTeachers: any[] }) {
         </div>
       </Reveal>
 
+      {/* Loading Indicator */}
+      {isPending && (
+        <div className="flex justify-center py-8">
+          <Loader2 className="w-6 h-6 animate-spin text-primary-700" />
+        </div>
+      )}
+
+      {/* Empty State */}
+      {hasNoResults && (
+        <div className="text-center py-16">
+          <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-muted/30 flex items-center justify-center">
+            <Users className="w-10 h-10 text-muted-foreground/50" />
+          </div>
+          <h3 className="text-xl font-black mb-2">No scholars found</h3>
+          <p className="text-muted-foreground mb-6">
+            {`We couldn't find any scholars in this department. Please check back later or explore our full scholarly council.`}
+          </p>
+          <Button
+            variant="outline"
+            onClick={() => startTransition(() => setActiveDept("ALL"))}
+            className="rounded-full"
+          >
+            View All Scholars
+          </Button>
+        </div>
+      )}
+
       {/* --- FACULTY GRID --- */}
-      <div className="grid lg:grid-cols-2 gap-12">
-        <AnimatePresence mode="popLayout">
-          {filteredFaculty.map((teacher, idx) => (
-            <motion.div
-              layout
-              key={teacher.id}
-              initial={{ opacity: 0, scale: 0.9 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.9 }}
-              transition={{ duration: 0.5, delay: idx * 0.05 }}
-            >
-              <div className="institutional-card p-8 lg:p-12 h-full flex flex-col group bg-card hover:border-primary-700/50 transition-all duration-700">
-                <div className="flex flex-col md:flex-row gap-10 items-start">
-                  {/* Scholar Portrait Container */}
-                  <div className="w-full md:w-48 h-64 bg-muted/30 rounded-3xl overflow-hidden relative border-2 border-dashed border-border/50 group-hover:border-primary-700/20 transition-colors">
-                    <div className="absolute inset-0 flex items-center justify-center opacity-20 group-hover:scale-110 transition-transform duration-700">
-                      <GraduationCap className="w-16 h-16" />
+      {!hasNoResults && (
+        <div className="grid lg:grid-cols-2 gap-12">
+          <AnimatePresence mode="popLayout">
+            {filteredFaculty.map((teacher, idx) => (
+              <motion.div
+                layout
+                key={teacher.id}
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0, scale: 0.9 }}
+                transition={{ duration: 0.5, delay: idx * 0.05 }}
+              >
+                <div className="institutional-card p-8 lg:p-12 h-full flex flex-col group bg-card hover:border-primary-700/50 transition-all duration-700">
+                  <div className="flex flex-col md:flex-row gap-10 items-start">
+                    {/* Scholar Portrait Container */}
+                    <div className="w-full md:w-48 h-64 bg-muted/30 rounded-3xl overflow-hidden relative border-2 border-dashed border-border/50 group-hover:border-primary-700/20 transition-colors">
+                      <div className="absolute inset-0 flex items-center justify-center opacity-20 group-hover:scale-110 transition-transform duration-700">
+                        <GraduationCap className="w-16 h-16" />
+                      </div>
+                      <div className="absolute bottom-0 left-0 right-0 p-4 bg-linear-to-t from-background to-transparent">
+                        <div className="flex justify-center gap-2">
+                          <div className="w-2 h-2 rounded-full bg-accent animate-ping" />
+                          <span className="text-[8px] font-black text-white uppercase tracking-widest">
+                            Active Sanad
+                          </span>
+                        </div>
+                      </div>
                     </div>
-                    <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-background to-transparent">
-                      <div className="flex justify-center gap-2">
-                        <div className="w-2 h-2 rounded-full bg-accent animate-ping" />
-                        <span className="text-[8px] font-black text-white uppercase tracking-widest">
-                          Active Sanad
-                        </span>
+
+                    {/* Scholar Stats */}
+                    <div className="flex-1 space-y-6">
+                      <div>
+                        <h3 className="text-3xl font-black tracking-tight group-hover:text-primary-700 transition-colors uppercase">
+                          {teacher.name}
+                        </h3>
+                        <p className="text-primary-700 font-black text-[10px] uppercase tracking-[0.2em] mt-1">
+                          {teacher.rank}
+                        </p>
+                      </div>
+
+                      <div className="space-y-4">
+                        <p className="text-[9px] font-black uppercase opacity-40 tracking-widest">
+                          Scholarly Credentials
+                        </p>
+                        <ul className="grid grid-cols-1 gap-2.5">
+                          {teacher.credentials.slice(0, 3).map((c: string) => (
+                            <li
+                              key={c}
+                              className="flex items-start gap-3 text-sm font-bold text-muted-foreground group-hover:text-foreground transition-colors"
+                            >
+                              <ShieldCheck className="w-4 h-4 text-accent shrink-0" />
+                              {c}
+                            </li>
+                          ))}
+                        </ul>
                       </div>
                     </div>
                   </div>
 
-                  {/* Scholar Stats */}
-                  <div className="flex-1 space-y-6">
-                    <div>
-                      <h3 className="text-3xl font-black tracking-tight group-hover:text-primary-700 transition-colors uppercase">
-                        {teacher.name}
-                      </h3>
-                      <p className="text-primary-700 font-black text-[10px] uppercase tracking-[0.2em] mt-1">
-                        {teacher.rank}
-                      </p>
+                  <div className="mt-10 p-8 rounded-3xl bg-primary-50/50 dark:bg-primary-950/20 border-l-4 border-gold italic font-medium text-muted-foreground text-sm leading-relaxed relative overflow-hidden">
+                    <div className="absolute top-0 right-0 p-4 opacity-5 rotate-12">
+                      <Award className="w-20 h-20" />
                     </div>
-
-                    <div className="space-y-4">
-                      <p className="text-[9px] font-black uppercase opacity-40 tracking-widest">
-                        Scholarly Credentials
-                      </p>
-                      <ul className="grid grid-cols-1 gap-2.5">
-                        {teacher.credentials.slice(0, 3).map((c: string) => (
-                          <li
-                            key={c}
-                            className="flex items-start gap-3 text-sm font-bold text-muted-foreground group-hover:text-foreground transition-colors"
-                          >
-                            <ShieldCheck className="w-4 h-4 text-accent shrink-0" />
-                            {c}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="mt-10 p-8 rounded-3xl bg-primary-50/50 dark:bg-primary-950/20 border-l-4 border-gold italic font-medium text-muted-foreground text-sm leading-relaxed relative overflow-hidden">
-                  <div className="absolute top-0 right-0 p-4 opacity-5 rotate-12">
-                    <Award className="w-20 h-20" />
-                  </div>
-                  "{teacher.philosophy}"
-                </div>
-
-                <div className="mt-auto pt-8 border-t border-border/50 flex flex-wrap items-center justify-between gap-4">
-                  <div className="flex items-center gap-4">
-                    <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest opacity-60">
-                      <Clock className="w-4 h-4 text-primary-700" />{" "}
-                      {teacher.availability}
-                    </div>
-                    <div className="w-1 h-1 rounded-full bg-border" />
-                    <div className="text-[10px] font-black uppercase tracking-widest text-accent">
-                      1-on-1 Path
-                    </div>
+                    {`  "${teacher.philosophy}"`}
                   </div>
 
-                  {/* ACTION: Leads to the Dynamic Route we built */}
-                  <Link href={`/teachers/${teacher.id}`}>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="font-black text-[10px] tracking-widest uppercase hover:text-primary-700 transition-colors"
-                    >
-                      Full Sanad Profile <ArrowRight className="ml-2 w-3 h-3" />
-                    </Button>
-                  </Link>
+                  <div className="mt-auto pt-8 border-t border-border/50 flex flex-wrap items-center justify-between gap-4">
+                    <div className="flex items-center gap-4">
+                      <div className="flex items-center gap-2 text-[10px] font-black uppercase tracking-widest opacity-60">
+                        <Clock className="w-4 h-4 text-primary-700" />{" "}
+                        {teacher.availability}
+                      </div>
+                      <div className="w-1 h-1 rounded-full bg-border" />
+                      <div className="text-[10px] font-black uppercase tracking-widest text-accent">
+                        1-on-1 Path
+                      </div>
+                    </div>
+
+                    <Link href={`/teachers/${teacher.id}`}>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="font-black text-[10px] tracking-widest uppercase hover:text-primary-700 transition-colors"
+                      >
+                        Full Sanad Profile{" "}
+                        <ArrowRight className="ml-2 w-3 h-3" />
+                      </Button>
+                    </Link>
+                  </div>
                 </div>
-              </div>
-            </motion.div>
-          ))}
-        </AnimatePresence>
-      </div>
+              </motion.div>
+            ))}
+          </AnimatePresence>
+        </div>
+      )}
 
       {/* --- INSTITUTIONAL CALL TO ACTION --- */}
       <Reveal delay={0.4}>

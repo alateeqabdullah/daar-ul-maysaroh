@@ -94,13 +94,10 @@
 //   ],
 // };
 
-
-
 import { auth } from "@/lib/auth";
 import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 
-// 1. Configuration Constants - UPDATED to use /portal routes
 const ROLE_PORTAL_HOMES: Record<string, string> = {
   SUPER_ADMIN: "/portal",
   ADMIN: "/dashboard",
@@ -120,7 +117,7 @@ const PUBLIC_ROUTES = [
   "/gallery",
   "/videos",
   "/testimonials",
-  "/teachers", // ✅ Fixed the typo
+  "/teachers",
   "/methodology",
   "/events",
   "/resources",
@@ -135,9 +132,9 @@ const PUBLIC_ROUTES = [
   "/pending",
   "/account-status",
   "/legal",
-
   "/maintenance",
   "/coming-soon",
+  "/offline",
   "/unauthorized",
 ];
 
@@ -149,66 +146,64 @@ const AUTH_ROUTES = [
 ];
 
 export default async function proxy(request: NextRequest) {
-  // 🚨 Maintenance mode check (add this FIRST)
-  const MAINTENANCE_MODE = process.env.MAINTENANCE_MODE === "true";
+  const { pathname } = request.nextUrl;
 
-  if (
-    MAINTENANCE_MODE &&
-    !request.nextUrl.pathname.startsWith("/maintenance")
-  ) {
+  // Maintenance mode check
+  const MAINTENANCE_MODE = process.env.MAINTENANCE_MODE === "true";
+  if (MAINTENANCE_MODE && pathname !== "/maintenance") {
     return NextResponse.redirect(new URL("/maintenance", request.url));
   }
 
+  // Utility pages (always accessible)
+  const UTILITY_PAGES = [
+    "/maintenance",
+    "/coming-soon",
+    "/offline",
+    "/unauthorized",
+  ];
+  const isUtilityPage = UTILITY_PAGES.some(
+    (route) => pathname === route || pathname.startsWith(route + "/"),
+  );
+
+  if (isUtilityPage) {
+    return NextResponse.next();
+  }
+
   const session = await auth();
-  const { pathname } = request.nextUrl;
 
-  // Helper: Get portal home based on role
-  const getPortalHome = (role: string) => ROLE_PORTAL_HOMES[role] || "/portal";
-
-  // 2. Identify Route Type
   const isAuthRoute = AUTH_ROUTES.some((route) => pathname.startsWith(route));
   const isPublicRoute = PUBLIC_ROUTES.some(
     (route) => pathname === route || pathname.startsWith(route + "/"),
   );
   const isPendingRoute = pathname.startsWith("/pending");
-  const isStatusRoute = pathname.startsWith("/account-status");
   const isPortalRoute = pathname.startsWith("/dashboard");
 
-  // ✅ Add check for utility pages (they're public)
-  const isUtilityPage = [
-    "/maintenance",
-    "/coming-soon",
-    "/offline",
-    "/unauthorized",
-  ].some((route) => pathname.startsWith(route));
-
-  // 3. Logic for Unauthenticated Users
+  // Unauthenticated users
   if (!session) {
-    // Allow access to utility pages even without session
-    if (isUtilityPage) {
+    if (isAuthRoute || isPublicRoute) {
       return NextResponse.next();
     }
-
-    if (!isAuthRoute && !isPublicRoute) {
-      const callbackUrl = encodeURIComponent(pathname);
-      return NextResponse.redirect(
-        new URL(`/login?callbackUrl=${callbackUrl}`, request.url),
-      );
-    }
-    return NextResponse.next();
+    const callbackUrl = encodeURIComponent(pathname);
+    return NextResponse.redirect(
+      new URL(`/login?callbackUrl=${callbackUrl}`, request.url),
+    );
   }
 
-  // 4. Logic for Authenticated Users
-  const user = session.user;
-  const userRole = user?.role || "STUDENT";
-  const userStatus = user?.status || "PENDING";
+  // Authenticated users
+  if (!session.user) {
+    return NextResponse.redirect(new URL("/login", request.url));
+  }
 
-  // 4a. Redirect away from Auth routes to PORTAL
+  const user = session.user;
+  const userRole = user.role || "STUDENT";
+  const userStatus = user.status || "PENDING";
+
+  // Redirect away from auth routes
   if (isAuthRoute) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
-  // 4b. Handle Account Status
+  // Account status handling
   if (userStatus === "SUSPENDED" || userStatus === "DEACTIVATED") {
     if (pathname !== "/account-status/suspended") {
       return NextResponse.redirect(
@@ -227,22 +222,16 @@ export default async function proxy(request: NextRequest) {
     return NextResponse.next();
   }
 
-  // 4c. Handle Pending Approval
-  if (
-    userStatus === "PENDING" &&
-    !isPendingRoute &&
-    !isPublicRoute &&
-    !isUtilityPage
-  ) {
+  // Pending approval
+  if (userStatus === "PENDING" && !isPendingRoute && !isPublicRoute) {
     return NextResponse.redirect(new URL("/pending", request.url));
   }
 
-  // 4d. Prevent Approved users from seeing the Pending page
   if (userStatus === "APPROVED" && isPendingRoute) {
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
-  // 5. Role-Based Access Control for Portal Routes
+  // Portal routes - role-based access
   if (isPortalRoute) {
     const PORTAL_ROLE_PERMISSIONS: Record<string, string[]> = {
       SUPER_ADMIN: ["/dashboard", "/dashboard/admin"],
@@ -254,7 +243,6 @@ export default async function proxy(request: NextRequest) {
     };
 
     const allowedRoutes = PORTAL_ROLE_PERMISSIONS[userRole] || ["/dashboard"];
-
     const isRouteAllowed = allowedRoutes.some(
       (route) => pathname === route || pathname.startsWith(route + "/"),
     );
@@ -264,7 +252,7 @@ export default async function proxy(request: NextRequest) {
     }
   }
 
-  // 6. Legacy Role-Based Access Control
+  // ✅ FIXED: Legacy role-based redirects - exact match only
   const legacyRoleProtectedRoutes = [
     {
       path: "/admin",
@@ -290,12 +278,12 @@ export default async function proxy(request: NextRequest) {
   ];
 
   for (const route of legacyRoleProtectedRoutes) {
-    if (pathname.startsWith(route.path)) {
+    // ✅ Exact match only (not startsWith)
+    if (pathname === route.path || pathname === `${route.path}/`) {
       if (!route.allowed.includes(userRole)) {
         return NextResponse.redirect(new URL("/dashboard", request.url));
-      } else {
-        return NextResponse.redirect(new URL(route.redirectTo, request.url));
       }
+      return NextResponse.redirect(new URL(route.redirectTo, request.url));
     }
   }
 
@@ -304,6 +292,6 @@ export default async function proxy(request: NextRequest) {
 
 export const config = {
   matcher: [
-    "/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|public|maintenance|coming-soon|unauthorized).*)",
+    "/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|maintenance|coming-soon|offline|unauthorized).*)",
   ],
 };
