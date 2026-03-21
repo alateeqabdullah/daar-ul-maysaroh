@@ -150,7 +150,7 @@ export default async function FacultyPage({ searchParams }: PageProps) {
         where: whereClause,
         skip: (page - 1) * TEACHERS_PER_PAGE,
         take: TEACHERS_PER_PAGE,
-        orderBy: { orderIndex: "asc" },
+        orderBy: { createdAt: "desc" }, // ✅ Fixed: use existing field instead of orderIndex
       }),
       prisma.teacher.count({ where: whereClause }),
     ]);
@@ -317,7 +317,7 @@ export default async function FacultyPage({ searchParams }: PageProps) {
                   href={buildUrl(1, activeSpecialization, "")}
                   className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-primary-700/10 text-primary-700 text-xs font-black"
                 >
-                  Search: "{searchQuery}"
+                  Search:{` "${searchQuery}"`}
                   <X className="w-3 h-3" />
                 </Link>
               )}
