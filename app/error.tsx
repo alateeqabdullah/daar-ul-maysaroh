@@ -1,16 +1,21 @@
+// app/error.tsx
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Reveal } from "@/components/shared/section-animation";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
-  AlertCircle,
   RefreshCw,
   Home,
   Mail,
   Bug,
   FileWarning,
+  ArrowLeft,
+  Loader2,
+  Shield,
+  Clock,
 } from "lucide-react";
 
 interface ErrorPageProps {
@@ -19,17 +24,36 @@ interface ErrorPageProps {
 }
 
 export default function ErrorPage({ error, reset }: ErrorPageProps) {
+  const router = useRouter();
+  const [isResetting, setIsResetting] = useState(false);
+
   useEffect(() => {
-    // Log error to monitoring service
     console.error("Application error:", error);
   }, [error]);
+
+  const handleReset = async () => {
+    setIsResetting(true);
+    try {
+      await reset();
+    } finally {
+      setIsResetting(false);
+    }
+  };
+
+  const handleGoBack = () => {
+    router.back();
+  };
 
   return (
     <main className="min-h-screen bg-background relative overflow-hidden">
       {/* Background Pattern */}
-      <div className="absolute inset-0 bg-gradient-to-br from-orange-500/5 via-background to-background" />
+      <div className="absolute inset-0 bg-linear-to-br from-orange-500/5 via-background to-background pointer-events-none" />
 
-      <div className="container mx-auto px-4 sm:px-6 min-h-screen flex items-center justify-center py-12 sm:py-16 md:py-20">
+      {/* Floating Elements */}
+      <div className="absolute top-20 right-10 w-64 h-64 bg-orange-500/5 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-20 left-10 w-96 h-96 bg-orange-500/5 rounded-full blur-3xl pointer-events-none" />
+
+      <div className="container mx-auto px-4 sm:px-6 min-h-screen flex items-center justify-center py-12 sm:py-16 md:py-20 relative z-10">
         <div className="max-w-4xl mx-auto text-center space-y-8 sm:space-y-10">
           {/* Error Icon */}
           <Reveal>
@@ -37,9 +61,7 @@ export default function ErrorPage({ error, reset }: ErrorPageProps) {
               <div className="w-24 h-24 sm:w-32 sm:h-32 mx-auto rounded-3xl bg-orange-500/10 flex items-center justify-center">
                 <FileWarning className="w-12 h-12 sm:w-16 sm:h-16 text-orange-500" />
               </div>
-
-              {/* Bug Icon */}
-              <div className="absolute -bottom-4 -right-4">
+              <div className="absolute -bottom-4 -right-4 animate-pulse">
                 <Bug className="w-6 h-6 text-muted-foreground/30" />
               </div>
             </div>
@@ -56,20 +78,25 @@ export default function ErrorPage({ error, reset }: ErrorPageProps) {
                 We encountered an unexpected error. Our team has been
                 automatically notified.
               </p>
+              <p className="text-sm text-muted-foreground/70 max-w-md mx-auto">
+              {`  Don't worry - you can try again or return to the homepage.`}
+              </p>
             </div>
           </Reveal>
 
-          {/* Error Details (for debugging) */}
+          {/* Error Details (Development Only) */}
           {process.env.NODE_ENV === "development" && (
             <Reveal delay={0.15}>
-              <div className="p-4 sm:p-6 rounded-xl bg-muted/30 border border-border text-left">
-                <p className="font-mono text-xs sm:text-sm overflow-auto">
-                  <span className="text-red-500">Error:</span> {error.message}
+              <div className="p-4 sm:p-6 rounded-xl bg-muted/30 border border-border text-left max-w-2xl mx-auto">
+                <p className="font-mono text-xs sm:text-sm overflow-auto break-all">
+                  <span className="text-red-500 font-bold">Error:</span>{" "}
+                  {error.message}
                   {error.digest && (
                     <>
                       <br />
                       <span className="text-muted-foreground">
-                        Digest: {error.digest}
+                        <span className="font-bold">Digest:</span>{" "}
+                        {error.digest}
                       </span>
                     </>
                   )}
@@ -80,28 +107,59 @@ export default function ErrorPage({ error, reset }: ErrorPageProps) {
 
           {/* Action Buttons */}
           <Reveal delay={0.2}>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <div className="flex flex-wrap gap-4 justify-center items-center">
               <Button
-                onClick={reset}
-                className="rounded-full px-6 py-3 sm:px-8 sm:py-4 font-black bg-orange-500 hover:bg-orange-600 text-white text-sm sm:text-base min-h-[44px]"
+                onClick={handleReset}
+                disabled={isResetting}
+                className="rounded-full px-6 py-3 sm:px-8 sm:py-4 font-black bg-orange-500 hover:bg-orange-600 text-white text-sm sm:text-base min-h-11 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
               >
                 <span className="flex items-center gap-2">
-                  <RefreshCw className="w-4 h-4" />
-                  TRY AGAIN
+                  {isResetting ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <RefreshCw className="w-4 h-4" />
+                  )}
+                  {isResetting ? "RETRYING..." : "TRY AGAIN"}
+                </span>
+              </Button>
+
+              <Button
+                onClick={handleGoBack}
+                variant="outline"
+                className="rounded-full px-6 py-3 sm:px-8 sm:py-4 font-black text-sm sm:text-base min-h-11 cursor-pointer hover:bg-muted transition-colors"
+              >
+                <span className="flex items-center gap-2">
+                  <ArrowLeft className="w-4 h-4" />
+                  GO BACK
                 </span>
               </Button>
 
               <Link href="/">
                 <Button
                   variant="outline"
-                  className="rounded-full px-6 py-3 sm:px-8 sm:py-4 font-black text-sm sm:text-base min-h-[44px]"
+                  className="rounded-full px-6 py-3 sm:px-8 sm:py-4 font-black text-sm sm:text-base min-h-11 cursor-pointer hover:bg-muted transition-colors"
                 >
                   <span className="flex items-center gap-2">
                     <Home className="w-4 h-4" />
-                    RETURN HOME
+                    HOME
                   </span>
                 </Button>
               </Link>
+            </div>
+          </Reveal>
+
+          {/* Trust Badges */}
+          <Reveal delay={0.25}>
+            <div className="flex flex-wrap justify-center gap-4 pt-4">
+              <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                <Shield className="w-3 h-3 text-primary-700" />
+                <span>Auto-reported to our team</span>
+              </div>
+              <div className="hidden sm:block w-px h-3 bg-border" />
+              <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                <Clock className="w-3 h-3 text-primary-700" />
+                <span>Typically resolved within hours</span>
+              </div>
             </div>
           </Reveal>
 
@@ -112,7 +170,10 @@ export default function ErrorPage({ error, reset }: ErrorPageProps) {
                 If the problem persists, please report it to our support team:
               </p>
               <Link href="mailto:errors@almaysaroh.com?subject=Error%20Report">
-                <Button variant="ghost" className="gap-2">
+                <Button
+                  variant="ghost"
+                  className="gap-2 cursor-pointer hover:bg-muted transition-colors"
+                >
                   <Mail className="w-4 h-4" />
                   errors@almaysaroh.com
                 </Button>
@@ -120,7 +181,7 @@ export default function ErrorPage({ error, reset }: ErrorPageProps) {
               {error.digest && (
                 <p className="text-xs text-muted-foreground mt-4">
                   Please include this error ID in your report:{" "}
-                  <code className="font-mono bg-muted px-2 py-1 rounded">
+                  <code className="font-mono bg-muted px-2 py-1 rounded text-xs">
                     {error.digest}
                   </code>
                 </p>

@@ -166,7 +166,7 @@ export default function AdmissionsPricingPage() {
 
             <div className="space-y-4">
               {/* Instant Card */}
-              <div className="group relative p-6 rounded-2xl bg-gradient-to-br from-background to-primary-50/20 border border-primary-100 dark:border-primary-900/30 hover:border-primary-700/50 transition-all duration-300 hover:shadow-xl">
+              <div className="group relative p-6 rounded-2xl bg-linear-to-br from-background to-primary-50/20 border border-primary-100 dark:border-primary-900/30 hover:border-primary-700/50 transition-all duration-300 hover:shadow-xl">
                 <div className="flex items-start gap-5">
                   <div className="w-14 h-14 rounded-2xl bg-primary-700 flex items-center justify-center shrink-0 shadow-lg">
                     <CreditCard className="w-7 h-7 text-white" />
@@ -185,7 +185,7 @@ export default function AdmissionsPricingPage() {
               </div>
 
               {/* Manual Card */}
-              <div className="group relative p-6 rounded-2xl bg-gradient-to-br from-background to-accent/5 border border-accent/10 hover:border-accent/30 transition-all duration-300 hover:shadow-xl">
+              <div className="group relative p-6 rounded-2xl bg-linear-to-br from-background to-accent/5 border border-accent/10 hover:border-accent/30 transition-all duration-300 hover:shadow-xl">
                 <div className="flex items-start gap-5">
                   <div className="w-14 h-14 rounded-2xl bg-accent flex items-center justify-center shrink-0 shadow-lg">
                     <Banknote className="w-7 h-7 text-white" />
@@ -275,7 +275,7 @@ export default function AdmissionsPricingPage() {
           {/* LEFT: Grants + Free Assessment */}
           <div className="space-y-8">
             {/* Grants Card */}
-            <div className="p-6 sm:p-8 rounded-2xl bg-gradient-to-br from-background to-primary-50/10 border border-primary-100 dark:border-primary-900/30">
+            <div className="p-6 sm:p-8 rounded-2xl bg-linear-to-br from-background to-primary-50/10 border border-primary-100 dark:border-primary-900/30">
               <div className="flex items-center gap-3 mb-4">
                 <Heart className="w-8 h-8 text-primary-700" />
                 <h3 className="font-black text-2xl uppercase tracking-tight">Scholarly Grants</h3>
@@ -298,7 +298,7 @@ export default function AdmissionsPricingPage() {
             </div>
 
             {/* Free Assessment Card */}
-            <div className="p-6 sm:p-8 rounded-2xl bg-gradient-to-br from-accent/5 to-accent/10 border border-accent/20 text-center">
+            <div className="p-6 sm:p-8 rounded-2xl bg-linear-to-br from-accent/5 to-accent/10 border border-accent/20 text-center">
               <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-accent/10 mb-4">
                 <Sparkles className="w-8 h-8 text-accent" />
               </div>
