@@ -64,8 +64,6 @@
 
 
 
-
-
 import { prisma } from "@/lib/prisma";
 import { Reveal } from "@/components/shared/section-animation";
 import { Verified, Users, Filter, ArrowLeft, ArrowRight, Search, X, Sparkles } from "lucide-react";
@@ -76,6 +74,7 @@ import { FacultyListSkeleton } from "@/components/skeletons/faculty-skeleton";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
+import { Prisma } from "@/app/generated/prisma/client";
 
 export const metadata: Metadata = {
   title: "Our Noble Faculty | Al-Maysaroh",
@@ -87,10 +86,11 @@ export const metadata: Metadata = {
   },
 };
 
-export const revalidate = 3600; // Revalidate every hour
+export const revalidate = 3600;
 
-// Specializations from existing Teacher model
+// Specializations that exist in your Teacher model's specialization field
 const SPECIALIZATIONS = [
+  { id: "all", name: "All Scholars", searchTerm: null },
   { id: "hifz", name: "Hifz & Memorization", searchTerm: "Hifz" },
   { id: "tajweed", name: "Tajweed & Recitation", searchTerm: "Tajweed" },
   { id: "arabic", name: "Classical Arabic", searchTerm: "Arabic" },
@@ -106,34 +106,64 @@ interface PageProps {
   };
 }
 
+interface TeacherDisplayData {
+  id: string;
+  name: string;
+  image: string | null;
+  rank: string;
+  credentials: string[];
+  philosophy: string;
+  availability: string;
+  isMock: boolean;
+  yearsOfExperience: number;
+  teacherId: string;
+}
+
 export default async function FacultyPage({ searchParams }: PageProps) {
   const page = Number(searchParams?.page) || 1;
   const activeSpecialization = searchParams?.specialization || "all";
   const searchQuery = searchParams?.search || "";
   const TEACHERS_PER_PAGE = 12;
 
-  let dbTeachers: any[] = [];
+  let dbTeachers: TeacherDisplayData[] = [];
   let totalCount = 0;
 
   try {
-    // Build where clause using existing fields
-    const whereClause: any = { isAvailable: true };
+    // Build where clause - simpler approach
+    const whereClause: Prisma.TeacherWhereInput = { 
+      isAvailable: true 
+    };
     
-    // Filter by specialization (exists in Teacher model)
+    // Filter by specialization (case-insensitive)
     if (activeSpecialization !== "all") {
       const spec = SPECIALIZATIONS.find(s => s.id === activeSpecialization);
-      if (spec) {
-        whereClause.specialization = { contains: spec.searchTerm, mode: "insensitive" };
+      if (spec && spec.searchTerm) {
+        whereClause.specialization = {
+          contains: spec.searchTerm,
+          mode: "insensitive"
+        };
       }
     }
     
     // Search by name or specialization
-    if (searchQuery) {
+    if (searchQuery && searchQuery.trim() !== "") {
       whereClause.OR = [
-        { user: { name: { contains: searchQuery, mode: "insensitive" } } },
-        { specialization: { contains: searchQuery, mode: "insensitive" } },
-        { expertise: { has: searchQuery } },
+        {
+          user: {
+            name: {
+              contains: searchQuery,
+              mode: "insensitive"
+            }
+          }
+        },
+        {
+          specialization: {
+            contains: searchQuery,
+            mode: "insensitive"
+          }
+        }
       ];
+      // Note: expertise field might need a different approach if it's a JSON array
     }
 
     const [fetched, count] = await Promise.all([
@@ -150,7 +180,7 @@ export default async function FacultyPage({ searchParams }: PageProps) {
         where: whereClause,
         skip: (page - 1) * TEACHERS_PER_PAGE,
         take: TEACHERS_PER_PAGE,
-        orderBy: { createdAt: "desc" }, // ✅ Fixed: use existing field instead of orderIndex
+        orderBy: { createdAt: "desc" },
       }),
       prisma.teacher.count({ where: whereClause }),
     ]);
@@ -172,7 +202,27 @@ export default async function FacultyPage({ searchParams }: PageProps) {
   } catch (e) {
     console.error("Teacher fetch failed, using mock catalog:", e);
     dbTeachers = getMockTeachers();
-    totalCount = dbTeachers.length;
+    // Filter mock data based on search and specialization
+    let filtered = [...dbTeachers];
+    
+    if (activeSpecialization !== "all") {
+      const spec = SPECIALIZATIONS.find(s => s.id === activeSpecialization);
+      if (spec && spec.searchTerm) {
+        filtered = filtered.filter(t => 
+          t.rank?.toLowerCase().includes(spec.searchTerm?.toLowerCase() || "")
+        );
+      }
+    }
+    
+    if (searchQuery) {
+      filtered = filtered.filter(t => 
+        t.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        t.rank?.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+    }
+    
+    dbTeachers = filtered;
+    totalCount = filtered.length;
   }
 
   const totalPages = Math.ceil(totalCount / TEACHERS_PER_PAGE);
@@ -192,7 +242,7 @@ export default async function FacultyPage({ searchParams }: PageProps) {
     if (newSpec && newSpec !== "all") params.set("specialization", newSpec);
     if (newSearch) params.set("search", newSearch);
     const queryString = params.toString();
-    return `/faculty${queryString ? `?${queryString}` : ""}`;
+    return `/teachers${queryString ? `?${queryString}` : ""}`;
   };
 
   return (
@@ -219,8 +269,8 @@ export default async function FacultyPage({ searchParams }: PageProps) {
             </h1>
             <p className="text-lg sm:text-xl md:text-2xl text-muted-foreground font-medium leading-relaxed border-l-4 border-primary-700 pl-4 sm:pl-6 md:pl-8 max-w-2xl">
               Each educator is a verified carrier of the{" "}
-              <span className="text-foreground font-bold">Divine Sanad</span>,
-              ensuring the preservation of the Quran's authentic recitation.
+              <span className="text-foreground font-bold">Divine Sanad</span>{`,
+              ensuring the preservation of the Quran's authentic recitation.`}
             </p>
             
             {/* Teacher Count */}
@@ -231,7 +281,8 @@ export default async function FacultyPage({ searchParams }: PageProps) {
               </p>
               <div className="w-px h-4 bg-border hidden sm:block" />
               <p className="text-sm text-muted-foreground">
-                Active in <span className="font-black text-primary-700">{activeSpecName}</span>
+                {searchQuery ? `Search: "${searchQuery}" • ` : ""}
+                <span className="font-black text-primary-700">{activeSpecName}</span>
               </p>
             </div>
           </Reveal>
@@ -242,12 +293,12 @@ export default async function FacultyPage({ searchParams }: PageProps) {
           {/* Search Bar */}
           <div className="relative max-w-md">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-            <form action="/faculty" method="GET">
+            <form action="/teachers" method="GET">
               <input
                 type="text"
                 name="search"
                 defaultValue={searchQuery}
-                placeholder="Search by name, specialization..."
+                placeholder="Search by name or specialization..."
                 className="w-full pl-10 pr-12 py-3 rounded-full bg-background border border-border focus:border-primary-700 focus:ring-2 focus:ring-primary-500/20 outline-none transition-all text-sm"
               />
               {searchQuery && (
@@ -264,24 +315,13 @@ export default async function FacultyPage({ searchParams }: PageProps) {
             </form>
           </div>
 
-          {/* Specialization Filters - Using existing specialization field */}
+          {/* Specialization Filters */}
           <div className="overflow-x-auto pb-2 scrollbar-hide">
             <div className="flex items-center gap-2 sm:gap-3 min-w-max">
               <div className="flex items-center gap-1.5 text-xs font-black uppercase tracking-wider text-muted-foreground mr-2 sticky left-0 bg-background pr-2">
                 <Filter className="w-3.5 h-3.5" />
                 <span>Specialization:</span>
               </div>
-              <Link
-                href={buildUrl(1, "all", searchQuery)}
-                className={cn(
-                  "px-4 py-2 rounded-full text-xs font-black uppercase tracking-wider transition-all whitespace-nowrap",
-                  activeSpecialization === "all"
-                    ? "bg-primary-700 text-white shadow-md"
-                    : "bg-muted/30 hover:bg-primary-700/10 border border-border"
-                )}
-              >
-                All Scholars
-              </Link>
               {SPECIALIZATIONS.map((spec) => (
                 <Link
                   key={spec.id}
@@ -317,7 +357,7 @@ export default async function FacultyPage({ searchParams }: PageProps) {
                   href={buildUrl(1, activeSpecialization, "")}
                   className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-primary-700/10 text-primary-700 text-xs font-black"
                 >
-                  Search:{` "${searchQuery}"`}
+                  Search: {`"${searchQuery}"`}
                   <X className="w-3 h-3" />
                 </Link>
               )}
@@ -342,8 +382,8 @@ export default async function FacultyPage({ searchParams }: PageProps) {
             <h3 className="text-xl font-black mb-2">No scholars found</h3>
             <p className="text-muted-foreground mb-6 max-w-md mx-auto">
               {searchQuery 
-                ? `We couldn't find any scholars matching "${searchQuery}". Try a different search term.`
-                : "We couldn't find any scholars in this specialization."}
+                ? `We couldn't find any scholars matching "${searchQuery}" in ${activeSpecName}. Try a different search term or clear filters.`
+                : "We couldn't find any scholars in this specialization. Please check back later."}
             </p>
             <Link href="/faculty">
               <Button variant="outline" className="rounded-full">
@@ -440,8 +480,8 @@ export default async function FacultyPage({ searchParams }: PageProps) {
   );
 }
 
-// Mock teachers fallback data using existing schema fields
-function getMockTeachers(): any[] {
+// Mock teachers fallback data
+function getMockTeachers(): TeacherDisplayData[] {
   return [
     {
       id: "mock-1",
