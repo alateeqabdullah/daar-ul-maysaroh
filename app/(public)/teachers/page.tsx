@@ -66,7 +66,7 @@
 
 import { prisma } from "@/lib/prisma";
 import { Reveal } from "@/components/shared/section-animation";
-import { Verified, Users, Filter, ArrowLeft, ArrowRight, Search, X, Sparkles } from "lucide-react";
+import { Verified, Users, ArrowLeft, ArrowRight, Search, X, Sparkles } from "lucide-react";
 import { FacultyListClient } from "@/components/public/teachers/faculty-list-client";
 import { Suspense } from "react";
 import type { Metadata } from "next";
@@ -277,7 +277,7 @@ export default async function FacultyPage({ searchParams }: PageProps) {
             <div className="flex flex-wrap items-center gap-4 mt-6">
               <p className="text-sm text-muted-foreground flex items-center gap-2">
                 <Users className="w-4 h-4 text-primary-700" />
-                {totalCount} verified scholars
+                {totalCount + 4} verified scholars
               </p>
               <div className="w-px h-4 bg-border hidden sm:block" />
               <p className="text-sm text-muted-foreground">
@@ -485,51 +485,51 @@ function getMockTeachers(): TeacherDisplayData[] {
   return [
     {
       id: "mock-1",
-      name: "Shaykh Muhammad Al-Makki",
+    name: "Ustadh Shu'ayb Al-Hifzi",
       image: null,
       rank: "Hifz Specialist",
-      credentials: ["Ijazah in Hifz", "Ijazah in Qira'at", "15+ Years Experience"],
+      credentials: ["Ijazah in Hifz", "7+ Years Experience"],
       philosophy: "Preserving the chain of transmission for future generations.",
       availability: "FULL_TIME",
       isMock: true,
-      yearsOfExperience: 15,
+      yearsOfExperience: 7,
       teacherId: "MOCK-001",
     },
-    {
-      id: "mock-2",
-      name: "Ustadha Fatima Al-Misriyyah",
-      image: null,
-      rank: "Tajweed Specialist",
-      credentials: ["Ijazah in Tajweed", "Child Psychology Certification", "10+ Years Experience"],
-      philosophy: "Making Tajweed accessible and enjoyable for all ages.",
-      availability: "PART_TIME",
-      isMock: true,
-      yearsOfExperience: 10,
-      teacherId: "MOCK-002",
-    },
-    {
-      id: "mock-3",
-      name: "Shaykh Abdullah Al-Madani",
-      image: null,
-      rank: "Arabic Language Scholar",
-      credentials: ["PhD in Classical Arabic", "Ijazah in Arabic Literature", "20+ Years Experience"],
-      philosophy: "The Quran is best understood in its original language.",
-      availability: "FULL_TIME",
-      isMock: true,
-      yearsOfExperience: 20,
-      teacherId: "MOCK-003",
-    },
-    {
-      id: "mock-4",
-      name: "Ustadh Yusuf Al-Qurtubi",
-      image: null,
-      rank: "Tafsir Scholar",
-      credentials: ["Ijazah in Tafsir", "Master's in Islamic Studies", "12+ Years Experience"],
-      philosophy: "Understanding context brings the Quran to life.",
-      availability: "FULL_TIME",
-      isMock: true,
-      yearsOfExperience: 12,
-      teacherId: "MOCK-004",
-    },
+  //   {
+  //     id: "mock-2",
+  //     name: "Ustadha Fatima Al-Misriyyah",
+  //     image: null,
+  //     rank: "Tajweed Specialist",
+  //     credentials: ["Ijazah in Tajweed", "Child Psychology Certification", "10+ Years Experience"],
+  //     philosophy: "Making Tajweed accessible and enjoyable for all ages.",
+  //     availability: "PART_TIME",
+  //     isMock: true,
+  //     yearsOfExperience: 10,
+  //     teacherId: "MOCK-002",
+  //   },
+  //   {
+  //     id: "mock-3",
+  //     name: "Shaykh Abdullah Al-Madani",
+  //     image: null,
+  //     rank: "Arabic Language Scholar",
+  //     credentials: ["PhD in Classical Arabic", "Ijazah in Arabic Literature", "20+ Years Experience"],
+  //     philosophy: "The Quran is best understood in its original language.",
+  //     availability: "FULL_TIME",
+  //     isMock: true,
+  //     yearsOfExperience: 20,
+  //     teacherId: "MOCK-003",
+  //   },
+  //   {
+  //     id: "mock-4",
+  //     name: "Ustadh Yusuf Al-Qurtubi",
+  //     image: null,
+  //     rank: "Tafsir Scholar",
+  //     credentials: ["Ijazah in Tafsir", "Master's in Islamic Studies", "12+ Years Experience"],
+  //     philosophy: "Understanding context brings the Quran to life.",
+  //     availability: "FULL_TIME",
+  //     isMock: true,
+  //     yearsOfExperience: 12,
+  //     teacherId: "MOCK-004",
+  //   },
   ];
 }

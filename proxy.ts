@@ -292,6 +292,6 @@ export default async function proxy(request: NextRequest) {
 
 export const config = {
   matcher: [
-    "/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|maintenance|coming-soon|offline|unauthorized).*)",
+    "/((?!api|_next/static|_next/image|favicon.ico|sitemap.xml|robots.txt|maintenance|coming-soon|unauthorized).*)",
   ],
 };

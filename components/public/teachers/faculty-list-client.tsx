@@ -95,7 +95,7 @@ export function FacultyListClient({
 
   // Combine DB Teachers with Mocks
   const allFaculty = useMemo(
-    () => [...dbTeachers, ...MOCK_FACULTY],
+    () => [...MOCK_FACULTY, ...dbTeachers],
     [dbTeachers],
   );
 
