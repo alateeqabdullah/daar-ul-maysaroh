@@ -515,17 +515,19 @@ export function CourseListClient({
         {/* Mobile Filter Sheet Trigger */}
         <Sheet open={isFilterSheetOpen} onOpenChange={setIsFilterSheetOpen}>
           <SheetTrigger asChild className="sm:hidden">
-            {" "}
-            {/* Only show on mobile */}
+            {/* Wrap the Button's content in a Fragment or span */}
             <Button
               variant="outline"
               className="flex items-center gap-2 rounded-full px-5 py-6 h-auto text-base font-medium border-2 border-primary-100/50 hover:bg-primary-50 dark:hover:bg-primary-900/20"
             >
-              <Filter className="w-4 h-4" />
-              Filters{" "}
-              {hasActiveFilters && (
-                <span className="w-2 h-2 bg-primary-700 rounded-full" />
-              )}
+              {/* Use a Fragment for the children of the Button */}
+              <Fragment>
+                <Filter className="w-4 h-4" />
+                Filters{" "}
+                {hasActiveFilters && (
+                  <span className="w-2 h-2 bg-primary-700 rounded-full" />
+                )}
+              </Fragment>
             </Button>
           </SheetTrigger>
           <SheetContent
