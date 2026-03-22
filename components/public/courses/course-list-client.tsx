@@ -142,57 +142,59 @@
 //   );
 // }
 
+
+
+
+
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { useState, useMemo, useCallback, Fragment } from "react";
 import {
   BookOpen,
   Mic,
   Globe,
   GraduationCap,
   Heart,
-  Award,
   Users,
+  Award,
   Star,
   Clock,
   Calendar,
-  ChevronRight,
-  Filter,
-  X,
-  Sparkles,
-  CheckCircle2,
-  ArrowRight,
   Search,
-  SlidersHorizontal,
+  Filter,
+  ChevronDown,
+  X,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import Link from "next/link";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet"; // Assuming you have a Shadcn Sheet component
 
-// Icon mapping object - maps string names to actual components
-const iconMap = {
-  BookOpen,
-  Mic,
-  Globe,
-  GraduationCap,
-  Heart,
-  Award,
-  Users,
-  Star,
-  Clock,
-  Calendar,
-  Sparkles,
-};
-
+// --- Interfaces for Type Safety ---
 interface Program {
   id: string;
   name: string;
   description: string;
-  longDescription?: string;
+  longDescription: string;
   basePrice: number;
   category: string;
-  subcategory?: string;
+  subcategory: string;
   duration: string;
   level: string;
   format: string;
@@ -203,46 +205,117 @@ interface Program {
   rating: number;
   reviewCount: number;
   features: string[];
-  curriculum?: string[];
-  prerequisites?: string;
-  outcomes?: string[];
+  curriculum: string[];
+  prerequisites: string;
+  outcomes: string[];
   isMock: boolean;
-  popular?: boolean;
-  badge?: string;
-  iconName: string; // ✅ This is a string now!
+  popular: boolean;
+  badge: string;
+  iconName: string;
   color: string;
 }
 
-interface Category {
+interface FilterOption {
   id: string;
   name: string;
-  iconName: string; // ✅ This is a string now!
-  count: number;
-}
-
-interface Level {
-  id: string;
-  name: string;
-}
-
-interface Format {
-  id: string;
-  name: string;
-}
-
-interface Duration {
-  id: string;
-  name: string;
+  iconName?: string; // For categories
+  count?: number; // For categories
 }
 
 interface CourseListClientProps {
   programs: Program[];
-  categories: Category[];
-  levels: Level[];
-  formats: Format[];
-  durations: Duration[];
+  categories: FilterOption[];
+  levels: FilterOption[];
+  formats: FilterOption[];
+  durations: FilterOption[];
 }
 
+// --- Icon Map for dynamic rendering ---
+const iconMap: { [key: string]: React.ElementType } = {
+  BookOpen,
+  Mic,
+  Globe,
+  GraduationCap,
+  Heart,
+  Users,
+  Award,
+  Star,
+  Clock,
+  Calendar,
+  Filter,
+  // Add any other Lucide icons that you might want to render dynamically via their string name
+};
+
+// --- Course Card Component ---
+const CourseCard = ({ course }: { course: Program }) => {
+  const IconComponent = iconMap[course.iconName || "BookOpen"]; // Default icon for safety
+
+  return (
+    <Link href={`/courses/${course.id}`} className="block h-full group">
+      <div
+        className={cn(
+          "relative bg-background border border-border rounded-2xl p-6 shadow-sm hover:shadow-lg transition-all transform hover:-translate-y-1 h-full flex flex-col justify-between",
+          `bg-gradient-to-br ${course.color || "from-gray-100 to-gray-50"} dark:from-gray-900 dark:to-gray-800`, // Dynamic background gradient
+        )}
+      >
+        {course.badge && (
+          <span className="absolute top-4 right-4 px-3 py-1 bg-primary-700 text-white text-xs font-bold rounded-full z-10 shadow-md">
+            {course.badge}
+          </span>
+        )}
+
+        {/* Icon and Title */}
+        <div className="flex items-center gap-4 mb-4">
+          <div className="w-12 h-12 flex-shrink-0 rounded-full bg-white/20 flex items-center justify-center border border-white/30 shadow-inner">
+            {IconComponent && <IconComponent className="w-6 h-6 text-white" />}
+          </div>
+          <h3 className="text-xl sm:text-2xl font-bold text-white leading-tight">
+            {course.name}
+          </h3>
+        </div>
+
+        {/* Description */}
+        <p className="text-sm text-gray-200 mb-4 flex-grow line-clamp-3">
+          {course.description}
+        </p>
+
+        {/* Details (Level, Format, Duration, Next Start) */}
+        <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-xs text-gray-100 mb-4">
+          <div className="flex items-center gap-2">
+            <GraduationCap className="w-4 h-4 opacity-70" />
+            <span>{course.level}</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <Users className="w-4 h-4 opacity-70" />
+            <span>{course.format}</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <Clock className="w-4 h-4 opacity-70" />
+            <span>{course.duration}</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <Calendar className="w-4 h-4 opacity-70" />
+            <span>{course.nextStart}</span>
+          </div>
+        </div>
+
+        {/* Price and Rating */}
+        <div className="flex items-center justify-between mt-auto pt-4 border-t border-white/10">
+          <span className="text-lg font-bold text-white">
+            ${course.basePrice}
+            <span className="text-sm font-normal">/month</span>
+          </span>
+          <span className="flex items-center gap-1 text-yellow-300 font-medium">
+            <Star className="w-4 h-4" fill="currentColor" />
+            {course.rating.toFixed(1)} ({course.reviewCount})
+          </span>
+        </div>
+      </div>
+    </Link>
+  );
+};
+
+// --- CourseListClient Component ---
 export function CourseListClient({
   programs,
   categories,
@@ -250,462 +323,438 @@ export function CourseListClient({
   formats,
   durations,
 }: CourseListClientProps) {
+  const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedLevel, setSelectedLevel] = useState("all");
   const [selectedFormat, setSelectedFormat] = useState("all");
   const [selectedDuration, setSelectedDuration] = useState("all");
-  const [searchQuery, setSearchQuery] = useState("");
-  const [sortBy, setSortBy] = useState("popular");
-  const [showFilters, setShowFilters] = useState(false);
-  const [visibleCount, setVisibleCount] = useState(6);
+  const [isFilterSheetOpen, setIsFilterSheetOpen] = useState(false); // State for mobile filter sheet
 
-  // Filter programs based on selections
+  // Memoized filtering logic to optimize performance
   const filteredPrograms = useMemo(() => {
-    return programs.filter((program) => {
-      // Category filter
-      if (selectedCategory !== "all" && program.category !== selectedCategory) {
-        return false;
-      }
+    let filtered = programs;
 
-      // Level filter
-      if (selectedLevel !== "all" && program.level !== selectedLevel) {
-        return false;
-      }
-
-      // Format filter
-      if (
-        selectedFormat !== "all" &&
-        !program.format.includes(selectedFormat)
-      ) {
-        return false;
-      }
-
-      // Duration filter
-      if (selectedDuration !== "all") {
-        const duration = program.duration;
-        if (selectedDuration === "3-6" && !duration.includes("6 months"))
-          return false;
-        if (
-          selectedDuration === "6-12" &&
-          !duration.includes("1 year") &&
-          !duration.includes("8 months")
-        )
-          return false;
-        if (
-          selectedDuration === "1-2" &&
-          !duration.includes("1.5") &&
-          !duration.includes("2")
-        )
-          return false;
-        if (
-          selectedDuration === "2+" &&
-          !duration.includes("2-3") &&
-          !duration.includes("3")
-        )
-          return false;
-      }
-
-      // Search query
-      if (searchQuery) {
-        const query = searchQuery.toLowerCase();
-        return (
-          program.name.toLowerCase().includes(query) ||
-          program.description.toLowerCase().includes(query) ||
-          program.category.toLowerCase().includes(query)
-        );
-      }
-
-      return true;
-    });
-  }, [
-    programs,
-    selectedCategory,
-    selectedLevel,
-    selectedFormat,
-    selectedDuration,
-    searchQuery,
-  ]);
-
-  // Sort programs
-  const sortedPrograms = useMemo(() => {
-    const sorted = [...filteredPrograms];
-    switch (sortBy) {
-      case "popular":
-        return sorted.sort((a, b) => (b.popular ? 1 : 0) - (a.popular ? 1 : 0));
-      case "rating":
-        return sorted.sort((a, b) => b.rating - a.rating);
-      case "price-low":
-        return sorted.sort((a, b) => a.basePrice - b.basePrice);
-      case "price-high":
-        return sorted.sort((a, b) => b.basePrice - a.basePrice);
-      case "students":
-        return sorted.sort((a, b) => b.students - a.students);
-      default:
-        return sorted;
+    // 1. Search Filter
+    if (searchTerm) {
+      filtered = filtered.filter(
+        (p: Program) =>
+          p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          p.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          p.category.toLowerCase().includes(searchTerm.toLowerCase()),
+      );
     }
-  }, [filteredPrograms, sortBy]);
 
-  // Paginate
-  const visiblePrograms = sortedPrograms.slice(0, visibleCount);
-  const hasMore = visibleCount < sortedPrograms.length;
+    // 2. Category Filter
+    if (selectedCategory !== "all") {
+      filtered = filtered.filter(
+        (p: Program) => p.category === selectedCategory,
+      );
+    }
 
-  // Reset visible count when filters change
-  useEffect(() => {
-    setVisibleCount(6);
+    // 3. Level Filter
+    if (selectedLevel !== "all") {
+      filtered = filtered.filter((p: Program) => p.level === selectedLevel);
+    }
+
+    // 4. Format Filter
+    if (selectedFormat !== "all") {
+      filtered = filtered.filter((p: Program) => p.format === selectedFormat);
+    }
+
+    // 5. Duration Filter (Robust parsing logic)
+    if (selectedDuration !== "all") {
+      filtered = filtered.filter((p: Program) => {
+        const pDuration = p.duration;
+        if (!pDuration) return false;
+
+        let pMinMonths = 0;
+        let pMaxMonths = Infinity;
+
+        // Simple parsing for common formats
+        const monthMatch = pDuration.match(/(\d+)-?(\d+)?\s*month/);
+        const yearMatch = pDuration.match(/(\d+)-?(\d+)?\s*year/);
+
+        if (monthMatch) {
+          pMinMonths = parseInt(monthMatch[1], 10);
+          pMaxMonths = monthMatch[2] ? parseInt(monthMatch[2], 10) : pMinMonths;
+        } else if (yearMatch) {
+          pMinMonths = parseInt(yearMatch[1], 10) * 12;
+          pMaxMonths = yearMatch[2]
+            ? parseInt(yearMatch[2], 10) * 12
+            : pMinMonths;
+        } else {
+          // Handle specific hardcoded durations if they don't fit the pattern
+          switch (pDuration) {
+            case "3-6 months":
+              pMinMonths = 3;
+              pMaxMonths = 6;
+              break;
+            case "6 months":
+              pMinMonths = 6;
+              pMaxMonths = 6;
+              break;
+            case "8 months":
+              pMinMonths = 8;
+              pMaxMonths = 8;
+              break;
+            case "1 year":
+              pMinMonths = 12;
+              pMaxMonths = 12;
+              break;
+            case "1.5 years":
+              pMinMonths = 18;
+              pMaxMonths = 18;
+              break;
+            case "2-3 years":
+              pMinMonths = 24;
+              pMaxMonths = 36;
+              break;
+            case "3-6 months":
+              pMinMonths = 3;
+              pMaxMonths = 6;
+              break;
+            case "TBD":
+              return false; // Exclude programs with TBD duration
+            default:
+              return true; // Include if duration cannot be parsed
+          }
+        }
+
+        // Apply filter logic based on selectedDuration
+        switch (selectedDuration) {
+          case "3-6":
+            return pMaxMonths >= 3 && pMinMonths <= 6;
+          case "6-12":
+            return pMaxMonths >= 6 && pMinMonths <= 12;
+          case "1-2":
+            return pMaxMonths >= 12 && pMinMonths <= 24;
+          case "2+":
+            return pMaxMonths > 24; // strictly greater than 2 years (24 months)
+          default:
+            return true;
+        }
+      });
+    }
+
+    return filtered;
   }, [
+    searchTerm,
     selectedCategory,
     selectedLevel,
     selectedFormat,
     selectedDuration,
-    searchQuery,
-    sortBy,
+    programs,
   ]);
 
-  // Clear all filters
-  const clearFilters = () => {
+  // Check if any filters are active to show a clear button/indicator
+  const hasActiveFilters = useMemo(() => {
+    return (
+      searchTerm !== "" ||
+      selectedCategory !== "all" ||
+      selectedLevel !== "all" ||
+      selectedFormat !== "all" ||
+      selectedDuration !== "all"
+    );
+  }, [
+    searchTerm,
+    selectedCategory,
+    selectedLevel,
+    selectedFormat,
+    selectedDuration,
+  ]);
+
+  // Callback to clear all filters
+  const clearAllFilters = useCallback(() => {
+    setSearchTerm("");
     setSelectedCategory("all");
     setSelectedLevel("all");
     setSelectedFormat("all");
     setSelectedDuration("all");
-    setSearchQuery("");
-    setSortBy("popular");
+    setIsFilterSheetOpen(false); // Close the sheet if open
+  }, []);
+
+  // Icon map for categories in filter (can be a subset if needed)
+  const filterIconMap: { [key: string]: React.ElementType } = {
+    BookOpen,
+    Mic,
+    Globe,
+    GraduationCap,
+    Heart,
+    Award,
+    Users,
+    Clock,
   };
 
-  const activeFilterCount = [
-    selectedCategory !== "all" ? 1 : 0,
-    selectedLevel !== "all" ? 1 : 0,
-    selectedFormat !== "all" ? 1 : 0,
-    selectedDuration !== "all" ? 1 : 0,
-    searchQuery ? 1 : 0,
-    sortBy !== "popular" ? 1 : 0,
-  ].reduce((a, b) => a + b, 0);
-
   return (
-    <div className="space-y-8">
-      {/* Mobile Filter Toggle */}
-      <div className="lg:hidden flex items-center justify-between">
-        <Button
-          variant="outline"
-          onClick={() => setShowFilters(!showFilters)}
-          className="w-full justify-between"
-        >
-          <span className="flex items-center gap-2">
-            <SlidersHorizontal className="w-4 h-4" />
-            Filters & Sort
-          </span>
-          <span className="flex items-center gap-2">
-            {activeFilterCount > 0 && (
-              <span className="bg-primary-700 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                {activeFilterCount}
-              </span>
-            )}
-            <ChevronRight
-              className={cn(
-                "w-4 h-4 transition-transform",
-                showFilters && "rotate-90",
-              )}
-            />
-          </span>
-        </Button>
-      </div>
-
-      {/* Filter Section */}
-      <div className={cn("space-y-6", !showFilters && "hidden lg:block")}>
-        <AnimatePresence>
-          {(showFilters || true) && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              className="space-y-6 overflow-hidden"
+    <div className="px-2 sm:px-0">
+      {/* Search Input and Mobile Filter Button */}
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 mb-6">
+        {/* Search Input */}
+        <div className="relative flex-grow">
+          <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+          <Input
+            placeholder="Search programs..."
+            className="w-full pl-12 pr-4 py-6 rounded-full border-2 border-primary-100/50 focus:border-primary-700 transition-all text-base"
+            aria-label="Search courses"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+          {searchTerm && (
+            <Button
+              variant="ghost"
+              size="icon"
+              className="absolute right-2 top-1/2 -translate-y-1/2 rounded-full"
+              onClick={() => setSearchTerm("")}
+              aria-label="Clear search"
             >
-              {/* Categories */}
+              <X className="w-4 h-4" />
+            </Button>
+          )}
+        </div>
+
+        {/* Mobile Filter Sheet Trigger */}
+        <Sheet open={isFilterSheetOpen} onOpenChange={setIsFilterSheetOpen}>
+          <SheetTrigger asChild className="sm:hidden">
+            {" "}
+            {/* Only show on mobile */}
+            <Button
+              variant="outline"
+              className="flex items-center gap-2 rounded-full px-5 py-6 h-auto text-base font-medium border-2 border-primary-100/50 hover:bg-primary-50 dark:hover:bg-primary-900/20"
+            >
+              <Filter className="w-4 h-4" />
+              Filters{" "}
+              {hasActiveFilters && (
+                <span className="w-2 h-2 bg-primary-700 rounded-full" />
+              )}
+            </Button>
+          </SheetTrigger>
+          <SheetContent
+            side="right"
+            className="w-full sm:max-w-md p-6 overflow-y-auto"
+          >
+            <SheetHeader className="pb-4 border-b border-border">
+              <SheetTitle className="text-2xl font-bold">
+                Filter Courses
+              </SheetTitle>
+              <SheetDescription>
+                Refine your search with specific criteria.
+              </SheetDescription>
+            </SheetHeader>
+
+            <div className="grid gap-6 mt-8">
+              {/* Category Filter in Sheet */}
               <div>
-                <h3 className="text-sm font-black uppercase tracking-wider text-primary-700 mb-3">
-                  Categories
+                <h3 className="text-lg font-semibold mb-3 text-foreground">
+                  Category
                 </h3>
-                <div className="flex flex-wrap gap-2">
+                <div className="grid grid-cols-2 gap-3">
                   {categories.map((cat) => {
-                    const IconComponent =
-                      iconMap[cat.iconName as keyof typeof iconMap] || BookOpen;
+                    const CategoryIcon =
+                      filterIconMap[cat.iconName || "BookOpen"];
                     return (
-                      <button
+                      <Button
                         key={cat.id}
+                        variant={
+                          selectedCategory === cat.id ? "default" : "outline"
+                        }
                         onClick={() => setSelectedCategory(cat.id)}
                         className={cn(
-                          "inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-black uppercase tracking-wider transition-all",
+                          "rounded-lg px-4 py-3 text-sm font-medium transition-all h-auto",
                           selectedCategory === cat.id
-                            ? "bg-primary-700 text-white"
-                            : "bg-primary-50 dark:bg-primary-950/40 text-primary-700 hover:bg-primary-100 dark:hover:bg-primary-900/60",
+                            ? "bg-primary-700 text-white hover:bg-primary-800"
+                            : "border-border text-muted-foreground hover:bg-muted/50 dark:border-gray-700 dark:hover:bg-gray-800",
+                          "flex items-center justify-start gap-2",
                         )}
                       >
-                        <IconComponent className="w-3.5 h-3.5" />
-                        {cat.name}
-                        <span className="text-[10px] opacity-70">
-                          ({cat.count})
-                        </span>
-                      </button>
+                        {CategoryIcon && <CategoryIcon className="w-4 h-4" />}
+                        {cat.name} ({cat.count})
+                      </Button>
                     );
                   })}
                 </div>
               </div>
 
-              {/* Levels & Formats Grid */}
-              <div className="grid md:grid-cols-3 gap-6">
-                {/* Level Filter */}
-                <div>
-                  <h3 className="text-sm font-black uppercase tracking-wider text-primary-700 mb-3">
-                    Level
-                  </h3>
-                  <select
-                    value={selectedLevel}
-                    onChange={(e) => setSelectedLevel(e.target.value)}
-                    className="w-full p-3 rounded-xl border border-border bg-background focus:border-primary-700 focus:ring-2 focus:ring-primary-500/20 outline-none transition-all"
-                  >
-                    {levels.map((level) => (
-                      <option key={level.id} value={level.id}>
-                        {level.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                {/* Format Filter */}
-                <div>
-                  <h3 className="text-sm font-black uppercase tracking-wider text-primary-700 mb-3">
-                    Format
-                  </h3>
-                  <select
-                    value={selectedFormat}
-                    onChange={(e) => setSelectedFormat(e.target.value)}
-                    className="w-full p-3 rounded-xl border border-border bg-background focus:border-primary-700 focus:ring-2 focus:ring-primary-500/20 outline-none transition-all"
-                  >
-                    {formats.map((format) => (
-                      <option key={format.id} value={format.id}>
-                        {format.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                {/* Duration Filter */}
-                <div>
-                  <h3 className="text-sm font-black uppercase tracking-wider text-primary-700 mb-3">
-                    Duration
-                  </h3>
-                  <select
-                    value={selectedDuration}
-                    onChange={(e) => setSelectedDuration(e.target.value)}
-                    className="w-full p-3 rounded-xl border border-border bg-background focus:border-primary-700 focus:ring-2 focus:ring-primary-500/20 outline-none transition-all"
-                  >
-                    {durations.map((duration) => (
-                      <option key={duration.id} value={duration.id}>
-                        {duration.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+              {/* Other Dropdown Filters in Sheet */}
+              <div>
+                <h3 className="text-lg font-semibold mb-3 text-foreground">
+                  Level
+                </h3>
+                <Select value={selectedLevel} onValueChange={setSelectedLevel}>
+                  <SelectTrigger className="w-full rounded-lg h-12">
+                    <SelectValue placeholder="Select Level" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      {levels.map((level) => (
+                        <SelectItem key={level.id} value={level.id}>
+                          {level.name}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
               </div>
 
-              {/* Sort & Clear */}
-              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pt-4 border-t border-border/50">
-                <div className="flex items-center gap-4">
-                  <span className="text-sm font-black uppercase tracking-wider text-primary-700">
-                    Sort by:
-                  </span>
-                  <select
-                    value={sortBy}
-                    onChange={(e) => setSortBy(e.target.value)}
-                    className="p-2 rounded-lg border border-border bg-background text-sm"
-                  >
-                    <option value="popular">Most Popular</option>
-                    <option value="rating">Highest Rated</option>
-                    <option value="price-low">Price: Low to High</option>
-                    <option value="price-high">Price: High to Low</option>
-                    <option value="students">Most Students</option>
-                  </select>
-                </div>
-
-                {activeFilterCount > 0 && (
-                  <Button
-                    variant="ghost"
-                    onClick={clearFilters}
-                    className="text-sm text-primary-700 hover:text-primary-800"
-                  >
-                    <X className="w-4 h-4 mr-1" />
-                    Clear all filters ({activeFilterCount})
-                  </Button>
-                )}
+              <div>
+                <h3 className="text-lg font-semibold mb-3 text-foreground">
+                  Format
+                </h3>
+                <Select
+                  value={selectedFormat}
+                  onValueChange={setSelectedFormat}
+                >
+                  <SelectTrigger className="w-full rounded-lg h-12">
+                    <SelectValue placeholder="Select Format" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      {formats.map((format) => (
+                        <SelectItem key={format.id} value={format.id}>
+                          {format.name}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
               </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+
+              <div>
+                <h3 className="text-lg font-semibold mb-3 text-foreground">
+                  Duration
+                </h3>
+                <Select
+                  value={selectedDuration}
+                  onValueChange={setSelectedDuration}
+                >
+                  <SelectTrigger className="w-full rounded-lg h-12">
+                    <SelectValue placeholder="Select Duration" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      {durations.map((duration) => (
+                        <SelectItem key={duration.id} value={duration.id}>
+                          {duration.name}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              {/* Clear Filters Button in Sheet */}
+              {hasActiveFilters && (
+                <Button
+                  variant="ghost"
+                  onClick={clearAllFilters}
+                  className="w-full rounded-lg text-red-500 hover:bg-red-50 dark:hover:bg-red-950/20 mt-4 h-12"
+                >
+                  <X className="w-4 h-4 mr-2" />
+                  Clear All Filters
+                </Button>
+              )}
+            </div>
+          </SheetContent>
+        </Sheet>
       </div>
 
-      {/* Results Count */}
-      <div className="flex items-center justify-between">
-        <p className="text-sm text-muted-foreground">
-          Showing{" "}
-          <span className="font-black text-primary-700">
-            {visiblePrograms.length}
-          </span>{" "}
-          of{" "}
-          <span className="font-black text-primary-700">
-            {sortedPrograms.length}
-          </span>{" "}
-          programs
-        </p>
-        {sortedPrograms.length === 0 && (
-          <p className="text-sm text-muted-foreground">
-            Try adjusting your filters
-          </p>
+      {/* Category Buttons (Horizontal Scroll for Mobile, Wrap for Desktop) */}
+      <div className="mb-8 flex flex-nowrap overflow-x-auto gap-2 sm:gap-4 pb-2 -mx-2 sm:mx-0 px-2 sm:px-0 scrollbar-hide">
+        {categories.map((cat) => {
+          const CategoryIcon = filterIconMap[cat.iconName || "BookOpen"];
+          return (
+            <Button
+              key={cat.id}
+              variant={selectedCategory === cat.id ? "default" : "outline"}
+              onClick={() => setSelectedCategory(cat.id)}
+              className={cn(
+                "rounded-full px-4 py-2 text-sm font-medium transition-all flex-shrink-0 whitespace-nowrap h-auto",
+                selectedCategory === cat.id
+                  ? "bg-primary-700 text-white hover:bg-primary-800"
+                  : "border-border text-muted-foreground hover:bg-muted/50 dark:border-gray-700 dark:hover:bg-gray-800",
+                "flex items-center gap-1.5",
+              )}
+            >
+              {CategoryIcon && <CategoryIcon className="w-4 h-4" />}
+              {cat.name} ({cat.count})
+            </Button>
+          );
+        })}
+      </div>
+
+      {/* Desktop Filter Dropdowns (Hidden on Mobile) */}
+      <div className="hidden sm:flex flex-wrap items-center gap-4 mb-8">
+        {/* Clear Filters Button for Desktop */}
+        {hasActiveFilters && (
+          <Button
+            variant="ghost"
+            onClick={clearAllFilters}
+            className="rounded-full text-sm text-red-500 hover:bg-red-50 dark:hover:bg-red-950/20"
+          >
+            <X className="w-4 h-4 mr-1" />
+            Clear Filters
+          </Button>
         )}
+
+        <Select value={selectedLevel} onValueChange={setSelectedLevel}>
+          <SelectTrigger className="w-[180px] rounded-full">
+            <Filter className="w-4 h-4 mr-2 text-muted-foreground" />
+            <SelectValue placeholder="Filter by Level" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              {levels.map((level) => (
+                <SelectItem key={level.id} value={level.id}>
+                  {level.name}
+                </SelectItem>
+              ))}
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+
+        <Select value={selectedFormat} onValueChange={setSelectedFormat}>
+          <SelectTrigger className="w-[180px] rounded-full">
+            <Users className="w-4 h-4 mr-2 text-muted-foreground" />
+            <SelectValue placeholder="Filter by Format" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              {formats.map((format) => (
+                <SelectItem key={format.id} value={format.id}>
+                  {format.name}
+                </SelectItem>
+              ))}
+            </SelectGroup>
+          </SelectContent>
+        </Select>
+
+        <Select value={selectedDuration} onValueChange={setSelectedDuration}>
+          <SelectTrigger className="w-[200px] rounded-full">
+            <Clock className="w-4 h-4 mr-2 text-muted-foreground" />
+            <SelectValue placeholder="Filter by Duration" />
+          </SelectTrigger>
+          <SelectContent>
+            <SelectGroup>
+              {durations.map((duration) => (
+                <SelectItem key={duration.id} value={duration.id}>
+                  {duration.name}
+                </SelectItem>
+              ))}
+            </SelectGroup>
+          </SelectContent>
+        </Select>
       </div>
 
       {/* Course Grid */}
-      {sortedPrograms.length === 0 ? (
-        <div className="text-center py-20">
-          <div className="w-20 h-20 mx-auto rounded-full bg-primary-50 dark:bg-primary-950/40 flex items-center justify-center mb-4">
-            <Search className="w-10 h-10 text-primary-700/50" />
-          </div>
-          <h3 className="text-2xl font-black tracking-tighter mb-2">
-            No programs found
-          </h3>
-          <p className="text-muted-foreground mb-6">
-            Try adjusting your filters or search query
-          </p>
-          <Button
-            onClick={clearFilters}
-            variant="outline"
-            className="rounded-full"
-          >
-            Clear all filters
-          </Button>
+      {filteredPrograms.length === 0 ? (
+        <div className="text-center py-10 text-muted-foreground text-lg sm:text-xl">
+          No programs found matching your criteria.
         </div>
       ) : (
-        <>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {visiblePrograms.map((program, index) => {
-              // Get the actual component from the map using the string name
-              const IconComponent =
-                iconMap[program.iconName as keyof typeof iconMap] || BookOpen;
-              return (
-                <motion.div
-                  key={program.id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.05 }}
-                  className="group relative h-full"
-                >
-                  <Link href={`/courses/${program.id}`}>
-                    <div className="institutional-card p-5 sm:p-6 h-full flex flex-col hover:border-primary-700/30 transition-all duration-300 cursor-pointer">
-                      {/* Badge */}
-                      {program.badge && (
-                        <div className="absolute top-4 right-4 z-10">
-                          <div className="px-3 py-1 rounded-full bg-gradient-to-r from-primary-700 to-primary-800 text-white text-[10px] font-black uppercase tracking-wider">
-                            {program.badge}
-                          </div>
-                        </div>
-                      )}
-
-                      {/* Icon - Now using mapped component */}
-                      <div className="mb-4">
-                        <div
-                          className={cn(
-                            "w-12 h-12 rounded-xl bg-gradient-to-br flex items-center justify-center",
-                            program.color,
-                          )}
-                        >
-                          <IconComponent className="w-6 h-6 text-white" />
-                        </div>
-                      </div>
-
-                      {/* Title & Category */}
-                      <h3 className="text-lg sm:text-xl font-black uppercase tracking-tight mb-1">
-                        {program.name}
-                      </h3>
-                      <p className="text-xs text-primary-700 font-black uppercase tracking-wider mb-3">
-                        {program.subcategory || program.category}
-                      </p>
-
-                      {/* Description */}
-                      <p className="text-xs sm:text-sm text-muted-foreground line-clamp-2 mb-4 flex-grow">
-                        {program.description}
-                      </p>
-
-                      {/* Meta Grid */}
-                      <div className="grid grid-cols-2 gap-2 mb-4">
-                        <div className="flex items-center gap-1.5 text-xs">
-                          <Clock className="w-3.5 h-3.5 text-primary-700" />
-                          <span className="font-medium">
-                            {program.duration}
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-1.5 text-xs">
-                          <Users className="w-3.5 h-3.5 text-primary-700" />
-                          <span className="font-medium">{program.format}</span>
-                        </div>
-                        <div className="flex items-center gap-1.5 text-xs">
-                          <Calendar className="w-3.5 h-3.5 text-primary-700" />
-                          <span className="font-medium">
-                            {program.nextStart}
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-1.5 text-xs">
-                          <Star className="w-3.5 h-3.5 text-primary-700" />
-                          <span className="font-medium">{program.rating}</span>
-                          <span className="text-[10px] text-muted-foreground">
-                            ({program.reviewCount})
-                          </span>
-                        </div>
-                      </div>
-
-                      {/* Price & CTA */}
-                      <div className="flex items-center justify-between pt-4 border-t border-border/50">
-                        <div>
-                          <span className="text-xl font-black text-primary-700">
-                            ${program.basePrice}
-                          </span>
-                          <span className="text-xs text-muted-foreground ml-1">
-                            /mo
-                          </span>
-                        </div>
-                        <div className="flex items-center gap-1 text-primary-700 font-black text-xs uppercase tracking-wider group-hover:gap-2 transition-all">
-                          View Details
-                          <ChevronRight className="w-4 h-4" />
-                        </div>
-                      </div>
-
-                      {/* Popular Indicator */}
-                      {program.popular && (
-                        <div className="absolute top-4 left-4">
-                          <div className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-gold/20 text-gold text-[8px] font-black uppercase tracking-wider">
-                            <Sparkles className="w-3 h-3" />
-                            Popular
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  </Link>
-                </motion.div>
-              );
-            })}
-          </div>
-
-          {/* Load More */}
-          {hasMore && (
-            <div className="text-center mt-12">
-              <Button
-                onClick={() => setVisibleCount((prev) => prev + 6)}
-                variant="outline"
-                className="rounded-full px-8 py-4 font-black"
-              >
-                Load More Programs
-                <ArrowRight className="w-4 h-4 ml-2" />
-              </Button>
-            </div>
-          )}
-        </>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filteredPrograms.map((program) => (
+            <CourseCard key={program.id} course={program} />
+          ))}
+        </div>
       )}
     </div>
   );
