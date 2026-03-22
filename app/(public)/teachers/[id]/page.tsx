@@ -171,6 +171,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Image from "next/image";
 import type { Metadata } from "next";
+import { cn } from "@/lib/utils";
 
 // Generate metadata dynamically
 export async function generateMetadata({
@@ -537,9 +538,9 @@ export default async function ScholarProfilePage({
                 </h3>
 
                 <p className="text-sm text-muted-foreground mb-6">
-                  {teacherData.name}'s unbroken lineage to the Prophet Muhammad (ﷺ) through
+                {`  ${teacherData.name}'s unbroken lineage to the Prophet Muhammad (ﷺ) through
                   generations of dedicated scholars. Each link represents a carrier of the sacred
-                  trust, preserving the authentic recitation for over 1400 years.
+                  trust, preserving the authentic recitation for over 1400 years.`}
                 </p>
 
                 {/* Famous Scholars Highlight */}
