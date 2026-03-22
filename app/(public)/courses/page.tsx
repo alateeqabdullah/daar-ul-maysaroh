@@ -109,20 +109,29 @@ import { prisma } from "@/lib/prisma";
 import { Reveal } from "@/components/shared/section-animation";
 import {
   Landmark,
-  Sparkles,
-  ArrowRight,
-  BookOpen, // Explicitly import icons used for helper functions (though not rendered here)
+  Search,
+  BookOpen,
   Mic,
   Globe,
   GraduationCap,
   Heart,
+  Users,
+  Sparkles,
+  ArrowRight,
+  Star,
+  Clock,
+  Calendar,
   Award,
+  Filter,
+  ChevronDown,
+  X,
 } from "lucide-react";
 import { CourseListClient } from "@/components/public/courses/course-list-client";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import Link from "next/link";
 
-// --- Metadata for SEO ---
+// Metadata for SEO
 export const metadata = {
   title: "Quran Courses Online | Hifz, Tajweed & Arabic | Al-Maysaroh",
   description:
@@ -135,8 +144,7 @@ export const metadata = {
   },
 };
 
-// --- MOCK DATA (Enhanced) ---
-// Note: 'isMock: true' programs will be filtered in the main logic to ensure they're only added once.
+// ICON NAMES ONLY - No components!
 const MOCK_DATA = [
   {
     id: "hifz-program",
@@ -178,10 +186,10 @@ const MOCK_DATA = [
       "Proper Tajweed application",
       "Teaching methodology",
     ],
-    isMock: false, // Set to false to indicate it's a "real" mock for initial display
+    isMock: false,
     popular: true,
     badge: "Most Popular",
-    iconName: "BookOpen",
+    iconName: "BookOpen", // ✅ String only!
     color: "from-primary-600 to-primary-800",
   },
   {
@@ -226,7 +234,7 @@ const MOCK_DATA = [
     ],
     isMock: false,
     popular: false,
-    iconName: "Mic",
+    iconName: "Mic", // ✅ String only!
     color: "from-accent to-accent/90",
   },
   {
@@ -272,7 +280,7 @@ const MOCK_DATA = [
     isMock: false,
     popular: true,
     badge: "Best Value",
-    iconName: "Globe",
+    iconName: "Globe", // ✅ String only!
     color: "from-gold to-gold/90",
   },
   {
@@ -317,7 +325,7 @@ const MOCK_DATA = [
     ],
     isMock: false,
     popular: false,
-    iconName: "GraduationCap",
+    iconName: "GraduationCap", // ✅ String only!
     color: "from-primary-500 to-primary-700",
   },
   {
@@ -363,7 +371,7 @@ const MOCK_DATA = [
     isMock: true,
     popular: true,
     badge: "Popular",
-    iconName: "Users",
+    iconName: "Users", // ✅ String only!
     color: "from-blue-500 to-blue-600",
   },
   {
@@ -408,7 +416,7 @@ const MOCK_DATA = [
     ],
     isMock: true,
     badge: "New",
-    iconName: "Star",
+    iconName: "Star", // ✅ String only!
     color: "from-purple-500 to-purple-600",
   },
   {
@@ -454,12 +462,12 @@ const MOCK_DATA = [
     isMock: true,
     popular: true,
     badge: "Limited Seats",
-    iconName: "Award",
+    iconName: "Award", // ✅ String only!
     color: "from-amber-600 to-amber-800",
   },
 ];
 
-// --- Categories with iconName strings only! ---
+// Categories with iconName strings only!
 const CATEGORIES = [
   { id: "all", name: "All Programs", iconName: "BookOpen", count: 0 },
   { id: "QURAN", name: "Quran", iconName: "BookOpen", count: 0 },
@@ -470,7 +478,7 @@ const CATEGORIES = [
   { id: "IJAZAH", name: "Ijazah", iconName: "Award", count: 0 },
 ];
 
-// --- Level filters ---
+// Level filters
 const LEVELS = [
   { id: "all", name: "All Levels" },
   { id: "Beginner", name: "Beginner" },
@@ -478,7 +486,7 @@ const LEVELS = [
   { id: "Advanced", name: "Advanced" },
 ];
 
-// --- Format filters ---
+// Format filters
 const FORMATS = [
   { id: "all", name: "All Formats" },
   { id: "1-on-1", name: "1-on-1" },
@@ -487,7 +495,7 @@ const FORMATS = [
   { id: "Group (4-6)", name: "Group (4-6)" },
 ];
 
-// --- Duration filters ---
+// Duration filters
 const DURATIONS = [
   { id: "all", name: "Any Duration" },
   { id: "3-6", name: "3-6 months" },
@@ -496,7 +504,7 @@ const DURATIONS = [
   { id: "2+", name: "2+ years" },
 ];
 
-// --- Helper function that returns STRING icon names only! ---
+// Helper function that returns STRING icon names only!
 function getIconNameForCategory(category: string): string {
   switch (category) {
     case "QURAN":
@@ -516,7 +524,7 @@ function getIconNameForCategory(category: string): string {
   }
 }
 
-// --- Helper function for colors ---
+// Helper function for colors
 function getColorForCategory(category: string): string {
   switch (category) {
     case "QURAN":
@@ -536,7 +544,6 @@ function getColorForCategory(category: string): string {
   }
 }
 
-// --- Main Server Component ---
 export default async function CoursesPage() {
   let dbPrograms = [];
 
@@ -570,32 +577,16 @@ export default async function CoursesPage() {
       isMock: false,
       popular: p.popular || false,
       badge: p.badge || "",
-      iconName: getIconNameForCategory(p.category),
+      iconName: getIconNameForCategory(p.category), // ✅ Returns string!
       color: getColorForCategory(p.category),
     }));
   } catch (error) {
     console.error("DB connection error - using enhanced mock data");
-    // If DB fails, ensure MOCK_DATA items that are *explicitly* isMock:true
-    // are included for a fuller catalog display.
-    dbPrograms = MOCK_DATA.filter((m) => !m.isMock); // If DB fails, still show "real" mock data
   }
 
-  // Final List: Database data + Mock data marked as 'isMock: true'
-  // This ensures that if the DB has real items for 'hifz-program', etc.,
-  // they take precedence, but if not, the mock ones fill in.
-  const uniquePrograms = new Map<string, (typeof MOCK_DATA)[0]>();
-
-  // Add DB programs first (or the 'real' mocks if DB failed)
-  dbPrograms.forEach((p) => uniquePrograms.set(p.id, p));
-
-  // Add MOCK_DATA items only if their ID doesn't already exist from DB
-  MOCK_DATA.forEach((m) => {
-    if (!uniquePrograms.has(m.id)) {
-      uniquePrograms.set(m.id, m);
-    }
-  });
-
-  const allPrograms = Array.from(uniquePrograms.values());
+  // Final List: Database data + Enhanced Mock Data
+  // Make sure MOCK_DATA only has iconName strings!
+  const allPrograms = [...dbPrograms, ...MOCK_DATA.filter((m) => m.isMock)];
 
   // Calculate counts for categories
   const categoriesWithCounts = CATEGORIES.map((cat) => {
@@ -619,10 +610,8 @@ export default async function CoursesPage() {
     0,
   );
   const averageRating =
-    allPrograms.length > 0
-      ? allPrograms.reduce((acc, p) => acc + (p.rating || 0), 0) /
-        allPrograms.length
-      : 0; // Handle division by zero
+    allPrograms.reduce((acc, p) => acc + (p.rating || 0), 0) /
+    allPrograms.length;
 
   return (
     <main
@@ -658,7 +647,18 @@ export default async function CoursesPage() {
               </p>
             </Reveal>
           </div>
-          {/* Search Bar is now handled entirely within CourseListClient */}
+
+          {/* Search Bar */}
+          <Reveal delay={0.25}>
+            <div className="relative max-w-md mt-4">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+              <Input
+                placeholder="Search programs..."
+                className="pl-12 pr-4 py-6 rounded-full border-2 border-primary-100/50 focus:border-primary-700 transition-all"
+                aria-label="Search courses"
+              />
+            </div>
+          </Reveal>
         </div>
 
         {/* --- STATS OVERVIEW --- */}
@@ -707,7 +707,7 @@ export default async function CoursesPage() {
           </div>
         </Reveal>
 
-        {/* --- CLIENT CONTROLLER (INTERACTIVE EXPLORER) --- */}
+        {/* --- CLIENT CONTROLLER - NOW WITH ALL STRINGS --- */}
         <CourseListClient
           programs={allPrograms}
           categories={categoriesWithCounts}
