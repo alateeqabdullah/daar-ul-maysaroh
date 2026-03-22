@@ -5,32 +5,23 @@ import { motion, AnimatePresence } from "framer-motion";
 import { WifiOff, X, RefreshCw } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
-// It's good practice to define types for props explicitly.
 interface OfflineProviderProps {
   children: React.ReactNode;
-  /**
-   * If true, the page will automatically refresh when reconnecting after being offline.
-   * @default true
-   */
   autoRefresh?: boolean;
-  /**
-   * The interval in milliseconds to check for connectivity when autoRefresh is enabled
-   * and the user is back online. (Note: browser events are primary, this is a fallback/reinforcement)
-   * @default 30000 (30 seconds)
-   * @deprecated The native `online` event is more reliable. This prop might be removed in future versions.
-   */
-  refreshInterval?: number; // Marked as deprecated as native events are generally preferred.
 }
 
 export function OfflineProvider({
   children,
   autoRefresh = true,
 }: OfflineProviderProps) {
+  // CRITICAL: Always initialize with false on server, update on client
   const [isOffline, setIsOffline] = useState(false);
-  const [hasBeenOffline, setHasBeenOffline] = useState(false); // Renamed for clarity
+  const [hasBeenOffline, setHasBeenOffline] = useState(false);
   const [showBanner, setShowBanner] = useState(true);
   const [isReconnecting, setIsReconnecting] = useState(false);
+  const [mounted, setMounted] = useState(false);
 
   // Using a ref to persist the auto-refresh behavior across re-renders
   const autoRefreshRef = useRef(autoRefresh);
@@ -38,40 +29,60 @@ export function OfflineProvider({
     autoRefreshRef.current = autoRefresh;
   }, [autoRefresh]);
 
-  // Effect to handle online/offline events
+  // Mark component as mounted on client
   useEffect(() => {
-    // Initial check on mount
-    const initialOfflineStatus = !navigator.onLine;
-    setIsOffline(initialOfflineStatus);
-    if (initialOfflineStatus) {
+    setMounted(true);
+  }, []);
+
+  // Manual retry mechanism
+  const handleRetry = useCallback(() => {
+    if (navigator.onLine) {
+      window.location.reload();
+    } else {
+      setIsOffline(true);
       setHasBeenOffline(true);
       setShowBanner(true);
+      toast.error("Still offline", {
+        description: "Please check your internet connection.",
+        duration: 4000,
+        position: "top-center",
+      });
     }
+  }, []);
+
+  const handleDismiss = useCallback(() => {
+    setShowBanner(false);
+  }, []);
+
+  // Effect to handle online/offline events - ONLY RUNS ON CLIENT
+  useEffect(() => {
+    if (!mounted) return;
+
+    let reconnectTimer: NodeJS.Timeout;
+
+    // Set initial offline state based on actual connection
+    setIsOffline(!navigator.onLine);
+    setHasBeenOffline(!navigator.onLine);
 
     const handleOffline = () => {
       setIsOffline(true);
       setHasBeenOffline(true);
       setShowBanner(true);
-      setIsReconnecting(false); // Ensure this is false when offline
+      setIsReconnecting(false);
     };
 
     const handleOnline = () => {
       setIsOffline(false);
       setIsReconnecting(true);
-      setShowBanner(false); // Hide banner immediately on online event
+      setShowBanner(false);
 
-      // Simulate reconnection delay and then potentially refresh
-      const reconnectTimer = setTimeout(() => {
+      reconnectTimer = setTimeout(() => {
         setIsReconnecting(false);
         if (autoRefreshRef.current && hasBeenOffline) {
-          // Only reload if we actually went offline before
           window.location.reload();
         }
-        // Reset hasBeenOffline after potential refresh, or if not refreshing
         setHasBeenOffline(false);
-      }, 1500); // Give a brief moment for the network to stabilize
-
-      return () => clearTimeout(reconnectTimer); // Cleanup timeout if component unmounts
+      }, 1500);
     };
 
     window.addEventListener("offline", handleOffline);
@@ -80,28 +91,14 @@ export function OfflineProvider({
     return () => {
       window.removeEventListener("offline", handleOffline);
       window.removeEventListener("online", handleOnline);
+      if (reconnectTimer) clearTimeout(reconnectTimer);
     };
-  }, [hasBeenOffline]); // hasBeenOffline is a dependency to ensure the auto-refresh logic uses the latest state
+  }, [mounted, hasBeenOffline]);
 
-  // Manual retry mechanism
-  const handleRetry = useCallback(() => {
-    if (navigator.onLine) {
-      window.location.reload();
-    } else {
-      // If still offline, re-show the banner and update state
-      setIsOffline(true);
-      setHasBeenOffline(true);
-      setShowBanner(true);
-      // Optional: Add a visual indicator here for a failed retry
-    }
-  }, []);
-
-  const handleDismiss = useCallback(() => {
-    setShowBanner(false);
-  }, []);
-
-  // No `mounted` state needed. Client components only run in the browser.
-  // The initial state check covers the first render.
+  // Don't render anything that could cause hydration mismatch until mounted
+  if (!mounted) {
+    return <>{children}</>;
+  }
 
   return (
     <>
@@ -115,60 +112,59 @@ export function OfflineProvider({
         {children}
       </div>
 
-      {/* Offline Banner - Animated */}
+      {/* OFFLINE BANNER - FULLY MOBILE OPTIMIZED */}
       <AnimatePresence>
         {isOffline && showBanner && (
           <motion.div
-            initial={{ opacity: 0, y: 50, x: "-50%" }}
-            animate={{ opacity: 1, y: 0, x: "-50%" }}
-            exit={{ opacity: 0, y: 50, x: "-50%" }}
-            transition={{ type: "spring", damping: 25, stiffness: 200 }} // Refined transition
-            className="fixed bottom-4 left-1/2 -translate-x-1/2 z-50 w-[calc(100%-2rem)] sm:w-auto sm:min-w-[380px] max-w-lg"
-            role="alert" // Announce to screen readers that an important message appeared
-            aria-live="polite" // Screen readers will announce changes
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            transition={{ duration: 0.3, ease: "easeOut" }}
+            className="fixed inset-x-0 bottom-0 sm:bottom-4 sm:inset-x-auto sm:left-1/2 sm:-translate-x-1/2 z-50 px-3 sm:px-0"
           >
-            <div className="glass-surface bg-amber-500/10 dark:bg-amber-950/30 backdrop-blur-md border border-amber-500/30 rounded-2xl shadow-2xl overflow-hidden">
-              <div className="relative p-4">
-                {/* Animated indicator */}
-                <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-500 via-orange-500 to-amber-500 animate-shimmer" />
+            <div className="glass-surface bg-amber-500/10 dark:bg-amber-950/30 backdrop-blur-md border border-amber-500/30 rounded-2xl shadow-2xl overflow-hidden w-full sm:w-[420px] max-w-full">
+              {/* Animated indicator */}
+              <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-500 via-orange-500 to-amber-500 animate-shimmer" />
 
-                <div className="flex items-start gap-4">
-                  <div className="flex-shrink-0 mt-0.5">
-                    {" "}
-                    {/* Minor alignment fix */}
-                    <div className="w-10 h-10 rounded-full bg-amber-500/20 flex items-center justify-center">
-                      <WifiOff className="w-5 h-5 text-amber-500 animate-pulse" />
+              <div className="p-4 sm:p-5">
+                <div className="flex items-start gap-3 sm:gap-4">
+                  {/* Icon */}
+                  <div className="shrink-0 mt-0.5">
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-amber-500/20 flex items-center justify-center">
+                      <WifiOff className="w-5 h-5 sm:w-6 sm:h-6 text-amber-500 animate-pulse" />
                     </div>
                   </div>
 
-                  <div className="flex-1 space-y-1">
-                    <h4 className="font-black text-sm uppercase tracking-wider text-amber-600 dark:text-amber-400">
+                  {/* Content */}
+                  <div className="flex-1 min-w-0">
+                    <h4 className="font-black text-sm sm:text-base uppercase tracking-wider text-amber-600 dark:text-amber-400 mb-1">
                       Connection Lost
                     </h4>
-                    <p className="text-xs text-muted-foreground">
+                    <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
                       You're currently offline. Some features may be
-                      unavailable.{" "}
+                      unavailable.
                       {hasBeenOffline &&
                         autoRefresh &&
-                        "We'll reconnect and refresh automatically when you're back online."}
+                        " We'll reconnect automatically when you're back online."}
                     </p>
 
-                    <div className="flex items-center gap-3 mt-3">
+                    {/* Action Buttons */}
+                    <div className="flex items-center gap-2 sm:gap-3 mt-3 sm:mt-4">
                       <Button
                         onClick={handleRetry}
                         size="sm"
                         variant="outline"
-                        className="h-8 px-3 rounded-full text-xs font-black gap-1 border-amber-500/50 text-amber-600 dark:text-amber-400 hover:bg-amber-500/10"
+                        className="h-9 sm:h-10 px-4 sm:px-5 rounded-full text-xs sm:text-sm font-black gap-1.5 border-amber-500/50 text-amber-600 dark:text-amber-400 hover:bg-amber-500/10"
                         aria-label="Retry connection"
                       >
-                        <RefreshCw className="w-3 h-3" />
-                        Retry
+                        <RefreshCw className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                        Retry Now
                       </Button>
                       <Button
                         onClick={handleDismiss}
                         size="sm"
                         variant="ghost"
-                        className="h-8 px-3 rounded-full text-xs font-black text-muted-foreground hover:text-foreground"
+                        className="h-9 sm:h-10 px-4 sm:px-5 rounded-full text-xs sm:text-sm font-black text-muted-foreground hover:text-foreground"
                         aria-label="Dismiss offline banner"
                       >
                         Dismiss
@@ -176,12 +172,13 @@ export function OfflineProvider({
                     </div>
                   </div>
 
+                  {/* Close Button - Mobile Optimized */}
                   <button
                     onClick={handleDismiss}
-                    className="flex-shrink-0 p-1 rounded-full hover:bg-muted/50 transition-colors"
+                    className="shrink-0 p-1.5 sm:p-2 -mt-1 -mr-1 rounded-full hover:bg-muted/50 transition-colors active:bg-muted/70"
                     aria-label="Close offline notification"
                   >
-                    <X className="w-4 h-4 text-muted-foreground" />
+                    <X className="w-4 h-4 sm:w-5 sm:h-5 text-muted-foreground" />
                   </button>
                 </div>
               </div>
@@ -190,48 +187,29 @@ export function OfflineProvider({
         )}
       </AnimatePresence>
 
-      {/* Reconnecting Indicator */}
+      {/* RECONNECTING INDICATOR - Mobile Optimized */}
       <AnimatePresence>
         {!isOffline && isReconnecting && (
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 20 }}
-            transition={{ duration: 0.3 }} // Simpler transition for this smaller element
-            className="fixed bottom-20 left-1/2 -translate-x-1/2 z-50"
-            role="status" // Indicate to screen readers that this is status information
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.9 }}
+            transition={{ duration: 0.2 }}
+            className="fixed top-4 sm:top-6 left-1/2 -translate-x-1/2 z-50"
+            role="status"
             aria-live="polite"
           >
-            <div className="glass-surface bg-green-500/10 dark:bg-green-950/30 backdrop-blur-md border border-green-500/30 rounded-full px-4 py-2 shadow-lg">
-              <div className="flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
-                <span className="text-xs font-black text-green-600 dark:text-green-400">
-                  Reconnecting...
+            <div className="glass-surface bg-green-500/10 dark:bg-green-950/30 backdrop-blur-md border border-green-500/30 rounded-full px-4 sm:px-5 py-2 sm:py-2.5 shadow-lg">
+              <div className="flex items-center gap-2 sm:gap-3">
+                <div className="w-2 h-2 sm:w-2.5 sm:h-2.5 rounded-full bg-green-500 animate-pulse" />
+                <span className="text-xs sm:text-sm font-black text-green-600 dark:text-green-400 whitespace-nowrap">
+                  Reconnecting to network...
                 </span>
               </div>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
-
-      {/* Hidden iframe for background keep-alive (optional) */}
-      {/*
-        Consider if `keep-alive` is truly necessary. Modern browsers are good at managing
-        background tabs. An iframe to an API route can sometimes cause unnecessary
-        server load or resource usage if not carefully managed.
-        If it's for session persistence, consider alternative strategies like
-        server-side sessions with refresh tokens or client-side caching.
-      */}
-      {!isOffline && (
-        <div className="hidden">
-          {/* <iframe
-            src="/api/keep-alive"
-            title="keep-alive"
-            aria-hidden="true"
-            style={{ display: "none" }}
-          /> */}
-        </div>
-      )}
     </>
   );
 }

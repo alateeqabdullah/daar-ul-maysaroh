@@ -144,7 +144,6 @@
 // }
 
 
-
 import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import { Reveal } from "@/components/shared/section-animation";
@@ -173,39 +172,160 @@ import Image from "next/image";
 import type { Metadata } from "next";
 import { cn } from "@/lib/utils";
 
-// Generate metadata dynamically
+// ==================== MOCK DATA (Fallback) ====================
+
+const MOCK_TEACHERS: Record<string, any> = {
+  "dean-ahmad": {
+    id: "dean-ahmad",
+    user: {
+      name: "Sheikh Abubakar Al-Maysari",
+      image: null,
+      email: "abubakar@almaysaroh.edu",
+    },
+    specialization: "Dean of Faculty | Hifz & Qira'at Specialist",
+    bio: "With over 25 years of teaching experience, I believe that memorization is the cultivation of the heart before the mind. My approach combines traditional Sanad-based instruction with modern pedagogical techniques to make the Quran accessible and meaningful for every student.",
+    expertise: ["Quranic Sciences", "Ijazah in 10 Qira'at", "Authentic Sanad Holder", "Hifz Pedagogy"],
+    experienceYears: 25,
+    contractType: "FULL_TIME",
+    isAvailable: true,
+    maxStudents: 20,
+    teachingStyle: "Traditional Sanad-based with personalized attention",
+    qualification: "PhD in Quranic Sciences, Ijazah in 10 Qira'at",
+    classes: [],
+    subjects: [],
+  },
+  "head-fatima": {
+    id: "head-fatima",
+    user: {
+      name: "Ustadha Fatima Zahra",
+      image: null,
+      email: "fatima@almaysaroh.edu",
+    },
+    specialization: "Head of Female Hifz | Tajweed Specialist",
+    bio: "Nurturing love for the Word through patience and consistent Sunnah. I specialize in helping young girls and women develop a deep, meaningful connection with the Quran through structured memorization programs.",
+    expertise: ["Ijazah in Hafs 'an 'Asim", "Master's in Islamic Pedagogy", "Child Development Specialist"],
+    experienceYears: 18,
+    contractType: "FULL_TIME",
+    isAvailable: true,
+    maxStudents: 18,
+    teachingStyle: "Gentle, encouraging, with focus on understanding",
+    qualification: "Ijazah in Hafs 'an 'Asim, Master's in Islamic Pedagogy",
+    classes: [],
+    subjects: [],
+  },
+  "scholar-aliyy": {
+    id: "scholar-aliyy",
+    user: {
+      name: "Ustadh Aliyy ibn Abdurrozzaaq",
+      image: null,
+      email: "aliyy@almaysaroh.edu",
+    },
+    specialization: "Senior Tajweed Scholar | Qira'at Specialist",
+    bio: "Recitation is an art that requires absolute precision and spiritual presence. My teaching focuses on the science of Tajweed, helping students master the rules of pronunciation and develop a melodious, accurate recitation.",
+    expertise: ["Expert in Al-Jazariyyah", "Certified in Phonetics", "Master of Qira'at"],
+    experienceYears: 15,
+    contractType: "FULL_TIME",
+    isAvailable: true,
+    maxStudents: 22,
+    teachingStyle: "Technical precision with spiritual depth",
+    qualification: "Ijazah in Tajweed, Certification in Phonetics",
+    classes: [],
+    subjects: [],
+  },
+};
+
+const MOCK_SANAD_CHAIN = [
+  {
+    generation: 1,
+    scholarName: "Sheikh Muhammad Al-Madani",
+    bio: "Senior Scholar at Islamic University of Madinah",
+    era: "15th Century Hijri",
+    region: "Madinah, Saudi Arabia",
+    isFamous: false,
+  },
+  {
+    generation: 2,
+    scholarName: "Sheikh Ibrahim Al-Misri",
+    bio: "Renowned Quranic Scholar and Teacher of Teachers",
+    era: "14th Century Hijri",
+    region: "Cairo, Egypt",
+    isFamous: true,
+  },
+  {
+    generation: 3,
+    scholarName: "Sheikh Yusuf Al-Andalusi",
+    bio: "Master of Qira'at and Classical Arabic",
+    era: "13th Century Hijri",
+    region: "Andalus, Spain",
+    isFamous: false,
+  },
+  {
+    generation: 8,
+    scholarName: "Imam Al-Jazari",
+    bio: "Father of Tajweed Science, Author of Al-Jazariyyah",
+    era: "9th Century Hijri",
+    region: "Damascus, Syria",
+    isFamous: true,
+  },
+  {
+    generation: 25,
+    scholarName: "Imam Nafi' Al-Madani",
+    bio: "One of the Seven Qira'at Masters",
+    era: "2nd Century Hijri",
+    region: "Madinah, Saudi Arabia",
+    isFamous: true,
+  },
+  {
+    generation: 35,
+    scholarName: "The Prophet Muhammad (ﷺ)",
+    bio: "Source of All Sanads, Final Messenger of Allah",
+    era: "1st Century Hijri",
+    region: "Makkah / Madinah",
+    isFamous: true,
+  },
+];
+
+// ==================== METADATA ====================
+
 export async function generateMetadata({
   params,
 }: {
   params: { id: string } | Promise<{ id: string }>;
 }): Promise<Metadata> {
   const resolvedParams = await params;
+  const id = resolvedParams.id;
 
-  try {
-    const teacher = await prisma.teacher.findUnique({
-      where: { id: resolvedParams.id },
-      include: { user: true },
-    });
+  // Check mock data first
+  let teacher = MOCK_TEACHERS[id];
 
-    if (!teacher || !teacher.user) {
-      return {
-        title: "Scholar Not Found | Al-Maysaroh",
-        description: "The requested scholar profile could not be found.",
-      };
+  if (!teacher) {
+    try {
+      const dbTeacher = await prisma.teacher.findUnique({
+        where: { id },
+        include: { user: true },
+      });
+      if (dbTeacher) teacher = dbTeacher;
+    } catch (error) {
+      console.error("Failed to fetch teacher:", error);
     }
+  }
 
+  if (!teacher || !teacher.user) {
     return {
-      title: `${teacher.user.name} | Al-Maysaroh Faculty`,
-      description:
-        teacher.bio?.slice(0, 160) ||
-        `Learn about ${teacher.user.name}, our Ijazah-certified scholar in ${teacher.specialization || "Quranic Studies"}.`,
-    };
-  } catch (error) {
-    return {
-      title: "Scholar Profile | Al-Maysaroh",
+      title: "Scholar Not Found | Al-Maysaroh",
+      description: "The requested scholar profile could not be found.",
     };
   }
+
+  return {
+    title: `${teacher.user.name} | Al-Maysaroh Faculty`,
+    description:
+      teacher.bio?.slice(0, 160) ||
+      `Learn about ${teacher.user.name}, our Ijazah-certified scholar in ${teacher.specialization || "Quranic Studies"}.`,
+  };
 }
+
+// ==================== MAIN PAGE COMPONENT ====================
 
 export default async function ScholarProfilePage({
   params,
@@ -215,10 +335,10 @@ export default async function ScholarProfilePage({
   const resolvedParams = await params;
   const id = resolvedParams.id;
 
-  // Fetch teacher data with SanadChain
   let teacher = null;
   let sanadChain = [];
 
+  // Try to get from database first
   try {
     teacher = await prisma.teacher.findUnique({
       where: { id },
@@ -237,7 +357,6 @@ export default async function ScholarProfilePage({
       },
     });
 
-    // If teacher has sanadChains in DB, use them
     if (teacher?.sanadChains && teacher.sanadChains.length > 0) {
       sanadChain = teacher.sanadChains;
     }
@@ -245,44 +364,39 @@ export default async function ScholarProfilePage({
     console.error("Failed to fetch teacher:", error);
   }
 
-  // Handle 404
+  // If not found in DB, check mock data
+  if (!teacher) {
+    teacher = MOCK_TEACHERS[id];
+    if (teacher) {
+      sanadChain = MOCK_SANAD_CHAIN;
+    }
+  }
+
+  // If still not found, show 404
   if (!teacher || !teacher.user) {
     notFound();
   }
 
-  // If no sanad chain in DB, use mock data for demonstration
-  if (sanadChain.length === 0) {
-    sanadChain = getMockSanadChain();
-  }
+  // Process sanad chain data
+  const famousScholars = sanadChain.filter((s: any) => s.isFamous);
+  const fullChain = sanadChain.sort((a: any, b: any) => a.generation - b.generation);
 
-  // Group chain by famous scholars
-  const famousScholars = sanadChain.filter((s) => s.isFamous);
-  const fullChain = sanadChain.sort((a, b) => a.generation - b.generation);
-
-  // Calculate availability status using existing fields
+  // Calculate availability
   const currentClasses = teacher.classes?.length || 0;
   const maxStudents = teacher.maxStudents || 20;
   const isAvailable = teacher.isAvailable && currentClasses < maxStudents;
   const availableSpots = maxStudents - currentClasses;
 
-  // Teacher data using ONLY existing schema fields
+  // Prepare display data
   const teacherData = {
     id: teacher.id,
-    name: teacher.user.name || "Scholar",
+    name: teacher.user.name,
     email: teacher.user.email,
     image: teacher.user.image,
     rank: teacher.specialization || "Ijazah-Certified Scholar",
-    quote:
-      teacher.bio?.split(".")[0] ||
-      "The Quran is a trust passed from heart to heart.",
-    bio:
-      teacher.bio ||
-      "Dedicated to preserving the authentic recitation of the Quran through unbroken chains of transmission.",
-    expertise: teacher.expertise || [
-      "Quranic Recitation",
-      "Tajweed Sciences",
-      "Qira'at Studies",
-    ],
+    quote: teacher.bio?.split(".")[0] || "The Quran is a trust passed from heart to heart.",
+    bio: teacher.bio || "Dedicated to preserving the authentic recitation of the Quran through unbroken chains of transmission.",
+    expertise: teacher.expertise || ["Quranic Recitation", "Tajweed Sciences", "Qira'at Studies"],
     contractType: teacher.contractType || "FULL_TIME",
     specialization: teacher.specialization || "Quranic Studies",
     experience: teacher.experienceYears || 0,
@@ -292,15 +406,13 @@ export default async function ScholarProfilePage({
     teachingStyle: teacher.teachingStyle || "Traditional with Modern Application",
     maxStudents: maxStudents,
     currentStudents: currentClasses,
-    yearsActive: teacher.experienceYears || 0,
-    // Location info would need to be added to schema
     location: "Global",
   };
 
   return (
     <main className="min-h-screen bg-background relative overflow-hidden">
       {/* Hero Background */}
-      <div className="absolute inset-0 bg-linear-to-b from-primary-900/5 via-transparent to-transparent" />
+      <div className="absolute inset-0 bg-gradient-to-b from-primary-900/5 via-transparent to-transparent" />
       <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-primary-700/5 blur-[120px] rounded-full -z-10" />
       <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-primary-700/5 blur-[100px] rounded-full -z-10" />
 
@@ -325,7 +437,7 @@ export default async function ScholarProfilePage({
           {/* Profile Image */}
           <div className="lg:w-1/3">
             <div className="relative group">
-              <div className="absolute -inset-1 bg-linear-to-r from-primary-700 via-gold to-primary-700 rounded-[2.5rem] blur opacity-20 group-hover:opacity-30 transition-opacity" />
+              <div className="absolute -inset-1 bg-gradient-to-r from-primary-700 via-gold to-primary-700 rounded-[2.5rem] blur opacity-20 group-hover:opacity-30 transition-opacity" />
               <div className="relative aspect-[3/4] rounded-[2.5rem] overflow-hidden border-4 border-white dark:border-slate-800 shadow-2xl">
                 {teacherData.image ? (
                   <Image
@@ -336,7 +448,7 @@ export default async function ScholarProfilePage({
                     priority
                   />
                 ) : (
-                  <div className="absolute inset-0 bg-linear-to-br from-primary-900 to-primary-700 flex items-center justify-center">
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary-900 to-primary-700 flex items-center justify-center">
                     <User className="w-32 h-32 text-white/30" />
                   </div>
                 )}
@@ -370,7 +482,7 @@ export default async function ScholarProfilePage({
             <Reveal delay={0.2}>
               <div className="flex flex-wrap gap-3">
                 <span className="px-4 py-2 rounded-full bg-gold/10 text-gold text-sm font-black">
-                  {teacherData.rank}
+                  {teacherData.rank.split("|")[0].trim()}
                 </span>
                 <span className="px-4 py-2 rounded-full bg-primary-700/10 text-primary-700 text-sm font-black">
                   {teacherData.specialization}
@@ -383,13 +495,13 @@ export default async function ScholarProfilePage({
                 {[
                   {
                     icon: Users,
-                    label: "Classes",
+                    label: "Current Classes",
                     value: teacherData.currentStudents,
                   },
                   {
                     icon: BookOpen,
-                    label: "Subjects",
-                    value: teacher.subjects?.length || 0,
+                    label: "Expertise Areas",
+                    value: teacherData.expertise.length,
                   },
                   {
                     icon: Clock,
@@ -447,13 +559,13 @@ export default async function ScholarProfilePage({
 
             {/* Expertise Card */}
             <Reveal delay={0.15}>
-              <div className="institutional-card p-6 sm:p-8 bg-linear-to-br from-primary-700/5 to-primary-700/10">
+              <div className="institutional-card p-6 sm:p-8 bg-gradient-to-br from-primary-700/5 to-primary-700/10">
                 <h3 className="font-black text-lg uppercase tracking-tight mb-4 flex items-center gap-2">
                   <Award className="w-5 h-5 text-primary-700" />
                   Areas of Expertise
                 </h3>
                 <div className="flex flex-wrap gap-2">
-                  {teacherData.expertise.map((item) => (
+                  {teacherData.expertise.map((item: string) => (
                     <span
                       key={item}
                       className="px-4 py-2 rounded-full bg-primary-700/10 text-primary-700 text-sm font-black"
@@ -499,7 +611,7 @@ export default async function ScholarProfilePage({
               </div>
             </Reveal>
 
-            {/* Teaching Schedule Preview */}
+            {/* Current Classes Preview */}
             {teacher.classes && teacher.classes.length > 0 && (
               <Reveal delay={0.25}>
                 <div className="institutional-card p-6 sm:p-8">
@@ -508,7 +620,7 @@ export default async function ScholarProfilePage({
                     Current Classes
                   </h3>
                   <div className="space-y-3">
-                    {teacher.classes.slice(0, 3).map((cls) => (
+                    {teacher.classes.slice(0, 3).map((cls: any) => (
                       <div key={cls.id} className="p-3 rounded-lg bg-muted/30">
                         <p className="font-black text-sm">{cls.name}</p>
                         <p className="text-xs text-muted-foreground">
@@ -538,19 +650,19 @@ export default async function ScholarProfilePage({
                 </h3>
 
                 <p className="text-sm text-muted-foreground mb-6">
-                {`  ${teacherData.name}'s unbroken lineage to the Prophet Muhammad (ﷺ) through
+                  {teacherData.name}'s unbroken lineage to the Prophet Muhammad (ﷺ) through
                   generations of dedicated scholars. Each link represents a carrier of the sacred
-                  trust, preserving the authentic recitation for over 1400 years.`}
+                  trust, preserving the authentic recitation for over 1400 years.
                 </p>
 
                 {/* Famous Scholars Highlight */}
                 {famousScholars.length > 0 && (
-                  <div className="mb-8 p-4 rounded-xl bg-linear-to-r from-primary-700/10 to-transparent border border-primary-700/20">
+                  <div className="mb-8 p-4 rounded-xl bg-gradient-to-r from-primary-700/10 to-transparent border border-primary-700/20">
                     <p className="text-xs font-black uppercase tracking-widest text-primary-700 mb-3">
                       KEY FIGURES IN THIS CHAIN
                     </p>
                     <div className="flex flex-wrap gap-3">
-                      {famousScholars.slice(0, 5).map((scholar) => (
+                      {famousScholars.slice(0, 5).map((scholar: any) => (
                         <div
                           key={scholar.generation}
                           className="flex items-center gap-2"
@@ -569,10 +681,10 @@ export default async function ScholarProfilePage({
                 {/* Chain Visualization */}
                 <div className="relative max-h-[600px] overflow-y-auto pr-4 custom-scrollbar">
                   {/* Vertical Line */}
-                  <div className="absolute left-5 top-0 bottom-0 w-0.5 bg-linear-to-b from-primary-700 via-primary-700/50 to-transparent" />
+                  <div className="absolute left-5 top-0 bottom-0 w-0.5 bg-gradient-to-b from-primary-700 via-primary-700/50 to-transparent" />
 
                   <div className="space-y-6">
-                    {fullChain.slice(0, 30).map((link, index) => (
+                    {fullChain.slice(0, 30).map((link: any, index: number) => (
                       <div key={index} className="relative flex gap-4 sm:gap-6">
                         {/* Node */}
                         <div
@@ -580,7 +692,7 @@ export default async function ScholarProfilePage({
                           w-10 h-10 sm:w-12 sm:h-12 rounded-full border-4 flex items-center justify-center shrink-0 relative z-10 bg-background
                           ${
                             link.isFamous
-                              ? "border-gold bg-linear-to-br from-gold/20 to-gold/5"
+                              ? "border-gold bg-gradient-to-br from-gold/20 to-gold/5"
                               : "border-primary-700"
                           }
                         `}
@@ -711,7 +823,7 @@ export default async function ScholarProfilePage({
                     Subjects Taught
                   </h4>
                   <div className="flex flex-wrap gap-2">
-                    {teacher.subjects.map((subject) => (
+                    {teacher.subjects.map((subject: any) => (
                       <span
                         key={subject.id}
                         className="px-3 py-1.5 rounded-full bg-primary-50 dark:bg-primary-950/30 text-primary-700 text-xs font-black"
@@ -730,56 +842,3 @@ export default async function ScholarProfilePage({
   );
 }
 
-// Helper function for mock Sanad Chain
-function getMockSanadChain() {
-  return [
-    {
-      generation: 1,
-      scholarName: "Sheikh Muhammad Al-Madani",
-      bio: "Senior Scholar at Islamic University",
-      era: "15th Century Hijri",
-      region: "Madinah",
-      isFamous: false,
-    },
-    {
-      generation: 2,
-      scholarName: "Sheikh Ibrahim Al-Misri",
-      bio: "Renowned Quranic Scholar",
-      era: "14th Century Hijri",
-      region: "Cairo",
-      isFamous: true,
-    },
-    {
-      generation: 3,
-      scholarName: "Sheikh Yusuf Al-Andalusi",
-      bio: "Master of Qira'at",
-      era: "13th Century Hijri",
-      region: "Andalus",
-      isFamous: false,
-    },
-    {
-      generation: 8,
-      scholarName: "Imam Al-Jazari",
-      bio: "Father of Tajweed Science",
-      era: "9th Century Hijri",
-      region: "Damascus",
-      isFamous: true,
-    },
-    {
-      generation: 25,
-      scholarName: "Imam Nafi' Al-Madani",
-      bio: "One of the Seven Qira'at Masters",
-      era: "2nd Century Hijri",
-      region: "Madinah",
-      isFamous: true,
-    },
-    {
-      generation: 35,
-      scholarName: "The Prophet Muhammad (ﷺ)",
-      bio: "Source of All Sanads",
-      era: "1st Century Hijri",
-      region: "Makkah/Madinah",
-      isFamous: true,
-    },
-  ];
-}
