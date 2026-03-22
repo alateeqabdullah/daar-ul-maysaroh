@@ -125,13 +125,15 @@ import {
   Filter,
   ChevronDown,
   X,
+  Loader2,
 } from "lucide-react";
 import { CourseListClient } from "@/components/public/courses/course-list-client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
+import { Suspense } from "react";
 
-// Metadata for SEO
+// ==================== METADATA ====================
 export const metadata = {
   title: "Quran Courses Online | Hifz, Tajweed & Arabic | Al-Maysaroh",
   description:
@@ -144,7 +146,7 @@ export const metadata = {
   },
 };
 
-// ICON NAMES ONLY - No components!
+// ==================== MOCK DATA ====================
 const MOCK_DATA = [
   {
     id: "hifz-program",
@@ -157,6 +159,7 @@ const MOCK_DATA = [
     category: "QURAN",
     subcategory: "Hifz",
     duration: "2-3 years",
+    durationMonths: 30, // ✅ Add numeric duration for filtering
     level: "All Levels",
     format: "1-on-1",
     nextStart: "September 2026",
@@ -186,10 +189,10 @@ const MOCK_DATA = [
       "Proper Tajweed application",
       "Teaching methodology",
     ],
-    isMock: false,
+    isMock: true,
     popular: true,
     badge: "Most Popular",
-    iconName: "BookOpen", // ✅ String only!
+    iconName: "BookOpen",
     color: "from-primary-600 to-primary-800",
   },
   {
@@ -203,6 +206,7 @@ const MOCK_DATA = [
     category: "TAJWEED",
     subcategory: "Recitation",
     duration: "6 months",
+    durationMonths: 6,
     level: "Beginner to Advanced",
     format: "Small Groups",
     nextStart: "October 2026",
@@ -232,9 +236,9 @@ const MOCK_DATA = [
       "Recite with confidence",
       "Teach basic rules",
     ],
-    isMock: false,
+    isMock: true,
     popular: false,
-    iconName: "Mic", // ✅ String only!
+    iconName: "Mic",
     color: "from-accent to-accent/90",
   },
   {
@@ -248,6 +252,7 @@ const MOCK_DATA = [
     category: "ARABIC",
     subcategory: "Language",
     duration: "1 year",
+    durationMonths: 12,
     level: "Beginner",
     format: "Group Sessions",
     nextStart: "September 2026",
@@ -277,10 +282,10 @@ const MOCK_DATA = [
       "Basic translation skills",
       "Continue self-study",
     ],
-    isMock: false,
+    isMock: true,
     popular: true,
     badge: "Best Value",
-    iconName: "Globe", // ✅ String only!
+    iconName: "Globe",
     color: "from-gold to-gold/90",
   },
   {
@@ -294,6 +299,7 @@ const MOCK_DATA = [
     category: "TAFSIR",
     subcategory: "Exegesis",
     duration: "1.5 years",
+    durationMonths: 18,
     level: "Advanced",
     format: "1-on-1",
     nextStart: "January 2027",
@@ -323,9 +329,9 @@ const MOCK_DATA = [
       "Independent research",
       "Teaching capability",
     ],
-    isMock: false,
+    isMock: true,
     popular: false,
-    iconName: "GraduationCap", // ✅ String only!
+    iconName: "GraduationCap",
     color: "from-primary-500 to-primary-700",
   },
   {
@@ -339,6 +345,7 @@ const MOCK_DATA = [
     category: "CHILDREN",
     subcategory: "Reading",
     duration: "6 months",
+    durationMonths: 6,
     level: "Beginner",
     format: "Group (4-6)",
     nextStart: "September 2026",
@@ -371,7 +378,7 @@ const MOCK_DATA = [
     isMock: true,
     popular: true,
     badge: "Popular",
-    iconName: "Users", // ✅ String only!
+    iconName: "Users",
     color: "from-blue-500 to-blue-600",
   },
   {
@@ -385,6 +392,7 @@ const MOCK_DATA = [
     category: "CHILDREN",
     subcategory: "Memorization",
     duration: "8 months",
+    durationMonths: 8,
     level: "Beginner",
     format: "Group (4-6)",
     nextStart: "October 2026",
@@ -416,7 +424,7 @@ const MOCK_DATA = [
     ],
     isMock: true,
     badge: "New",
-    iconName: "Star", // ✅ String only!
+    iconName: "Star",
     color: "from-purple-500 to-purple-600",
   },
   {
@@ -430,6 +438,7 @@ const MOCK_DATA = [
     category: "IJAZAH",
     subcategory: "Certification",
     duration: "3-6 months",
+    durationMonths: 4,
     level: "Advanced",
     format: "1-on-1",
     nextStart: "Rolling Admission",
@@ -462,12 +471,12 @@ const MOCK_DATA = [
     isMock: true,
     popular: true,
     badge: "Limited Seats",
-    iconName: "Award", // ✅ String only!
+    iconName: "Award",
     color: "from-amber-600 to-amber-800",
   },
 ];
 
-// Categories with iconName strings only!
+// ==================== CATEGORIES ====================
 const CATEGORIES = [
   { id: "all", name: "All Programs", iconName: "BookOpen", count: 0 },
   { id: "QURAN", name: "Quran", iconName: "BookOpen", count: 0 },
@@ -478,7 +487,7 @@ const CATEGORIES = [
   { id: "IJAZAH", name: "Ijazah", iconName: "Award", count: 0 },
 ];
 
-// Level filters
+// ==================== FILTER OPTIONS ====================
 const LEVELS = [
   { id: "all", name: "All Levels" },
   { id: "Beginner", name: "Beginner" },
@@ -486,66 +495,51 @@ const LEVELS = [
   { id: "Advanced", name: "Advanced" },
 ];
 
-// Format filters
 const FORMATS = [
   { id: "all", name: "All Formats" },
   { id: "1-on-1", name: "1-on-1" },
   { id: "Group", name: "Group" },
   { id: "Small Groups", name: "Small Groups" },
   { id: "Group (4-6)", name: "Group (4-6)" },
+  { id: "Group Sessions", name: "Group Sessions" },
 ];
 
-// Duration filters
 const DURATIONS = [
-  { id: "all", name: "Any Duration" },
-  { id: "3-6", name: "3-6 months" },
-  { id: "6-12", name: "6-12 months" },
-  { id: "1-2", name: "1-2 years" },
-  { id: "2+", name: "2+ years" },
+  { id: "all", name: "Any Duration", minMonths: 0, maxMonths: 999 },
+  { id: "3-6", name: "3-6 months", minMonths: 3, maxMonths: 6 },
+  { id: "6-12", name: "6-12 months", minMonths: 6, maxMonths: 12 },
+  { id: "1-2", name: "1-2 years", minMonths: 12, maxMonths: 24 },
+  { id: "2+", name: "2+ years", minMonths: 24, maxMonths: 999 },
 ];
 
-// Helper function that returns STRING icon names only!
+// ==================== HELPER FUNCTIONS ====================
 function getIconNameForCategory(category: string): string {
-  switch (category) {
-    case "QURAN":
-      return "BookOpen";
-    case "TAJWEED":
-      return "Mic";
-    case "ARABIC":
-      return "Globe";
-    case "TAFSIR":
-      return "GraduationCap";
-    case "CHILDREN":
-      return "Heart";
-    case "IJAZAH":
-      return "Award";
-    default:
-      return "BookOpen";
-  }
+  const map: Record<string, string> = {
+    QURAN: "BookOpen",
+    TAJWEED: "Mic",
+    ARABIC: "Globe",
+    TAFSIR: "GraduationCap",
+    CHILDREN: "Heart",
+    IJAZAH: "Award",
+  };
+  return map[category] || "BookOpen";
 }
 
-// Helper function for colors
 function getColorForCategory(category: string): string {
-  switch (category) {
-    case "QURAN":
-      return "from-primary-600 to-primary-800";
-    case "TAJWEED":
-      return "from-accent to-accent/90";
-    case "ARABIC":
-      return "from-gold to-gold/90";
-    case "TAFSIR":
-      return "from-primary-500 to-primary-700";
-    case "CHILDREN":
-      return "from-blue-500 to-blue-600";
-    case "IJAZAH":
-      return "from-amber-600 to-amber-800";
-    default:
-      return "from-primary-600 to-primary-800";
-  }
+  const map: Record<string, string> = {
+    QURAN: "from-primary-600 to-primary-800",
+    TAJWEED: "from-accent to-accent/90",
+    ARABIC: "from-gold to-gold/90",
+    TAFSIR: "from-primary-500 to-primary-700",
+    CHILDREN: "from-blue-500 to-blue-600",
+    IJAZAH: "from-amber-600 to-amber-800",
+  };
+  return map[category] || "from-primary-600 to-primary-800";
 }
 
+// ==================== MAIN PAGE COMPONENT ====================
 export default async function CoursesPage() {
-  let dbPrograms = [];
+  let dbPrograms: any[] = [];
 
   try {
     const fetched = await prisma.pricingPlan.findMany({
@@ -562,6 +556,7 @@ export default async function CoursesPage() {
       category: p.category,
       subcategory: p.subcategory || "",
       duration: p.duration || "TBD",
+      durationMonths: p.durationMonths || 0, // ✅ Add this field to your DB
       level: p.level || "All Levels",
       format: p.format || "1-on-1",
       nextStart: p.nextStart || "Quarterly",
@@ -577,16 +572,14 @@ export default async function CoursesPage() {
       isMock: false,
       popular: p.popular || false,
       badge: p.badge || "",
-      iconName: getIconNameForCategory(p.category), // ✅ Returns string!
+      iconName: getIconNameForCategory(p.category),
       color: getColorForCategory(p.category),
     }));
   } catch (error) {
-    console.error("DB connection error - using enhanced mock data");
+    console.error("DB connection error - using mock data");
   }
 
-  // Final List: Database data + Enhanced Mock Data
-  // Make sure MOCK_DATA only has iconName strings!
-  const allPrograms = [...dbPrograms, ...MOCK_DATA.filter((m) => m.isMock)];
+  const allPrograms = [...dbPrograms, ...MOCK_DATA];
 
   // Calculate counts for categories
   const categoriesWithCounts = CATEGORIES.map((cat) => {
@@ -618,12 +611,12 @@ export default async function CoursesPage() {
       className="pt-24 sm:pt-28 md:pt-32 lg:pt-36 xl:pt-40 pb-12 sm:pb-16 md:pb-20 bg-background relative overflow-hidden"
       aria-label="Al-Maysaroh Course Catalog"
     >
-      {/* Immersive Background Lighting */}
+      {/* Background Lighting */}
       <div className="absolute top-0 right-0 w-[300px] h-[300px] sm:w-[400px] sm:h-[400px] md:w-[600px] md:h-[600px] lg:w-[800px] lg:h-[800px] bg-primary-700/5 blur-2xl sm:blur-[60px] md:blur-[100px] lg:blur-[150px] -z-10 rounded-full translate-x-1/4 -translate-y-1/4" />
       <div className="absolute bottom-0 left-0 w-[250px] h-[250px] sm:w-[350px] sm:h-[350px] md:w-[500px] md:h-[500px] lg:w-[600px] lg:h-[600px] bg-gold/5 blur-[30px] sm:blur-[50px] md:blur-[80px] lg:blur-[120px] -z-10 rounded-full -translate-x-1/4 translate-y-1/4" />
 
       <div className="container mx-auto px-4 sm:px-6">
-        {/* --- HEADER SECTION --- */}
+        {/* ==================== HEADER SECTION ==================== */}
         <div className="max-w-4xl mb-8 sm:mb-12 md:mb-16 lg:mb-20 space-y-6 sm:space-y-8">
           <Reveal>
             <div className="inline-flex items-center gap-2 sm:gap-3 px-4 py-2.5 sm:px-5 sm:py-2.5 rounded-xl sm:rounded-2xl glass-surface border border-primary-100/50 text-primary-700 text-xs sm:text-[10px] font-black uppercase tracking-wider sm:tracking-[0.3em] shadow-lg sm:shadow-xl min-h-11">
@@ -661,7 +654,7 @@ export default async function CoursesPage() {
           </Reveal>
         </div>
 
-        {/* --- STATS OVERVIEW --- */}
+        {/* ==================== STATS OVERVIEW ==================== */}
         <Reveal delay={0.3}>
           <div className="grid grid-cols-2 md:grid-cols-5 gap-3 sm:gap-4 mb-8 sm:mb-12 p-4 sm:p-6 rounded-2xl bg-gradient-to-br from-primary-50/50 to-primary-100/20 dark:from-primary-950/20 dark:to-primary-900/10 border border-primary-700/20">
             <div className="text-center">
@@ -707,16 +700,24 @@ export default async function CoursesPage() {
           </div>
         </Reveal>
 
-        {/* --- CLIENT CONTROLLER - NOW WITH ALL STRINGS --- */}
-        <CourseListClient
-          programs={allPrograms}
-          categories={categoriesWithCounts}
-          levels={LEVELS}
-          formats={FORMATS}
-          durations={DURATIONS}
-        />
+        {/* ==================== CLIENT CONTROLLER ==================== */}
+        <Suspense
+          fallback={
+            <div className="flex justify-center items-center py-20">
+              <Loader2 className="w-8 h-8 animate-spin text-primary-700" />
+            </div>
+          }
+        >
+          <CourseListClient
+            programs={allPrograms}
+            categories={categoriesWithCounts}
+            levels={LEVELS}
+            formats={FORMATS}
+            durations={DURATIONS}
+          />
+        </Suspense>
 
-        {/* --- BOTTOM CTA --- */}
+        {/* ==================== BOTTOM CTA ==================== */}
         <Reveal delay={0.5}>
           <div className="mt-16 sm:mt-20 md:mt-24 text-center">
             <div className="inline-flex flex-col items-center gap-6 p-8 sm:p-10 rounded-3xl bg-gradient-to-br from-primary-50/30 to-primary-100/10 dark:from-primary-950/20 dark:to-primary-900/10 border border-primary-700/20 max-w-2xl mx-auto">
@@ -729,10 +730,10 @@ export default async function CoursesPage() {
                 help you find the perfect program for your goals.
               </p>
               <Link href="/assessment">
-                <Button className="rounded-full px-8 py-4 sm:px-10 sm:py-5 font-black bg-primary-700 hover:bg-primary-800">
+                <Button className="rounded-full px-8 py-4 sm:px-10 sm:py-5 font-black bg-primary-700 hover:bg-primary-800 transition-all duration-300 group">
                   <span className="flex items-center gap-2">
                     FREE ASSESSMENT
-                    <ArrowRight className="w-4 h-4" />
+                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
                   </span>
                 </Button>
               </Link>
