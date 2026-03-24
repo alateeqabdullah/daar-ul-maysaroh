@@ -2,14 +2,13 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "Al-Maysaroh Quran Institute",
+    name: "Al-Maysaroh Institute",
     short_name: "Al-Maysaroh",
-    description: "The Operating System for Modern Islamic Education",
+    description: "Online Quranic Education with Authentic Sanad",
     start_url: "/",
     display: "standalone",
     background_color: "#ffffff",
-
-    theme_color: "#10b981", // Emerald-500 matching your theme
+    theme_color: "#7c3aed",
     orientation: "portrait",
     lang: "en",
 
