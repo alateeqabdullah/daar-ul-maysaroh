@@ -369,19 +369,19 @@ export function Hero() {
               className="relative z-10 inline-flex items-center gap-2 md:gap-3 px-4 md:px-6 py-2 md:py-2.5 rounded-xl md:rounded-2xl glass-surface border-white/10 md:border-white/20 text-primary-700 text-[10px] md:text-[11px] font-bold md:font-black tracking-[0.2em] md:tracking-[0.3em] uppercase shadow-lg md:shadow-2xl"
             >
               <div className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-accent animate-pulse" />
-              <span className="whitespace-nowrap">AL-MAYSAROH INSTITUTE</span>
+              <h1 className="whitespace-nowrap">AL-MAYSAROH INSTITUTE</h1>
             </motion.div>
             <div className="absolute inset-0 bg-primary-700/10 md:bg-primary-700/20 blur-lg md:blur-xl rounded-full" />
           </div>
 
           {/* HEADLINE - Sophisticated & Aspirational */}
           <div className="space-y-4 md:space-y-5">
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tighter leading-[1.1] font-heading">
+            <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tighter leading-[1.1] font-heading">
               Not Just Quran Classes. <br />
               <span className="text-transparent bg-clip-text bg-linear-to-r from-gold via-primary-600 to-primary-800">
                 A Personal Connection to the Quran...
               </span>
-            </h1>
+            </h2>
 
             {/* SUBHEADING - Benefits for Adults */}
             <p className="text-lg text-muted-foreground max-w-lg">

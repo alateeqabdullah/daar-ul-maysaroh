@@ -726,8 +726,8 @@ export default async function CoursesPage() {
                 Not Sure Where to Start?
               </h2>
               <p className="text-sm sm:text-base text-muted-foreground max-w-md">
-                Schedule a free assessment with our academic advisors. We'll
-                help you find the perfect program for your goals.
+              {`  Schedule a free assessment with our academic advisors. We'll
+                help you find the perfect program for your goals.`}
               </p>
               <Link href="/assessment">
                 <Button className="rounded-full px-8 py-4 sm:px-10 sm:py-5 font-black bg-primary-700 hover:bg-primary-800 transition-all duration-300 group">
