@@ -5,7 +5,24 @@ export default function robots(): MetadataRoute.Robots {
         rules: {
             userAgent: '*',
             allow: '/',
-            disallow: '/admin',
+            disallow: [
+                '/admin',
+                '/dashboard',
+                '/settings',
+                '/profile',
+                '/api',
+                '/login',
+                '/register',
+                '/password-reset',
+                '/account',
+                '/orders',
+                '/cart',
+                '/checkout',
+                '/thank-you',
+                '/404',
+                '/500',
+                
+            ]
         },
         sitemap: 'https://almaysaroh.com/sitemap.xml',
     };
