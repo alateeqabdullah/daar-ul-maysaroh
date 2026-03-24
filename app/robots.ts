@@ -9,15 +9,14 @@ export default function robots(): MetadataRoute.Robots {
                 '/admin',
                 '/dashboard',
                 '/settings',
-                '/profile',
+               
                 '/api',
                 '/login',
                 '/register',
                 '/password-reset',
-                '/account',
-                '/orders',
-                '/cart',
-                '/checkout',
+              
+              
+              
                 '/thank-you',
                 '/404',
                 '/500',
