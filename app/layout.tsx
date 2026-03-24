@@ -21,33 +21,63 @@ const amiri = Amiri({
   variable: "--font-quran",
 });
 
-// const amiriQuran = Amiri_Quran({
-//   subsets: ["arabic"],
-//   variable: "--font-quran-arabic",
-//   weight: "400"
-// });
-
-
 const playfair = Playfair_Display({
   subsets: ["latin"],
   variable: "--font-heading",
 });
 
-
-
-
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
   maximumScale: 1,
-  userScalable: false, 
+  userScalable: false,
   themeColor: "#10b981",
 };
 
-
+// JSON-LD Schema for Rich Results
+const organizationSchema = {
+  "@context": "https://schema.org",
+  "@type": "EducationalOrganization",
+  name: "Al-Maysaroh International Institute",
+  url: "https://almaysaroh.com",
+  logo: "https://almaysaroh.com/icons/icon-512x512.png",
+  description:
+    "Preserving the sacred tradition of Quranic recitation through scholarly excellence with authentic Sanad-based education.",
+  foundingDate: "2024",
+  founder: {
+    "@type": "Person",
+    name: "Daarul Maysaroh",
+  },
+  address: {
+    "@type": "PostalAddress",
+    addressCountry: "NG",
+  },
+  sameAs: [
+    // Add your social media URLs when available
+    // "https://www.facebook.com/almaysaroh",
+    // "https://twitter.com/almaysaroh",
+    // "https://www.instagram.com/almaysaroh"i
+  ],
+  offers: {
+    "@type": "Offer",
+    category: "Islamic Education",
+    priceSpecification: {
+      "@type": "PriceSpecification",
+      priceCurrency: "USD",
+    },
+  },
+  knowsAbout: [
+    "Quran Memorization",
+    "Tajweed",
+    "Arabic Language",
+    "Islamic Studies",
+    "Ijazah Certification",
+  ],
+};
 
 export const metadata: Metadata = {
-  applicationName: "Al-Maysaroh Institute",
+  metadataBase: new URL("https://almaysaroh.com"),
+  applicationName: "Al-Maysaroh International Institute",
   referrer: "origin-when-cross-origin",
   robots: {
     index: true,
@@ -55,57 +85,93 @@ export const metadata: Metadata = {
     nocache: true,
     googleBot: {
       index: true,
-      follow: false,
-      noimageindex: true,
+      follow: true,
+      noimageindex: false,
       "max-video-preview": -1,
       "max-image-preview": "large",
       "max-snippet": -1,
     },
   },
+  themeColor: "#10b981",
   viewport: viewport,
-  themeColor: "#10b981", 
 
   title: {
-    default: "Al-Maysaroh Quran Institute | Online Quranic Excellence",
+    default: "Al-Maysaroh Institute | Online Quranic Excellence",
     template: "%s | Al-Maysaroh",
   },
   description:
-    "Preserving the sacred tradition of Quranic recitation through scholarly excellence.",
+    "Preserving the sacred tradition of Quranic recitation through scholarly excellence. Ijazah-certified scholars, authentic Sanad, and personalized 1-on-1 Quran education.",
   keywords: [
     "Quran",
+    "Islamic Institute",
+    "Quranic Institute",
+    "Al-Maysaroh Institute",
+    "Almaysaroh Institute",
+    "Almaysaroh Quran Institute",
+    "Al-Maysaroh Quran Institute",
+    "Al-Maysaroh",
+    "Almaysaroh",
+    "Hifz",
+    "Tahfiz",
+    "Tahfeedh",
     "Islamic Education",
     "Tajweed",
     "Quranic Studies",
     "Online Quran Classes",
     "Hifz Program",
-    "Islamic Institute",
-    "Quran Recitation",
+    "Ijazah Certification",
+    "Sanad",
+    "Quran Memorization",
     "Islamic Learning",
     "Religious Education",
+    "Quran Teacher",
+    "Learn Quran Online",
+    "Quran Recitation",
+    "Quranic Excellence",
+    "Quranic Tradition",
+    
   ],
-  authors: [
-    { name: "Daarul Maysaroh", url: "https://daarulmaysaroh.org" },
-  ],
+  authors: [{ name: "Daarul Maysaroh", url: "https://almaysaroh.com" }],
   creator: "Daarul Maysaroh",
   publisher: "Daarul Maysaroh",
-  metadataBase: new URL("https://almaysaroh.org"),
+
+  // Canonical URL
+  alternates: {
+    canonical: "https://almaysaroh.com",
+    // Add language versions when available
+    // languages: {
+    //   'en': 'https://almaysaroh.com',
+    //   'ar': 'https://almaysaroh.com/ar',
+    // },
+  },
+
   openGraph: {
     type: "website",
     locale: "en_US",
-    url: "https://almaysaroh.org",
-    title: "Al-Maysaroh Quran Institute | Online Quranic Excellence",
+    url: "https://almaysaroh.com",
+    title: "Al-Maysaroh Institute | Online Quranic Excellence",
     description:
-      "Preserving the sacred tradition of Quranic recitation through scholarly excellence.",
-    siteName: "Al-Maysaroh Quran Institute",
+      "Preserving the sacred tradition of Quranic recitation through scholarly excellence. Ijazah-certified scholars, authentic Sanad, and personalized 1-on-1 Quran education.",
+    siteName: "Al-Maysaroh International Institute",
+    images: [
+      {
+        url: "/icons/og-image.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Al-Maysaroh Institute - Quranic Education",
+      },
+    ],
   },
+
   twitter: {
     card: "summary_large_image",
     title: "Al-Maysaroh Institute | Online Quranic Excellence",
     description:
       "Preserving the sacred tradition of Quranic recitation through scholarly excellence.",
+    images: ["/icons/twitter-image.jpg"],
   },
 
-  // Standard PWA Metadata
+  // PWA Metadata
   appleWebApp: {
     capable: true,
     statusBarStyle: "default",
@@ -133,27 +199,41 @@ export const metadata: Metadata = {
     ],
   },
 
-  manifest: "/manifest.json", // Next.js automatically maps manifest.ts to this
+  manifest: "/manifest.json",
 
+  // JSON-LD Schema for rich search results
+  other: {
+    "application/ld+json": JSON.stringify(organizationSchema),
+  },
 };
 
-export default async function RootLayout({
+export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  await new Promise((resolve) => setTimeout(resolve, 2000));
   return (
     <html lang="en" suppressHydrationWarning>
+      <head>
+        {/* Preconnect for performance */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="anonymous"
+        />
+      </head>
       <body
         className={`${inter.variable} ${noto.variable} ${amiri.variable} ${playfair.variable} font-sans antialiased`}
       >
-        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem={false}
+        >
           <AuthProvider>
             <GlobalScrollProgress />
-            <OfflineProvider>
-              {children}
-            </OfflineProvider>
+            <OfflineProvider>{children}</OfflineProvider>
             <Toaster position="top-center" richColors />
           </AuthProvider>
         </ThemeProvider>
