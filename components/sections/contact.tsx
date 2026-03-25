@@ -151,6 +151,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 export function Contact() {
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -281,12 +282,12 @@ export function Contact() {
                   <h4 className="font-black uppercase text-xs tracking-widest mb-2">
                     Admissions Council
                   </h4>
-                  <a
-                    href="mailto:admissions@almaysaroh.org"
+                  <Link
+                    href="mailto:info.almaysaroh@gmail.com"
                     className="text-xs text-muted-foreground font-bold hover:text-primary-700 transition-colors break-all"
                   >
-                    admissions@almaysaroh.org
-                  </a>
+                    info.almaysaroh@gmail.com
+                  </Link>
                 </div>
               </Reveal>
 
@@ -296,12 +297,12 @@ export function Contact() {
                   <h4 className="font-black uppercase text-xs tracking-widest mb-2">
                     Technical Registrar
                   </h4>
-                  <a
-                    href="mailto:registrar@almaysaroh.org"
+                  <Link
+                    href="mailto:info.almaysaroh@gmail.com"
                     className="text-xs text-muted-foreground font-bold hover:text-accent transition-colors break-all"
                   >
-                    registrar@almaysaroh.org
-                  </a>
+                    info.almaysaroh@gmail.com
+                  </Link>
                 </div>
               </Reveal>
             </div>
@@ -319,7 +320,7 @@ export function Contact() {
                 <div>
                   <p className="text-sm font-bold text-muted-foreground">
                     Our council serves{" "}
-                    <span className="text-foreground">15+ countries</span>{" "}
+                    <span className="text-foreground">50+ countries</span>{" "}
                     across all major timezones.
                   </p>
                   <p className="text-xs text-primary-700 mt-1">
@@ -514,7 +515,7 @@ export function Contact() {
 
               {/* Privacy Note */}
               <p className="text-[10px] text-center text-muted-foreground/50 mt-4">
-               {` 🔒 We'll respond within 24 hours. Your information is protected.`}
+                {` 🔒 We'll respond within 48 hours. Your information is protected.`}
               </p>
             </div>
           </Reveal>
