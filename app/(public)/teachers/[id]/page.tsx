@@ -143,7 +143,6 @@
 //   );
 // }
 
-
 import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import { Reveal } from "@/components/shared/section-animation";
@@ -172,9 +171,41 @@ import Image from "next/image";
 import type { Metadata } from "next";
 import { cn } from "@/lib/utils";
 
+// ==================== TYPES ====================
+
+interface Teacher {
+  id: string;
+  user: {
+    name: string;
+    image: string | null;
+    email: string;
+  };
+  specialization: string | null;
+  bio: string | null;
+  expertise: string[];
+  experienceYears: number | null;
+  contractType: string | null;
+  isAvailable: boolean;
+  maxStudents: number | null;
+  teachingStyle: string | null;
+  qualification: string | null;
+  classes?: { id: string; name: string; level: string; section?: string | null }[];
+  subjects?: { id: string; name: string }[];
+  sanadChains?: SanadChainLink[];
+}
+
+interface SanadChainLink {
+  generation: number;
+  scholarName: string;
+  bio: string;
+  era: string;
+  region: string;
+  isFamous: boolean;
+}
+
 // ==================== MOCK DATA (Fallback) ====================
 
-const MOCK_TEACHERS: Record<string, any> = {
+const MOCK_TEACHERS: Record<string, Teacher> = {
   "dean-ahmad": {
     id: "dean-ahmad",
     user: {
@@ -184,7 +215,12 @@ const MOCK_TEACHERS: Record<string, any> = {
     },
     specialization: "Dean of Faculty | Hifz & Qira'at Specialist",
     bio: "With over 25 years of teaching experience, I believe that memorization is the cultivation of the heart before the mind. My approach combines traditional Sanad-based instruction with modern pedagogical techniques to make the Quran accessible and meaningful for every student.",
-    expertise: ["Quranic Sciences", "Ijazah in 10 Qira'at", "Authentic Sanad Holder", "Hifz Pedagogy"],
+    expertise: [
+      "Quranic Sciences",
+      "Ijazah in 10 Qira'at",
+      "Authentic Sanad Holder",
+      "Hifz Pedagogy",
+    ],
     experienceYears: 25,
     contractType: "FULL_TIME",
     isAvailable: true,
@@ -193,6 +229,7 @@ const MOCK_TEACHERS: Record<string, any> = {
     qualification: "PhD in Quranic Sciences, Ijazah in 10 Qira'at",
     classes: [],
     subjects: [],
+    sanadChains: [],
   },
   "head-fatima": {
     id: "head-fatima",
@@ -203,7 +240,11 @@ const MOCK_TEACHERS: Record<string, any> = {
     },
     specialization: "Head of Female Hifz | Tajweed Specialist",
     bio: "Nurturing love for the Word through patience and consistent Sunnah. I specialize in helping young girls and women develop a deep, meaningful connection with the Quran through structured memorization programs.",
-    expertise: ["Ijazah in Hafs 'an 'Asim", "Master's in Islamic Pedagogy", "Child Development Specialist"],
+    expertise: [
+      "Ijazah in Hafs 'an 'Asim",
+      "Master's in Islamic Pedagogy",
+      "Child Development Specialist",
+    ],
     experienceYears: 18,
     contractType: "FULL_TIME",
     isAvailable: true,
@@ -212,6 +253,7 @@ const MOCK_TEACHERS: Record<string, any> = {
     qualification: "Ijazah in Hafs 'an 'Asim, Master's in Islamic Pedagogy",
     classes: [],
     subjects: [],
+    sanadChains: [],
   },
   "scholar-aliyy": {
     id: "scholar-aliyy",
@@ -222,7 +264,11 @@ const MOCK_TEACHERS: Record<string, any> = {
     },
     specialization: "Senior Tajweed Scholar | Qira'at Specialist",
     bio: "Recitation is an art that requires absolute precision and spiritual presence. My teaching focuses on the science of Tajweed, helping students master the rules of pronunciation and develop a melodious, accurate recitation.",
-    expertise: ["Expert in Al-Jazariyyah", "Certified in Phonetics", "Master of Qira'at"],
+    expertise: [
+      "Expert in Al-Jazariyyah",
+      "Certified in Phonetics",
+      "Master of Qira'at",
+    ],
     experienceYears: 15,
     contractType: "FULL_TIME",
     isAvailable: true,
@@ -231,10 +277,11 @@ const MOCK_TEACHERS: Record<string, any> = {
     qualification: "Ijazah in Tajweed, Certification in Phonetics",
     classes: [],
     subjects: [],
+    sanadChains: [],
   },
 };
 
-const MOCK_SANAD_CHAIN = [
+const MOCK_SANAD_CHAIN: SanadChainLink[] = [
   {
     generation: 1,
     scholarName: "Sheikh Muhammad Al-Madani",
@@ -285,62 +332,16 @@ const MOCK_SANAD_CHAIN = [
   },
 ];
 
-// ==================== METADATA ====================
-
-export async function generateMetadata({
-  params,
-}: {
-  params: { id: string } | Promise<{ id: string }>;
-}): Promise<Metadata> {
-  const resolvedParams = await params;
-  const id = resolvedParams.id;
-
-  // Check mock data first
-  let teacher = MOCK_TEACHERS[id];
-
-  if (!teacher) {
-    try {
-      const dbTeacher = await prisma.teacher.findUnique({
-        where: { id },
-        include: { user: true },
-      });
-      if (dbTeacher) teacher = dbTeacher;
-    } catch (error) {
-      console.error("Failed to fetch teacher:", error);
-    }
-  }
-
-  if (!teacher || !teacher.user) {
-    return {
-      title: "Scholar Not Found | Al-Maysaroh",
-      description: "The requested scholar profile could not be found.",
-    };
-  }
-
-  return {
-    title: `${teacher.user.name} | Al-Maysaroh Faculty`,
-    description:
-      teacher.bio?.slice(0, 160) ||
-      `Learn about ${teacher.user.name}, our Ijazah-certified scholar in ${teacher.specialization || "Quranic Studies"}.`,
-  };
-}
-
-// ==================== MAIN PAGE COMPONENT ====================
-
-export default async function ScholarProfilePage({
-  params,
-}: {
-  params: { id: string } | Promise<{ id: string }>;
-}) {
-  const resolvedParams = await params;
-  const id = resolvedParams.id;
-
-  let teacher = null;
-  let sanadChain = [];
+// Helper function to get teacher data (DB or Mock)
+async function getTeacher(
+  id: string,
+): Promise<{ teacher: Teacher | null; sanadChain: SanadChainLink[] }> {
+  let teacher: Teacher | null = null;
+  let sanadChain: SanadChainLink[] = [];
 
   // Try to get from database first
   try {
-    teacher = await prisma.teacher.findUnique({
+    const dbTeacher = await prisma.teacher.findUnique({
       where: { id },
       include: {
         user: true,
@@ -357,29 +358,141 @@ export default async function ScholarProfilePage({
       },
     });
 
-    if (teacher?.sanadChains && teacher.sanadChains.length > 0) {
-      sanadChain = teacher.sanadChains;
+    if (dbTeacher) {
+      teacher = dbTeacher as Teacher;
+      if (dbTeacher.sanadChains && dbTeacher.sanadChains.length > 0) {
+        sanadChain = dbTeacher.sanadChains as SanadChainLink[];
+      }
     }
   } catch (error) {
-    console.error("Failed to fetch teacher:", error);
+    console.error("Failed to fetch teacher from DB:", error);
   }
 
   // If not found in DB, check mock data
-  if (!teacher) {
+  if (!teacher && MOCK_TEACHERS[id]) {
     teacher = MOCK_TEACHERS[id];
-    if (teacher) {
-      sanadChain = MOCK_SANAD_CHAIN;
-    }
+    sanadChain = MOCK_SANAD_CHAIN;
   }
+
+  return { teacher, sanadChain };
+}
+
+// ==================== METADATA ====================
+
+export async function generateMetadata({
+  params,
+}: {
+  params: { id: string };
+}): Promise<Metadata> {
+  const { teacher } = await getTeacher(params.id);
+
+  if (!teacher || !teacher.user) {
+    return {
+      title: "Scholar Not Found | Al-Maysaroh",
+      description: "The requested scholar profile could not be found.",
+      robots: { index: false },
+    };
+  }
+
+  const teacherName = teacher.user.name;
+  const specialization = teacher.specialization || "Quranic Scholar";
+  const experience = teacher.experienceYears || "";
+  const bioPreview = teacher.bio?.slice(0, 160) || "";
+
+  return {
+    title: `${teacherName} | ${specialization} | Al-Maysaroh Faculty`,
+    description:
+      bioPreview ||
+      `Learn Quran with ${teacherName}, a ${experience}+ year expert in ${specialization}. Authentic Ijazah certification with unbroken Sanad to Prophet Muhammad (ﷺ).`,
+    keywords: [
+      teacherName,
+      specialization,
+      "Quran Teacher",
+      "Ijazah",
+      "Sanad",
+      "Tajweed Teacher",
+      "Hifz Instructor",
+      ...(teacher.expertise || []),
+    ],
+    openGraph: {
+      title: `${teacherName} - ${specialization} | Al-Maysaroh`,
+      description:
+        bioPreview ||
+        `Learn Quran with ${teacherName}. Authentic Ijazah-certified scholar.`,
+      type: "profile",
+      images: teacher.user.image
+        ? [
+            {
+              url: teacher.user.image,
+              width: 800,
+              height: 800,
+              alt: teacherName,
+            },
+          ]
+        : undefined,
+    },
+    twitter: {
+      card: "summary",
+      title: `${teacherName} | Al-Maysaroh Faculty`,
+      description:
+        bioPreview ||
+        `Learn Quran with ${teacherName}. Ijazah-certified scholar.`,
+      images: teacher.user.image ? [teacher.user.image] : undefined,
+    },
+    alternates: {
+      canonical: `https://almaysaroh.com/teachers/${params.id}`,
+    },
+    other: {
+      "application/ld+json": JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "Person",
+        name: teacherName,
+        jobTitle: specialization,
+        description: teacher.bio,
+        image: teacher.user.image,
+        worksFor: {
+          "@type": "EducationalOrganization",
+          name: "Al-Maysaroh Institute",
+        },
+        knowsAbout: teacher.expertise,
+        hasCredential: {
+          "@type": "EducationalOccupationalCredential",
+          name: "Ijazah Certification",
+          credentialCategory: "Sanad",
+        },
+        experience: {
+          "@type": "QuantitativeValue",
+          name: `${experience} years`,
+          value: experience,
+        },
+      }),
+    },
+  };
+}
+
+export const revalidate = 3600;
+
+// ==================== MAIN PAGE COMPONENT ====================
+
+export default async function ScholarProfilePage({
+  params,
+}: {
+  params: { id: string };
+}) {
+  const { teacher, sanadChain: fetchedSanadChain } = await getTeacher(
+    params.id,
+  );
 
   // If still not found, show 404
   if (!teacher || !teacher.user) {
     notFound();
   }
 
-  // Process sanad chain data
-  const famousScholars = sanadChain.filter((s: any) => s.isFamous);
-  const fullChain = sanadChain.sort((a: any, b: any) => a.generation - b.generation);
+  // Use fetched sanad chain or fallback to mock
+  const sanadChain =
+    fetchedSanadChain.length > 0 ? fetchedSanadChain : MOCK_SANAD_CHAIN;
+  const famousScholars = sanadChain.filter((s: SanadChainLink) => s.isFamous);
+  const fullChain = [...sanadChain].sort((a, b) => a.generation - b.generation);
 
   // Calculate availability
   const currentClasses = teacher.classes?.length || 0;
@@ -394,16 +507,25 @@ export default async function ScholarProfilePage({
     email: teacher.user.email,
     image: teacher.user.image,
     rank: teacher.specialization || "Ijazah-Certified Scholar",
-    quote: teacher.bio?.split(".")[0] || "The Quran is a trust passed from heart to heart.",
-    bio: teacher.bio || "Dedicated to preserving the authentic recitation of the Quran through unbroken chains of transmission.",
-    expertise: teacher.expertise || ["Quranic Recitation", "Tajweed Sciences", "Qira'at Studies"],
+    quote:
+      teacher.bio?.split(".")[0] ||
+      "The Quran is a trust passed from heart to heart.",
+    bio:
+      teacher.bio ||
+      "Dedicated to preserving the authentic recitation of the Quran through unbroken chains of transmission.",
+    expertise: teacher.expertise || [
+      "Quranic Recitation",
+      "Tajweed Sciences",
+      "Qira'at Studies",
+    ],
     contractType: teacher.contractType || "FULL_TIME",
     specialization: teacher.specialization || "Quranic Studies",
     experience: teacher.experienceYears || 0,
     qualification: teacher.qualification || "Ijazah Certified",
     isAvailable: isAvailable,
     availableSpots: availableSpots,
-    teachingStyle: teacher.teachingStyle || "Traditional with Modern Application",
+    teachingStyle:
+      teacher.teachingStyle || "Traditional with Modern Application",
     maxStudents: maxStudents,
     currentStudents: currentClasses,
     location: "Global",
@@ -412,7 +534,7 @@ export default async function ScholarProfilePage({
   return (
     <main className="min-h-screen bg-background relative overflow-hidden">
       {/* Hero Background */}
-      <div className="absolute inset-0 bg-gradient-to-b from-primary-900/5 via-transparent to-transparent" />
+      <div className="absolute inset-0 bg-linear-to-b from-primary-900/5 via-transparent to-transparent" />
       <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-primary-700/5 blur-[120px] rounded-full -z-10" />
       <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-primary-700/5 blur-[100px] rounded-full -z-10" />
 
@@ -437,8 +559,8 @@ export default async function ScholarProfilePage({
           {/* Profile Image */}
           <div className="lg:w-1/3">
             <div className="relative group">
-              <div className="absolute -inset-1 bg-gradient-to-r from-primary-700 via-gold to-primary-700 rounded-[2.5rem] blur opacity-20 group-hover:opacity-30 transition-opacity" />
-              <div className="relative aspect-[3/4] rounded-[2.5rem] overflow-hidden border-4 border-white dark:border-slate-800 shadow-2xl">
+              <div className="absolute -inset-1 bg-linear-to-r from-primary-700 via-gold to-primary-700 rounded-[2.5rem] blur opacity-20 group-hover:opacity-30 transition-opacity" />
+              <div className="relative aspect-3/4 rounded-[2.5rem] overflow-hidden border-4 border-white dark:border-slate-800 shadow-2xl">
                 {teacherData.image ? (
                   <Image
                     src={teacherData.image}
@@ -448,7 +570,7 @@ export default async function ScholarProfilePage({
                     priority
                   />
                 ) : (
-                  <div className="absolute inset-0 bg-gradient-to-br from-primary-900 to-primary-700 flex items-center justify-center">
+                  <div className="absolute inset-0 bg-linear-to-br from-primary-900 to-primary-700 flex items-center justify-center">
                     <User className="w-32 h-32 text-white/30" />
                   </div>
                 )}
@@ -559,7 +681,7 @@ export default async function ScholarProfilePage({
 
             {/* Expertise Card */}
             <Reveal delay={0.15}>
-              <div className="institutional-card p-6 sm:p-8 bg-gradient-to-br from-primary-700/5 to-primary-700/10">
+              <div className="institutional-card p-6 sm:p-8 bg-linear-to-br from-primary-700/5 to-primary-700/10">
                 <h3 className="font-black text-lg uppercase tracking-tight mb-4 flex items-center gap-2">
                   <Award className="w-5 h-5 text-primary-700" />
                   Areas of Expertise
@@ -589,7 +711,9 @@ export default async function ScholarProfilePage({
                     <p className="text-xs text-muted-foreground mb-2">
                       Qualification
                     </p>
-                    <p className="font-black text-sm">{teacherData.qualification}</p>
+                    <p className="font-black text-sm">
+                      {teacherData.qualification}
+                    </p>
                   </div>
                   <div>
                     <p className="text-xs text-muted-foreground mb-2">
@@ -620,7 +744,7 @@ export default async function ScholarProfilePage({
                     Current Classes
                   </h3>
                   <div className="space-y-3">
-                    {teacher.classes.slice(0, 3).map((cls: any) => (
+                    {teacher.classes.slice(0, 3).map((cls) => (
                       <div key={cls.id} className="p-3 rounded-lg bg-muted/30">
                         <p className="font-black text-sm">{cls.name}</p>
                         <p className="text-xs text-muted-foreground">
@@ -650,30 +774,35 @@ export default async function ScholarProfilePage({
                 </h3>
 
                 <p className="text-sm text-muted-foreground mb-6">
-                  {teacherData.name}'s unbroken lineage to the Prophet Muhammad (ﷺ) through
-                  generations of dedicated scholars. Each link represents a carrier of the sacred
-                  trust, preserving the authentic recitation for over 1400 years.
+                {`  ${teacherData.name}'s unbroken lineage to the Prophet Muhammad
+                  (ﷺ) through generations of dedicated scholars. Each link
+                  represents a carrier of the sacred trust, preserving the
+                  authentic recitation for over 1400 years.`}
                 </p>
 
                 {/* Famous Scholars Highlight */}
                 {famousScholars.length > 0 && (
-                  <div className="mb-8 p-4 rounded-xl bg-gradient-to-r from-primary-700/10 to-transparent border border-primary-700/20">
+                  <div className="mb-8 p-4 rounded-xl bg-linear-to-r from-primary-700/10 to-transparent border border-primary-700/20">
                     <p className="text-xs font-black uppercase tracking-widest text-primary-700 mb-3">
                       KEY FIGURES IN THIS CHAIN
                     </p>
                     <div className="flex flex-wrap gap-3">
-                      {famousScholars.slice(0, 5).map((scholar: any) => (
-                        <div
-                          key={scholar.generation}
-                          className="flex items-center gap-2"
-                        >
-                          <Star className="w-4 h-4 text-gold fill-gold" />
-                          <span className="font-bold">{scholar.scholarName}</span>
-                          <span className="text-xs text-muted-foreground">
-                            ({scholar.era})
-                          </span>
-                        </div>
-                      ))}
+                      {famousScholars
+                        .slice(0, 5)
+                        .map((scholar: SanadChainLink) => (
+                          <div
+                            key={scholar.generation}
+                            className="flex items-center gap-2"
+                          >
+                            <Star className="w-4 h-4 text-gold fill-gold" />
+                            <span className="font-bold">
+                              {scholar.scholarName}
+                            </span>
+                            <span className="text-xs text-muted-foreground">
+                              ({scholar.era})
+                            </span>
+                          </div>
+                        ))}
                     </div>
                   </div>
                 )}
@@ -681,58 +810,63 @@ export default async function ScholarProfilePage({
                 {/* Chain Visualization */}
                 <div className="relative max-h-[600px] overflow-y-auto pr-4 custom-scrollbar">
                   {/* Vertical Line */}
-                  <div className="absolute left-5 top-0 bottom-0 w-0.5 bg-gradient-to-b from-primary-700 via-primary-700/50 to-transparent" />
+                  <div className="absolute left-5 top-0 bottom-0 w-0.5 bg-linear-to-b from-primary-700 via-primary-700/50 to-transparent" />
 
                   <div className="space-y-6">
-                    {fullChain.slice(0, 30).map((link: any, index: number) => (
-                      <div key={index} className="relative flex gap-4 sm:gap-6">
-                        {/* Node */}
+                    {fullChain
+                      .slice(0, 30)
+                      .map((link: SanadChainLink, index: number) => (
                         <div
-                          className={`
+                          key={index}
+                          className="relative flex gap-4 sm:gap-6"
+                        >
+                          {/* Node */}
+                          <div
+                            className={`
                           w-10 h-10 sm:w-12 sm:h-12 rounded-full border-4 flex items-center justify-center shrink-0 relative z-10 bg-background
                           ${
                             link.isFamous
-                              ? "border-gold bg-gradient-to-br from-gold/20 to-gold/5"
+                              ? "border-gold bg-linear-to-br from-gold/20 to-gold/5"
                               : "border-primary-700"
                           }
                         `}
-                        >
-                          {link.isFamous ? (
-                            <Star className="w-4 h-4 sm:w-5 sm:h-5 text-gold" />
-                          ) : (
-                            <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-primary-700" />
-                          )}
-                        </div>
-
-                        {/* Content */}
-                        <div className="flex-1 pb-6">
-                          <div className="flex flex-wrap items-center gap-2 mb-1">
-                            <p className="font-black text-base sm:text-lg">
-                              {link.scholarName}
-                            </p>
-                            {link.isFamous && (
-                              <span className="px-2 py-0.5 rounded-full bg-gold/10 text-gold text-[9px] sm:text-[10px] font-black uppercase tracking-wider">
-                                Renowned
-                              </span>
+                          >
+                            {link.isFamous ? (
+                              <Star className="w-4 h-4 sm:w-5 sm:h-5 text-gold" />
+                            ) : (
+                              <div className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-primary-700" />
                             )}
                           </div>
-                          {link.bio && (
-                            <p className="text-xs sm:text-sm text-muted-foreground mb-1">
-                              {link.bio}
-                            </p>
-                          )}
-                          <div className="flex flex-wrap gap-2 sm:gap-3 text-xs">
-                            <span className="text-primary-700 font-black">
-                              {link.era}
-                            </span>
-                            <span className="text-muted-foreground">•</span>
-                            <span className="text-muted-foreground">
-                              {link.region}
-                            </span>
+
+                          {/* Content */}
+                          <div className="flex-1 pb-6">
+                            <div className="flex flex-wrap items-center gap-2 mb-1">
+                              <p className="font-black text-base sm:text-lg">
+                                {link.scholarName}
+                              </p>
+                              {link.isFamous && (
+                                <span className="px-2 py-0.5 rounded-full bg-gold/10 text-gold text-[9px] sm:text-[10px] font-black uppercase tracking-wider">
+                                  Renowned
+                                </span>
+                              )}
+                            </div>
+                            {link.bio && (
+                              <p className="text-xs sm:text-sm text-muted-foreground mb-1">
+                                {link.bio}
+                              </p>
+                            )}
+                            <div className="flex flex-wrap gap-2 sm:gap-3 text-xs">
+                              <span className="text-primary-700 font-black">
+                                {link.era}
+                              </span>
+                              <span className="text-muted-foreground">•</span>
+                              <span className="text-muted-foreground">
+                                {link.region}
+                              </span>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    ))}
+                      ))}
                   </div>
                 </div>
 
@@ -777,37 +911,49 @@ export default async function ScholarProfilePage({
                   </p>
                 </div>
 
-                <div className={cn(
-                  "institutional-card p-5 sm:p-6",
-                  teacherData.isAvailable 
-                    ? "bg-primary-700 text-white" 
-                    : "bg-muted/50"
-                )}>
-                  <h4 className={cn(
-                    "font-black text-xs sm:text-sm uppercase mb-3 tracking-widest flex items-center gap-2",
-                    teacherData.isAvailable ? "text-white/80" : "text-primary-700"
-                  )}>
+                <div
+                  className={cn(
+                    "institutional-card p-5 sm:p-6",
+                    teacherData.isAvailable
+                      ? "bg-primary-700 text-white"
+                      : "bg-muted/50",
+                  )}
+                >
+                  <h4
+                    className={cn(
+                      "font-black text-xs sm:text-sm uppercase mb-3 tracking-widest flex items-center gap-2",
+                      teacherData.isAvailable
+                        ? "text-white/80"
+                        : "text-primary-700",
+                    )}
+                  >
                     <Users className="w-4 h-4" />
                     Availability
                   </h4>
-                  <p className={cn(
-                    "text-sm mb-4",
-                    teacherData.isAvailable ? "text-white/80" : "text-muted-foreground"
-                  )}>
+                  <p
+                    className={cn(
+                      "text-sm mb-4",
+                      teacherData.isAvailable
+                        ? "text-white/80"
+                        : "text-muted-foreground",
+                    )}
+                  >
                     {teacherData.isAvailable
                       ? `${teacherData.availableSpots} of ${teacherData.maxStudents} spots available`
                       : "Currently at capacity"}
                   </p>
                   <Link href="/admissions">
-                    <Button 
+                    <Button
                       className={cn(
                         "w-full font-black text-xs tracking-widest uppercase rounded-xl",
                         teacherData.isAvailable
                           ? "bg-white text-primary-700 hover:bg-white/90"
-                          : "bg-primary-700 text-white hover:bg-primary-800"
+                          : "bg-primary-700 text-white hover:bg-primary-800",
                       )}
                     >
-                      {teacherData.isAvailable ? "Request Assignment" : "Join Waitlist"}
+                      {teacherData.isAvailable
+                        ? "Request Assignment"
+                        : "Join Waitlist"}
                     </Button>
                   </Link>
                 </div>
@@ -823,7 +969,7 @@ export default async function ScholarProfilePage({
                     Subjects Taught
                   </h4>
                   <div className="flex flex-wrap gap-2">
-                    {teacher.subjects.map((subject: any) => (
+                    {teacher.subjects.map((subject) => (
                       <span
                         key={subject.id}
                         className="px-3 py-1.5 rounded-full bg-primary-50 dark:bg-primary-950/30 text-primary-700 text-xs font-black"
@@ -841,4 +987,3 @@ export default async function ScholarProfilePage({
     </main>
   );
 }
-

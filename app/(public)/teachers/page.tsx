@@ -76,19 +76,46 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { Prisma } from "@/app/generated/prisma/client";
 
+// Generate static metadata for faculty listing page
 export const metadata: Metadata = {
-  title: "Our Noble Faculty | Al-Maysaroh",
+  title: "Our Noble Faculty | Ijazah-Certified Quran Scholars",
   description:
-    "Meet our Ijazah-certified scholars with unbroken chains of transmission to Prophet Muhammad (ﷺ).",
+    "Meet our distinguished faculty of Ijazah-certified scholars with unbroken chains of transmission to Prophet Muhammad (ﷺ). Learn from authentic carriers of the Divine Sanad.",
+  keywords: [
+    "Quran teachers",
+    "Quran scholars",
+    "Quran professors",
+    "Ijazah scholars",
+    "Quran instructors",
+    "Tajweed experts",
+    "Hifz experts",
+    "Tahfiz teachers",
+    "Sanad holders",
+    "Tajweed teachers",
+    "Hifz instructors",
+    "Islamic scholars",
+    "Quranic education",
+    "Online Quran classes",
+    "Certified Quran teachers",
+    "Authentic Quran teachers",
+
+  ],
   openGraph: {
-    title: "Al-Maysaroh Faculty",
-    description: "Learn from verified carriers of Divine Sanad",
+    title: "Al-Maysaroh Faculty | Ijazah-Certified Scholars",
+    description:
+      "Learn from verified carriers of Divine Sanad. Each scholar has an unbroken chain to Prophet Muhammad (ﷺ).",
+    url: "https://almaysaroh.com/teachers",
   },
+  alternates: {
+    canonical: "https://almaysaroh.com/teachers",
+  },
+
+
 };
 
 export const revalidate = 3600;
 
-// Specializations that exist in your Teacher model's specialization field
+// Specializations from existing Teacher model
 const SPECIALIZATIONS = [
   { id: "all", name: "All Scholars", searchTerm: null },
   { id: "hifz", name: "Hifz & Memorization", searchTerm: "Hifz" },

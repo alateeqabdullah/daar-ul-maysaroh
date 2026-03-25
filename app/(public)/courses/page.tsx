@@ -104,7 +104,6 @@
 //     </main>
 //   );
 // }
-
 import { prisma } from "@/lib/prisma";
 import { Reveal } from "@/components/shared/section-animation";
 import {
@@ -132,19 +131,49 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { Suspense } from "react";
+import type { Metadata } from "next";
 
 // ==================== METADATA ====================
-export const metadata = {
+export const metadata: Metadata = {
   title: "Quran Courses Online | Hifz, Tajweed & Arabic | Al-Maysaroh",
   description:
     "Explore our Sanad-based Quran courses: Hifz memorization, Tajweed mastery, and Classical Arabic. Learn 1-on-1 with certified scholars. Ijazah certification available.",
+  keywords: [
+    "Quran courses",
+    "Hifz program",
+    "Tajweed classes",
+    "Arabic language",
+    "Ijazah certification",
+    "online Quran learning",
+    "Sanad",
+  ],
   openGraph: {
-    title: "Al-Maysaroh Course Catalog",
+    title: "Al-Maysaroh Course Catalog | Quranic Education",
     description:
-      "Sacred knowledge, made accessible. Browse our scholarly curriculum.",
+      "Sacred knowledge, made accessible. Browse our scholarly curriculum of Quran, Tajweed, Arabic, and Islamic Studies programs.",
+    url: "https://almaysaroh.org/courses",
+    type: "website",
+    images: [
+      {
+        url: "/og-courses.jpg",
+        width: 1200,
+        height: 630,
+        alt: "Al-Maysaroh Courses",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Al-Maysaroh Course Catalog",
+    description: "Browse our Sanad-based Quranic programs",
     images: ["/og-courses.jpg"],
   },
+  alternates: {
+    canonical: "https://almaysaroh.org/courses",
+  },
 };
+
+export const revalidate = 3600;
 
 // ==================== MOCK DATA ====================
 const MOCK_DATA = [
@@ -159,7 +188,7 @@ const MOCK_DATA = [
     category: "QURAN",
     subcategory: "Hifz",
     duration: "2-3 years",
-    durationMonths: 30, // ✅ Add numeric duration for filtering
+    durationMonths: 30,
     level: "All Levels",
     format: "1-on-1",
     nextStart: "September 2026",
@@ -556,7 +585,7 @@ export default async function CoursesPage() {
       category: p.category,
       subcategory: p.subcategory || "",
       duration: p.duration || "TBD",
-      durationMonths: p.durationMonths || 0, // ✅ Add this field to your DB
+      durationMonths: p.durationMonths || 0,
       level: p.level || "All Levels",
       format: p.format || "1-on-1",
       nextStart: p.nextStart || "Quarterly",
@@ -726,8 +755,8 @@ export default async function CoursesPage() {
                 Not Sure Where to Start?
               </h2>
               <p className="text-sm sm:text-base text-muted-foreground max-w-md">
-              {`  Schedule a free assessment with our academic advisors. We'll
-                help you find the perfect program for your goals.`}
+                Schedule a free assessment with our academic advisors. We'll
+                help you find the perfect program for your goals.
               </p>
               <Link href="/assessment">
                 <Button className="rounded-full px-8 py-4 sm:px-10 sm:py-5 font-black bg-primary-700 hover:bg-primary-800 transition-all duration-300 group">
