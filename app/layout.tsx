@@ -236,10 +236,17 @@ export default function RootLayout({
             <GlobalScrollProgress />
             <OfflineProvider>
               {children}
-              {/* WhatsApp Floating Button - Appears on all pages */}
+              {/* The Ultimate WhatsApp Experience */}
               <WhatsAppButton
                 phoneNumber="2349110163930"
-                message="Assalamu Alaikum! I'm interested in learning more about Al-Maysaroh programs. Can you please guide me?"
+                defaultMessage="Assalamu Alaikum! I'm interested in learning more about Al-Maysaroh programs."
+                position="bottom-right"
+                autoOpen={true}
+                autoOpenDelay={5000}
+                showGreeting={true}
+                greetingMessage="Need help? Our scholars are online! 🕋"
+                preQualify={true}
+                trackAnalytics={true}
               />
             </OfflineProvider>
             <Toaster position="top-center" richColors />
