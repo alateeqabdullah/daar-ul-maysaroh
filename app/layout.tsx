@@ -11,6 +11,7 @@ import { Toaster } from "sonner";
 import "./globals.css";
 import { OfflineProvider } from "@/components/providers/offline-detector";
 import { GlobalScrollProgress } from "@/components/layoutt/globallScroll";
+import { WhatsAppButton } from "@/components/shared/whatsapp-button";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const noto = Noto_Sans_Arabic({ subsets: ["arabic"], variable: "--font-noto" });
@@ -233,7 +234,14 @@ export default function RootLayout({
         >
           <AuthProvider>
             <GlobalScrollProgress />
-            <OfflineProvider>{children}</OfflineProvider>
+            <OfflineProvider>
+              {children}
+              {/* WhatsApp Floating Button - Appears on all pages */}
+              <WhatsAppButton
+                phoneNumber="2349110163930"
+                message="Assalamu Alaikum! I'm interested in learning more about Al-Maysaroh programs. Can you please guide me?"
+              />
+            </OfflineProvider>
             <Toaster position="top-center" richColors />
           </AuthProvider>
         </ThemeProvider>
