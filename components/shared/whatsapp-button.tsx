@@ -3,9 +3,9 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MessageCircle, X, Phone, Mail, Send } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
+
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 interface WhatsAppButtonProps {
   phoneNumber?: string; // Format: "2349110163930" (country code without +)
@@ -76,7 +76,7 @@ export function WhatsAppButton({
           onClick={() => setIsOpen(!isOpen)}
           className={cn(
             "relative w-14 h-14 sm:w-16 sm:h-16 rounded-full shadow-2xl flex items-center justify-center transition-all duration-300 group",
-            "bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700",
+            "bg-linear-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700",
             "focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-background"
           )}
           aria-label="Contact us on WhatsApp"
@@ -121,7 +121,7 @@ export function WhatsAppButton({
             >
               <div className="glass-surface rounded-2xl shadow-2xl border border-green-500/20 overflow-hidden">
                 {/* Header */}
-                <div className="bg-gradient-to-r from-green-500 to-green-600 p-4 text-white">
+                <div className="bg-linear-to-r from-green-500 to-green-600 p-4 text-white">
                   <div className="flex items-center gap-3">
                     <MessageCircle className="w-5 h-5" />
                     <div>
@@ -136,7 +136,7 @@ export function WhatsAppButton({
                 {/* Options */}
                 <div className="p-3 space-y-2">
                   {/* WhatsApp Direct */}
-                  <a
+                  <Link
                     href={whatsappUrl}
                     target="_blank"
                     rel="noopener noreferrer"
@@ -154,10 +154,10 @@ export function WhatsAppButton({
                       </p>
                     </div>
                     <Send className="w-4 h-4 text-green-500 opacity-0 group-hover:opacity-100 transition-opacity" />
-                  </a>
+                  </Link>
 
                   {/* Call */}
-                  <a
+                  <Link
                     href="tel:+2349110163930"
                     className="flex items-center gap-3 p-3 rounded-xl hover:bg-primary-50 dark:hover:bg-primary-950/20 transition-all group"
                   >
@@ -172,10 +172,10 @@ export function WhatsAppButton({
                         +234 911 016 3930
                       </p>
                     </div>
-                  </a>
+                  </Link>
 
                   {/* Email */}
-                  <a
+                  <Link
                     href="mailto:info.almaysaroh@gmail.com"
                     className="flex items-center gap-3 p-3 rounded-xl hover:bg-primary-50 dark:hover:bg-primary-950/20 transition-all group"
                   >
@@ -190,7 +190,7 @@ export function WhatsAppButton({
                         info.almaysaroh@gmail.com
                       </p>
                     </div>
-                  </a>
+                  </Link>
                 </div>
 
                 {/* Footer Note */}
