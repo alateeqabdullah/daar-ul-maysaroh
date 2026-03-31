@@ -553,7 +553,8 @@ export default async function GroupQiroahAdmissionsPage() {
                 </div>
               </Reveal>
 
-              <Reveal delay={0.2}>
+              
+            <Reveal delay={0.2}>
               <div className="institutional-card p-6 sm:p-8 bg-gradient-to-br from-accent/5 to-accent/10 border-2 border-accent/20">
                 <div className="text-center mb-6">
                   <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-accent/10 mb-4">
@@ -588,6 +589,7 @@ export default async function GroupQiroahAdmissionsPage() {
                 </Link>
               </div>
             </Reveal>
+          </div>
           </div>
         </section>
 
