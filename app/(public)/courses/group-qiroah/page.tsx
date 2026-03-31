@@ -139,12 +139,18 @@ const COURSE_DETAILS = {
       ],
     },
   ],
-  schedule:[
+  schedule: [
     { day: "Monday & Wednesday", time: "4:00 PM - 4:45 PM (EST)" },
     { day: "Tuesday & Thursday", time: "5:00 PM - 5:45 PM (EST)" },
-    { day: "Saturday", time: "10:00 AM - 11:30 AM (EST)" },
-    { day: "Sunday", time: "11:00 AM - 12:30 PM (EST)" },
+    { day: "Saturday & Sunday", time: "10:00 AM - 11:30 AM (EST)" },
   ],
+
+  // schedule: [
+  //   { day: "Monday & Wednesday", time: "4:00 PM - 4:45 PM (EST)" },
+  //   { day: "Tuesday & Thursday", time: "5:00 PM - 5:45 PM (EST)" },
+  //   { day: "Saturday", time: "10:00 AM - 11:30 AM (EST)" },
+  //   { day: "Sunday", time: "11:00 AM - 12:30 PM (EST)" },
+  // ],
   teachers: [
     {
       name: "Ustadha Fatima Zahrah",
