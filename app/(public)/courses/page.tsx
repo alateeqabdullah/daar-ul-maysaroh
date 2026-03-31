@@ -109,21 +109,10 @@ import { Reveal } from "@/components/shared/section-animation";
 import {
   Landmark,
   Search,
-  BookOpen,
-  Mic,
-  Globe,
-  GraduationCap,
-  Heart,
-  Users,
+
   Sparkles,
   ArrowRight,
-  Star,
-  Clock,
-  Calendar,
-  Award,
-  Filter,
-  ChevronDown,
-  X,
+
   Loader2,
 } from "lucide-react";
 import { CourseListClient } from "@/components/public/courses/course-list-client";
@@ -178,7 +167,7 @@ export const revalidate = 3600;
 // ==================== MOCK DATA ====================
 const MOCK_DATA = [
   {
-    id: "hifz-program",
+    id: "hifz",
     name: "Hifz Al-Quran",
     description:
       "Complete Quran memorization with Ijazah certification. Master the entire Quran with proper Tajweed and understanding.",
@@ -225,7 +214,7 @@ const MOCK_DATA = [
     color: "from-primary-600 to-primary-800",
   },
   {
-    id: "tajweed-mastery",
+    id: "tajweed",
     name: "Tajweed Al-Itqan",
     description:
       "Scientific mastery of Quranic recitation rules. Perfect your pronunciation and flow with expert guidance.",
@@ -271,7 +260,7 @@ const MOCK_DATA = [
     color: "from-accent to-accent/90",
   },
   {
-    id: "arabic-fluency",
+    id: "arabic",
     name: "Quranic Arabic",
     description:
       "Understand the Quran in its original language. Master classical Arabic grammar and vocabulary.",
@@ -318,7 +307,7 @@ const MOCK_DATA = [
     color: "from-gold to-gold/90",
   },
   {
-    id: "tafsir-studies",
+    id: "tafsir",
     name: "Tafsir Al-Mubin",
     description:
       "Deep Quranic understanding through classical exegesis. Study Tafsir from primary sources.",
@@ -685,7 +674,7 @@ export default async function CoursesPage() {
 
         {/* ==================== STATS OVERVIEW ==================== */}
         <Reveal delay={0.3}>
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-3 sm:gap-4 mb-8 sm:mb-12 p-4 sm:p-6 rounded-2xl bg-gradient-to-br from-primary-50/50 to-primary-100/20 dark:from-primary-950/20 dark:to-primary-900/10 border border-primary-700/20">
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-3 sm:gap-4 mb-8 sm:mb-12 p-4 sm:p-6 rounded-2xl bg-linear-to-br from-primary-50/50 to-primary-100/20 dark:from-primary-950/20 dark:to-primary-900/10 border border-primary-700/20">
             <div className="text-center">
               <div className="text-2xl sm:text-3xl font-black text-primary-700">
                 {totalPrograms}
