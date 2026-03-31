@@ -1,18 +1,27 @@
 import { Reveal } from "@/components/shared/section-animation";
 import {
+  BookOpen,
   User,
   Clock,
   Calendar,
-  Heart,
+  Star,
   Sparkles,
-  Gift,
-  Trophy,
+  Award,
+  Target,
+  MessageSquare,
   CheckCircle2,
   ArrowRight,
   HelpCircle,
-  Users,
-  TrendingUp,
+  Shield,
+  GraduationCap,
+  Volume2,
+  Mic,
+  BookHeart,
+  Crown,
   Zap,
+  TrendingUp,
+  Heart,
+  Gem,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -24,22 +33,18 @@ export const metadata = {
     "Personalized 1-on-1 Quran reading program for children ages 6-12. Individual attention from certified scholars for faster progress and confidence building.",
 };
 
-const COURSE_DETAILS = {
-  name: "Individual Qiro'ah for Children",
+const PROGRAM = {
+  name: "Individual Qiro'ah",
+  subtitle: "1-on-1 Quran Reading for Children",
   tagline: "Personalized Attention for Faster Progress",
   description:
     "A personalized 1-on-1 Quran reading program designed for children ages 6-12. Each child receives undivided attention from a certified scholar, ensuring faster progress, proper pronunciation, and building confidence in Quranic recitation.",
   ageGroup: "6-12 years",
   duration: "Flexible (3-9 months)",
-  sessionsPerWeek: "2-3",
-  sessionDuration: "30-45 minutes",
+  sessionsPerWeek: 2,
+  sessionDuration: "45 minutes",
   classSize: "1-on-1",
-  startDate: "Rolling enrollment",
-  price: {
-    monthly: 129,
-    quarterly: 349,
-    annually: 1299,
-  },
+  price: "$129/month",
   features: [
     "100% personalized attention",
     "Custom learning pace",
@@ -83,11 +88,6 @@ const COURSE_DETAILS = {
       ],
     },
   ],
-  schedule: [
-    { day: "Flexible", time: "Morning • Afternoon • Evening (EST)" },
-    { day: "Weekdays", time: "Monday - Friday, 9 AM - 8 PM" },
-    { day: "Weekends", time: "Saturday - Sunday, 10 AM - 4 PM" },
-  ],
   benefits: [
     {
       icon: User,
@@ -97,7 +97,7 @@ const COURSE_DETAILS = {
     {
       icon: TrendingUp,
       title: "Faster Progress",
-      description: "Learn at their own pace without waiting for others",
+      description: "2-3x faster progress than group settings",
     },
     {
       icon: Heart,
@@ -110,13 +110,21 @@ const COURSE_DETAILS = {
       description: "Choose times that work for your family",
     },
   ],
-  advantages: [
-    "Customized lesson plans based on child's level",
-    "Teacher adapts to child's learning style",
-    "More repetition and practice time",
-    "Detailed weekly progress reports",
-    "Access to recorded sessions for review",
-    "Direct parent-teacher communication",
+  schedule: [
+    { day: "Monday - Friday", time: "9:00 AM - 8:00 PM (EST)" },
+    { day: "Saturday - Sunday", time: "10:00 AM - 4:00 PM (EST)" },
+  ],
+  teachers: [
+    {
+      name: "Ustadha Fatima Al-Misriyyah",
+      qualifications: "Ijazah in Tajweed, 10 years teaching children",
+      specialty: "Early childhood Quran education",
+    },
+    {
+      name: "Ustadh Ahmed Al-Makki",
+      qualifications: "Ijazah in Qira'at, 8 years experience with children",
+      specialty: "Building reading confidence",
+    },
   ],
   faqs: [
     {
@@ -138,10 +146,6 @@ const COURSE_DETAILS = {
     {
       q: "Is there a trial available?",
       a: "Yes! We offer a free assessment session where your child can meet the teacher and experience the 1-on-1 format before committing.",
-    },
-    {
-      q: "What materials are needed?",
-      a: "Just a computer/tablet with internet connection, microphone, and camera. All digital materials are provided through our portal.",
     },
   ],
 };
@@ -167,14 +171,16 @@ export default function IndividualQiroahPage() {
 
               <Reveal delay={0.1}>
                 <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tighter font-heading leading-[0.9]">
-                  Individual <span className="text-primary-700 italic">Qiro'ah</span>
-                  <br />for Children
+                  Individual{" "}
+                  <span className="text-primary-700 italic">Qiro'ah</span>
+                  <br />
+                  for Children
                 </h1>
               </Reveal>
 
               <Reveal delay={0.2}>
                 <p className="text-base sm:text-lg text-muted-foreground font-light leading-relaxed">
-                  {COURSE_DETAILS.description}
+                  {PROGRAM.description}
                 </p>
               </Reveal>
 
@@ -182,15 +188,15 @@ export default function IndividualQiroahPage() {
                 <div className="flex flex-wrap gap-3 pt-2">
                   <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-accent/10 text-accent text-xs font-black">
                     <User className="w-3.5 h-3.5" />
-                    {COURSE_DETAILS.classSize}
+                    {PROGRAM.classSize}
                   </div>
                   <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-accent/10 text-accent text-xs font-black">
                     <Clock className="w-3.5 h-3.5" />
-                    {COURSE_DETAILS.sessionDuration}
+                    {PROGRAM.sessionDuration}
                   </div>
                   <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-accent/10 text-accent text-xs font-black">
                     <Calendar className="w-3.5 h-3.5" />
-                    {COURSE_DETAILS.sessionsPerWeek}x/week
+                    {PROGRAM.sessionsPerWeek}x/week
                   </div>
                 </div>
               </Reveal>
@@ -205,8 +211,11 @@ export default function IndividualQiroahPage() {
                       </span>
                     </Button>
                   </Link>
-                  <Link href="#assessment" className="w-full sm:w-auto">
-                    <Button variant="outline" className="w-full rounded-full px-6 py-3 sm:px-8 sm:py-4 font-black text-sm sm:text-base min-h-[44px]">
+                  <Link href="/contact" className="w-full sm:w-auto">
+                    <Button
+                      variant="outline"
+                      className="w-full rounded-full px-6 py-3 sm:px-8 sm:py-4 font-black text-sm sm:text-base min-h-[44px]"
+                    >
                       FREE ASSESSMENT
                     </Button>
                   </Link>
@@ -214,25 +223,37 @@ export default function IndividualQiroahPage() {
               </Reveal>
             </div>
 
-            {/* Right Visual */}
+            {/* Right Visual - Stats Card */}
             <Reveal delay={0.4} className="lg:w-1/2">
               <div className="institutional-card p-6 sm:p-8 bg-gradient-to-br from-primary-50/20 to-primary-100/10 dark:from-primary-950/20 dark:to-primary-900/10 border-2 border-primary-700/20">
                 <div className="grid grid-cols-2 gap-4 sm:gap-6 mb-6">
                   <div className="space-y-1">
-                    <div className="text-2xl sm:text-3xl font-black text-primary-700">$129</div>
+                    <div className="text-2xl sm:text-3xl font-black text-primary-700">
+                      $129
+                    </div>
                     <div className="text-xs text-muted-foreground">Monthly</div>
                   </div>
                   <div className="space-y-1">
-                    <div className="text-2xl sm:text-3xl font-black text-primary-700">3-9 mo</div>
-                    <div className="text-xs text-muted-foreground">Duration</div>
+                    <div className="text-2xl sm:text-3xl font-black text-primary-700">
+                      3-9 mo
+                    </div>
+                    <div className="text-xs text-muted-foreground">
+                      Duration
+                    </div>
                   </div>
                   <div className="space-y-1">
-                    <div className="text-2xl sm:text-3xl font-black text-primary-700">1-on-1</div>
+                    <div className="text-2xl sm:text-3xl font-black text-primary-700">
+                      1-on-1
+                    </div>
                     <div className="text-xs text-muted-foreground">Format</div>
                   </div>
                   <div className="space-y-1">
-                    <div className="text-2xl sm:text-3xl font-black text-primary-700">Flexible</div>
-                    <div className="text-xs text-muted-foreground">Schedule</div>
+                    <div className="text-2xl sm:text-3xl font-black text-primary-700">
+                      Flexible
+                    </div>
+                    <div className="text-xs text-muted-foreground">
+                      Schedule
+                    </div>
                   </div>
                 </div>
 
@@ -244,7 +265,8 @@ export default function IndividualQiroahPage() {
                     </div>
                   </div>
                   <p className="text-sm text-muted-foreground">
-                    Individual attention means your child advances at their own pace
+                    Individual attention means your child advances at their own
+                    pace
                   </p>
                 </div>
               </div>
@@ -252,21 +274,23 @@ export default function IndividualQiroahPage() {
           </div>
         </div>
 
-        {/* ==================== BENEFITS SECTION ==================== */}
-        <section className="py-12 sm:py-16 md:py-20">
-          <Reveal>
-            <div className="text-center mb-12 sm:mb-16 space-y-4">
+        {/* ==================== FEATURES SECTION ==================== */}
+        <section className="py-12 sm:py-16 md:py-20 bg-gradient-to-b from-background to-primary-50/5 dark:to-primary-950/5 rounded-3xl">
+          <div className="text-center mb-12 sm:mb-16 space-y-4">
+            <Reveal>
               <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter">
-                Why Choose <span className="text-primary-700 italic">1-on-1</span>
+                Why Choose{" "}
+                <span className="text-primary-700 italic">1-on-1</span>
               </h2>
               <p className="text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto">
-                Personalized attention that accelerates your child's Quran journey
+                Personalized attention that accelerates your child's Quran
+                journey
               </p>
-            </div>
-          </Reveal>
+            </Reveal>
+          </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
-            {COURSE_DETAILS.benefits.map((benefit, index) => (
+            {PROGRAM.benefits.map((benefit, index) => (
               <Reveal key={index} delay={index * 0.1}>
                 <div className="institutional-card p-5 sm:p-6 text-center h-full hover:border-primary-700/30 transition-all duration-300">
                   <div className="w-10 h-10 sm:w-12 sm:h-12 mx-auto mb-3 rounded-lg bg-primary-50 dark:bg-primary-950/40 flex items-center justify-center">
@@ -284,72 +308,13 @@ export default function IndividualQiroahPage() {
           </div>
         </section>
 
-        {/* ==================== ADVANTAGES SECTION ==================== */}
-        <section className="py-12 sm:py-16 md:py-20 bg-gradient-to-b from-background to-primary-50/5 dark:to-primary-950/5 rounded-3xl">
-          <div className="grid md:grid-cols-2 gap-8 lg:gap-12 items-center">
-            <Reveal>
-              <div className="space-y-6">
-                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary-100 dark:bg-primary-900/30 text-primary-700 text-[11px] font-black uppercase tracking-wider">
-                  <Trophy className="w-3.5 h-3.5" /> Why Parents Love It
-                </div>
-                <h2 className="text-3xl sm:text-4xl font-black tracking-tighter">
-                  The <span className="text-primary-700 italic">Individual</span> Advantage
-                </h2>
-                <div className="space-y-3">
-                  {COURSE_DETAILS.advantages.map((advantage, idx) => (
-                    <div key={idx} className="flex items-center gap-3">
-                      <CheckCircle2 className="w-5 h-5 text-primary-700 flex-shrink-0" />
-                      <span className="text-muted-foreground">{advantage}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </Reveal>
-
-            <Reveal delay={0.2}>
-              <div className="institutional-card p-6 sm:p-8 bg-gradient-to-br from-accent/5 to-accent/10 border-2 border-accent/20">
-                <div className="text-center mb-6">
-                  <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-accent/10 mb-4">
-                    <Gift className="w-8 h-8 text-accent" />
-                  </div>
-                  <h3 className="font-black text-xl sm:text-2xl uppercase tracking-tight mb-2">
-                    Free Assessment Session
-                  </h3>
-                  <p className="text-sm text-muted-foreground">
-                    Experience 1-on-1 learning before committing
-                  </p>
-                </div>
-
-                <ul className="space-y-3 mb-6">
-                  {[
-                    "30-minute personalized session",
-                    "Meet your dedicated teacher",
-                    "Custom learning plan created",
-                    "No obligation to continue",
-                  ].map((item, idx) => (
-                    <li key={idx} className="flex items-center gap-3">
-                      <CheckCircle2 className="w-4 h-4 text-accent" />
-                      <span className="text-sm">{item}</span>
-                    </li>
-                  ))}
-                </ul>
-
-                <Link href="#assessment">
-                  <Button className="w-full rounded-full bg-accent hover:bg-accent/90 text-white font-black">
-                    SCHEDULE FREE ASSESSMENT
-                  </Button>
-                </Link>
-              </div>
-            </Reveal>
-          </div>
-        </section>
-
         {/* ==================== CURRICULUM SECTION ==================== */}
         <section className="py-12 sm:py-16 md:py-20">
           <div className="text-center mb-12 sm:mb-16 space-y-4">
             <Reveal>
               <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter">
-                Personalized <span className="text-primary-700 italic">Learning Path</span>
+                Personalized{" "}
+                <span className="text-primary-700 italic">Learning Path</span>
               </h2>
               <p className="text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto">
                 Tailored curriculum that adapts to your child's pace
@@ -358,7 +323,7 @@ export default function IndividualQiroahPage() {
           </div>
 
           <div className="space-y-4 sm:space-y-6">
-            {COURSE_DETAILS.curriculum.map((level, index) => (
+            {PROGRAM.curriculum.map((level, index) => (
               <Reveal key={index} delay={index * 0.1}>
                 <div className="institutional-card p-5 sm:p-6 md:p-8 hover:border-primary-700/30 transition-all duration-300">
                   <div className="flex flex-col md:flex-row md:items-start gap-4 sm:gap-6">
@@ -398,20 +363,21 @@ export default function IndividualQiroahPage() {
           </div>
         </section>
 
-        {/* ==================== SCHEDULE SECTION ==================== */}
+        {/* ==================== SCHEDULE & FREE ASSESSMENT ==================== */}
         <section className="py-12 sm:py-16 md:py-20 bg-gradient-to-b from-background to-primary-50/5 dark:to-primary-950/5 rounded-3xl">
           <div className="grid md:grid-cols-2 gap-8 sm:gap-12 items-start">
             <Reveal>
               <div className="space-y-6">
                 <h2 className="text-3xl sm:text-4xl font-black tracking-tighter">
-                  Flexible <span className="text-primary-700 italic">Scheduling</span>
+                  Flexible{" "}
+                  <span className="text-primary-700 italic">Schedule</span>
                 </h2>
                 <p className="text-lg text-muted-foreground">
                   Choose times that work around your family's routine
                 </p>
 
                 <div className="space-y-3 sm:space-y-4">
-                  {COURSE_DETAILS.schedule.map((slot, index) => (
+                  {PROGRAM.schedule.map((slot, index) => (
                     <div
                       key={index}
                       className="p-4 sm:p-5 rounded-xl bg-card border border-primary-700/10 hover:border-primary-700/30 transition-all"
@@ -434,39 +400,88 @@ export default function IndividualQiroahPage() {
             </Reveal>
 
             <Reveal delay={0.2}>
-              <div className="p-6 sm:p-8 rounded-xl bg-primary-700/5 border border-primary-700/10">
-                <div className="flex items-center gap-3 mb-4">
-                  <Clock className="w-5 h-5 text-primary-700" />
-                  <h3 className="font-black text-lg uppercase tracking-tight">
-                    Session Options
+              <div className="institutional-card p-6 sm:p-8 bg-gradient-to-br from-accent/5 to-accent/10 border-2 border-accent/20">
+                <div className="text-center mb-6">
+                  <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-accent/10 mb-4">
+                    <Gem className="w-8 h-8 text-accent" />
+                  </div>
+                  <h3 className="font-black text-xl sm:text-2xl uppercase tracking-tight mb-2">
+                    Free Assessment Session
                   </h3>
+                  <p className="text-sm text-muted-foreground">
+                    Experience 1-on-1 learning before committing
+                  </p>
                 </div>
-                <div className="space-y-3">
+
+                <ul className="space-y-3 mb-6">
                   {[
-                    { duration: "30 minutes", best: "Young beginners (6-8 yrs)" },
-                    { duration: "45 minutes", best: "Recommended (8-10 yrs)" },
-                    { duration: "60 minutes", best: "Advanced students (10-12 yrs)" },
-                  ].map((opt, idx) => (
-                    <div
-                      key={idx}
-                      className="flex justify-between items-center py-2 border-b border-border/50 last:border-0"
-                    >
-                      <span className="font-black">{opt.duration}</span>
-                      <span className="text-xs text-muted-foreground">{opt.best}</span>
-                    </div>
+                    "30-minute personalized session",
+                    "Meet your dedicated teacher",
+                    "Custom learning plan created",
+                    "No obligation to continue",
+                  ].map((item, idx) => (
+                    <li key={idx} className="flex items-center gap-3">
+                      <CheckCircle2 className="w-4 h-4 text-accent" />
+                      <span className="text-sm">{item}</span>
+                    </li>
                   ))}
-                </div>
+                </ul>
+
+                <Link href="/contact">
+                  <Button className="w-full rounded-full bg-accent hover:bg-accent/90 text-white font-black">
+                    SCHEDULE FREE ASSESSMENT
+                  </Button>
+                </Link>
               </div>
             </Reveal>
           </div>
         </section>
 
-        {/* ==================== PRICING SECTION ==================== */}
+        {/* ==================== TEACHERS SECTION ==================== */}
         <section className="py-12 sm:py-16 md:py-20">
           <Reveal>
             <div className="text-center mb-12 sm:mb-16 space-y-4">
               <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter">
-                Investment in Your <span className="text-primary-700 italic">Child's Future</span>
+                Meet Your{" "}
+                <span className="text-primary-700 italic">Teacher</span>
+              </h2>
+              <p className="text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto">
+                Certified scholars specializing in children's Quran education
+              </p>
+            </div>
+          </Reveal>
+
+          <div className="grid md:grid-cols-2 gap-6 sm:gap-8 max-w-4xl mx-auto">
+            {PROGRAM.teachers.map((teacher, index) => (
+              <Reveal key={index} delay={index * 0.1}>
+                <div className="institutional-card p-5 sm:p-6 flex items-start gap-4">
+                  <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-br from-primary-700 to-primary-800 flex items-center justify-center text-white font-black text-2xl">
+                    {teacher.name.charAt(0)}
+                  </div>
+                  <div>
+                    <h3 className="font-black text-base sm:text-lg uppercase tracking-tight mb-1">
+                      {teacher.name}
+                    </h3>
+                    <p className="text-xs text-primary-700 font-black mb-2">
+                      {teacher.specialty}
+                    </p>
+                    <p className="text-xs sm:text-sm text-muted-foreground">
+                      {teacher.qualifications}
+                    </p>
+                  </div>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </section>
+
+        {/* ==================== PRICING SECTION ==================== */}
+        <section className="py-12 sm:py-16 md:py-20 bg-gradient-to-b from-background to-primary-50/5 dark:to-primary-950/5 rounded-3xl">
+          <Reveal>
+            <div className="text-center mb-12 sm:mb-16 space-y-4">
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter">
+                Investment in Your{" "}
+                <span className="text-primary-700 italic">Child's Future</span>
               </h2>
               <p className="text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto">
                 Choose the payment option that works best for your family
@@ -474,7 +489,7 @@ export default function IndividualQiroahPage() {
             </div>
           </Reveal>
 
-          <div className="grid md:grid-cols-3 gap-6 sm:gap-8">
+          <div className="grid md:grid-cols-3 gap-6 sm:gap-8 max-w-5xl mx-auto">
             {[
               {
                 name: "Monthly",
@@ -517,7 +532,7 @@ export default function IndividualQiroahPage() {
                 <div
                   className={cn(
                     "institutional-card p-5 sm:p-6 md:p-8 h-full flex flex-col relative",
-                    plan.popular && "border-2 border-primary-700 shadow-royal"
+                    plan.popular && "border-2 border-primary-700 shadow-royal",
                   )}
                 >
                   {plan.popular && (
@@ -558,7 +573,7 @@ export default function IndividualQiroahPage() {
                         "w-full rounded-full font-black",
                         plan.popular
                           ? "bg-primary-700 hover:bg-primary-800 text-white"
-                          : "bg-primary-700/10 hover:bg-primary-700/20 text-primary-700"
+                          : "bg-primary-700/10 hover:bg-primary-700/20 text-primary-700",
                       )}
                     >
                       SELECT PLAN
@@ -570,83 +585,22 @@ export default function IndividualQiroahPage() {
           </div>
         </section>
 
-        {/* ==================== COMPARISON SECTION ==================== */}
-        <section className="py-12 sm:py-16 md:py-20 bg-gradient-to-b from-background to-primary-50/5 dark:to-primary-950/5 rounded-3xl">
-          <Reveal>
-            <div className="text-center mb-12 sm:mb-16 space-y-4">
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter">
-                Individual vs. <span className="text-primary-700 italic">Group</span>
-              </h2>
-              <p className="text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto">
-                Choose the best format for your child's learning style
-              </p>
-            </div>
-          </Reveal>
-
-          <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-            <div className="p-6 sm:p-8 rounded-2xl bg-primary-700/5 border border-primary-700/20">
-              <div className="text-center mb-4">
-                <User className="w-10 h-10 text-primary-700 mx-auto mb-2" />
-                <h3 className="font-black text-xl uppercase tracking-tight">
-                  1-on-1 Individual
-                </h3>
-              </div>
-              <ul className="space-y-3">
-                {[
-                  "100% teacher attention",
-                  "Custom learning pace",
-                  "Flexible scheduling",
-                  "2-3x faster progress",
-                  "Personalized feedback",
-                ].map((item, idx) => (
-                  <li key={idx} className="flex items-center gap-2 text-sm">
-                    <CheckCircle2 className="w-4 h-4 text-primary-700" />
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div className="p-6 sm:p-8 rounded-2xl bg-muted/30 border border-border">
-              <div className="text-center mb-4">
-                <Users className="w-10 h-10 text-muted-foreground mx-auto mb-2" />
-                <h3 className="font-black text-xl uppercase tracking-tight text-muted-foreground">
-                  Group Class
-                </h3>
-              </div>
-              <ul className="space-y-3">
-                {[
-                  "Shared teacher attention",
-                  "Classroom pace",
-                  "Fixed schedule",
-                  "Standard progress",
-                  "Group feedback",
-                ].map((item, idx) => (
-                  <li key={idx} className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <CheckCircle2 className="w-4 h-4 text-muted-foreground/50" />
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        </section>
-
         {/* ==================== FAQ SECTION ==================== */}
         <section className="py-12 sm:py-16 md:py-20">
           <div className="text-center mb-12 sm:mb-16 space-y-4">
             <Reveal>
               <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter">
-              Parent <span className="text-primary-700 italic">Questions</span>
+                Frequently Asked{" "}
+                <span className="text-primary-700 italic">Questions</span>
               </h2>
               <p className="text-lg sm:text-xl text-muted-foreground">
-              Everything you need to know about 1-on-1 learning
+                Everything parents need to know about 1-on-1 learning
               </p>
             </Reveal>
           </div>
 
           <div className="grid md:grid-cols-2 gap-4 sm:gap-6 max-w-5xl mx-auto">
-            {COURSE_DETAILS.faqs.map((faq, index) => (
+            {PROGRAM.faqs.map((faq, index) => (
               <Reveal key={index} delay={index * 0.05}>
                 <div className="institutional-card p-4 sm:p-6 hover:border-primary-700/30 transition-all duration-300">
                   <div className="flex gap-3 sm:gap-4">
@@ -667,17 +621,20 @@ export default function IndividualQiroahPage() {
         </section>
 
         {/* ==================== FINAL CTA ==================== */}
-        <section id="assessment" className="py-12 sm:py-16 md:py-20">
+        <section className="py-12 sm:py-16 md:py-20">
           <Reveal>
             <div className="institutional-card p-8 sm:p-10 md:p-12 text-center border-2 border-primary-700/20 max-w-4xl mx-auto">
               <User className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 mx-auto mb-4 sm:mb-6 text-primary-700" />
 
               <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black tracking-tighter mb-4">
-                Give Your Child <span className="text-primary-700 italic">Individual</span> Attention
+                Give Your Child{" "}
+                <span className="text-primary-700 italic">Individual</span>{" "}
+                Attention
               </h2>
 
               <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto mb-6 sm:mb-8">
-                Every child deserves personalized guidance on their Quran journey. Start with a free assessment today.
+                Every child deserves personalized guidance on their Quran
+                journey. Start with a free assessment today.
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
