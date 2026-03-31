@@ -17,21 +17,16 @@ import {
   Star,
   Trophy,
   Gift,
-  BookOpen,
-  Target,
-  Shield,
-  Crown,
-  TrendingUp,
-  Zap,
   HelpCircle,
+  Shield,
 } from "lucide-react";
-import { TrialForm } from "@/components/forms/trial-form";
+// import { TrialForm } from "@/components/forms/trial-form";
 import { cn } from "@/lib/utils";
 import { Metadata } from "next";
 
 // Dynamic metadata generation
 export async function generateMetadata(): Promise<Metadata> {
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://almaysaroh.org";
+  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "https://almaysaroh.com";
 
   return {
     title:
@@ -46,12 +41,26 @@ export async function generateMetadata(): Promise<Metadata> {
       "children quran reading",
       "interactive quran learning",
       "group quran lessons",
+      "quran recitation for kids",
+      "quran classes for children",
+      "quran reading program for kids",
+      "quran learning for children",
+      "quran education for kids",
+      "quran recitation classes for children",
+      "quran study group for kids",
+      "quran reading sessions for children",
+      "quran learning program for kids",
+      "quran recitation program for children",
+      "quran classes online for kids",
+      "quran reading classes for children",
+      "quran learning classes for kids",
+      "quran recitation classes online for children",
     ],
     openGraph: {
       title: "Group Qiro'ah for Children | Interactive Quran Reading",
       description:
         "Fun, interactive group Quran reading program for children ages 7-12. Learn with peers, earn rewards, and build confidence.",
-      url: `${baseUrl}/courses/qiroah/group`,
+      url: `${baseUrl}/courses/group-qiroah`,
       siteName: "Al-Maysaroh Institute",
       images: [
         {
@@ -72,7 +81,7 @@ export async function generateMetadata(): Promise<Metadata> {
       images: [`${baseUrl}/og/qiroah-group.jpg`],
     },
     alternates: {
-      canonical: `${baseUrl}/courses/qiroah/group`,
+      canonical: `${baseUrl}/courses/group-qiroah`,
     },
   };
 }
@@ -297,7 +306,7 @@ export default async function GroupQiroahAdmissionsPage() {
                 <Reveal delay={0.4}>
                   <div className="flex flex-col sm:flex-row gap-3 pt-4">
                     <Link href="/admissions" className="w-full sm:w-auto">
-                      <Button className="w-full rounded-full px-6 py-3 sm:px-8 sm:py-4 font-black bg-primary-700 hover:bg-primary-800 text-sm sm:text-base min-h-[44px]">
+                      <Button className="w-full rounded-full px-6 py-3 sm:px-8 sm:py-4 font-black bg-primary-700 hover:bg-primary-800 text-sm sm:text-base min-h-11">
                         <span className="flex items-center justify-center gap-2 sm:gap-3">
                           ENROLL NOW
                           <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
@@ -307,7 +316,7 @@ export default async function GroupQiroahAdmissionsPage() {
                     <Link href="#assessment" className="w-full sm:w-auto">
                       <Button
                         variant="outline"
-                        className="w-full rounded-full px-6 py-3 sm:px-8 sm:py-4 font-black text-sm sm:text-base min-h-[44px]"
+                        className="w-full rounded-full px-6 py-3 sm:px-8 sm:py-4 font-black text-sm sm:text-base min-h-11"
                       >
                         FREE ASSESSMENT
                       </Button>
@@ -318,7 +327,7 @@ export default async function GroupQiroahAdmissionsPage() {
 
               {/* Hero Visual - Enhanced with rewards preview */}
               <Reveal delay={0.4} className="lg:w-1/2">
-                <div className="institutional-card p-6 sm:p-8 bg-gradient-to-br from-primary-50/20 to-primary-100/10 dark:from-primary-950/20 dark:to-primary-900/10 border-2 border-primary-700/20">
+                <div className="institutional-card p-6 sm:p-8 bg-linear-to-br from-primary-50/20 to-primary-100/10 dark:from-primary-950/20 dark:to-primary-900/10 border-2 border-primary-700/20">
                   <div className="grid grid-cols-2 gap-4 sm:gap-6 mb-6">
                     <div className="space-y-1">
                       <div className="text-2xl sm:text-3xl font-black text-primary-700">
@@ -385,7 +394,7 @@ export default async function GroupQiroahAdmissionsPage() {
         </section>
 
         {/* Benefits Section - Your existing structure with enhanced icons */}
-        <section className="py-12 sm:py-16 md:py-24 bg-gradient-to-b from-background to-primary-50/5 dark:to-primary-950/5 rounded-3xl">
+        <section className="py-12 sm:py-16 md:py-24 bg-linear-to-b from-background to-primary-50/5 dark:to-primary-950/5 rounded-3xl">
           <div className="max-w-6xl mx-auto">
             <Reveal>
               <div className="text-center mb-12 sm:mb-16 space-y-4">
@@ -445,7 +454,7 @@ export default async function GroupQiroahAdmissionsPage() {
                 <Reveal key={index} delay={index * 0.1}>
                   <div className="institutional-card p-5 sm:p-6 md:p-8 hover:border-primary-700/30 transition-all duration-300">
                     <div className="flex flex-col md:flex-row md:items-start gap-4 sm:gap-6">
-                      <div className="md:w-64 flex-shrink-0">
+                      <div className="md:w-64 shrink-0">
                         <div className="inline-flex items-center gap-2 sm:gap-3 mb-2">
                           <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-primary-700 text-white flex items-center justify-center text-sm sm:text-base font-black shadow-md">
                             {index + 1}
@@ -485,7 +494,7 @@ export default async function GroupQiroahAdmissionsPage() {
         </section>
 
         {/* Rewards Section - Premium Addition */}
-        <section className="py-12 sm:py-16 md:py-24 bg-gradient-to-b from-background to-primary-50/5 dark:to-primary-950/5 rounded-3xl">
+        <section className="py-12 sm:py-16 md:py-24 bg-linear-to-b from-background to-primary-50/5 dark:to-primary-950/5 rounded-3xl">
           <div className="max-w-6xl mx-auto">
             <Reveal>
               <div className="text-center mb-12 sm:mb-16 space-y-4">
@@ -505,7 +514,7 @@ export default async function GroupQiroahAdmissionsPage() {
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
               {COURSE_DETAILS.rewards.map((reward, index) => (
                 <Reveal key={index} delay={index * 0.1}>
-                  <div className="text-center p-4 sm:p-6 rounded-xl bg-gradient-to-br from-accent/5 to-accent/10 border border-accent/20 hover:border-accent/40 transition-all group">
+                  <div className="text-center p-4 sm:p-6 rounded-xl bg-linear-to-br from-accent/5 to-accent/10 border border-accent/20 hover:border-accent/40 transition-all group">
                     <div className="text-5xl mb-3 group-hover:scale-110 transition-transform">
                       {reward.badge}
                     </div>
@@ -562,7 +571,7 @@ export default async function GroupQiroahAdmissionsPage() {
 
               
             <Reveal delay={0.2}>
-              <div className="institutional-card p-6 sm:p-8 bg-gradient-to-br from-accent/5 to-accent/10 border-2 border-accent/20">
+              <div className="institutional-card p-6 sm:p-8 bg-linear-to-br from-accent/5 to-accent/10 border-2 border-accent/20">
                 <div className="text-center mb-6">
                   <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-accent/10 mb-4">
                     <Gift className="w-8 h-8 text-accent" />
@@ -606,7 +615,7 @@ export default async function GroupQiroahAdmissionsPage() {
         {/* Pricing Section - Your existing structure */}
         <section
           id="pricing"
-          className="py-12 sm:py-16 md:py-24 bg-gradient-to-b from-background to-primary-50/5 dark:to-primary-950/5 rounded-3xl"
+          className="py-12 sm:py-16 md:py-24 bg-linear-to-b from-background to-primary-50/5 dark:to-primary-950/5 rounded-3xl"
         >
           <div className="max-w-6xl mx-auto">
             <Reveal>
@@ -698,13 +707,13 @@ export default async function GroupQiroahAdmissionsPage() {
                       </p>
                     </div>
 
-                    <ul className="space-y-2 sm:space-y-3 mb-6 flex-grow">
+                    <ul className="space-y-2 sm:space-y-3 mb-6 grow">
                       {plan.features.map((feature, idx) => (
                         <li
                           key={idx}
                           className="flex items-center gap-2 text-xs sm:text-sm"
                         >
-                          <CheckCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary-700 flex-shrink-0" />
+                          <CheckCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary-700 shrink-0" />
                           <span>{feature}</span>
                         </li>
                       ))}
@@ -754,7 +763,7 @@ export default async function GroupQiroahAdmissionsPage() {
               {COURSE_DETAILS.teachers.map((teacher, index) => (
                 <Reveal key={index} delay={index * 0.1}>
                   <div className="institutional-card p-5 sm:p-6 flex items-start gap-4 hover:border-primary-700/30 transition-all duration-300 group">
-                    <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-br from-primary-700 to-primary-800 flex items-center justify-center text-white font-black text-2xl group-hover:scale-105 transition-transform">
+                    <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-linear-to-br from-primary-700 to-primary-800 flex items-center justify-center text-white font-black text-2xl group-hover:scale-105 transition-transform">
                       {teacher.name.charAt(0)}
                     </div>
                     <div>
@@ -775,7 +784,7 @@ export default async function GroupQiroahAdmissionsPage() {
         {/* ENROLLMENT FORM SECTION - Your existing structure */}
         <section
           id="enroll-form"
-          className="py-12 sm:py-16 md:py-24 scroll-mt-20 bg-gradient-to-b from-background to-primary-50/5 dark:to-primary-950/5 rounded-3xl"
+          className="py-12 sm:py-16 md:py-24 scroll-mt-20 bg-linear-to-b from-background to-primary-50/5 dark:to-primary-950/5 rounded-3xl"
         >
           <div className="max-w-4xl mx-auto">
             <Reveal>
@@ -833,7 +842,7 @@ export default async function GroupQiroahAdmissionsPage() {
             </Reveal>
 
             <Reveal delay={0.1}>
-              <div className="institutional-card p-6 sm:p-8 md:p-10 border-2 border-accent/20 bg-gradient-to-br from-accent/5 to-accent/10">
+              <div className="institutional-card p-6 sm:p-8 md:p-10 border-2 border-accent/20 bg-linear-to-br from-accent/5 to-accent/10">
                 <TrialForm
                   courseId="group-qiroah"
                   courseName="Group Qiro'ah for Children"
@@ -850,7 +859,7 @@ export default async function GroupQiroahAdmissionsPage() {
         </section> */}
 
         {/* FAQ Section - Enhanced with better styling */}
-        <section className="py-12 sm:py-16 md:py-24 bg-gradient-to-b from-background to-primary-50/5 dark:to-primary-950/5 rounded-3xl">
+        <section className="py-12 sm:py-16 md:py-24 bg-linear-to-b from-background to-primary-50/5 dark:to-primary-950/5 rounded-3xl">
           <div className="max-w-4xl mx-auto">
             <Reveal>
               <div className="text-center mb-12 sm:mb-16 space-y-4">
@@ -872,7 +881,7 @@ export default async function GroupQiroahAdmissionsPage() {
                 <Reveal key={index} delay={index * 0.05}>
                   <div className="institutional-card p-4 sm:p-6 hover:border-primary-700/30 transition-all duration-300 group">
                     <div className="flex gap-3 sm:gap-4">
-                      <div className="w-8 h-8 rounded-lg bg-primary-50 dark:bg-primary-950/40 flex items-center justify-center flex-shrink-0 group-hover:bg-primary-700/10 transition-colors">
+                      <div className="w-8 h-8 rounded-lg bg-primary-50 dark:bg-primary-950/40 flex items-center justify-center shrink-0 group-hover:bg-primary-700/10 transition-colors">
                         <HelpCircle className="w-4 h-4 text-primary-700" />
                       </div>
                       <div>
@@ -909,7 +918,7 @@ export default async function GroupQiroahAdmissionsPage() {
 
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link href="/admissions">
-                  <Button className="rounded-full px-8 py-4 sm:px-10 sm:py-5 font-black bg-primary-700 hover:bg-primary-800 text-base sm:text-lg min-h-[44px]">
+                  <Button className="rounded-full px-8 py-4 sm:px-10 sm:py-5 font-black bg-primary-700 hover:bg-primary-800 text-base sm:text-lg min-h-11">
                     <span className="flex items-center gap-3">
                       ENROLL NOW
                       <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -920,7 +929,7 @@ export default async function GroupQiroahAdmissionsPage() {
                 <Link href="/contact">
                   <Button
                     variant="outline"
-                    className="rounded-full px-8 py-4 sm:px-10 sm:py-5 font-black text-base sm:text-lg min-h-[44px]"
+                    className="rounded-full px-8 py-4 sm:px-10 sm:py-5 font-black text-base sm:text-lg min-h-11"
                   >
                     FREE ASSESSMENT
                   </Button>
