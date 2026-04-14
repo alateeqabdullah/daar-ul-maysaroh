@@ -53,7 +53,7 @@ const MOCK_PRICING_CONFIG = {
   ],
   durations: [30, 45, 60, 90],
   frequencies: [1, 2, 3, 4, 5],
-  basePricePerMinute: 0.25, // $0.30 per minute
+  basePricePerMinute: 0.25, // $0.25 per minute
 };
 
 export function PricingCalculator({ dbPlans }: { dbPlans?: any[] }) {
@@ -220,7 +220,7 @@ export function PricingCalculator({ dbPlans }: { dbPlans?: any[] }) {
           </div>
 
           {/* SUMMARY PANEL - 2 columns on desktop */}
-          <div className="lg:col-span-2 p-6 sm:p-8 md:p-10 bg-gradient-to-br from-primary-700/5 to-primary-800/5 flex flex-col justify-between">
+          <div className="lg:col-span-2 p-6 sm:p-8 md:p-10 bg-linear-to-br from-primary-700/5 to-primary-800/5 flex flex-col justify-between">
             <div className="space-y-8">
               {/* Price Display */}
               <div className="text-center space-y-3">

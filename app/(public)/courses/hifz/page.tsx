@@ -48,7 +48,7 @@
 //   return (
 //     <div className="min-h-screen bg-background pt-16">
 //       {/* Hero Section */}
-//       <section className="bg-gradient-to-br from-purple-500 to-pink-600 text-white py-16 lg:py-20">
+//       <section className="bg-linear-to-br from-purple-500 to-pink-600 text-white py-16 lg:py-20">
 //         <div className="container mx-auto px-4 lg:px-6">
 //           <div className="grid lg:grid-cols-2 gap-12 items-center">
 //             <motion.div
@@ -225,7 +225,7 @@
 //                 className="bg-card rounded-2xl border shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden group relative"
 //               >
 //                 {/* Premium Badge */}
-//                 <div className="absolute top-4 right-4 bg-gradient-to-r from-purple-500 to-pink-500 text-white px-3 py-1 rounded-full text-xs font-medium">
+//                 <div className="absolute top-4 right-4 bg-linear-to-r from-purple-500 to-pink-500 text-white px-3 py-1 rounded-full text-xs font-medium">
 //                   Premium
 //                 </div>
 
@@ -283,7 +283,7 @@
 
 //                   {/* CTA */}
 //                   <Button
-//                     className="w-full group-hover:scale-105 transition-transform duration-200 bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600"
+//                     className="w-full group-hover:scale-105 transition-transform duration-200 bg-linear-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600"
 //                     asChild
 //                   >
 //                     <Link href={`/courses/${course.id}`}>
@@ -346,9 +346,9 @@
 
 
 
-import { BookOpen, Users, Clock, Target, Award, Shield, Star, Sparkles, GraduationCap, Calendar, CheckCircle2, Landmark, ArrowRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { Reveal } from "@/components/shared/section-animation";
+import { Button } from "@/components/ui/button";
+import { ArrowRight, Award, BookOpen, Calendar, CheckCircle2, Clock, GraduationCap, Shield, Sparkles, Target, Users } from "lucide-react";
 import Link from "next/link";
 
 export default function HifzProgramPage() {
@@ -391,7 +391,7 @@ export default function HifzProgramPage() {
                 <Reveal delay={0.3}>
                   <div className="flex flex-col sm:flex-row gap-4 pt-4">
                     <Link href="/admissions">
-                      <Button className="rounded-full px-8 py-4 sm:px-10 sm:py-5 font-black bg-primary-700 hover:bg-primary-800 text-base sm:text-lg min-h-[44px] w-full sm:w-auto">
+                      <Button className="rounded-full px-8 py-4 sm:px-10 sm:py-5 font-black bg-primary-700 hover:bg-primary-800 text-base sm:text-lg min-h-11 w-full sm:w-auto">
                         <span className="flex items-center gap-3">
                           START YOUR JOURNEY
                           <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -399,7 +399,7 @@ export default function HifzProgramPage() {
                       </Button>
                     </Link>
                     <Link href="#curriculum">
-                      <Button variant="outline" className="rounded-full px-8 py-4 sm:px-10 sm:py-5 font-black text-base sm:text-lg min-h-[44px] w-full sm:w-auto">
+                      <Button variant="outline" className="rounded-full px-8 py-4 sm:px-10 sm:py-5 font-black text-base sm:text-lg min-h-11 w-full sm:w-auto">
                         EXPLORE CURRICULUM
                       </Button>
                     </Link>
@@ -410,7 +410,7 @@ export default function HifzProgramPage() {
               {/* Hero Visual */}
               <Reveal delay={0.4}>
                 <div className="relative">
-                  <div className="institutional-card p-8 sm:p-10 md:p-12 bg-gradient-to-br from-primary-50/20 to-primary-100/10 dark:from-primary-950/20 dark:to-primary-900/10 border-2 border-primary-700/20">
+                  <div className="institutional-card p-8 sm:p-10 md:p-12 bg-linear-to-br from-primary-50/20 to-primary-100/10 dark:from-primary-950/20 dark:to-primary-900/10 border-2 border-primary-700/20">
                     <div className="grid grid-cols-2 gap-6 mb-8">
                       <div className="space-y-2">
                         <div className="text-3xl sm:text-4xl font-black text-primary-700">2-3</div>
@@ -448,7 +448,7 @@ export default function HifzProgramPage() {
       </section>
 
       {/* Program Highlights */}
-      <section className="py-12 sm:py-16 md:py-24 bg-gradient-to-b from-background to-primary-50/5 dark:to-primary-950/5">
+      <section className="py-12 sm:py-16 md:py-24 bg-linear-to-b from-background to-primary-50/5 dark:to-primary-950/5">
         <div className="container mx-auto px-4 sm:px-6">
           <div className="max-w-6xl mx-auto">
             <Reveal>
@@ -518,7 +518,7 @@ export default function HifzProgramPage() {
             <div className="space-y-6 sm:space-y-8">
               {[
                 {
-                  phase: "Phase 1",
+                  phase: "1",
                   title: "Foundation (6 Months)",
                   description: "Establish memorization techniques and daily routine",
                   points: [
@@ -529,7 +529,7 @@ export default function HifzProgramPage() {
                   ]
                 },
                 {
-                  phase: "Phase 2",
+                  phase: "2",
                   title: "Core Memorization (18 Months)",
                   description: "Systematic completion of the entire Quran",
                   points: [
@@ -540,7 +540,7 @@ export default function HifzProgramPage() {
                   ]
                 },
                 {
-                  phase: "Phase 3",
+                  phase: "3",
                   title: "Consolidation (6 Months)",
                   description: "Perfect memorization and preparation for Ijazah",
                   points: [
@@ -554,9 +554,9 @@ export default function HifzProgramPage() {
                 <Reveal key={index} delay={index * 0.1}>
                   <div className="institutional-card p-6 sm:p-8 md:p-10 hover:border-primary-700/30 transition-all duration-300">
                     <div className="flex flex-col md:flex-row md:items-start gap-6">
-                      <div className="md:w-48 flex-shrink-0">
+                      <div className="md:w-48 shrink-0">
                         <div className="inline-flex items-center gap-3 mb-3">
-                          <div className="w-10 h-10 rounded-lg bg-primary-700 text-white flex items-center justify-center text-sm font-black">
+                          <div className="w-10 h-10 rounded-lg bg-primary-700 text-white p-4 flex items-center justify-center text-sm font-black">
                             {phase.phase}
                           </div>
                           <div className="font-black text-lg uppercase tracking-tight">{phase.title}</div>
@@ -568,7 +568,7 @@ export default function HifzProgramPage() {
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                           {phase.points.map((point, idx) => (
                             <div key={idx} className="flex items-center gap-3 p-3 rounded-lg bg-primary-50/50 dark:bg-primary-950/20">
-                              <CheckCircle2 className="w-4 h-4 text-primary-700 flex-shrink-0" />
+                              <CheckCircle2 className="w-4 h-4 text-primary-700 shrink-0" />
                               <span className="text-sm font-medium">{point}</span>
                             </div>
                           ))}
@@ -584,7 +584,7 @@ export default function HifzProgramPage() {
       </section>
 
       {/* Teaching Methodology */}
-      <section className="py-12 sm:py-16 md:py-24 bg-gradient-to-b from-background to-primary-50/5 dark:to-primary-950/5">
+      <section className="py-12 sm:py-16 md:py-24 bg-linear-to-b from-background to-primary-50/5 dark:to-primary-950/5">
         <div className="container mx-auto px-4 sm:px-6">
           <div className="max-w-6xl mx-auto">
             <Reveal>
@@ -649,7 +649,7 @@ export default function HifzProgramPage() {
 
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
                   <Link href="/admissions">
-                    <Button className="rounded-full px-8 py-4 sm:px-10 sm:py-5 font-black bg-primary-700 hover:bg-primary-800 text-base sm:text-lg min-h-[44px] w-full sm:w-auto">
+                    <Button className="rounded-full px-8 py-4 sm:px-10 sm:py-5 font-black bg-primary-700 hover:bg-primary-800 text-base sm:text-lg min-h-11 w-full sm:w-auto">
                       <span className="flex items-center gap-3">
                         ENROLL NOW
                         <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -658,7 +658,7 @@ export default function HifzProgramPage() {
                   </Link>
                   
                   <Link href="/contact">
-                    <Button variant="outline" className="rounded-full px-8 py-4 sm:px-10 sm:py-5 font-black text-base sm:text-lg min-h-[44px] w-full sm:w-auto">
+                    <Button variant="outline" className="rounded-full px-8 py-4 sm:px-10 sm:py-5 font-black text-base sm:text-lg min-h-11 w-full sm:w-auto">
                       SPEAK TO ADVISOR
                     </Button>
                   </Link>
@@ -687,7 +687,7 @@ export default function HifzProgramPage() {
       </section>
 
       {/* FAQ Section */}
-      <section className="py-12 sm:py-16 md:py-24 bg-gradient-to-b from-background to-primary-50/5 dark:to-primary-950/5">
+      <section className="py-12 sm:py-16 md:py-24 bg-linear-to-b from-background to-primary-50/5 dark:to-primary-950/5">
         <div className="container mx-auto px-4 sm:px-6">
           <div className="max-w-4xl mx-auto">
             <Reveal>
