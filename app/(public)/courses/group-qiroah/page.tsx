@@ -95,13 +95,13 @@ const COURSE_DETAILS = {
   ageGroup: "7-12 years",
   duration: "6 months",
   sessionsPerWeek: "min: 2, max: 4" ,
-  sessionDuration: "45 - 60 minutes",
-  classSize: "4-6 students",
+  sessionDuration: "30 - 60 minutes",
+  classSize: "4-10 students",
   startDate: "April, 2026",
   price: {
-    monthly: 16,
-    quarterly: 45,
-    annually: 165,
+    monthly: 6,
+    quarterly: 18,
+    annually: 70,
   },
   features: [
     "Interactive learning games",
@@ -149,9 +149,9 @@ const COURSE_DETAILS = {
     },
   ],
   schedule: [
-    { day: "Monday & Wednesday", time: "4:00 PM - 4:45 PM (EST)" },
-    { day: "Tuesday & Thursday", time: "5:00 PM - 5:45 PM (EST)" },
-    { day: "Saturday & Sunday", time: "10:00 AM - 11:30 AM (EST)" },
+    { day: "Monday & Wednesday", time: "3:00 PM - 4:45 PM (EST)" },
+    { day: "Tuesday & Thursday", time: "3:00 PM - 5:45 PM (EST)" },
+    { day: "Saturday & Sunday", time: "8:00 AM - 11:30 AM (EST)" },
   ],
 
   // schedule: [
