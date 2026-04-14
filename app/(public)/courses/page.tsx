@@ -123,6 +123,8 @@ import Link from "next/link";
 import { Suspense } from "react";
 import type { Metadata } from "next";
 
+
+// ==================== TYPES ====================
 // ==================== METADATA ====================
 export const metadata: Metadata = {
   title: "Sacred Pathways | Quran, Tajweed & Arabic Courses | Al-Maysaroh",
@@ -547,6 +549,36 @@ function getColorForCategory(category: string): string {
   return map[category] || "from-primary-600 to-primary-800";
 }
 
+// ==================== PROGRAM TYPE ====================
+type Program = {
+  id: string;
+  name: string;
+  description: string;
+  longDescription?: string;
+  basePrice: number;
+  category: string;
+  subcategory?: string;
+  duration?: string;
+  durationMonths?: number;
+  level?: string;
+  format?: string;
+  nextStart?: string;
+  sessionsPerWeek?: number;
+  sessionDuration?: string;
+  students?: number;
+  rating?: number;
+  reviewCount?: number;
+  features?: string[];
+  curriculum?: string[];
+  prerequisites?: string;
+  outcomes?: string[];
+  isMock?: boolean;
+  popular?: boolean;
+  badge?: string;
+  iconName?: string;
+  color?: string;
+};
+
 // ==================== MAIN PAGE COMPONENT ====================
 export default async function CoursesPage() {
   let dbPrograms: any[] = [];
@@ -565,25 +597,26 @@ export default async function CoursesPage() {
       basePrice: Number(p.basePrice),
       category: p.category as string,
       subcategory: p.category || "",
-      duration: `${p.minDuration}-${p.maxDuration || ""} months`,
+      duration: p.minDuration ? `${p.minDuration}-${p.maxDuration || ""} months` : "Flexible",
       durationMonths: p.minDuration || 0,
       level: p.level || "All Levels",
       format: (p as unknown as { format?: string }).format || "1-on-1",
       nextStart: (p as any).nextStart || "Quarterly",
-      sessionsPerWeek: p.sessionsPerWeek || 2,
+      sessionsPerWeek: p.sessionsPerWeek || 0,
       sessionDuration: "45 min",
       students: (p as { students?: number }).students || 0,
       rating: (p as { rating?: number }).rating || 4.8,
       reviewCount: (p as any).reviewCount || 0,
       features: p.features || [],
       curriculum: (p as any).curriculum || [],
-      prerequisites: p.prerequisites || "None",
-      outcomes: p.outcomes || [],
+      prerequisites: (p as any).prerequisites || "None",
+      // outcomes: p.outcomes || [],
+      outcomes: [],
       isMock: false,
-      popular: p.popular || false,
-      badge: p.badge || "",
-      iconName: getIconNameForCategory(p.category),
-      color: getColorForCategory(p.category),
+      popular: (p as any).popular || false,
+      badge: (p as any).badge || "",
+      iconName: getIconNameForCategory(p.category) as string,
+      color: getColorForCategory(p.category) as string,
     }));
   } catch (error) {
     console.error("DB connection error - using mock data");
@@ -732,17 +765,19 @@ export default async function CoursesPage() {
         >
           <CourseListClient
             programs={allPrograms}
+            
             categories={categoriesWithCounts}
             levels={LEVELS}
             formats={FORMATS}
             durations={DURATIONS}
+
           />
         </Suspense>
 
         {/* ==================== BOTTOM CTA ==================== */}
         <Reveal delay={0.3}>
           <div className="mt-16 sm:mt-20 md:mt-24">
-            <div className="institutional-card p-8 sm:p-10 md:p-12 text-center max-w-3xl mx-auto border-2 border-primary-700/20 bg-gradient-to-br from-primary-50/20 to-primary-100/10">
+            <div className="institutional-card p-8 sm:p-10 md:p-12 text-center max-w-3xl mx-auto border-2 border-primary-700/20 bg-linear-to-br from-primary-50/20 to-primary-100/10">
               <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary-700/10 mb-4">
                 <Sparkles className="w-8 h-8 text-primary-700" />
               </div>
@@ -750,8 +785,8 @@ export default async function CoursesPage() {
                 Not Sure Where to Begin?
               </h2>
               <p className="text-sm sm:text-base text-muted-foreground max-w-md mx-auto mb-6">
-                Schedule a free assessment with our academic advisors. We'll
-                help you find the perfect program for your journey.
+              {`  Schedule a free assessment with our academic advisors. We'll
+                help you find the perfect program for your journey.`}
               </p>
               <Link href="/assessment">
                 <Button className="rounded-full px-8 py-4 sm:px-10 sm:py-5 font-black bg-primary-700 hover:bg-primary-800 transition-all duration-300 group">
