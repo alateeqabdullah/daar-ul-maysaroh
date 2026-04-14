@@ -316,8 +316,8 @@ export function WhatsAppButton({
   customColors,
   showAvailability = true,
   availabilityHours = {
-    start: "09:00",
-    end: "21:00",
+    start: "00:00",
+    end: "22:00",
     timezone: "Africa/Lagos",
   },
   enableAnalytics = false,

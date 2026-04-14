@@ -248,11 +248,12 @@ export default function RootLayout({
                 showTooltip={true}
                 tooltipText="Need help? Click here! 💬"
                 enableAnalytics={true}
-                availabilityHours={{
-                  start: "06:00",
-                  end: "22:00",
-                  timezone: "America/New_York",
-                }}
+                
+                // availabilityHours={{
+                //   start: "06:00",
+                //   end: "22:00",
+                //   timezone: "America/New_York",
+                // }}
               />
             </OfflineProvider>
             <Toaster position="top-center" richColors />
