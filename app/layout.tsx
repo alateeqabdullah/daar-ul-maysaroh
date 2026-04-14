@@ -237,9 +237,22 @@ export default function RootLayout({
             <OfflineProvider>
               {children}
               {/* WhatsApp Floating Button - Appears on all pages */}
+           
               <WhatsAppButton
-                phoneNumber="2349110163930"
-                message="Assalamu Alaikum! I'm interested in learning more about Al-Maysaroh programs. Can you please guide me?"
+                phoneNumber="1234567890"
+                email="info.almaysaroh@gmail.com"
+                theme="blue"
+                size="lg"
+                position="bottom-right"
+                message="Assalamu Alaikum! I'm interested in learning more about Al-Maysaroh Institute. Can you provide more information?"
+                showTooltip={true}
+                tooltipText="Need help? Click here! 💬"
+                enableAnalytics={true}
+                availabilityHours={{
+                  start: "08:00",
+                  end: "22:00",
+                  timezone: "America/New_York",
+                }}
               />
             </OfflineProvider>
             <Toaster position="top-center" richColors />
