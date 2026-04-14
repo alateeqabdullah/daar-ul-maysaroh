@@ -91,7 +91,7 @@ const COURSE_DETAILS = {
   name: "Group Qiro'ah for Children",
   tagline: "Learn to Read Quran with Joy & Confidence",
   description:
-    "A nurturing environment where children ages 7-12 learn proper Quranic recitation through interactive group sessions, games, and positive reinforcement.",
+    "A nurturing environment where children ages 7-12 learn proper Quranic recitation through interactive group sessions, games, and positive reinforcement .",
   ageGroup: "7-12 years",
   duration: "6 months",
   sessionsPerWeek: "min: 2, max: 4" ,
@@ -331,7 +331,7 @@ export default async function GroupQiroahAdmissionsPage() {
                   <div className="grid grid-cols-2 gap-4 sm:gap-6 mb-6">
                     <div className="space-y-1">
                       <div className="text-2xl sm:text-3xl font-black text-primary-700">
-                        $16
+                        $6
                       </div>
                       <div className="text-xs text-muted-foreground">
                         Monthly
@@ -635,7 +635,7 @@ export default async function GroupQiroahAdmissionsPage() {
               {[
                 {
                   name: "Monthly",
-                  price: "$16",
+                  price: "$6",
                   period: "/month",
                   description: "Perfect for trying out",
                   features: [
@@ -649,7 +649,7 @@ export default async function GroupQiroahAdmissionsPage() {
                 },
                 {
                   name: "Quarterly",
-                  price: "$45",
+                  price: "$18",
                   period: "/3 months",
                   description: "Save 6+%",
                   features: [
@@ -663,7 +663,7 @@ export default async function GroupQiroahAdmissionsPage() {
                 },
                 {
                   name: "Annual",
-                  price: "$165",
+                  price: "$70",
                   period: "/year",
                   description: "Save 1% + bonus",
                   features: [

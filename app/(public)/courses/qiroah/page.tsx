@@ -1,23 +1,12 @@
 import { Reveal } from "@/components/shared/section-animation";
 import {
-  BookOpen,
   User,
   Clock,
   Calendar,
-  Star,
   Sparkles,
-  Award,
-  Target,
-  MessageSquare,
   CheckCircle2,
   ArrowRight,
   HelpCircle,
-  Shield,
-  GraduationCap,
-  Volume2,
-  Mic,
-  BookHeart,
-  Crown,
   Zap,
   TrendingUp,
   Heart,
@@ -172,7 +161,7 @@ export default function IndividualQiroahPage() {
               <Reveal delay={0.1}>
                 <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tighter font-heading leading-[0.9]">
                   Individual{" "}
-                  <span className="text-primary-700 italic">Qiro'ah</span>
+                  <span className="text-primary-700 italic">{`Qiro'ah`}</span>
                   <br />
                   for Children
                 </h1>
@@ -204,7 +193,7 @@ export default function IndividualQiroahPage() {
               <Reveal delay={0.4}>
                 <div className="flex flex-col sm:flex-row gap-3 pt-4">
                   <Link href="/admissions" className="w-full sm:w-auto">
-                    <Button className="w-full rounded-full px-6 py-3 sm:px-8 sm:py-4 font-black bg-primary-700 hover:bg-primary-800 text-sm sm:text-base min-h-[44px]">
+                    <Button className="w-full rounded-full px-6 py-3 sm:px-8 sm:py-4 font-black bg-primary-700 hover:bg-primary-800 text-sm sm:text-base min-h-11">
                       <span className="flex items-center justify-center gap-2 sm:gap-3">
                         ENROLL NOW
                         <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
@@ -214,7 +203,7 @@ export default function IndividualQiroahPage() {
                   <Link href="/contact" className="w-full sm:w-auto">
                     <Button
                       variant="outline"
-                      className="w-full rounded-full px-6 py-3 sm:px-8 sm:py-4 font-black text-sm sm:text-base min-h-[44px]"
+                      className="w-full rounded-full px-6 py-3 sm:px-8 sm:py-4 font-black text-sm sm:text-base min-h-11"
                     >
                       FREE ASSESSMENT
                     </Button>
@@ -225,7 +214,7 @@ export default function IndividualQiroahPage() {
 
             {/* Right Visual - Stats Card */}
             <Reveal delay={0.4} className="lg:w-1/2">
-              <div className="institutional-card p-6 sm:p-8 bg-gradient-to-br from-primary-50/20 to-primary-100/10 dark:from-primary-950/20 dark:to-primary-900/10 border-2 border-primary-700/20">
+              <div className="institutional-card p-6 sm:p-8 bg-linear-to-br from-primary-50/20 to-primary-100/10 dark:from-primary-950/20 dark:to-primary-900/10 border-2 border-primary-700/20">
                 <div className="grid grid-cols-2 gap-4 sm:gap-6 mb-6">
                   <div className="space-y-1">
                     <div className="text-2xl sm:text-3xl font-black text-primary-700">
@@ -275,7 +264,7 @@ export default function IndividualQiroahPage() {
         </div>
 
         {/* ==================== FEATURES SECTION ==================== */}
-        <section className="py-12 sm:py-16 md:py-20 bg-gradient-to-b from-background to-primary-50/5 dark:to-primary-950/5 rounded-3xl">
+        <section className="py-12 sm:py-16 md:py-20 bg-linear-to-b from-background to-primary-50/5 dark:to-primary-950/5 rounded-3xl">
           <div className="text-center mb-12 sm:mb-16 space-y-4">
             <Reveal>
               <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter">
@@ -283,8 +272,10 @@ export default function IndividualQiroahPage() {
                 <span className="text-primary-700 italic">1-on-1</span>
               </h2>
               <p className="text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto">
-                Personalized attention that accelerates your child's Quran
-                journey
+                {`Personalized attention that accelerates your child's Quran
+                journey and builds lasting confidence in their recitation skills. Experience the transformative power of 1-on-1 learning with Al-Maysaroh's Individual Qiro'ah program
+                 designed specifically for children ages 6-12.
+                 Our certified scholars provide undivided attention, ensuring your child receives a customized learning experience that adapts to their unique pace and style. With flexible scheduling, progress tracking, and a curriculum tailored to their needs, our 1-on-1 program is the ultimate choice for parents seeking the best Quran education for their children. Watch your child thrive with personalized guidance and support every step of the way.`}
               </p>
             </Reveal>
           </div>
@@ -364,7 +355,7 @@ export default function IndividualQiroahPage() {
         </section>
 
         {/* ==================== SCHEDULE & FREE ASSESSMENT ==================== */}
-        <section className="py-12 sm:py-16 md:py-20 bg-gradient-to-b from-background to-primary-50/5 dark:to-primary-950/5 rounded-3xl">
+        <section className="py-12 sm:py-16 md:py-20 bg-linear-to-b from-background to-primary-50/5 dark:to-primary-950/5 rounded-3xl">
           <div className="grid md:grid-cols-2 gap-8 sm:gap-12 items-start">
             <Reveal>
               <div className="space-y-6">
@@ -400,7 +391,7 @@ export default function IndividualQiroahPage() {
             </Reveal>
 
             <Reveal delay={0.2}>
-              <div className="institutional-card p-6 sm:p-8 bg-gradient-to-br from-accent/5 to-accent/10 border-2 border-accent/20">
+              <div className="institutional-card p-6 sm:p-8 bg-linear-to-br from-accent/5 to-accent/10 border-2 border-accent/20">
                 <div className="text-center mb-6">
                   <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-accent/10 mb-4">
                     <Gem className="w-8 h-8 text-accent" />
@@ -455,7 +446,7 @@ export default function IndividualQiroahPage() {
             {PROGRAM.teachers.map((teacher, index) => (
               <Reveal key={index} delay={index * 0.1}>
                 <div className="institutional-card p-5 sm:p-6 flex items-start gap-4">
-                  <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-br from-primary-700 to-primary-800 flex items-center justify-center text-white font-black text-2xl">
+                  <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-linear-to-br from-primary-700 to-primary-800 flex items-center justify-center text-white font-black text-2xl">
                     {teacher.name.charAt(0)}
                   </div>
                   <div>
@@ -476,7 +467,7 @@ export default function IndividualQiroahPage() {
         </section>
 
         {/* ==================== PRICING SECTION ==================== */}
-        <section className="py-12 sm:py-16 md:py-20 bg-gradient-to-b from-background to-primary-50/5 dark:to-primary-950/5 rounded-3xl">
+        <section className="py-12 sm:py-16 md:py-20 bg-linear-to-b from-background to-primary-50/5 dark:to-primary-950/5 rounded-3xl">
           <Reveal>
             <div className="text-center mb-12 sm:mb-16 space-y-4">
               <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter">
