@@ -141,7 +141,6 @@
 //     </div>
 //   );
 // }
-
 "use client";
 
 import { useState, useMemo, useEffect } from "react";
@@ -161,16 +160,18 @@ import {
   Filter,
   X,
   Sparkles,
-  CheckCircle2,
   ArrowRight,
   Search,
   SlidersHorizontal,
+  TrendingUp,
+  Zap,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
 
-// Icon mapping object - maps string names to actual components
+// Icon mapping object
 const iconMap = {
   BookOpen,
   Mic,
@@ -183,6 +184,8 @@ const iconMap = {
   Clock,
   Calendar,
   Sparkles,
+  TrendingUp,
+  Zap,
 };
 
 interface Program {
@@ -190,10 +193,11 @@ interface Program {
   name: string;
   description: string;
   longDescription?: string;
-  basePrice: number;
+  basePrice?: number;
   category: string;
   subcategory?: string;
   duration: string;
+  durationMonths?: number;
   level: string;
   format: string;
   nextStart: string;
@@ -209,14 +213,16 @@ interface Program {
   isMock: boolean;
   popular?: boolean;
   badge?: string;
-  iconName: string; // ✅ This is a string now!
+  iconName: string;
   color: string;
+  isFixedPrice?: boolean; // For group courses
+  startingPrice?: number; // For variable pricing
 }
 
 interface Category {
   id: string;
   name: string;
-  iconName: string; // ✅ This is a string now!
+  iconName: string;
   count: number;
 }
 
@@ -233,6 +239,8 @@ interface Format {
 interface Duration {
   id: string;
   name: string;
+  minMonths?: number;
+  maxMonths?: number;
 }
 
 interface CourseListClientProps {
@@ -259,53 +267,41 @@ export function CourseListClient({
   const [showFilters, setShowFilters] = useState(false);
   const [visibleCount, setVisibleCount] = useState(6);
 
-  // Filter programs based on selections
+  // Reset search when category changes
+  useEffect(() => {
+    setSearchQuery("");
+  }, [selectedCategory]);
+
+  // Filter programs
   const filteredPrograms = useMemo(() => {
     return programs.filter((program) => {
-      // Category filter
       if (selectedCategory !== "all" && program.category !== selectedCategory) {
         return false;
       }
-
-      // Level filter
       if (selectedLevel !== "all" && program.level !== selectedLevel) {
         return false;
       }
-
-      // Format filter
       if (
         selectedFormat !== "all" &&
         !program.format.includes(selectedFormat)
       ) {
         return false;
       }
-
-      // Duration filter
       if (selectedDuration !== "all") {
-        const duration = program.duration;
-        if (selectedDuration === "3-6" && !duration.includes("6 months"))
-          return false;
-        if (
-          selectedDuration === "6-12" &&
-          !duration.includes("1 year") &&
-          !duration.includes("8 months")
-        )
-          return false;
-        if (
-          selectedDuration === "1-2" &&
-          !duration.includes("1.5") &&
-          !duration.includes("2")
-        )
-          return false;
-        if (
-          selectedDuration === "2+" &&
-          !duration.includes("2-3") &&
-          !duration.includes("3")
-        )
-          return false;
+        if (program.durationMonths) {
+          const duration = durations.find((d) => d.id === selectedDuration);
+          if (
+            duration?.minMonths &&
+            program.durationMonths < duration.minMonths
+          )
+            return false;
+          if (
+            duration?.maxMonths &&
+            program.durationMonths > duration.maxMonths
+          )
+            return false;
+        }
       }
-
-      // Search query
       if (searchQuery) {
         const query = searchQuery.toLowerCase();
         return (
@@ -314,7 +310,6 @@ export function CourseListClient({
           program.category.toLowerCase().includes(query)
         );
       }
-
       return true;
     });
   }, [
@@ -324,6 +319,7 @@ export function CourseListClient({
     selectedFormat,
     selectedDuration,
     searchQuery,
+    durations,
   ]);
 
   // Sort programs
@@ -335,9 +331,17 @@ export function CourseListClient({
       case "rating":
         return sorted.sort((a, b) => b.rating - a.rating);
       case "price-low":
-        return sorted.sort((a, b) => a.basePrice - b.basePrice);
+        return sorted.sort(
+          (a, b) =>
+            (a.basePrice || a.startingPrice || 0) -
+            (b.basePrice || b.startingPrice || 0),
+        );
       case "price-high":
-        return sorted.sort((a, b) => b.basePrice - a.basePrice);
+        return sorted.sort(
+          (a, b) =>
+            (b.basePrice || b.startingPrice || 0) -
+            (a.basePrice || a.startingPrice || 0),
+        );
       case "students":
         return sorted.sort((a, b) => b.students - a.students);
       default:
@@ -345,11 +349,9 @@ export function CourseListClient({
     }
   }, [filteredPrograms, sortBy]);
 
-  // Paginate
   const visiblePrograms = sortedPrograms.slice(0, visibleCount);
   const hasMore = visibleCount < sortedPrograms.length;
 
-  // Reset visible count when filters change
   useEffect(() => {
     setVisibleCount(6);
   }, [
@@ -361,7 +363,6 @@ export function CourseListClient({
     sortBy,
   ]);
 
-  // Clear all filters
   const clearFilters = () => {
     setSelectedCategory("all");
     setSelectedLevel("all");
@@ -380,169 +381,161 @@ export function CourseListClient({
     sortBy !== "popular" ? 1 : 0,
   ].reduce((a, b) => a + b, 0);
 
+  // Get display price
+  const getDisplayPrice = (program: Program) => {
+    if (program.isFixedPrice) {
+      return `$${program.basePrice}/mo`;
+    }
+    return `From $${program.startingPrice}/mo`;
+  };
+
   return (
-    <div className="space-y-8">
-      {/* Mobile Filter Toggle */}
-      <div className="lg:hidden flex items-center justify-between">
-        <Button
-          variant="outline"
-          onClick={() => setShowFilters(!showFilters)}
-          className="w-full justify-between"
-        >
-          <span className="flex items-center gap-2">
-            <SlidersHorizontal className="w-4 h-4" />
-            Filters & Sort
-          </span>
-          <span className="flex items-center gap-2">
-            {activeFilterCount > 0 && (
-              <span className="bg-primary-700 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                {activeFilterCount}
-              </span>
-            )}
-            <ChevronRight
-              className={cn(
-                "w-4 h-4 transition-transform",
-                showFilters && "rotate-90",
-              )}
-            />
-          </span>
-        </Button>
+    <div className="space-y-10">
+      {/* ==================== SEARCH BAR ==================== */}
+      <div className="relative max-w-md">
+        <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+        <Input
+          type="text"
+          placeholder="Search programs..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="pl-11 pr-4 py-6 rounded-full border-2 border-primary-100/50 focus:border-primary-700 transition-all bg-background"
+        />
+        {searchQuery && (
+          <button
+            onClick={() => setSearchQuery("")}
+            className="absolute right-4 top-1/2 -translate-y-1/2"
+          >
+            <X className="w-4 h-4 text-muted-foreground hover:text-primary-700 transition-colors" />
+          </button>
+        )}
       </div>
 
-      {/* Filter Section */}
-      <div className={cn("space-y-6", !showFilters && "hidden lg:block")}>
-        <AnimatePresence>
-          {(showFilters || true) && (
-            <motion.div
-              initial={{ opacity: 0, height: 0 }}
-              animate={{ opacity: 1, height: "auto" }}
-              exit={{ opacity: 0, height: 0 }}
-              className="space-y-6 overflow-hidden"
-            >
-              {/* Categories */}
-              <div>
-                <h3 className="text-sm font-black uppercase tracking-wider text-primary-700 mb-3">
-                  Categories
-                </h3>
-                <div className="flex flex-wrap gap-2">
-                  {categories.map((cat) => {
-                    const IconComponent =
-                      iconMap[cat.iconName as keyof typeof iconMap] || BookOpen;
-                    return (
-                      <button
-                        key={cat.id}
-                        onClick={() => setSelectedCategory(cat.id)}
-                        className={cn(
-                          "inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-black uppercase tracking-wider transition-all",
-                          selectedCategory === cat.id
-                            ? "bg-primary-700 text-white"
-                            : "bg-primary-50 dark:bg-primary-950/40 text-primary-700 hover:bg-primary-100 dark:hover:bg-primary-900/60",
-                        )}
-                      >
-                        <IconComponent className="w-3.5 h-3.5" />
-                        {cat.name}
-                        <span className="text-[10px] opacity-70">
-                          ({cat.count})
-                        </span>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* Levels & Formats Grid */}
-              <div className="grid md:grid-cols-3 gap-6">
-                {/* Level Filter */}
-                <div>
-                  <h3 className="text-sm font-black uppercase tracking-wider text-primary-700 mb-3">
-                    Level
-                  </h3>
-                  <select
-                    value={selectedLevel}
-                    onChange={(e) => setSelectedLevel(e.target.value)}
-                    className="w-full p-3 rounded-xl border border-border bg-background focus:border-primary-700 focus:ring-2 focus:ring-primary-500/20 outline-none transition-all"
-                  >
-                    {levels.map((level) => (
-                      <option key={level.id} value={level.id}>
-                        {level.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                {/* Format Filter */}
-                <div>
-                  <h3 className="text-sm font-black uppercase tracking-wider text-primary-700 mb-3">
-                    Format
-                  </h3>
-                  <select
-                    value={selectedFormat}
-                    onChange={(e) => setSelectedFormat(e.target.value)}
-                    className="w-full p-3 rounded-xl border border-border bg-background focus:border-primary-700 focus:ring-2 focus:ring-primary-500/20 outline-none transition-all"
-                  >
-                    {formats.map((format) => (
-                      <option key={format.id} value={format.id}>
-                        {format.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                {/* Duration Filter */}
-                <div>
-                  <h3 className="text-sm font-black uppercase tracking-wider text-primary-700 mb-3">
-                    Duration
-                  </h3>
-                  <select
-                    value={selectedDuration}
-                    onChange={(e) => setSelectedDuration(e.target.value)}
-                    className="w-full p-3 rounded-xl border border-border bg-background focus:border-primary-700 focus:ring-2 focus:ring-primary-500/20 outline-none transition-all"
-                  >
-                    {durations.map((duration) => (
-                      <option key={duration.id} value={duration.id}>
-                        {duration.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-
-              {/* Sort & Clear */}
-              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 pt-4 border-t border-border/50">
-                <div className="flex items-center gap-4">
-                  <span className="text-sm font-black uppercase tracking-wider text-primary-700">
-                    Sort by:
-                  </span>
-                  <select
-                    value={sortBy}
-                    onChange={(e) => setSortBy(e.target.value)}
-                    className="p-2 rounded-lg border border-border bg-background text-sm"
-                  >
-                    <option value="popular">Most Popular</option>
-                    <option value="rating">Highest Rated</option>
-                    <option value="price-low">Price: Low to High</option>
-                    <option value="price-high">Price: High to Low</option>
-                    <option value="students">Most Students</option>
-                  </select>
-                </div>
-
-                {activeFilterCount > 0 && (
-                  <Button
-                    variant="ghost"
-                    onClick={clearFilters}
-                    className="text-sm text-primary-700 hover:text-primary-800"
-                  >
-                    <X className="w-4 h-4 mr-1" />
-                    Clear all filters ({activeFilterCount})
-                  </Button>
+      {/* ==================== CATEGORY PILLS (Fixed) ==================== */}
+      <div className="overflow-x-auto pb-2 scrollbar-hide">
+        <div className="flex items-center gap-3 min-w-max">
+          <Filter className="w-4 h-4 text-primary-700 mr-1" />
+          {categories.map((cat) => {
+            const IconComponent =
+              iconMap[cat.iconName as keyof typeof iconMap] || BookOpen;
+            return (
+              <button
+                key={cat.id}
+                onClick={() => setSelectedCategory(cat.id)}
+                className={cn(
+                  "inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-xs font-black uppercase tracking-wider transition-all whitespace-nowrap",
+                  selectedCategory === cat.id
+                    ? "bg-primary-700 text-white shadow-md"
+                    : "bg-primary-50 dark:bg-primary-950/40 text-primary-700 hover:bg-primary-100 dark:hover:bg-primary-900/60 border border-primary-100 dark:border-primary-800",
                 )}
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+              >
+                <IconComponent className="w-4 h-4" />
+                {cat.name}
+                <span
+                  className={cn(
+                    "text-[10px]",
+                    selectedCategory === cat.id
+                      ? "text-white/70"
+                      : "text-primary-700/70",
+                  )}
+                >
+                  ({cat.count})
+                </span>
+              </button>
+            );
+          })}
+        </div>
       </div>
 
-      {/* Results Count */}
+      {/* ==================== FILTERS SECTION ==================== */}
+      <div className="flex flex-wrap items-center justify-between gap-4 py-4 border-y border-border/50">
+        <div className="flex flex-wrap items-center gap-4">
+          {/* Level Filter */}
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-black uppercase tracking-wider text-muted-foreground">
+              Level:
+            </span>
+            <select
+              value={selectedLevel}
+              onChange={(e) => setSelectedLevel(e.target.value)}
+              className="px-3 py-2 rounded-full text-xs font-black border border-border bg-background focus:border-primary-700 outline-none transition-all"
+            >
+              {levels.map((level) => (
+                <option key={level.id} value={level.id}>
+                  {level.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Format Filter */}
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-black uppercase tracking-wider text-muted-foreground">
+              Format:
+            </span>
+            <select
+              value={selectedFormat}
+              onChange={(e) => setSelectedFormat(e.target.value)}
+              className="px-3 py-2 rounded-full text-xs font-black border border-border bg-background focus:border-primary-700 outline-none transition-all"
+            >
+              {formats.map((format) => (
+                <option key={format.id} value={format.id}>
+                  {format.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Duration Filter */}
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-black uppercase tracking-wider text-muted-foreground">
+              Duration:
+            </span>
+            <select
+              value={selectedDuration}
+              onChange={(e) => setSelectedDuration(e.target.value)}
+              className="px-3 py-2 rounded-full text-xs font-black border border-border bg-background focus:border-primary-700 outline-none transition-all"
+            >
+              {durations.map((duration) => (
+                <option key={duration.id} value={duration.id}>
+                  {duration.name}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Sort */}
+          <div className="flex items-center gap-2">
+            <span className="text-xs font-black uppercase tracking-wider text-muted-foreground">
+              Sort:
+            </span>
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value)}
+              className="px-3 py-2 rounded-full text-xs font-black border border-border bg-background focus:border-primary-700 outline-none transition-all"
+            >
+              <option value="popular">Most Popular</option>
+              <option value="rating">Highest Rated</option>
+              <option value="price-low">Price: Low to High</option>
+              <option value="price-high">Price: High to Low</option>
+              <option value="students">Most Students</option>
+            </select>
+          </div>
+        </div>
+
+        {activeFilterCount > 0 && (
+          <Button
+            variant="ghost"
+            onClick={clearFilters}
+            className="text-xs text-primary-700 hover:text-primary-800 gap-1"
+          >
+            <X className="w-3.5 h-3.5" />
+            Clear ({activeFilterCount})
+          </Button>
+        )}
+      </div>
+
+      {/* ==================== RESULTS COUNT ==================== */}
       <div className="flex items-center justify-between">
         <p className="text-sm text-muted-foreground">
           Showing{" "}
@@ -555,14 +548,9 @@ export function CourseListClient({
           </span>{" "}
           programs
         </p>
-        {sortedPrograms.length === 0 && (
-          <p className="text-sm text-muted-foreground">
-            Try adjusting your filters
-          </p>
-        )}
       </div>
 
-      {/* Course Grid */}
+      {/* ==================== COURSE GRID ==================== */}
       {sortedPrograms.length === 0 ? (
         <div className="text-center py-20">
           <div className="w-20 h-20 mx-auto rounded-full bg-primary-50 dark:bg-primary-950/40 flex items-center justify-center mb-4">
@@ -584,9 +572,8 @@ export function CourseListClient({
         </div>
       ) : (
         <>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {visiblePrograms.map((program, index) => {
-              // Get the actual component from the map using the string name
               const IconComponent =
                 iconMap[program.iconName as keyof typeof iconMap] || BookOpen;
               return (
@@ -594,34 +581,34 @@ export function CourseListClient({
                   key={program.id}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.05 }}
+                  transition={{ delay: Math.min(index * 0.05, 0.5) }}
                   className="group relative h-full"
                 >
                   <Link href={`/courses/${program.id}`}>
-                    <div className="institutional-card p-5 sm:p-6 h-full flex flex-col hover:border-primary-700/30 transition-all duration-300 cursor-pointer">
+                    <div className="institutional-card p-8 h-full flex flex-col hover:border-primary-700/30 transition-all duration-300 cursor-pointer">
                       {/* Badge */}
                       {program.badge && (
-                        <div className="absolute top-4 right-4 z-10">
-                          <div className="px-3 py-1 rounded-full bg-gradient-to-r from-primary-700 to-primary-800 text-white text-[10px] font-black uppercase tracking-wider">
+                        <div className="absolute top-5 right-5 z-10">
+                          <div className="px-3 py-1 rounded-full bg-gradient-to-r from-primary-700 to-primary-800 text-white text-[10px] font-black uppercase tracking-wider shadow-md">
                             {program.badge}
                           </div>
                         </div>
                       )}
 
-                      {/* Icon - Now using mapped component */}
-                      <div className="mb-4">
+                      {/* Icon */}
+                      <div className="mb-5">
                         <div
                           className={cn(
-                            "w-12 h-12 rounded-xl bg-gradient-to-br flex items-center justify-center",
+                            "w-14 h-14 rounded-xl bg-gradient-to-br flex items-center justify-center",
                             program.color,
                           )}
                         >
-                          <IconComponent className="w-6 h-6 text-white" />
+                          <IconComponent className="w-7 h-7 text-white" />
                         </div>
                       </div>
 
-                      {/* Title & Category */}
-                      <h3 className="text-lg sm:text-xl font-black uppercase tracking-tight mb-1">
+                      {/* Title */}
+                      <h3 className="text-xl font-black uppercase tracking-tight mb-2 line-clamp-1">
                         {program.name}
                       </h3>
                       <p className="text-xs text-primary-700 font-black uppercase tracking-wider mb-3">
@@ -629,56 +616,57 @@ export function CourseListClient({
                       </p>
 
                       {/* Description */}
-                      <p className="text-xs sm:text-sm text-muted-foreground line-clamp-2 mb-4 flex-grow">
+                      <p className="text-sm text-muted-foreground leading-relaxed line-clamp-2 mb-5 flex-grow">
                         {program.description}
                       </p>
 
                       {/* Meta Grid */}
-                      <div className="grid grid-cols-2 gap-2 mb-4">
-                        <div className="flex items-center gap-1.5 text-xs">
-                          <Clock className="w-3.5 h-3.5 text-primary-700" />
-                          <span className="font-medium">
+                      <div className="grid grid-cols-2 gap-3 mb-5">
+                        <div className="flex items-center gap-2">
+                          <Clock className="w-4 h-4 text-primary-700" />
+                          <span className="text-sm font-medium">
                             {program.duration}
                           </span>
                         </div>
-                        <div className="flex items-center gap-1.5 text-xs">
-                          <Users className="w-3.5 h-3.5 text-primary-700" />
-                          <span className="font-medium">{program.format}</span>
+                        <div className="flex items-center gap-2">
+                          <Users className="w-4 h-4 text-primary-700" />
+                          <span className="text-sm font-medium">
+                            {program.format}
+                          </span>
                         </div>
-                        <div className="flex items-center gap-1.5 text-xs">
-                          <Calendar className="w-3.5 h-3.5 text-primary-700" />
-                          <span className="font-medium">
+                        <div className="flex items-center gap-2">
+                          <Calendar className="w-4 h-4 text-primary-700" />
+                          <span className="text-sm font-medium">
                             {program.nextStart}
                           </span>
                         </div>
-                        <div className="flex items-center gap-1.5 text-xs">
-                          <Star className="w-3.5 h-3.5 text-primary-700" />
-                          <span className="font-medium">{program.rating}</span>
-                          <span className="text-[10px] text-muted-foreground">
+                        <div className="flex items-center gap-2">
+                          <Star className="w-4 h-4 text-primary-700" />
+                          <span className="text-sm font-medium">
+                            {program.rating}
+                          </span>
+                          <span className="text-xs text-muted-foreground">
                             ({program.reviewCount})
                           </span>
                         </div>
                       </div>
 
                       {/* Price & CTA */}
-                      <div className="flex items-center justify-between pt-4 border-t border-border/50">
+                      <div className="flex items-center justify-between pt-5 border-t border-border/50 mt-auto">
                         <div>
-                          <span className="text-xl font-black text-primary-700">
-                            ${program.basePrice}
-                          </span>
-                          <span className="text-xs text-muted-foreground ml-1">
-                            /mo
+                          <span className="text-2xl font-black text-primary-700">
+                            {getDisplayPrice(program)}
                           </span>
                         </div>
                         <div className="flex items-center gap-1 text-primary-700 font-black text-xs uppercase tracking-wider group-hover:gap-2 transition-all">
                           View Details
-                          <ChevronRight className="w-4 h-4" />
+                          <ChevronRight className="w-4 h-4 group-hover:translate-x-0.5 transition-transform" />
                         </div>
                       </div>
 
                       {/* Popular Indicator */}
                       {program.popular && (
-                        <div className="absolute top-4 left-4">
+                        <div className="absolute top-5 left-5">
                           <div className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-gold/20 text-gold text-[8px] font-black uppercase tracking-wider">
                             <Sparkles className="w-3 h-3" />
                             Popular
@@ -698,10 +686,10 @@ export function CourseListClient({
               <Button
                 onClick={() => setVisibleCount((prev) => prev + 6)}
                 variant="outline"
-                className="rounded-full px-8 py-4 font-black"
+                className="rounded-full px-8 py-4 font-black group"
               >
                 Load More Programs
-                <ArrowRight className="w-4 h-4 ml-2" />
+                <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
               </Button>
             </div>
           )}
