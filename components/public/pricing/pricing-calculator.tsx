@@ -53,7 +53,7 @@ const MOCK_PRICING_CONFIG = {
   ],
   durations: [30, 45, 60, 90],
   frequencies: [1, 2, 3, 4, 5],
-  basePricePerMinute: 0.48, // $0.48 per minute
+  basePricePerMinute: 0.25, // $0.30 per minute
 };
 
 export function PricingCalculator({ dbPlans }: { dbPlans?: any[] }) {
@@ -88,7 +88,7 @@ export function PricingCalculator({ dbPlans }: { dbPlans?: any[] }) {
 
   return (
     <div className="w-full max-w-6xl mx-auto">
-      <div className="institutional-card overflow-hidden bg-gradient-to-br from-background to-muted/5 shadow-2xl">
+      <div className="institutional-card overflow-hidden bg-linear-to-br from-background to-muted/5 shadow-2xl">
         <div className="grid lg:grid-cols-5">
           {/* SETTINGS PANEL - 3 columns on desktop */}
           <div className="lg:col-span-3 p-6 sm:p-8 md:p-10 space-y-8 border-r border-border/50">

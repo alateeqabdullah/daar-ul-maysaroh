@@ -141,23 +141,39 @@ const PROGRAM = {
 
 export default function IndividualQiroahPage() {
   return (
-    <main className="pt-24 sm:pt-28 md:pt-32 pb-12 sm:pb-16 md:pb-20 bg-background overflow-x-hidden">
-      {/* Background Decor */}
-      <div className="absolute top-0 right-0 w-[300px] sm:w-[500px] h-[300px] sm:h-[500px] bg-primary-700/5 blur-[80px] sm:blur-[120px] -z-10 rounded-full" />
-      <div className="absolute bottom-0 left-0 w-[300px] sm:w-[500px] h-[300px] sm:h-[500px] bg-primary-700/5 blur-[80px] sm:blur-[120px] -z-10 rounded-full" />
+    <main className="pt-16 sm:pt-20 md:pt-24 lg:pt-28 xl:pt-32 bg-background overflow-x-hidden">
+    {/* Background Decor - Premium Addition */}
+    <div className="absolute top-0 right-0 w-[300px] sm:w-[500px] h-[300px] sm:h-[500px] bg-primary-700/5 blur-[80px] sm:blur-[120px] -z-10 rounded-full" />
+    <div className="absolute bottom-0 left-0 w-[300px] sm:w-[500px] h-[300px] sm:h-[500px] bg-primary-700/5 blur-[80px] sm:blur-[120px] -z-10 rounded-full" />
 
-      <div className="container mx-auto px-4 sm:px-6">
-        {/* Breadcrumb */}
-        <div className="text-xs sm:text-sm text-muted-foreground">
-          <Link
-            href="/courses"
-            className="hover:text-primary-700 transition-colors"
-          >
-            Programs
-          </Link>
+    {/* Floating particles - Premium Addition */}
+    <div className="absolute top-1/4 right-1/4 w-2 h-2 bg-primary-700/20 rounded-full blur-[1px] animate-pulse" />
+    <div className="absolute bottom-1/3 left-1/3 w-3 h-3 bg-primary-700/20 rounded-full blur-[1px] animate-pulse delay-300" />
 
-          <span className="mx-2">/</span>
-          <span className="text-primary-700 font-medium">Juz Amma Group</span>
+    <div className="container mx-auto px-4 sm:px-6">
+      {/* Hero Section - Enhanced with better visual */}
+      <section className="relative overflow-hidden">
+        <div className="max-w-6xl mx-auto py-8 sm:py-12 md:py-16 lg:py-20 space-y-6 sm:space-y-8 md:space-y-10">
+          {/* Breadcrumb */}
+          <div className="text-xs sm:text-sm text-muted-foreground">
+            <Link
+              href="/courses"
+              className="hover:text-primary-700 transition-colors"
+            >
+              Programs
+            </Link>
+            <span className="mx-2">/</span>
+            {/* <Link
+              href="/courses/children"
+              className="hover:text-primary-700 transition-colors"
+            >
+              Children
+            </Link> */}
+            {/* <span className="mx-2">/</span> */}
+            <span className="text-primary-700 font-medium">
+            {`  Group Qiro'ah`}
+            </span>
+          </div>
         </div>
         {/* ==================== HERO SECTION ==================== */}
         <div className="max-w-6xl mx-auto mb-12 sm:mb-16 md:mb-20 lg:mb-24">
@@ -230,7 +246,7 @@ export default function IndividualQiroahPage() {
                 <div className="grid grid-cols-2 gap-4 sm:gap-6 mb-6">
                   <div className="space-y-1">
                     <div className="text-2xl sm:text-3xl font-black text-primary-700">
-                      $129
+                      $2+
                     </div>
                     <div className="text-xs text-muted-foreground">Monthly</div>
                   </div>
@@ -274,6 +290,7 @@ export default function IndividualQiroahPage() {
             </Reveal>
           </div>
         </div>
+      </section>
 
         {/* ==================== FEATURES SECTION ==================== */}
         <section className="py-12 sm:py-16 md:py-20 bg-linear-to-b from-background to-primary-50/5 dark:to-primary-950/5 rounded-3xl">
@@ -319,7 +336,7 @@ export default function IndividualQiroahPage() {
                 <span className="text-primary-700 italic">Learning Path</span>
               </h2>
               <p className="text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto">
-                Tailored curriculum that adapts to your child's pace
+                {`Tailored curriculum that adapts to your child's pace and learning style, ensuring they master each stage of their Quranic journey with confidence and joy.`}
               </p>
             </Reveal>
           </div>
@@ -375,7 +392,7 @@ export default function IndividualQiroahPage() {
                   <span className="text-primary-700 italic">Schedule</span>
                 </h2>
                 <p className="text-lg text-muted-foreground">
-                  Choose times that work around your family's routine
+                  {`Choose times that work around your family's routine`}
                 </p>
 
                 <div className="space-y-3 sm:space-y-4">
@@ -439,7 +456,7 @@ export default function IndividualQiroahPage() {
           </div>
         </section>
 
-        {/* ==================== TEACHERS SECTION ==================== */}
+       {/* ==================== TEACHERS SECTION ==================== */}
         <section className="py-12 sm:py-16 md:py-20">
           <Reveal>
             <div className="text-center mb-12 sm:mb-16 space-y-4">
@@ -448,7 +465,7 @@ export default function IndividualQiroahPage() {
                 <span className="text-primary-700 italic">Teacher</span>
               </h2>
               <p className="text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto">
-                Certified scholars specializing in children's Quran education
+                {`Certified scholars specializing in children's Quran education`}
               </p>
             </div>
           </Reveal>
@@ -475,15 +492,15 @@ export default function IndividualQiroahPage() {
               </Reveal>
             ))}
           </div>
-        </section>
+        </section> 
 
         {/* ==================== PRICING SECTION ==================== */}
-        <section className="py-12 sm:py-16 md:py-20 bg-linear-to-b from-background to-primary-50/5 dark:to-primary-950/5 rounded-3xl">
+        {/* <section className="py-12 sm:py-16 md:py-20 bg-linear-to-b from-background to-primary-50/5 dark:to-primary-950/5 rounded-3xl">
           <Reveal>
             <div className="text-center mb-12 sm:mb-16 space-y-4">
               <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter">
                 Investment in Your{" "}
-                <span className="text-primary-700 italic">Child's Future</span>
+                <span className="text-primary-700 italic">{`Child's Future`}</span>
               </h2>
               <p className="text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto">
                 Choose the payment option that works best for your family
@@ -495,7 +512,7 @@ export default function IndividualQiroahPage() {
             {[
               {
                 name: "Monthly",
-                price: "$129",
+                price: "$2",
                 period: "/month",
                 features: [
                   "8-12 sessions per month",
@@ -585,7 +602,9 @@ export default function IndividualQiroahPage() {
               </Reveal>
             ))}
           </div>
-        </section>
+        </section> */}
+
+        
 
         {/* ==================== FAQ SECTION ==================== */}
         <section className="py-12 sm:py-16 md:py-20">
@@ -682,4 +701,3 @@ export default function IndividualQiroahPage() {
     </main>
   );
 }
-
