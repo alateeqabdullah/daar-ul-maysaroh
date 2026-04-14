@@ -239,9 +239,9 @@ export default function RootLayout({
               {/* WhatsApp Floating Button - Appears on all pages */}
            
               <WhatsAppButton
-                phoneNumber="1234567890"
+                phoneNumber="2349110163930"
                 email="info.almaysaroh@gmail.com"
-                theme="blue"
+                theme="green"
                 size="lg"
                 position="bottom-right"
                 message="Assalamu Alaikum! I'm interested in learning more about Al-Maysaroh Institute. Can you provide more information?"
@@ -249,7 +249,7 @@ export default function RootLayout({
                 tooltipText="Need help? Click here! 💬"
                 enableAnalytics={true}
                 availabilityHours={{
-                  start: "08:00",
+                  start: "06:00",
                   end: "22:00",
                   timezone: "America/New_York",
                 }}
