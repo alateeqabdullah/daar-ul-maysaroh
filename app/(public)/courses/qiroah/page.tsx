@@ -285,9 +285,8 @@ export default function IndividualQiroahPage() {
               </h2>
               <p className="text-lg sm:text-xl text-muted-foreground max-w-3xl mx-auto">
                 {`Personalized attention that accelerates your child's Quran
-                journey and builds lasting confidence in their recitation skills. Experience the transformative power of 1-on-1 learning with Al-Maysaroh's Individual Qiro'ah program
-                 designed specifically for children ages 6-12.
-                 Our certified scholars provide undivided attention, ensuring your child receives a customized learning experience that adapts to their unique pace and style. With flexible scheduling, progress tracking, and a curriculum tailored to their needs, our 1-on-1 program is the ultimate choice for parents seeking the best Quran education for their children. Watch your child thrive with personalized guidance and support every step of the way.`}
+                journey and builds lasting confidence in their recitation skills. 
+               `}
               </p>
             </Reveal>
           </div>
