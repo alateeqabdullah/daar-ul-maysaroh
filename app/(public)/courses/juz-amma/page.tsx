@@ -259,8 +259,7 @@ export default async function JuzAmmaAdmissionsPage() {
             {/* Breadcrumb */}
             <div className="text-xs sm:text-sm text-muted-foreground">
               <Link href="/courses" className="hover:text-primary-700 transition-colors">Programs</Link>
-              <span className="mx-2">/</span>
-              <Link href="/courses/children" className="hover:text-primary-700 transition-colors">Children</Link>
+             
               <span className="mx-2">/</span>
               <span className="text-primary-700 font-medium">Juz Amma Group</span>
             </div>

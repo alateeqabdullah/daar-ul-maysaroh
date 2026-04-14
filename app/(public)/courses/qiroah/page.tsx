@@ -147,6 +147,18 @@ export default function IndividualQiroahPage() {
       <div className="absolute bottom-0 left-0 w-[300px] sm:w-[500px] h-[300px] sm:h-[500px] bg-primary-700/5 blur-[80px] sm:blur-[120px] -z-10 rounded-full" />
 
       <div className="container mx-auto px-4 sm:px-6">
+        {/* Breadcrumb */}
+        <div className="text-xs sm:text-sm text-muted-foreground">
+          <Link
+            href="/courses"
+            className="hover:text-primary-700 transition-colors"
+          >
+            Programs
+          </Link>
+
+          <span className="mx-2">/</span>
+          <span className="text-primary-700 font-medium">Juz Amma Group</span>
+        </div>
         {/* ==================== HERO SECTION ==================== */}
         <div className="max-w-6xl mx-auto mb-12 sm:mb-16 md:mb-20 lg:mb-24">
           <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 xl:gap-16">
