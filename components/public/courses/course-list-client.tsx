@@ -283,7 +283,7 @@ function CourseCard({ program }: { program: Program }) {
     if (program.isFixedPrice) {
       return `$${program.basePrice}`;
     }
-    return `From $${program.startingPrice || program.basePrice}`;
+    return `$${program.startingPrice || program.basePrice} +`;
   };
 
   const IconComponent =
