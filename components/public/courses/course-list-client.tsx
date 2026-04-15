@@ -180,6 +180,7 @@ import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import Link from "next/link";
 
 // Icon mapping object
 const iconMap = {
@@ -385,7 +386,7 @@ function CourseCard({ program }: { program: Program }) {
         <div className="flex items-center justify-between">
           <div>
             <div className="flex items-baseline gap-1">
-              <span className="text-lg font-black tracking-tighter text-primary-700">
+              <span className="text-sm font-black tracking-tighter text-primary-700">
                 {getPriceDisplay()}
               </span>
               <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest">
@@ -400,14 +401,16 @@ function CourseCard({ program }: { program: Program }) {
           </div>
 
           <Button
-            onClick={handleEnroll}
+          
             className="h-12 px-6 rounded-xl bg-primary-700 text-white font-black text-[10px] tracking-[0.15em] uppercase shadow-lg relative overflow-hidden group/btn transition-all active:scale-95"
           >
+             <Link href="/admissions">
             <span className="relative z-10 flex items-center gap-2">
               Enroll{" "}
               <ArrowRight className="w-3.5 h-3.5 group-hover/btn:translate-x-1 transition-transform" />
             </span>
             <div className="absolute inset-0 bg-linear-to-r from-transparent via-white/20 to-transparent -skew-x-12 -translate-x-full group-hover/btn:animate-shimmer" />
+            </Link>
           </Button>
         </div>
       </div>

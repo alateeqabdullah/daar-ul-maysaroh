@@ -590,7 +590,7 @@ export default function QiroahProgramPage() {
                 </p>
 
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <Link href="/admissions/qiroah">
+                  <Link href="/admissions">
                     <Button className="rounded-full px-8 py-4 sm:px-10 sm:py-5 font-black bg-primary-700 hover:bg-primary-800 text-base sm:text-lg min-h-11 w-full sm:w-auto">
                       <span className="flex items-center gap-3">
                         ENROLL NOW
