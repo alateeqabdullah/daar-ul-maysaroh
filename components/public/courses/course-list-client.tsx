@@ -385,7 +385,7 @@ function CourseCard({ program }: { program: Program }) {
         <div className="flex items-center justify-between">
           <div>
             <div className="flex items-baseline gap-1">
-              <span className="text-4xl font-black tracking-tighter text-primary-700">
+              <span className="text-lg font-black tracking-tighter text-primary-700">
                 {getPriceDisplay()}
               </span>
               <span className="text-xs font-bold text-muted-foreground uppercase tracking-widest">
@@ -418,14 +418,14 @@ function CourseCard({ program }: { program: Program }) {
       </div>
 
       {/* Popular Badge */}
-      {program.popular && (
+      {/* {program.popular && (
         <div className="absolute top-5 right-5">
           <div className="flex items-center gap-1 px-2 py-0.5 rounded-full bg-gold/20 text-gold text-[8px] font-black uppercase tracking-wider">
             <Sparkles className="w-3 h-3" />
             Popular
           </div>
         </div>
-      )}
+      )} */}
     </motion.div>
   );
 }
@@ -598,14 +598,9 @@ export function CourseListClient({
               </button>
             );
           })}
-        </div>
-      </div>
-
-      {/* ==================== FILTERS SECTION ==================== */}
-      <div className="flex flex-wrap items-center justify-between gap-4 py-4 border-y border-border/50">
-        <div className="flex flex-wrap items-center gap-4">
+   <div className="flex flex-wrap items-center gap-4">
           {/* Level Filter */}
-          <div className="flex items-center gap-2">
+          {/* <div className="flex items-center gap-2">
             <span className="text-xs font-black uppercase tracking-wider text-muted-foreground">
               Level:
             </span>
@@ -623,10 +618,10 @@ export function CourseListClient({
                 </option>
               ))}
             </select>
-          </div>
+          </div> */}
 
           {/* Format Filter */}
-          <div className="flex items-center gap-2">
+          {/* <div className="flex items-center gap-2">
             <span className="text-xs font-black uppercase tracking-wider text-muted-foreground">
               Format:
             </span>
@@ -644,10 +639,10 @@ export function CourseListClient({
                 </option>
               ))}
             </select>
-          </div>
+          </div> */}
 
           {/* Duration Filter */}
-          <div className="flex items-center gap-2">
+          {/* <div className="flex items-center gap-2">
             <span className="text-xs font-black uppercase tracking-wider text-muted-foreground">
               Duration:
             </span>
@@ -665,10 +660,10 @@ export function CourseListClient({
                 </option>
               ))}
             </select>
-          </div>
+          </div> */}
 
           {/* Sort */}
-          <div className="flex items-center gap-2">
+          {/* <div className="flex items-center gap-2">
             <span className="text-xs font-black uppercase tracking-wider text-muted-foreground">
               Sort:
             </span>
@@ -686,10 +681,15 @@ export function CourseListClient({
               <option value="price-high">Price: High to Low</option>
               <option value="students">Most Students</option>
             </select>
-          </div>
+          </div> */}
         </div>
+      </div>
+      </div>
 
-        {activeFilterCount > 0 && (
+      {/* ==================== FILTERS SECTION ==================== */}
+      {/* <div className="flex flex-wrap items-center justify-between gap-4 py-4 border-y border-border/50"> */}
+       
+        {/* {activeFilterCount > 0 && (
           <Button
             variant="ghost"
             onClick={clearFilters}
@@ -698,8 +698,8 @@ export function CourseListClient({
             <X className="w-3.5 h-3.5" />
             Clear ({activeFilterCount})
           </Button>
-        )}
-      </div>
+        )} */}
+      {/* </div> */}
 
       {/* ==================== RESULTS COUNT ==================== */}
       <div className="flex items-center justify-between">
