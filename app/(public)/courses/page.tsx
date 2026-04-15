@@ -682,7 +682,7 @@ export default async function CoursesPage() {
         </div>
 
         {/* ==================== STATS OVERVIEW ==================== */}
-        <Reveal delay={0.1}>
+        {/* <Reveal delay={0.1}>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-12">
             <div className="institutional-card p-4 sm:p-5 text-center group hover:border-primary-700/30 transition-all">
               <div className="text-2xl sm:text-3xl font-black text-primary-700 mb-1">
@@ -717,7 +717,7 @@ export default async function CoursesPage() {
               </div>
             </div>
           </div>
-        </Reveal>
+        </Reveal> */}
 
         {/* ==================== SEARCH & FILTERS ==================== */}
         {/* <div className="mb-8 space-y-4">
