@@ -55,6 +55,13 @@ const navigation = [
         col: "left",
       },
       {
+        name: "Qiro'ah Program",
+        href: "/courses/qiroah",
+        desc: "Master Qiro'ah Reading and Recition",
+        icon: Users,
+        col: "right",
+      },
+      {
         name: "Tajweed Mastery",
         href: "/courses/tajweed",
         desc: "Scientific recitation rules",
