@@ -451,7 +451,7 @@ export function Header() {
                   </Link>
                   <Link href="/register">
                     <Button className="rounded-xl font-black px-6 lg:px-8 bg-primary-700 hover:bg-primary-800 text-white shadow-lg text-[11px] tracking-widest relative overflow-hidden group min-h-11">
-                      <span className="relative z-10">ADMISSIONS</span>
+                      <span className="relative z-10">REGISTER</span>
                       <motion.div
                         className="absolute inset-0 bg-linear-to-r from-transparent via-white/20 to-transparent -skew-x-12"
                         animate={{ x: ["-100%", "200%"] }}
@@ -714,7 +714,7 @@ export function Header() {
                       onClick={() => setMobileMenuOpen(false)}
                     >
                       <Button className="w-full h-14 rounded-2xl font-black bg-primary-700 text-white">
-                        ADMISSIONS
+                        REGISTER
                       </Button>
                     </Link>
                     <Link
