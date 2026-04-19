@@ -45,7 +45,7 @@ export default function AboutPage() {
                 <Sparkles className="w-3 h-3" /> Our Philosophical Foundation
               </div>
 
-              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black tracking-tighter font-heading leading-[1.1] sm:leading-[0.95]">
+              {/* <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black tracking-tighter font-heading leading-[1.1] sm:leading-[0.95]">
                 The Divine <br />
                 <span className="text-primary-700 italic">Sanctuary.</span>
               </h1>
@@ -54,6 +54,20 @@ export default function AboutPage() {
                 Al-Maysaroh Institute bridges the gap between classical
                 scholarly rigor and the 21st-century digital world. We don't
                 just teach books; we preserve the light of the Quran.
+              </p> */}
+
+              <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tighter font-heading leading-[0.9]">
+                Preserving the{" "}
+                <span className="text-primary-700 italic">Word</span>
+                <br />
+                {" "}of Allah
+              </h1>
+
+              {/* ✅ Your Descriptive Paragraph - Perfect here! */}
+              <p className="text-lg sm:text-xl md:text-2xl text-muted-foreground max-w-2xl leading-relaxed">
+                Al-Maysaroh International Institute is a sanctuary of sacred
+                knowledge, dedicated to preserving the authentic transmission of
+                the Quran through an unbroken chain of scholarship.
               </p>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 pt-2 sm:pt-4">
@@ -93,7 +107,7 @@ export default function AboutPage() {
                     <Lightbulb className="w-8 h-8 sm:w-10 sm:h-10 text-gold" />
                   </div>
                   <p className="text-2xl sm:text-3xl lg:text-4xl font-heading italic text-balance leading-tight text-primary-950 dark:text-white">
-                    "A generation that carries the Word, and lives its Light."
+                    {`"A generation that carries the Word, and lives its Light."`}
                   </p>
                   <div className="h-px w-10 sm:w-12 bg-gold/50 mx-auto" />
                 </div>
@@ -151,13 +165,13 @@ export default function AboutPage() {
                 </div>
                 <div>
                   <p className="text-lg italic text-muted-foreground mb-3 leading-relaxed">
-                    "Al-Maysaroh was born from a simple belief: every sincere
+                    {` "Al-Maysaroh was born from a simple belief: every sincere
                     seeker deserves access to authentic Quranic education
                     without compromise. We don't just teach the Quran—we connect
-                    you to its living chain of transmission."
+                    you to its living chain of transmission."`}
                   </p>
                   <p className="font-black">
-                    — Shaykh Abubakar Al-Maysariy, Founder
+                    - Shaykh Abubakar Al-Maysariy, Founder
                   </p>
                 </div>
               </div>
@@ -417,7 +431,7 @@ export default function AboutPage() {
             {[1, 2, 3, 4, 5].map((i) => (
               <Star key={i} className="w-4 h-4 fill-gold text-gold" />
             ))}
-            <span className="text-sm font-black">4.9 (50+ reviews)</span>
+            <span className="text-sm font-black">4.9</span>
           </div>
           <div className="w-px h-6 bg-border hidden sm:block" />
           <div className="flex items-center gap-2">
@@ -427,7 +441,7 @@ export default function AboutPage() {
           <div className="w-px h-6 bg-border hidden sm:block" />
           <div className="flex items-center gap-2">
             <Globe className="w-4 h-4 text-primary-700" />
-            <span className="text-sm font-black">15+ Countries</span>
+            <span className="text-sm font-black">6+ Countries</span>
           </div>
         </div>
 
@@ -459,6 +473,10 @@ export default function AboutPage() {
     </main>
   );
 }
+
+
+
+
 // import { ArrowRight, BookOpen, CheckCircle, ScrollText, ShieldCheck } from "lucide-react";
 
 // export default function MethodologyPage() {
