@@ -423,7 +423,7 @@ export function Testimonials() {
                       />
 
                       {/* Card Content */}
-                      <div className="relative bg-linear-to-br from-background to-primary-50/10 dark:from-background dark:to-primary-950/20 rounded-3xl border border-primary-700/10 p-6 sm:p-7 md:p-8 h-full flex flex-col backdrop-blur-sm transition-all duration-500 hover:border-primary-700/30 shadow-lg hover:shadow-2xl">
+                      <div className="relative bg-linear-to-br from-background to-primary-50/10 dark:from-background dark:to-primary-950/20 rounded-3xl border border-primary-700/10 p-6 sm:p-7 md:p-8 h-full flex flex-col backdrop-blur-sm transition-all duration-500">
                         {/* Decorative Corner Elements */}
                         <div className="absolute top-0 left-0 w-20 h-20 border-l-2 border-t-2 border-primary-700/10 rounded-tl-3xl" />
                         <div className="absolute top-0 right-0 w-20 h-20 border-r-2 border-t-2 border-primary-700/10 rounded-tr-3xl" />
