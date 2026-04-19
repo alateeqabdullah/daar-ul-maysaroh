@@ -24,8 +24,7 @@ import {
   TrendingUp,
   Play,
   Pause,
-  CircleDot,
-  Circle,
+ 
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -413,14 +412,14 @@ export function Testimonials() {
                       className="relative h-full"
                     >
                       {/* Animated Border Glow */}
-                      <motion.div
+                      {/* <motion.div
                         animate={{
                           opacity: isHovered ? 1 : 0,
                           scale: isHovered ? 1.02 : 1,
                         }}
                         transition={{ duration: 0.3 }}
                         className="absolute -inset-0.5 bg-linear-to-r from-gold via-primary-700 to-gold rounded-3xl blur-xl opacity-0"
-                      />
+                      /> */}
 
                       {/* Card Content */}
                       <div className="relative bg-linear-to-br from-background to-primary-50/10 dark:from-background dark:to-primary-950/20 rounded-3xl border border-primary-700/10 p-6 sm:p-7 md:p-8 h-full flex flex-col backdrop-blur-sm transition-all duration-500">
@@ -465,9 +464,9 @@ export function Testimonials() {
                         </div>
 
                         {/* Content with Read More */}
-                        <div className="mb-5 flex-grow">
+                        <div className="mb-5 grow">
                           <p className="text-sm sm:text-base text-muted-foreground leading-relaxed font-medium">
-                            "{displayContent}
+                            {`"${displayContent}`}
                             {shouldTruncate && !isExpanded && "..."}
                             {shouldTruncate && (
                               <motion.button
@@ -478,7 +477,7 @@ export function Testimonials() {
                                 {isExpanded ? "Show less" : "Read more"}
                               </motion.button>
                             )}
-                            "
+                           {` "`}
                           </p>
                         </div>
 
