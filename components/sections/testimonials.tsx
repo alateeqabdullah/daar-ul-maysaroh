@@ -234,7 +234,7 @@ export function Testimonials() {
   return (
     <section
       ref={sectionRef}
-      className="py-16 sm:py-24 lg:py-32 bg-gradient-to-b from-background via-background to-primary-50/20 relative overflow-hidden"
+      className="py-16 sm:py-24 lg:py-32 bg-linear-to-b from-background via-background to-primary-50/20 relative overflow-hidden"
     >
       {/* Animated Background Elements */}
       <div className="absolute inset-0 overflow-hidden">
@@ -243,7 +243,7 @@ export function Testimonials() {
           style={{ backgroundSize: "300px" }}
         />
 
-        {/* Animated Gradient Orbs */}
+        {/* Animated linear Orbs */}
         <motion.div
           animate={{
             scale: [1, 1.2, 1],
@@ -293,7 +293,7 @@ export function Testimonials() {
           <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16 lg:mb-20">
             <Reveal>
               <div className="flex justify-center mb-6">
-                <div className="w-20 h-px bg-gradient-to-r from-transparent via-gold to-transparent" />
+                <div className="w-20 h-px bg-linear-to-r from-transparent via-gold to-transparent" />
               </div>
 
               <div className="inline-flex items-center gap-2 text-gold font-black text-[10px] uppercase tracking-[0.3em] mb-6 bg-gold/5 px-5 py-2.5 rounded-full border border-gold/20 backdrop-blur-sm">
@@ -311,7 +311,7 @@ export function Testimonials() {
                       repeat: Infinity,
                       ease: "easeInOut",
                     }}
-                    className="absolute -bottom-2 left-0 h-0.5 bg-gradient-to-r from-primary-700 to-gold"
+                    className="absolute -bottom-2 left-0 h-0.5 bg-linear-to-r from-primary-700 to-gold"
                   />
                 </span>
               </h2>
@@ -335,7 +335,7 @@ export function Testimonials() {
             },
             {
               icon: MessageCircle,
-              label: "50+ Reviews",
+              label: "30+ Reviews",
               desc: "5-star rated",
               color: "primary",
             },
@@ -373,9 +373,9 @@ export function Testimonials() {
 
         {/* Testimonials Carousel - PREMIUM DESIGN */}
         <div className="relative">
-          {/* Gradient Overlays for carousel edges */}
-          <div className="absolute left-0 top-0 bottom-0 w-12 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none hidden lg:block" />
-          <div className="absolute right-0 top-0 bottom-0 w-12 bg-gradient-to-l from-background to-transparent z-10 pointer-events-none hidden lg:block" />
+          {/* linear Overlays for carousel edges */}
+          <div className="absolute left-0 top-0 bottom-0 w-12 bg-linear-to-r from-background to-transparent z-10 pointer-events-none hidden lg:block" />
+          <div className="absolute right-0 top-0 bottom-0 w-12 bg-linear-to-l from-background to-transparent z-10 pointer-events-none hidden lg:block" />
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
             <AnimatePresence mode="wait">
@@ -419,11 +419,11 @@ export function Testimonials() {
                           scale: isHovered ? 1.02 : 1,
                         }}
                         transition={{ duration: 0.3 }}
-                        className="absolute -inset-0.5 bg-gradient-to-r from-gold via-primary-700 to-gold rounded-3xl blur-xl opacity-0"
+                        className="absolute -inset-0.5 bg-linear-to-r from-gold via-primary-700 to-gold rounded-3xl blur-xl opacity-0"
                       />
 
                       {/* Card Content */}
-                      <div className="relative bg-gradient-to-br from-background to-primary-50/10 dark:from-background dark:to-primary-950/20 rounded-3xl border border-primary-700/10 p-6 sm:p-7 md:p-8 h-full flex flex-col backdrop-blur-sm transition-all duration-500 hover:border-primary-700/30 shadow-lg hover:shadow-2xl">
+                      <div className="relative bg-linear-to-br from-background to-primary-50/10 dark:from-background dark:to-primary-950/20 rounded-3xl border border-primary-700/10 p-6 sm:p-7 md:p-8 h-full flex flex-col backdrop-blur-sm transition-all duration-500 hover:border-primary-700/30 shadow-lg hover:shadow-2xl">
                         {/* Decorative Corner Elements */}
                         <div className="absolute top-0 left-0 w-20 h-20 border-l-2 border-t-2 border-primary-700/10 rounded-tl-3xl" />
                         <div className="absolute top-0 right-0 w-20 h-20 border-r-2 border-t-2 border-primary-700/10 rounded-tr-3xl" />
@@ -446,7 +446,7 @@ export function Testimonials() {
                           }}
                           className="mb-4"
                         >
-                          <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-gradient-to-r from-gold/20 to-gold/5 border border-gold/30 text-gold text-[9px] font-black uppercase tracking-wider backdrop-blur-sm">
+                          <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-linear-to-r from-gold/20 to-gold/5 border border-gold/30 text-gold text-[9px] font-black uppercase tracking-wider backdrop-blur-sm">
                             <Crown className="w-2.5 h-2.5" />
                             {testimonial.achievement}
                             <Sparkles className="w-2.5 h-2.5 ml-1" />
@@ -507,8 +507,8 @@ export function Testimonials() {
                             transition={{ duration: 0.3 }}
                             className="relative"
                           >
-                            <div className="absolute inset-0 rounded-full bg-gradient-to-r from-gold to-primary-700 blur-md opacity-0 group-hover:opacity-30 transition-opacity" />
-                            <div className="relative w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-gradient-to-br from-primary-700 to-primary-800 flex items-center justify-center text-white text-lg sm:text-xl font-black shadow-lg ring-2 ring-primary-700/20">
+                            <div className="absolute inset-0 rounded-full bg-linear-to-r from-gold to-primary-700 blur-md opacity-0 group-hover:opacity-30 transition-opacity" />
+                            <div className="relative w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-linear-to-br from-primary-700 to-primary-800 flex items-center justify-center text-white text-lg sm:text-xl font-black shadow-lg ring-2 ring-primary-700/20">
                               {testimonial.image}
                             </div>
                           </motion.div>
@@ -538,12 +538,12 @@ export function Testimonials() {
                           </motion.div>
                         </div>
 
-                        {/* Hover Gradient Overlay */}
+                        {/* Hover linear Overlay */}
                         <motion.div
                           initial={{ opacity: 0 }}
                           animate={{ opacity: isHovered ? 0.08 : 0 }}
                           transition={{ duration: 0.3 }}
-                          className="absolute inset-0 rounded-3xl bg-gradient-to-br from-primary-700 to-primary-800 pointer-events-none"
+                          className="absolute inset-0 rounded-3xl bg-linear-to-br from-primary-700 to-primary-800 pointer-events-none"
                         />
                       </div>
                     </motion.div>
@@ -560,7 +560,7 @@ export function Testimonials() {
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={prevSlide}
-                className="w-12 h-12 rounded-full bg-gradient-to-r from-primary-700/20 to-primary-800/20 border border-primary-700/30 flex items-center justify-center hover:bg-primary-700 hover:text-white transition-all duration-300 backdrop-blur-sm"
+                className="w-12 h-12 rounded-full bg-linear-to-r from-primary-700/20 to-primary-800/20 border border-primary-700/30 flex items-center justify-center hover:bg-primary-700 hover:text-white transition-all duration-300 backdrop-blur-sm"
                 aria-label="Previous testimonials"
               >
                 <ChevronLeft className="w-5 h-5" />
@@ -584,7 +584,7 @@ export function Testimonials() {
                 whileHover={{ scale: 1.1 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={nextSlide}
-                className="w-12 h-12 rounded-full bg-gradient-to-r from-primary-700/20 to-primary-800/20 border border-primary-700/30 flex items-center justify-center hover:bg-primary-700 hover:text-white transition-all duration-300 backdrop-blur-sm"
+                className="w-12 h-12 rounded-full bg-linear-to-r from-primary-700/20 to-primary-800/20 border border-primary-700/30 flex items-center justify-center hover:bg-primary-700 hover:text-white transition-all duration-300 backdrop-blur-sm"
                 aria-label="Next testimonials"
               >
                 <ChevronRight className="w-5 h-5" />
@@ -637,7 +637,7 @@ export function Testimonials() {
               ],
             }}
             transition={{ duration: 2, repeat: Infinity }}
-            className="inline-flex items-center gap-2 px-5 sm:px-6 py-2.5 sm:py-3 rounded-full bg-gradient-to-r from-primary-700/5 to-primary-800/5 border border-primary-700/20 hover:border-gold/40 transition-all duration-300 backdrop-blur-sm"
+            className="inline-flex items-center gap-2 px-5 sm:px-6 py-2.5 sm:py-3 rounded-full bg-linear-to-r from-primary-700/5 to-primary-800/5 border border-primary-700/20 hover:border-gold/40 transition-all duration-300 backdrop-blur-sm"
           >
             <Heart className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary-700 animate-pulse" />
             <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-wider text-muted-foreground">
