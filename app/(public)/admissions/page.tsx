@@ -965,9 +965,9 @@ export default function AdmissionsPage() {
 
                 <div className="space-y-4">
                   {[
-                    { n: "Hifz Program", p: "$200-300" },
-                    { n: "Tajweed Mastery", p: "$150-200" },
-                    { n: "Arabic Fluency", p: "$100-150" },
+                    { n: "Hifz Program", p: "$2.25+" },
+                    { n: "Tajweed Mastery", p: "$2+" },
+                    { n: "Arabic Fluency", p: "$2+" },
                   ].map((row, i) => (
                     <div
                       key={i}
