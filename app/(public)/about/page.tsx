@@ -95,9 +95,9 @@ export default function AboutPage() {
 
           <Reveal delay={0.2}>
             <div className="relative aspect-square">
-              <div className="absolute inset-0 border-2 border-gold/20 rounded-[3rem] sm:rounded-[4rem] rotate-3 -z-10" />
+              <div className="absolute inset-0 border-2 border-gold/20 rounded-3xl sm:rounded-[4rem] rotate-3 -z-10" />
 
-              <div className="relative h-full glass-surface rounded-[3rem] sm:rounded-[4rem] border shadow-royal flex items-center justify-center p-8 sm:p-12 overflow-hidden bg-card/40 backdrop-blur-3xl">
+              <div className="relative h-full glass-surface rounded-3xl sm:rounded-[4rem] border shadow-royal flex items-center justify-center p-8 sm:p-12 overflow-hidden bg-card/40 backdrop-blur-3xl">
                 <div className="quran-monumental opacity-5 absolute scale-125 rotate-12 pointer-events-none select-none text-4xl sm:text-6xl whitespace-nowrap">
                   بِسْمِ ٱللَّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ
                 </div>
@@ -158,9 +158,9 @@ export default function AboutPage() {
         {/* SUGGESTION 1: FOUNDER'S NOTE */}
         <div className="mb-24 sm:mb-32">
           <Reveal>
-            <div className="institutional-card p-8 sm:p-10 bg-gradient-to-br from-primary-50/20 to-primary-100/10 border-l-4 border-gold">
+            <div className="institutional-card p-8 sm:p-10 bg-linear-to-br from-primary-50/20 to-primary-100/10 border-l-4 border-gold">
               <div className="flex flex-col md:flex-row gap-6 items-start">
-                <div className="w-16 h-16 rounded-full bg-gradient-to-br from-primary-700 to-primary-800 flex items-center justify-center text-white text-2xl font-black shrink-0">
+                <div className="w-16 h-16 rounded-full bg-linear-to-br from-primary-700 to-primary-800 flex items-center justify-center text-white text-2xl font-black shrink-0">
                   أ
                 </div>
                 <div>
@@ -356,7 +356,7 @@ export default function AboutPage() {
 
         {/* SECTION 5: THE LEARNING ROADMAP */}
         <div className="relative institutional-card p-6 sm:p-8 lg:p-20 xl:p-24 bg-card/30 backdrop-blur-md border-primary-700/10 overflow-hidden mb-20">
-          <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-primary-700 via-gold to-primary-700" />
+          <div className="absolute top-0 left-0 w-full h-1.5 bg-linear-to-r from-primary-700 via-gold to-primary-700" />
 
           <div className="max-w-3xl mb-12 sm:mb-16 lg:mb-20">
             <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black uppercase tracking-tighter mb-3 sm:mb-4 leading-tight">

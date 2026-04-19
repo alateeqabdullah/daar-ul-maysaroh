@@ -1186,7 +1186,7 @@ export default function AdmissionsPage() {
                           Tafsir Al-Mubin (1.5 years)
                         </option>
                         <option value="qiroah">
-                          Group Qiro'ah - Children (6 months)
+                         {` Group Qiro'ah - Children (6 months)`}
                         </option>
                         <option value="juz-amma">
                           Juz Amma Group - Children (8 months)

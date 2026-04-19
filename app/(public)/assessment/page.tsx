@@ -218,7 +218,7 @@ export default function AssessmentPage() {
   }
 
   return (
-    <main className="min-h-screen bg-background overflow-hidden py-20 sm:py-12 md:py-16">
+    <main className="min-h-screen bg-background overflow-hidden py-40 sm:py-20 md:py-40">
       {/* Background Elements - Reduced opacity for mobile */}
       <div className="fixed inset-0 opacity-[0.02] bg-[url('/islamic-pattern.svg')] bg-center bg-repeat pointer-events-none" />
       <div className="fixed top-0 right-0 w-64 h-64 sm:w-96 sm:h-96 bg-primary-700/5 rounded-full blur-3xl -z-10" />
