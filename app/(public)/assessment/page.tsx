@@ -39,12 +39,12 @@ import { motion, AnimatePresence } from "framer-motion";
 const DEAN = {
   name: "Shaykh Abubakar Al-Maysariy",
   title: "Dean of Academic Affairs & Chief Scholar",
-  credentials: "Ijazah in Ten Qira'at • PhD in Quranic Sciences • 30+ Years",
-  experience: "30+ years",
-  students: "5000+",
+  credentials: "Ijazah in Qira'at",
+  experience: "15+ years",
+  students: "500+",
   sanad: "Unbroken chain to Prophet Muhammad (ﷺ)",
   image: "أ",
-  bio: "A direct disciple of senior Makkan scholars, Shaykh Abubakar personally oversees every student's assessment, ensuring each receives a tailored learning path with proper teacher matching.",
+  bio: "Shaykh Abubakar personally oversees every student's assessment, ensuring each receives a tailored learning path with proper teacher matching.",
   quote:
     "Every soul has a unique path to the Quran. My duty is to illuminate that path for you.",
 };
@@ -70,7 +70,7 @@ const TIME_SLOTS = [
 ];
 
 // Formspree Endpoint
-const FORMSPREE_ENDPOINT = "https://formspree.io/f/xgondqpk";
+const FORMSPREE_ENDPOINT = "https://formspree.io/f/xjgjrobk";
 
 export default function AssessmentPage() {
   const [step, setStep] = useState(1);
@@ -167,21 +167,21 @@ export default function AssessmentPage() {
 
   if (isSuccess) {
     return (
-      <main className="min-h-screen bg-background flex items-center justify-center py-12 px-4">
+      <main className="min-h-screen bg-background flex items-center justify-center py-40 px-4">
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="institutional-card p-6 sm:p-8 md:p-12 text-center max-w-md w-full mx-auto"
+          className="institutional-card p-6 sm:p-8 md:p-12 text-center max-w-xl w-full mx-auto"
         >
           <div className="w-20 h-20 sm:w-24 sm:h-24 mx-auto mb-6 rounded-full bg-accent/10 flex items-center justify-center">
             <CheckCircle2 className="w-10 h-10 sm:w-12 sm:h-12 text-accent" />
           </div>
           <h1 className="text-2xl sm:text-3xl md:text-4xl font-black mb-4">
-            Assessment Request Received! 🎉
+            Assessment Request Received!
           </h1>
           <p className="text-muted-foreground text-sm sm:text-base mb-6">
-            Shaykh Abubakar's office will contact you within 24 hours to
-            schedule your personalized assessment session.
+           {` Shaykh Abubakar's office will contact you within 24 hours to
+            schedule your personalized assessment session.`}
           </p>
 
           <div className="p-4 sm:p-6 rounded-xl bg-primary-50/50 dark:bg-primary-950/30 mb-6 text-left">
