@@ -199,13 +199,13 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { cn } from "@/lib/utils";
+
 
 export function CTA() {
   return (
     <section className="py-16 sm:py-24 lg:py-32 relative overflow-hidden">
       {/* Background Elements */}
-      <div className="absolute inset-0 bg-gradient-to-br from-primary-950/20 via-background to-primary-950/10" />
+      <div className="absolute inset-0 bg-linear-to-br from-primary-950/20 via-background to-primary-950/10" />
       <div className="absolute inset-0 opacity-[0.03] bg-[url('/islamic-pattern.svg')] bg-center bg-repeat" />
       
       {/* Animated Orbs */}
@@ -219,7 +219,7 @@ export function CTA() {
       <div className="container mx-auto px-4 sm:px-6 relative z-10">
         <div className="max-w-5xl mx-auto">
           <Reveal>
-            <div className="institutional-card p-8 sm:p-10 md:p-12 lg:p-16 text-center relative overflow-hidden border-2 border-primary-700/20 bg-gradient-to-br from-background via-primary-50/5 to-primary-100/10">
+            <div className="institutional-card p-8 sm:p-10 md:p-12 lg:p-16 text-center relative overflow-hidden border-2 border-primary-700/20 bg-linear-to-br from-background via-primary-50/5 to-primary-100/10">
               
               {/* Decorative Corner Accents */}
               <div className="absolute top-0 left-0 w-20 h-20 border-t-2 border-l-2 border-primary-700/20 rounded-tl-3xl" />
@@ -243,7 +243,7 @@ export function CTA() {
 
               {/* Subheading */}
               <p className="text-base sm:text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-6">
-                Join 1,200+ students who have transformed their relationship with the Quran through our authentic Sanad-based programs.
+                Join 100+ students who have transformed their relationship with the Quran through our authentic Sanad-based programs.
               </p>
 
               {/* Trust Badges Row */}
@@ -307,7 +307,7 @@ export function CTA() {
                   <div className="hidden sm:block w-px h-4 bg-border" />
                   <div className="flex items-center gap-2">
                     <Star className="w-4 h-4 text-primary-700" />
-                    <span>Flexible Payment Plans</span>
+                    <span>Affordable Payment Plans</span>
                   </div>
                 </div>
               </div>
