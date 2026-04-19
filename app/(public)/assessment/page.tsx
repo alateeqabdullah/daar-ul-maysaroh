@@ -3,7 +3,6 @@
 
 import { useState } from "react";
 import {
-  Calendar,
   Clock,
   User,
   Mail,
@@ -12,19 +11,14 @@ import {
   ArrowRight,
   CheckCircle2,
   Loader2,
-  BookOpen,
   Users,
   Heart,
-  Award,
   Crown,
   Shield,
   GraduationCap,
   Globe,
   Quote,
   Scroll,
-  Sun,
-  Moon,
-  Star as StarIcon,
   ChevronLeft,
   ChevronRight,
 } from "lucide-react";
@@ -240,7 +234,7 @@ export default function AssessmentPage() {
             </div>
             <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black tracking-tighter font-heading leading-[1.1] mb-4">
               Your{" "}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-gold via-primary-600 to-primary-800">
+              <span className="text-transparent bg-clip-text bg-linear-to-r from-gold via-primary-600 to-primary-800">
                 Sacred Journey
               </span>
               <br className="hidden sm:block" />
@@ -263,12 +257,12 @@ export default function AssessmentPage() {
             className="max-w-4xl mx-auto mb-8 sm:mb-12 md:mb-16"
           >
             <div className="institutional-card p-5 sm:p-6 md:p-8 overflow-hidden border-2 border-primary-700/20">
-              <div className="h-1 bg-gradient-to-r from-gold via-primary-700 to-gold -mt-5 sm:-mt-6 md:-mt-8 mb-5 sm:mb-6 md:mb-8" />
+              <div className="h-1 bg-linear-to-r from-gold via-primary-700 to-gold -mt-5 sm:-mt-6 md:-mt-8 mb-5 sm:mb-6 md:mb-8" />
 
               <div className="flex flex-col items-center text-center">
                 <div className="relative shrink-0 mb-4">
-                  <div className="absolute -inset-1 bg-gradient-to-r from-gold to-primary-700 rounded-full blur opacity-30" />
-                  <div className="relative w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-full bg-gradient-to-br from-primary-700 to-primary-800 flex items-center justify-center text-white text-3xl sm:text-4xl font-black shadow-2xl">
+                  <div className="absolute -inset-1 bg-linear-to-r from-gold to-primary-700 rounded-full blur opacity-30" />
+                  <div className="relative w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-full bg-linear-to-br from-primary-700 to-primary-800 flex items-center justify-center text-white text-3xl sm:text-4xl font-black shadow-2xl">
                     {DEAN.image}
                   </div>
                   <div className="absolute -bottom-1 -right-1 bg-gold rounded-full p-1 shadow-lg">
@@ -315,7 +309,7 @@ export default function AssessmentPage() {
                   <div className="relative pt-2">
                     <Quote className="absolute -top-1 -left-1 w-4 h-4 text-gold/20" />
                     <p className="text-xs italic text-muted-foreground/80 pl-4">
-                      "{DEAN.quote}"
+                     {` "${DEAN.quote}"`}
                     </p>
                   </div>
                 </div>
@@ -376,7 +370,7 @@ export default function AssessmentPage() {
                         Tell us about yourself
                       </h2>
                       <p className="text-xs sm:text-sm text-muted-foreground">
-                        We'll match you with the right scholar
+                        {`We'll match you with the right scholar`}
                       </p>
                     </div>
 
@@ -503,11 +497,12 @@ export default function AssessmentPage() {
                         >
                           <option value="">Select a program</option>
                           <option value="hifz">Hifz Al-Quran</option>
+                          <option value="qiroah">{`Qiro'ah Al-Quran`}</option>
                           <option value="tajweed">Tajweed Mastery</option>
                           <option value="arabic">Quranic Arabic</option>
                           <option value="tafsir">Tafsir Studies</option>
                           <option value="qiroah">
-                            Group Qiro'ah (Children)
+                            {`Group Qiro'ah (Children)`}
                           </option>
                           <option value="juz-amma">Juz Amma (Children)</option>
                         </select>

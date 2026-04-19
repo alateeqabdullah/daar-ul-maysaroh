@@ -16,38 +16,48 @@ import {
   GraduationCap,
   Star,
 } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
 export default function AboutPage() {
   return (
-    <main className="relative pt-32 pb-20 overflow-hidden">
-      {/* Visual Depth Blobs */}
-      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-primary-700/5 rounded-full blur-[120px] -z-10" />
-      <div className="absolute bottom-1/2 -left-20 w-[400px] h-[400px] bg-gold/5 rounded-full blur-[100px] -z-10" />
+    <main className="relative pt-24 sm:pt-28 md:pt-32 pb-12 sm:pb-16 md:pb-20 overflow-hidden bg-background">
+      {/* Visual Depth Blobs - Mobile optimized */}
+      <div className="absolute top-0 right-0 w-[300px] sm:w-[500px] h-[300px] sm:h-[500px] bg-primary-700/5 rounded-full blur-[80px] sm:blur-[120px] -z-10" />
+      <div className="absolute bottom-1/2 -left-20 w-[250px] sm:w-[400px] h-[250px] sm:h-[400px] bg-gold/5 rounded-full blur-[80px] sm:blur-[100px] -z-10" />
 
-      <div className="container mx-auto px-6">
-        {/* SECTION 1: THE VISION (YOUR ORIGINAL CODE) */}
-        <div className="grid lg:grid-cols-2 gap-16 lg:gap-24 items-center mb-40">
+      <div className="container mx-auto px-4 sm:px-6">
+        {/* Breadcrumb */}
+        <div className="text-xs sm:text-sm text-muted-foreground mb-6 sm:mb-8">
+          <Link href="/" className="hover:text-primary-700 transition-colors">
+            Home
+          </Link>
+          <span className="mx-2">/</span>
+          <span className="text-primary-700 font-medium">About</span>
+        </div>
+
+        {/* SECTION 1: THE VISION */}
+        <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 xl:gap-24 items-center mb-24 sm:mb-32 lg:mb-40">
           <Reveal>
-            <div className="space-y-10">
-              <div className="inline-flex items-center gap-2 text-primary-700 font-black text-[10px] uppercase tracking-[0.4em] bg-primary-50 px-4 py-2 rounded-full border border-primary-700/10">
+            <div className="space-y-6 sm:space-y-8 lg:space-y-10">
+              <div className="inline-flex items-center gap-2 text-primary-700 font-black text-[10px] uppercase tracking-[0.3em] bg-primary-50 px-4 py-2 rounded-full border border-primary-700/10">
                 <Sparkles className="w-3 h-3" /> Our Philosophical Foundation
               </div>
 
-              <h1 className="text-6xl lg:text-8xl xl:text-9xl font-black tracking-tighter font-heading leading-[0.9]">
+              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black tracking-tighter font-heading leading-[1.1] sm:leading-[0.95]">
                 The Divine <br />
                 <span className="text-primary-700 italic">Sanctuary.</span>
               </h1>
 
-              <p className="text-xl lg:text-2xl text-muted-foreground font-medium leading-relaxed border-l-4 border-gold pl-8">
-                {`Al-Maysaroh Institute bridges the gap between classical
-                scholarly rigor and the 21st-century digital world.
-                We don't just teach books; we preserve the light of the Quran.`}
+              <p className="text-lg sm:text-xl lg:text-2xl text-muted-foreground font-medium leading-relaxed border-l-4 border-gold pl-4 sm:pl-6 lg:pl-8">
+                Al-Maysaroh Institute bridges the gap between classical
+                scholarly rigor and the 21st-century digital world. We don't
+                just teach books; we preserve the light of the Quran.
               </p>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 pt-4">
-                <div className="group p-6 rounded-3xl bg-card border border-primary-700/10 hover:border-primary-700/30 transition-all">
-                  <h4 className="font-black uppercase text-[10px] tracking-[0.3em] text-primary-700 mb-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 pt-2 sm:pt-4">
+                <div className="group p-5 sm:p-6 rounded-2xl sm:rounded-3xl bg-card border border-primary-700/10 hover:border-primary-700/30 transition-all">
+                  <h4 className="font-black uppercase text-[10px] tracking-[0.3em] text-primary-700 mb-2 sm:mb-3">
                     Our Mission
                   </h4>
                   <p className="text-sm text-muted-foreground font-bold leading-relaxed">
@@ -55,8 +65,8 @@ export default function AboutPage() {
                     facet of life.
                   </p>
                 </div>
-                <div className="group p-6 rounded-3xl bg-card border border-primary-700/10 hover:border-primary-700/30 transition-all">
-                  <h4 className="font-black uppercase text-[10px] tracking-[0.3em] text-primary-700 mb-3">
+                <div className="group p-5 sm:p-6 rounded-2xl sm:rounded-3xl bg-card border border-primary-700/10 hover:border-primary-700/30 transition-all">
+                  <h4 className="font-black uppercase text-[10px] tracking-[0.3em] text-primary-700 mb-2 sm:mb-3">
                     Our Legacy
                   </h4>
                   <p className="text-sm text-muted-foreground font-bold leading-relaxed">
@@ -70,29 +80,29 @@ export default function AboutPage() {
 
           <Reveal delay={0.2}>
             <div className="relative aspect-square">
-              <div className="absolute inset-0 border-2 border-gold/20 rounded-[4rem] rotate-3 -z-10" />
+              <div className="absolute inset-0 border-2 border-gold/20 rounded-[3rem] sm:rounded-[4rem] rotate-3 -z-10" />
 
-              <div className="relative h-full glass-surface rounded-[4rem] border shadow-royal flex items-center justify-center p-12 overflow-hidden bg-card/40 backdrop-blur-3xl">
-                <div className="quran-monumental opacity-5 absolute scale-125 rotate-12 pointer-events-none select-none">
+              <div className="relative h-full glass-surface rounded-[3rem] sm:rounded-[4rem] border shadow-royal flex items-center justify-center p-8 sm:p-12 overflow-hidden bg-card/40 backdrop-blur-3xl">
+                <div className="quran-monumental opacity-5 absolute scale-125 rotate-12 pointer-events-none select-none text-4xl sm:text-6xl whitespace-nowrap">
                   بِسْمِ ٱللَّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ
                 </div>
 
-                <div className="text-center space-y-8 relative z-10">
-                  <div className="w-20 h-20 bg-gold/10 rounded-full flex items-center justify-center mx-auto shadow-[0_0_30px_rgba(212,175,55,0.2)]">
-                    <Lightbulb className="w-10 h-10 text-gold" />
+                <div className="text-center space-y-6 sm:space-y-8 relative z-10">
+                  <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gold/10 rounded-full flex items-center justify-center mx-auto shadow-[0_0_30px_rgba(212,175,55,0.2)]">
+                    <Lightbulb className="w-8 h-8 sm:w-10 sm:h-10 text-gold" />
                   </div>
-                  <p className="text-3xl lg:text-4xl font-heading italic text-balance leading-tight text-primary-950 dark:text-white">
-                    {` "A generation that carries the Word, and lives its Light."`}
+                  <p className="text-2xl sm:text-3xl lg:text-4xl font-heading italic text-balance leading-tight text-primary-950 dark:text-white">
+                    "A generation that carries the Word, and lives its Light."
                   </p>
-                  <div className="h-px w-12 bg-gold/50 mx-auto" />
+                  <div className="h-px w-10 sm:w-12 bg-gold/50 mx-auto" />
                 </div>
               </div>
             </div>
           </Reveal>
         </div>
 
-        {/* NEW SECTION: CORE VALUES (The "Heart" of the about page) */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-40">
+        {/* SECTION 2: CORE VALUES */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 mb-24 sm:mb-32 lg:mb-40">
           {[
             {
               title: "Ikhlas",
@@ -114,12 +124,12 @@ export default function AboutPage() {
             },
           ].map((val, i) => (
             <Reveal key={i} delay={i * 0.1}>
-              <div className="text-center p-10 rounded-[3rem] bg-primary-50/30 border border-primary-700/5 group hover:border-gold/30 transition-all">
-                <val.icon className="w-10 h-10 text-gold mx-auto mb-6" />
+              <div className="text-center p-8 sm:p-10 rounded-3xl bg-primary-50/30 border border-primary-700/5 group hover:border-gold/30 transition-all">
+                <val.icon className="w-10 h-10 text-gold mx-auto mb-5 sm:mb-6" />
                 <h3 className="text-xl font-black uppercase tracking-tight">
                   {val.title}
                 </h3>
-                <p className="text-[10px] font-black uppercase tracking-widest text-primary-700 mb-4">
+                <p className="text-[10px] font-black uppercase tracking-widest text-primary-700 mb-3 sm:mb-4">
                   {val.label}
                 </p>
                 <p className="text-sm text-muted-foreground font-medium italic">
@@ -130,21 +140,21 @@ export default function AboutPage() {
           ))}
         </div>
 
-        {/* SECTION 2: THE 4 PILLARS (YOUR ORIGINAL CODE) */}
-        <div className="text-center mb-24 space-y-4">
+        {/* SECTION 3: THE 4 PILLARS */}
+        <div className="text-center mb-16 sm:mb-20 lg:mb-24 space-y-4">
           <Reveal>
-            <h2 className="text-4xl md:text-6xl font-black uppercase tracking-tighter">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black uppercase tracking-tighter">
               The Al-Maysaroh{" "}
               <span className="text-primary-700 italic">Method</span>
             </h2>
-            <div className="h-1.5 w-24 bg-gold mx-auto rounded-full" />
+            <div className="h-1 w-16 sm:w-24 bg-gold mx-auto rounded-full" />
             <p className="text-muted-foreground font-bold uppercase tracking-widest text-xs pt-4">
               Our scientific approach to Quranic mastery.
             </p>
           </Reveal>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-40">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 mb-24 sm:mb-32 lg:mb-40">
           {[
             {
               t: "Makharij",
@@ -168,11 +178,11 @@ export default function AboutPage() {
             },
           ].map((pillar, i) => (
             <Reveal key={pillar.t} delay={i * 0.1}>
-              <div className="institutional-card p-10 text-center flex flex-col items-center group hover:-translate-y-2 transition-all">
-                <div className="w-16 h-16 rounded-2xl bg-primary-50 dark:bg-primary-950/40 flex items-center justify-center mb-6 group-hover:bg-primary-700 group-hover:text-white transition-all duration-500">
-                  <pillar.i className="w-8 h-8 text-primary-700 group-hover:text-white" />
+              <div className="institutional-card p-8 sm:p-10 text-center flex flex-col items-center group hover:-translate-y-2 transition-all duration-300">
+                <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-primary-50 dark:bg-primary-950/40 flex items-center justify-center mb-5 sm:mb-6 group-hover:bg-primary-700 group-hover:text-white transition-all duration-500">
+                  <pillar.i className="w-7 h-7 sm:w-8 sm:h-8 text-primary-700 group-hover:text-white" />
                 </div>
-                <h3 className="text-lg font-black uppercase tracking-widest mb-4">
+                <h3 className="text-base sm:text-lg font-black uppercase tracking-widest mb-3 sm:mb-4">
                   {pillar.t}
                 </h3>
                 <p className="text-sm text-muted-foreground font-medium leading-relaxed italic">
@@ -183,9 +193,9 @@ export default function AboutPage() {
           ))}
         </div>
 
-        {/* NEW SECTION: GLOBAL IMPACT (Building Institutional Trust) */}
-        <div className="mb-40 py-20 border-y border-primary-700/5">
-          <div className="grid grid-cols-2 lg:grid-cols-4 gap-12 text-center">
+        {/* SECTION 4: GLOBAL IMPACT */}
+        <div className="mb-24 sm:mb-32 lg:mb-40 py-12 sm:py-16 lg:py-20 border-y border-primary-700/5">
+          <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-8 sm:gap-12 text-center">
             {[
               { label: "Students Worldwide", val: "100+", icon: Users },
               { label: "Represented Nations", val: "5+", icon: Globe },
@@ -197,9 +207,9 @@ export default function AboutPage() {
               { label: "Years of Tradition", val: "1400+", icon: ScrollText },
             ].map((stat, i) => (
               <Reveal key={i} delay={i * 0.1}>
-                <div className="space-y-4">
-                  <stat.icon className="w-6 h-6 text-gold mx-auto opacity-40" />
-                  <h4 className="text-4xl md:text-5xl font-black tracking-tighter text-primary-700">
+                <div className="space-y-2 sm:space-y-3">
+                  <stat.icon className="w-5 h-5 sm:w-6 sm:h-6 text-gold mx-auto opacity-40" />
+                  <h4 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter text-primary-700">
                     {stat.val}
                   </h4>
                   <p className="text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">
@@ -211,21 +221,21 @@ export default function AboutPage() {
           </div>
         </div>
 
-        {/* SECTION 3: THE LEARNING ROADMAP (YOUR ORIGINAL CODE) */}
-        <div className="relative institutional-card p-10 lg:p-24 bg-card/30 backdrop-blur-md border-primary-700/10 overflow-hidden mb-20">
-          <div className="absolute top-0 left-0 w-full h-2 bg-linear-to-r from-primary-700 via-gold to-primary-700" />
+        {/* SECTION 5: THE LEARNING ROADMAP */}
+        <div className="relative institutional-card p-6 sm:p-8 lg:p-20 xl:p-24 bg-card/30 backdrop-blur-md border-primary-700/10 overflow-hidden mb-20">
+          <div className="absolute top-0 left-0 w-full h-1.5 bg-gradient-to-r from-primary-700 via-gold to-primary-700" />
 
-          <div className="max-w-3xl mb-20">
-            <h2 className="text-4xl lg:text-6xl font-black uppercase tracking-tighter mb-4 leading-tight">
+          <div className="max-w-3xl mb-12 sm:mb-16 lg:mb-20">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black uppercase tracking-tighter mb-3 sm:mb-4 leading-tight">
               Your Journey <br />
               <span className="text-primary-700 italic">to Ijazah</span>
             </h2>
-            <p className="text-lg text-muted-foreground font-medium">
+            <p className="text-base sm:text-lg text-muted-foreground font-medium">
               A structured path from beginner to verified carrier of the Quran.
             </p>
           </div>
 
-          <div className="grid lg:grid-cols-3 gap-12 relative">
+          <div className="grid lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-12 relative">
             <div className="hidden lg:block absolute top-10 left-0 w-full h-px bg-primary-700/10 -z-10" />
 
             {[
@@ -255,22 +265,22 @@ export default function AboutPage() {
               },
             ].map((phase, i) => (
               <Reveal key={phase.lvl} delay={i * 0.1}>
-                <div className="relative space-y-8 bg-background/80 p-8 rounded-[2.5rem] border border-primary-700/5 shadow-xl hover:shadow-royal transition-all group">
-                  <div className="w-14 h-14 rounded-2xl bg-primary-700 text-white flex items-center justify-center font-black text-xl shadow-lg group-hover:scale-110 transition-transform">
+                <div className="relative space-y-5 sm:space-y-6 bg-background/80 p-6 sm:p-8 rounded-2xl sm:rounded-3xl border border-primary-700/5 shadow-xl hover:shadow-royal transition-all group">
+                  <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-primary-700 text-white flex items-center justify-center font-black text-lg sm:text-xl shadow-lg group-hover:scale-110 transition-transform">
                     0{i + 1}
                   </div>
 
                   <div>
-                    <h4 className="text-xl font-black uppercase tracking-tight mb-6 group-hover:text-primary-700 transition-colors">
+                    <h4 className="text-lg sm:text-xl font-black uppercase tracking-tight mb-4 sm:mb-6 group-hover:text-primary-700 transition-colors">
                       {phase.lvl}
                     </h4>
-                    <ul className="space-y-4">
+                    <ul className="space-y-3 sm:space-y-4">
                       {phase.items.map((item) => (
                         <li
                           key={item}
-                          className="flex items-center gap-3 text-sm font-bold text-muted-foreground"
+                          className="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm font-bold text-muted-foreground"
                         >
-                          <ChevronRight className="w-4 h-4 text-gold shrink-0" />
+                          <ChevronRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gold shrink-0" />
                           {item}
                         </li>
                       ))}
@@ -281,22 +291,26 @@ export default function AboutPage() {
             ))}
           </div>
 
-          {/* FINAL CTA (Completing the About Page) */}
-          <div className="mt-20 flex flex-col items-center border-t border-primary-700/5 pt-12 text-center">
+          {/* FINAL CTA */}
+          <div className="mt-12 sm:mt-16 lg:mt-20 flex flex-col items-center border-t border-primary-700/5 pt-10 sm:pt-12 lg:pt-16 text-center">
             <Reveal>
-              <h3 className="text-2xl font-black uppercase tracking-tighter mb-6">
+              <h3 className="text-xl sm:text-2xl font-black uppercase tracking-tighter mb-5 sm:mb-6">
                 Start Your Path to Hifz Today
               </h3>
-              <div className="flex flex-col sm:flex-row gap-4">
+              <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
                 <Link href="/admissions">
-                  <button className="px-10 py-5 rounded-full bg-primary-700 text-white font-black uppercase text-xs tracking-widest shadow-royal hover:bg-primary-800 transition-all flex items-center gap-3">
-                    Enroll Now <ArrowRight className="w-4 h-4" />
-                  </button>
+                  <Button className="px-6 sm:px-8 lg:px-10 py-4 sm:py-5 rounded-full bg-primary-700 hover:bg-primary-800 text-white font-black uppercase text-[10px] sm:text-xs tracking-widest shadow-royal transition-all flex items-center gap-2 sm:gap-3">
+                    Enroll Now{" "}
+                    <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                  </Button>
                 </Link>
                 <Link href="/contact">
-                  <button className="px-10 py-5 rounded-full border-2 border-primary-700 text-primary-700 font-black uppercase text-xs tracking-widest hover:bg-primary-50 transition-all">
+                  <Button
+                    variant="outline"
+                    className="px-6 sm:px-8 lg:px-10 py-4 sm:py-5 rounded-full border-2 border-primary-700 text-primary-700 font-black uppercase text-[10px] sm:text-xs tracking-widest hover:bg-primary-50 transition-all"
+                  >
                     Speak to an Advisor
-                  </button>
+                  </Button>
                 </Link>
               </div>
             </Reveal>
