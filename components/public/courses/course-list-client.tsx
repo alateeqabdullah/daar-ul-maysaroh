@@ -313,6 +313,7 @@ function CourseCard({ program }: { program: Program }) {
 
       {/* CONTENT AREA */}
       <div className="grow space-y-6 w-full">
+        <Link href={`/courses/${program.id}`}>
         <div>
           <h3 className="text-2xl sm:text-3xl font-black uppercase tracking-tighter leading-none group-hover:text-primary-700 transition-colors mb-2">
             {program.name}
@@ -366,6 +367,7 @@ function CourseCard({ program }: { program: Program }) {
               </span>
             </div>
           </div>
+          
         </div>
 
         {/* Features as Tags */}
@@ -379,6 +381,7 @@ function CourseCard({ program }: { program: Program }) {
             </span>
           ))}
         </div>
+        </Link>
       </div>
 
       {/* COMMAND FOOTER */}

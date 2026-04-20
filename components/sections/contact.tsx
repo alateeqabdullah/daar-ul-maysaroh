@@ -150,7 +150,6 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
-import { cn } from "@/lib/utils";
 import Link from "next/link";
 
 export function Contact() {
@@ -277,7 +276,7 @@ export function Contact() {
 
             <div className="grid sm:grid-cols-2 gap-4 sm:gap-6">
               <Reveal delay={0.2}>
-                <div className="p-6 sm:p-8 rounded-2xl sm:rounded-[2rem] border-2 border-primary-100 dark:border-primary-900/30 hover:border-primary-700 dark:hover:border-primary-700 transition-all group bg-gradient-to-br from-background to-primary-50/20">
+                <div className="p-6 sm:p-8 rounded-2xl sm:rounded-2xl border-2 border-primary-100 dark:border-primary-900/30 hover:border-primary-700 dark:hover:border-primary-700 transition-all group bg-linear-to-br from-background to-primary-50/20">
                   <Landmark className="w-6 h-6 sm:w-8 sm:h-8 text-primary-700 mb-3 sm:mb-4 group-hover:scale-110 transition-transform" />
                   <h4 className="font-black uppercase text-xs tracking-widest mb-2">
                     Admissions Council
@@ -292,7 +291,7 @@ export function Contact() {
               </Reveal>
 
               <Reveal delay={0.3}>
-                <div className="p-6 sm:p-8 rounded-2xl sm:rounded-[2rem] border-2 border-accent/10 hover:border-accent transition-all group bg-gradient-to-br from-background to-accent/5">
+                <div className="p-6 sm:p-8 rounded-2xl sm:rounded-2xl border-2 border-accent/10 hover:border-accent transition-all group bg-linear-to-br from-background to-accent/5">
                   <ShieldCheck className="w-6 h-6 sm:w-8 sm:h-8 text-accent mb-3 sm:mb-4 group-hover:scale-110 transition-transform" />
                   <h4 className="font-black uppercase text-xs tracking-widest mb-2">
                     Technical Registrar
@@ -313,7 +312,7 @@ export function Contact() {
                   {[1, 2, 3, 4].map((i) => (
                     <div
                       key={i}
-                      className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-4 border-background bg-gradient-to-br from-primary-600 to-primary-800 shadow-xl"
+                      className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-4 border-background bg-linear-to-br from-primary-600 to-primary-800 shadow-xl"
                     />
                   ))}
                 </div>
@@ -333,14 +332,14 @@ export function Contact() {
 
           {/* RIGHT COLUMN - Form */}
           <Reveal delay={0.5}>
-            <div className="glass-surface p-6 sm:p-8 lg:p-12 xl:p-16 rounded-3xl sm:rounded-[3rem] lg:rounded-[4rem] border border-primary-700/20 shadow-xl lg:shadow-3xl relative overflow-hidden">
+            <div className="glass-surface p-6 sm:p-8 lg:p-12 xl:p-16 rounded-3xl sm:rounded-3xl lg:rounded-[4rem] border border-primary-700/20 shadow-xl lg:shadow-3xl relative overflow-hidden">
               {/* Background glow */}
               <div className="absolute top-0 right-0 w-32 sm:w-48 lg:w-64 h-32 sm:h-48 lg:h-64 bg-primary-700/5 blur-[60px] lg:blur-[80px] -z-10 rounded-full" />
 
               {/* Success overlay */}
               {isSuccess && (
                 <div className="absolute inset-0 bg-background/95 backdrop-blur-sm z-20 flex items-center justify-center animate-in fade-in duration-300">
-                  <div className="bg-gradient-to-br from-primary-50 to-background dark:from-primary-950/30 dark:to-background p-8 rounded-3xl text-center max-w-sm mx-4 shadow-2xl border border-primary-700/20">
+                  <div className="bg-linear-to-br from-primary-50 to-background dark:from-primary-950/30 dark:to-background p-8 rounded-3xl text-center max-w-sm mx-4 shadow-2xl border border-primary-700/20">
                     <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-primary-700/10 flex items-center justify-center">
                       <CheckCircle2 className="w-10 h-10 text-primary-700" />
                     </div>
@@ -450,11 +449,12 @@ export function Contact() {
                     disabled={isSubmitting}
                   >
                     <option value="">Select a program</option>
+                    <option value="qiroah">{`Quran Reading Mastery`}</option>
                     <option value="hifz">Hifz Mastery Track</option>
                     <option value="tajweed">Tajweed Phonetics</option>
                     <option value="arabic">Classical Arabic</option>
                     <option value="ijazah">Ijazah Certification</option>
-                    <option value="qiroah">{`Group Qiro'ah (Children)`}</option>
+                    <option value="group-qiroah">{`Group Qiro'ah (Children)`}</option>
                     <option value="juz-amma">Juz Amma (Children)</option>
                     <option value="other">Other Inquiry</option>
                   </select>
@@ -488,7 +488,7 @@ export function Contact() {
                 <Button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full h-14 sm:h-16 lg:h-20 rounded-2xl sm:rounded-[2rem] bg-primary-700 hover:bg-primary-800 text-white font-black text-[10px] sm:text-[11px] tracking-[0.2em] sm:tracking-[0.3em] uppercase shadow-xl relative overflow-hidden group disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
+                  className="w-full h-14 sm:h-16 lg:h-20 rounded-2xl sm:rounded-2xl bg-primary-700 hover:bg-primary-800 text-white font-black text-[10px] sm:text-[11px] tracking-[0.2em] sm:tracking-[0.3em] uppercase shadow-xl relative overflow-hidden group disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300"
                 >
                   <span className="relative z-10 flex items-center justify-center gap-2">
                     {isSubmitting ? (
@@ -506,8 +506,8 @@ export function Contact() {
 
                   {/* Shimmer effect */}
                   {!isSubmitting && (
-                    <div className="absolute inset-0 -z-10 overflow-hidden rounded-2xl sm:rounded-[2rem]">
-                      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -skew-x-12 animate-shimmer" />
+                    <div className="absolute inset-0 -z-10 overflow-hidden rounded-2xl sm:rounded-2xl">
+                      <div className="absolute inset-0 bg-linear-to-r from-transparent via-white/10 to-transparent -skew-x-12 animate-shimmer" />
                     </div>
                   )}
                 </Button>

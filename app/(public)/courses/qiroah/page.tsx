@@ -599,7 +599,7 @@ export default function QiroahProgramPage() {
                     </Button>
                   </Link>
 
-                  <Link href="/contact">
+                  <Link href="/assessment">
                     <Button
                       variant="outline"
                       className="rounded-full px-8 py-4 sm:px-10 sm:py-5 font-black text-base sm:text-lg min-h-11 w-full sm:w-auto"

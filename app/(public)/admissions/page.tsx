@@ -1177,19 +1177,20 @@ export default function AdmissionsPage() {
                         className="w-full h-12 px-4 rounded-xl border border-border bg-background focus:border-primary-700 focus:ring-2 focus:ring-primary-500/20 outline-none transition-all appearance-none"
                       >
                         <option value="">Select a program</option>
-                        <option value="hifz">Hifz Al-Quran (2-3 years)</option>
+                        <option value="qiroah">{`Qiro'ah Al-Quran`}</option>
+                        <option value="hifz">Hifz Al-Quran</option>
                         <option value="tajweed">
-                          Tajweed Al-Itqan (6 months)
+                          Tajweed Al-Itqan
                         </option>
-                        <option value="arabic">Quranic Arabic (1 year)</option>
+                        <option value="arabic">Quranic Arabic</option>
                         <option value="tafsir">
-                          Tafsir Al-Mubin (1.5 years)
+                          Tafsir Al-Mubin
                         </option>
                         <option value="qiroah">
                          {` Group Qiro'ah - Children (6 months)`}
                         </option>
                         <option value="juz-amma">
-                          Juz Amma Group - Children (8 months)
+                          Juz Amma Group - Children
                         </option>
                         <option value="ijazah">
                           Ijazah Certification Track
@@ -1264,7 +1265,7 @@ export default function AdmissionsPage() {
               },
               {
                 q: "Can I change programs after enrollment?",
-                a: "Yes, curriculum shifts are permitted within the first academic month of your enrollment.",
+                a: "Yes, curriculum shifts are always subject to teacher availability and may require a brief reassessment to ensure proper placement.",
               },
               {
                 q: "Is financial aid available?",

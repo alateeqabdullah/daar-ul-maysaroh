@@ -1,7 +1,7 @@
 import { Hero } from "@/components/sections/hero";
 import { Teachers } from "@/components/sections/teachers";
 import { Testimonials } from "@/components/sections/testimonials";
-import { PaymentPlansWithStripe } from "@/components/payment/payment-plans-with-stripe";
+// import { PaymentPlansWithStripe } from "@/components/payment/payment-plans-with-stripe";
 import { Features } from "@/components/sections/features";
 import { Stats } from "@/components/sections/stats";
 import { QuranicVerse } from "@/components/sections/quranic-verse";
