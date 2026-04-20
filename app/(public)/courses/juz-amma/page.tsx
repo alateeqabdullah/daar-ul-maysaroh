@@ -1515,8 +1515,8 @@ export default function JuzAmmaPage() {
               <MessageCircle className="w-3.5 h-3.5" /> Common Questions
             </div>
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter font-heading mb-4">
-              Your <span className="text-amber-600 italic">Questions</span>,
-              Answered
+              Your <span className="text-amber-600 italic">Questions</span>
+             {`, Answered`}
             </h2>
           </div>
 {/* 
