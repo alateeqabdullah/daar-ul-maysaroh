@@ -960,7 +960,6 @@
 //   );
 // }
 
-
 // app/courses/group-qiroah/page.tsx
 "use client";
 
@@ -1017,7 +1016,7 @@ const PROGRAM_DATA = {
   description: "A warm, nurturing group learning experience for absolute beginners of all ages. Join a community of learners on the same beautiful journey.",
   audience: "All Ages • Absolute Beginners Welcome",
   duration: "Flexible (6-12 months)",
-  sessionsPerWeek: "1-3 sessions",
+  sessionsPerWeek: "2-4 sessions",
   sessionDuration: "45-60 minutes",
   format: "Small Groups (4-10 learners)",
   level: "Beginner to Intermediate",
@@ -1054,7 +1053,7 @@ const SCHEDULE_OPTIONS = [
 
 // Success Stories
 const STORIES = [
-  { name: "Abdulbasit, 45", type: "Working Professional", quote: "I never thought I could learn Quran reading at my age. The patient teachers and supportive group made it possible.", duration: "7 months", icon: Briefcase },
+  { name: "Abdbasit, 45", type: "Working Professional", quote: "I never thought I could learn Quran reading at my age. The patient teachers and supportive group made it possible.", duration: "7 months", icon: Briefcase },
   { name: "Qonitah, 9", type: "Young Learner", quote: "Learning to read the Quran is fun! I love the challenges and my friends in the class.", duration: "6 months", icon: Baby },
   { name: "Habeebah, 32", type: "Busy Mother", quote: "The flexible schedule allowed me to learn without sacrificing family time. I'm now reading short surahs confidently!", duration: "6 months", icon: Heart },
   { name: "Yusuf, 19", type: "University Student", quote: "The group setting kept me accountable and motivated. I've gone from zero to reading surahs confidently.", duration: "7 months", icon: GraduationCap },
@@ -1067,19 +1066,19 @@ const FAQS = [
   { q: "How much time should I practice at home?", a: "We recommend 10-15 minutes of daily practice. Consistency matters more than quantity." },
   { q: "What if I miss a class?", a: "Recordings are available, and we offer flexible makeup options within the same week." },
   { q: "Can I switch to 1-on-1 later?", a: "Absolutely! Many students start in groups and transition to private sessions as they advance." },
-  { q: "Is there a free trial?", a: "Yes! We offer a free 20-30-minute assessment session to experience our teaching style." },
+  { q: "Is there any assessment?", a: "Yes! We offer a free 20-30-minute assessment session to experience our teaching style." },
 ];
 
 export default function GroupQiroahPage() {
   const containerRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({ target: containerRef, offset: ["start start", "end start"] });
-  const heroY = useTransform(scrollYProgress, [0, 1], [0, -100]);
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0.9]);
+  const heroY = useTransform(scrollYProgress, [0, 1], [0, -50]); // Reduced movement on mobile
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0.95]);
 
   return (
-    <main ref={containerRef} className="relative pt-12 bg-background overflow-hidden">
-      {/* Premium Background Effects */}
-      <div className="fixed inset-0 pointer-events-none">
+    <main ref={containerRef} className="relative pt-0 sm:pt-12 bg-background overflow-hidden">
+      {/* Premium Background Effects - Hidden on mobile for performance */}
+      <div className="hidden sm:block fixed inset-0 pointer-events-none">
         <div className="absolute inset-0 opacity-[0.02] bg-[url('/islamic-pattern.svg')] bg-center bg-repeat" style={{ backgroundSize: "300px" }} />
         <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-amber-500/5 rounded-full blur-[150px]" />
         <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-orange-500/5 rounded-full blur-[150px]" />
@@ -1091,71 +1090,71 @@ export default function GroupQiroahPage() {
         <motion.div animate={{ y: [0, -15, 0], opacity: [0.4, 0.7, 0.4] }} transition={{ duration: 3.5, repeat: Infinity, delay: 2 }} className="absolute top-1/3 right-1/4 w-2 h-2 bg-rose-400/30 rounded-full" />
       </div>
 
-      {/* Hero Section - Premium Design */}
-      <motion.div style={{ y: heroY, opacity: heroOpacity }} className="relative pt-24 sm:pt-28 md:pt-32 pb-16">
+      {/* Hero Section - Mobile-First */}
+      <motion.div style={{ y: heroY, opacity: heroOpacity }} className="relative pt-16 sm:pt-24 md:pt-28 lg:pt-32 pb-12 sm:pb-16">
         <div className="container mx-auto px-4 sm:px-6">
           <div className="max-w-4xl mx-auto text-center">
             <motion.div
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ duration: 0.5 }}
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-linear-to-r from-amber-500/10 to-orange-500/10 border border-amber-500/20 text-amber-700 text-[11px] font-black uppercase tracking-wider mb-6 backdrop-blur-sm"
+              className="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-5 py-1.5 sm:py-2.5 rounded-full bg-linear-to-r from-amber-500/10 to-orange-500/10 border border-amber-500/20 text-amber-700 text-[9px] sm:text-[11px] font-black uppercase tracking-wider mb-4 sm:mb-6 backdrop-blur-sm"
             >
-              <Sparkles className="w-3.5 h-3.5" /> 🌟 For Everyone • All Ages Welcome 🌟
+              <Sparkles className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5" /> 🌟 For Everyone • All Ages Welcome 🌟
             </motion.div>
             
-            <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-black tracking-tighter font-heading leading-[1.1] mb-6">
+            <h1 className="text-4xl xs:text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-black tracking-tighter font-heading leading-[1.1] sm:leading-[1.1] mb-4 sm:mb-6 px-2">
               Learn to Read{" "}
-              <span className="text-transparent bg-clip-text bg-linear-to-r from-amber-600 via-orange-600 to-rose-600">
+              <span className="text-transparent bg-clip-text bg-linear-to-r from-amber-600 via-orange-600 to-rose-600 whitespace-normal">
                 the Quran
               </span>
             </h1>
             
-            <p className="text-xl text-muted-foreground font-light max-w-2xl mx-auto mb-8 leading-relaxed">
+            <p className="text-base sm:text-xl text-muted-foreground font-light max-w-2xl mx-auto mb-6 sm:mb-8 leading-relaxed px-4">
               {PROGRAM_DATA.description}
             </p>
             
-            <div className="flex flex-wrap justify-center gap-3 mb-8">
+            <div className="flex flex-wrap justify-center gap-2 sm:gap-3 mb-6 sm:mb-8 px-2">
               {[
                 { icon: Users, text: PROGRAM_DATA.format },
                 { icon: Clock, text: `${PROGRAM_DATA.sessionDuration} sessions` },
                 { icon: Smile, text: "Beginner Friendly" },
               ].map((item, i) => (
-                <div key={i} className="flex items-center gap-2 px-4 py-2 rounded-full bg-linear-to-r from-amber-50 to-orange-50 dark:from-amber-950/30 dark:to-orange-950/30 border border-amber-200 dark:border-amber-800 text-amber-700 text-xs font-black">
-                  <item.icon className="w-3.5 h-3.5" />
-                  {item.text}
+                <div key={i} className="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-full bg-linear-to-r from-amber-50 to-orange-50 dark:from-amber-950/30 dark:to-orange-950/30 border border-amber-200 dark:border-amber-800 text-amber-700 text-[10px] sm:text-xs font-black">
+                  <item.icon className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+                  <span className="truncate">{item.text}</span>
                 </div>
               ))}
             </div>
             
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/assessment">
-                <Button className="rounded-full px-10 py-5 sm:px-12 sm:py-6 font-black bg-linear-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white text-base sm:text-lg shadow-xl hover:shadow-2xl transition-all duration-300 group">
-                  <span className="flex items-center gap-2">
+            <div className="flex flex-col xs:flex-row gap-3 sm:gap-4 justify-center px-4">
+              <Link href="/assessment" className="w-full xs:w-auto">
+                <Button className="w-full rounded-full px-6 sm:px-10 py-4 sm:py-5 font-black bg-linear-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white text-sm sm:text-base shadow-xl hover:shadow-2xl transition-all duration-300 group">
+                  <span className="flex items-center justify-center gap-2">
                     START FREE ASSESSMENT
-                    <Rocket className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform" />
+                    <Rocket className="w-3.5 h-3.5 sm:w-4 sm:h-4 group-hover:translate-x-1 transition-transform" />
                   </span>
                 </Button>
               </Link>
-              <Link href="#journey">
-                <Button variant="outline" className="rounded-full px-10 py-5 sm:px-12 sm:py-6 font-black text-base sm:text-lg border-amber-600 text-amber-600 hover:bg-amber-50 transition-all duration-300">
+              <Link href="#journey" className="w-full xs:w-auto">
+                <Button variant="outline" className="w-full rounded-full px-6 sm:px-10 py-4 sm:py-5 font-black text-sm sm:text-base border-amber-600 text-amber-600 hover:bg-amber-50 transition-all duration-300">
                   EXPLORE THE JOURNEY
                 </Button>
               </Link>
             </div>
 
-            {/* Stats with Premium Cards */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-12 pt-8 border-t border-border/50">
+            {/* Stats - Mobile-First Grid */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mt-10 sm:mt-12 pt-6 sm:pt-8 border-t border-border/50 px-2">
               {[
                 { label: "Happy Learners", value: "50+", icon: Users },
                 { label: "Success Rate", value: "95%", icon: Target },
                 { label: "Global Reach", value: "6+", icon: Globe },
                 { label: "Avg. Completion", value: "7 mo", icon: Calendar },
               ].map((stat, i) => (
-                <motion.div key={i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }} className="p-4 rounded-2xl bg-linear-to-br from-amber-50/50 to-orange-50/50 dark:from-amber-950/20 dark:to-orange-950/20 border border-amber-100 dark:border-amber-800">
-                  <stat.icon className="w-5 h-5 text-amber-600 mx-auto mb-2" />
-                  <div className="text-2xl sm:text-3xl font-black text-amber-600">{stat.value}</div>
-                  <div className="text-xs text-muted-foreground mt-1">{stat.label}</div>
+                <motion.div key={i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }} className="p-2.5 sm:p-4 rounded-xl sm:rounded-2xl bg-linear-to-br from-amber-50/50 to-orange-50/50 dark:from-amber-950/20 dark:to-orange-950/20 border border-amber-100 dark:border-amber-800">
+                  <stat.icon className="w-4 h-4 sm:w-5 sm:h-5 text-amber-600 mx-auto mb-1.5 sm:mb-2" />
+                  <div className="text-lg sm:text-2xl md:text-3xl font-black text-amber-600">{stat.value}</div>
+                  <div className="text-[10px] sm:text-xs text-muted-foreground mt-0.5 sm:mt-1">{stat.label}</div>
                 </motion.div>
               ))}
             </div>
@@ -1163,33 +1162,33 @@ export default function GroupQiroahPage() {
         </div>
       </motion.div>
 
-      {/* Benefits Section - Premium Cards */}
-      <section className="py-20 bg-linear-to-b from-background via-amber-50/5 to-orange-50/5">
+      {/* Benefits Section - Mobile-First */}
+      <section className="py-16 sm:py-20 bg-linear-to-b from-background via-amber-50/5 to-orange-50/5">
         <div className="container mx-auto px-4 sm:px-6">
-          <div className="text-center max-w-2xl mx-auto mb-14">
-            <div className="inline-flex items-center gap-2 text-amber-600 font-black text-[10px] uppercase tracking-[0.3em] mb-4">
-              <Heart className="w-3.5 h-3.5" /> Why Families Love Us
+          <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-14">
+            <div className="inline-flex items-center gap-2 text-amber-600 font-black text-[9px] sm:text-[10px] uppercase tracking-[0.2em] sm:tracking-[0.3em] mb-3 sm:mb-4">
+              <Heart className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> Why Families Love Us
             </div>
-            <h2 className="text-4xl sm:text-5xl md:text-6xl font-black tracking-tighter font-heading mb-4">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black tracking-tighter font-heading mb-3 sm:mb-4 px-2">
               A <span className="text-transparent bg-clip-text bg-linear-to-r from-amber-600 to-orange-600">Supportive</span> Learning Environment
             </h2>
-            <p className="text-muted-foreground text-lg">Where everyone can learn at their own pace, with encouragement every step of the way</p>
+            <p className="text-base sm:text-lg text-muted-foreground px-4">Where everyone can learn at their own pace, with encouragement every step of the way</p>
           </div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {BENEFITS.map((benefit, i) => {
               const Icon = benefit.icon;
               return (
                 <Reveal key={i} delay={i * 0.1}>
-                  <motion.div whileHover={{ y: -5 }} className="group p-6 rounded-2xl bg-background border border-border hover:border-amber-300 shadow-lg hover:shadow-xl transition-all duration-300">
-                    <div className="flex gap-4">
-                      <div className="w-14 h-14 rounded-xl bg-linear-to-br from-amber-100 to-orange-100 dark:from-amber-950/50 dark:to-orange-950/50 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
-                        <Icon className="w-7 h-7 text-amber-600" />
+                  <motion.div whileHover={{ y: -5 }} className="group p-4 sm:p-6 rounded-xl sm:rounded-2xl bg-background border border-border hover:border-amber-300 shadow-lg hover:shadow-xl transition-all duration-300">
+                    <div className="flex gap-3 sm:gap-4">
+                      <div className="w-10 h-10 sm:w-14 sm:h-14 rounded-lg sm:rounded-xl bg-linear-to-br from-amber-100 to-orange-100 dark:from-amber-950/50 dark:to-orange-950/50 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                        <Icon className="w-5 h-5 sm:w-7 sm:h-7 text-amber-600" />
                       </div>
-                      <div>
-                        <h3 className="font-black text-lg mb-1">{benefit.title}</h3>
-                        <p className="text-sm text-muted-foreground">{benefit.description}</p>
-                        <div className="mt-2 inline-flex px-2 py-0.5 rounded-full bg-amber-100 dark:bg-amber-900/30 text-amber-700 text-[10px] font-black">
+                      <div className="flex-1 min-w-0">
+                        <h3 className="font-black text-base sm:text-lg mb-1">{benefit.title}</h3>
+                        <p className="text-xs sm:text-sm text-muted-foreground break-words">{benefit.description}</p>
+                        <div className="mt-1.5 sm:mt-2 inline-flex px-1.5 sm:px-2 py-0.5 rounded-full bg-amber-100 dark:bg-amber-900/30 text-amber-700 text-[8px] sm:text-[10px] font-black">
                           {benefit.audience}
                         </div>
                       </div>
@@ -1202,54 +1201,55 @@ export default function GroupQiroahPage() {
         </div>
       </section>
 
-      {/* Learning Journey - Premium Timeline */}
-      <section id="journey" className="py-20 scroll-mt-24">
+      {/* Learning Journey - Mobile-First Timeline */}
+      <section id="journey" className="py-16 sm:py-20 scroll-mt-16 sm:scroll-mt-24">
         <div className="container mx-auto px-4 sm:px-6">
-          <div className="text-center max-w-2xl mx-auto mb-14">
-            <div className="inline-flex items-center gap-2 text-amber-600 font-black text-[10px] uppercase tracking-[0.3em] mb-4">
-              <Compass className="w-3.5 h-3.5" /> Your Path to Mastery
+          <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-14">
+            <div className="inline-flex items-center gap-2 text-amber-600 font-black text-[9px] sm:text-[10px] uppercase tracking-[0.2em] sm:tracking-[0.3em] mb-3 sm:mb-4">
+              <Compass className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> Your Path to Mastery
             </div>
-            <h2 className="text-4xl sm:text-5xl md:text-6xl font-black tracking-tighter font-heading mb-4">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black tracking-tighter font-heading mb-3 sm:mb-4 px-2">
               From <span className="text-transparent bg-clip-text bg-linear-to-r from-amber-600 to-orange-600">First Letter</span> to <span className="text-transparent bg-clip-text bg-linear-to-r from-orange-600 to-rose-600">Confident Reader</span>
             </h2>
-            <p className="text-muted-foreground text-lg">A clear, supportive progression designed for lasting success</p>
+            <p className="text-base sm:text-lg text-muted-foreground px-4">A clear, supportive progression designed for lasting success</p>
           </div>
 
           <div className="relative max-w-4xl mx-auto">
-            <div className="absolute left-7 top-0 bottom-0 w-0.5 bg-linear-to-b from-amber-400 via-orange-400 to-rose-400 hidden md:block" />
-            <div className="space-y-8">
+            {/* Vertical line - hidden on mobile */}
+            <div className="hidden lg:block absolute left-7 top-0 bottom-0 w-0.5 bg-linear-to-b from-amber-400 via-orange-400 to-rose-400" />
+            <div className="space-y-6 sm:space-y-8">
               {LEARNING_JOURNEY.map((stage, idx) => {
                 const Icon = stage.icon;
                 return (
                   <Reveal key={idx} delay={idx * 0.1}>
-                    <div className="relative pl-0 md:pl-20">
-                      <div className="hidden md:flex absolute left-0 top-6 w-14 h-14 rounded-full bg-linear-to-br from-amber-500 to-orange-500 items-center justify-center text-white font-black text-xl shadow-lg group-hover:scale-110 transition-transform">
+                    <div className="relative lg:pl-20">
+                      <div className="hidden lg:flex absolute left-0 top-6 w-14 h-14 rounded-full bg-linear-to-br from-amber-500 to-orange-500 items-center justify-center text-white font-black text-xl shadow-lg group-hover:scale-110 transition-transform">
                         {idx + 1}
                       </div>
-                      <div className="institutional-card p-6 md:p-8 hover:border-amber-300 transition-all duration-300">
-                        <div className="flex flex-col md:flex-row gap-6">
+                      <div className="bg-card rounded-xl sm:rounded-2xl border border-border hover:border-amber-300 transition-all duration-300 p-5 sm:p-6 md:p-8">
+                        <div className="flex flex-col md:flex-row gap-4 md:gap-6">
                           <div className="md:w-72">
-                            <div className="flex items-center gap-3 mb-2">
-                              <div className="w-12 h-12 rounded-xl bg-linear-to-br from-amber-100 to-orange-100 dark:from-amber-950/30 dark:to-orange-950/30 flex items-center justify-center">
-                                <Icon className="w-6 h-6 text-amber-600" />
+                            <div className="flex items-center gap-2 sm:gap-3 mb-2">
+                              <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-linear-to-br from-amber-100 to-orange-100 dark:from-amber-950/30 dark:to-orange-950/30 flex items-center justify-center">
+                                <Icon className="w-5 h-5 sm:w-6 sm:h-6 text-amber-600" />
                               </div>
-                              <h3 className="font-black text-2xl">{stage.stage}</h3>
+                              <h3 className="font-black text-xl sm:text-2xl">{stage.stage}</h3>
                             </div>
-                            <div className="inline-flex px-3 py-1 rounded-full bg-amber-100 dark:bg-amber-900/30 text-amber-700 text-xs font-black mt-2">
+                            <div className="inline-flex px-2 sm:px-3 py-0.5 sm:py-1 rounded-full bg-amber-100 dark:bg-amber-900/30 text-amber-700 text-[9px] sm:text-xs font-black mt-1 sm:mt-2">
                               {stage.duration}
                             </div>
-                            <p className="text-sm text-muted-foreground mt-3">{stage.focus}</p>
+                            <p className="text-xs sm:text-sm text-muted-foreground mt-2 sm:mt-3">{stage.focus}</p>
                           </div>
                           <div className="flex-1">
-                            <div className="flex flex-wrap gap-2">
+                            <div className="flex flex-wrap gap-1.5 sm:gap-2">
                               {stage.activities.map((activity, i) => (
-                                <div key={i} className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-linear-to-r from-amber-50 to-orange-50 dark:from-amber-950/30 dark:to-orange-950/30 text-amber-700 text-xs font-black">
-                                  <CheckCircle2 className="w-3.5 h-3.5" />
-                                  {activity}
+                                <div key={i} className="flex items-center gap-1 px-2 sm:px-3 py-1 sm:py-1.5 rounded-full bg-linear-to-r from-amber-50 to-orange-50 dark:from-amber-950/30 dark:to-orange-950/30 text-amber-700 text-[9px] sm:text-xs font-black">
+                                  <CheckCircle2 className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5" />
+                                  <span className="truncate">{activity}</span>
                                 </div>
                               ))}
                             </div>
-                            <div className="mt-4 h-2 w-full bg-amber-100 dark:bg-amber-900/30 rounded-full overflow-hidden">
+                            <div className="mt-3 sm:mt-4 h-1.5 sm:h-2 w-full bg-amber-100 dark:bg-amber-900/30 rounded-full overflow-hidden">
                               <motion.div
                                 initial={{ width: 0 }}
                                 whileInView={{ width: `${(idx + 1) * 25}%` }}
@@ -1269,54 +1269,53 @@ export default function GroupQiroahPage() {
         </div>
       </section>
 
-      {/* Schedule & Pricing - Premium Cards */}
-      <section className="py-20 bg-linear-to-b from-background via-amber-50/5 to-orange-50/5">
+      {/* Schedule & Pricing - Mobile-First Grid */}
+      <section className="py-16 sm:py-20 bg-linear-to-b from-background via-amber-50/5 to-orange-50/5">
         <div className="container mx-auto px-4 sm:px-6">
-          <div className="grid lg:grid-cols-2 gap-8">
+          <div className="grid lg:grid-cols-2 gap-6 sm:gap-8">
             {/* Schedule Card */}
             <Reveal>
-              <div className="institutional-card p-8 hover:border-amber-300 transition-all duration-300">
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="w-12 h-12 rounded-xl bg-linear-to-br from-amber-100 to-orange-100 dark:from-amber-950/30 dark:to-orange-950/30 flex items-center justify-center">
-                    <Calendar className="w-6 h-6 text-amber-600" />
+              <div className="bg-card rounded-xl sm:rounded-2xl border border-border hover:border-amber-300 transition-all duration-300 p-5 sm:p-6 md:p-8">
+                <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-linear-to-br from-amber-100 to-orange-100 dark:from-amber-950/30 dark:to-orange-950/30 flex items-center justify-center">
+                    <Calendar className="w-5 h-5 sm:w-6 sm:h-6 text-amber-600" />
                   </div>
-                  <h3 className="font-black text-2xl">Flexible Schedule</h3>
+                  <h3 className="font-black text-xl sm:text-2xl">Flexible Schedule</h3>
                 </div>
-                <div className="space-y-3">
+                <div className="space-y-2 sm:space-y-3">
                   {SCHEDULE_OPTIONS.map((slot, i) => {
                     const Icon = slot.icon;
                     return (
-                      <div key={i} className="p-4 rounded-xl bg-background border border-border hover:border-amber-300 transition-all">
-                        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
-                          <div className="flex items-center gap-3">
-                            <Icon className="w-4 h-4 text-amber-600" />
-                            <span className="font-black text-sm">{slot.day}</span>
+                      <div key={i} className="p-3 sm:p-4 rounded-lg sm:rounded-xl bg-background border border-border hover:border-amber-300 transition-all">
+                        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-1 sm:gap-2">
+                          <div className="flex items-center gap-2 sm:gap-3">
+                            <Icon className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-600" />
+                            <span className="font-black text-xs sm:text-sm">{slot.day}</span>
                           </div>
-                          <span className="text-sm text-muted-foreground">{slot.time}</span>
+                          <span className="text-xs sm:text-sm text-muted-foreground pl-6 sm:pl-0">{slot.time}</span>
                         </div>
                       </div>
                     );
                   })}
                 </div>
-                {/* <p className="text-xs text-muted-foreground mt-4 text-center">✨ All times in EST • More time zones available • Custom schedules possible ✨</p> */}
               </div>
             </Reveal>
 
             {/* Pricing Card */}
             <Reveal delay={0.2}>
-              <div className="institutional-card p-8 bg-linear-to-br from-amber-50/20 to-orange-50/20 hover:border-amber-300 transition-all duration-300">
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="w-12 h-12 rounded-xl bg-linear-to-br from-amber-500 to-orange-500 flex items-center justify-center shadow-lg">
-                    <Gem className="w-6 h-6 text-white" />
+              <div className="bg-card rounded-xl sm:rounded-2xl border border-border hover:border-amber-300 transition-all duration-300 p-5 sm:p-6 md:p-8 bg-linear-to-br from-amber-50/20 to-orange-50/20">
+                <div className="flex items-center gap-2 sm:gap-3 mb-4 sm:mb-6">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg sm:rounded-xl bg-linear-to-br from-amber-500 to-orange-500 flex items-center justify-center shadow-lg">
+                    <Gem className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
                   </div>
-                  <h3 className="font-black text-2xl">Simple, Transparent Pricing</h3>
+                  <h3 className="font-black text-xl sm:text-2xl">Simple Pricing</h3>
                 </div>
-                <div className="space-y-6">
+                <div className="space-y-4 sm:space-y-6">
                   <div className="text-center">
-                    <div className="text-5xl font-black text-transparent bg-clip-text bg-linear-to-r from-amber-600 to-orange-600">{PROGRAM_DATA.priceRange}</div>
-                    <p className="text-sm text-muted-foreground mt-1">{PROGRAM_DATA.pricePeriod} • includes all materials</p>
+                    <div className="text-4xl sm:text-5xl font-black text-transparent bg-clip-text bg-linear-to-r from-amber-600 to-orange-600">{PROGRAM_DATA.priceRange}</div>
+                    <p className="text-xs sm:text-sm text-muted-foreground mt-1">{PROGRAM_DATA.pricePeriod} • includes all materials</p>
                   </div>
-                  <div className="space-y-3">
+                  <div className="space-y-2 sm:space-y-3">
                     {[
                       "2-4 small group sessions per week",
                       "All digital learning materials",
@@ -1325,17 +1324,11 @@ export default function GroupQiroahPage() {
                       "Free assessment session",
                       "Certificate upon completion",
                     ].map((feature, i) => (
-                      <div key={i} className="flex items-center gap-3 text-sm p-2 rounded-lg hover:bg-amber-50/50 transition-colors">
-                        <CheckCircle2 className="w-4 h-4 text-amber-600 shrink-0" />
-                        <span>{feature}</span>
+                      <div key={i} className="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm p-1.5 sm:p-2 rounded-lg hover:bg-amber-50/50 transition-colors">
+                        <CheckCircle2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-600 shrink-0" />
+                        <span className="break-words">{feature}</span>
                       </div>
                     ))}
-                  </div>
-                  <div className="pt-4 border-t border-border">
-                    {/* <div className="flex justify-between items-center text-sm p-3 rounded-lg bg-amber-50/30">
-                      <span className="font-black">Family discount (3+ members)</span>
-                      <span className="font-black text-transparent bg-clip-text bg-linear-to-r from-amber-600 to-orange-600">15% off</span>
-                    </div> */}
                   </div>
                 </div>
               </div>
@@ -1344,36 +1337,36 @@ export default function GroupQiroahPage() {
         </div>
       </section>
 
-      {/* Success Stories - Premium Cards */}
-      <section className="py-20">
+      {/* Success Stories - Mobile-First Grid */}
+      <section className="py-16 sm:py-20">
         <div className="container mx-auto px-4 sm:px-6">
-          <div className="text-center max-w-2xl mx-auto mb-14">
-            <div className="inline-flex items-center gap-2 text-amber-600 font-black text-[10px] uppercase tracking-[0.3em] mb-4">
-              <Users className="w-3.5 h-3.5" /> Real Stories, Real Success
+          <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-14">
+            <div className="inline-flex items-center gap-2 text-amber-600 font-black text-[9px] sm:text-[10px] uppercase tracking-[0.2em] sm:tracking-[0.3em] mb-3 sm:mb-4">
+              <Users className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> Real Stories, Real Success
             </div>
-            <h2 className="text-4xl sm:text-5xl md:text-6xl font-black tracking-tighter font-heading mb-4">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black tracking-tighter font-heading mb-3 sm:mb-4 px-2">
               From Our <span className="text-transparent bg-clip-text bg-linear-to-r from-amber-600 to-orange-600">Community</span>
             </h2>
-            <p className="text-muted-foreground text-lg">Learners of all ages who found their path with us</p>
+            <p className="text-base sm:text-lg text-muted-foreground px-4">Learners of all ages who found their path with us</p>
           </div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
             {STORIES.map((story, i) => (
               <Reveal key={i} delay={i * 0.1}>
-                <motion.div whileHover={{ y: -5 }} className="institutional-card p-6 h-full flex flex-col group">
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="w-14 h-14 rounded-full bg-linear-to-br from-amber-500 to-orange-500 flex items-center justify-center text-white font-black text-xl shadow-lg">
+                <motion.div whileHover={{ y: -5 }} className="bg-card rounded-xl sm:rounded-2xl border border-border hover:border-amber-300 transition-all p-4 sm:p-6 h-full flex flex-col group">
+                  <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
+                    <div className="w-10 h-10 sm:w-14 sm:h-14 rounded-full bg-linear-to-br from-amber-500 to-orange-500 flex items-center justify-center text-white font-black text-lg sm:text-xl shadow-lg shrink-0">
                       {story.name.charAt(0)}
                     </div>
-                    <div>
-                      <h4 className="font-black text-lg">{story.name}</h4>
-                      <p className="text-xs text-amber-600 font-black">{story.type}</p>
+                    <div className="min-w-0">
+                      <h4 className="font-black text-base sm:text-lg truncate">{story.name}</h4>
+                      <p className="text-[10px] sm:text-xs text-amber-600 font-black truncate">{story.type}</p>
                     </div>
                   </div>
-                  <Quote className="w-8 h-8 text-amber-200 dark:text-amber-800/30 mb-3" />
-                  <p className="text-sm text-muted-foreground italic grow leading-relaxed">"{story.quote}"</p>
-                  <div className="mt-4 pt-3 border-t border-border">
-                    <p className="text-xs font-black text-transparent bg-clip-text bg-linear-to-r from-amber-600 to-orange-600">✓ Completed in {story.duration}</p>
+                  <Quote className="w-6 h-6 sm:w-8 sm:h-8 text-amber-200 dark:text-amber-800/30 mb-2 sm:mb-3" />
+                  <p className="text-xs sm:text-sm text-muted-foreground italic grow leading-relaxed break-words">"{story.quote}"</p>
+                  <div className="mt-3 sm:mt-4 pt-2 sm:pt-3 border-t border-border">
+                    <p className="text-[10px] sm:text-xs font-black text-transparent bg-clip-text bg-linear-to-r from-amber-600 to-orange-600">✓ Completed in {story.duration}</p>
                   </div>
                 </motion.div>
               </Reveal>
@@ -1382,29 +1375,29 @@ export default function GroupQiroahPage() {
         </div>
       </section>
 
-      {/* FAQ Section - Premium Accordion */}
-      <section className="py-20 bg-linear-to-b from-background via-amber-50/5 to-orange-50/5">
+      {/* FAQ Section - Mobile-First Grid */}
+      <section className="py-16 sm:py-20 bg-linear-to-b from-background via-amber-50/5 to-orange-50/5">
         <div className="container mx-auto px-4 sm:px-6">
-          <div className="text-center max-w-2xl mx-auto mb-14">
-            <div className="inline-flex items-center gap-2 text-amber-600 font-black text-[10px] uppercase tracking-[0.3em] mb-4">
-              <MessageCircle className="w-3.5 h-3.5" /> Common Questions
+          <div className="text-center max-w-2xl mx-auto mb-10 sm:mb-14">
+            <div className="inline-flex items-center gap-2 text-amber-600 font-black text-[9px] sm:text-[10px] uppercase tracking-[0.2em] sm:tracking-[0.3em] mb-3 sm:mb-4">
+              <MessageCircle className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> Common Questions
             </div>
-            <h2 className="text-4xl sm:text-5xl md:text-6xl font-black tracking-tighter font-heading mb-4">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black tracking-tighter font-heading mb-3 sm:mb-4 px-2">
               Frequently Asked <span className="text-transparent bg-clip-text bg-linear-to-r from-amber-600 to-orange-600">Questions</span>
             </h2>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+          <div className="grid sm:grid-cols-2 gap-4 sm:gap-6 max-w-4xl mx-auto">
             {FAQS.map((faq, i) => (
               <Reveal key={i} delay={i * 0.05}>
-                <motion.div whileHover={{ y: -3 }} className="institutional-card p-6 hover:border-amber-300 transition-all duration-300">
-                  <div className="flex items-start gap-3">
-                    <div className="w-8 h-8 rounded-full bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center shrink-0 mt-0.5">
-                      <Sparkles className="w-4 h-4 text-amber-600" />
+                <motion.div whileHover={{ y: -3 }} className="bg-card rounded-xl sm:rounded-2xl border border-border hover:border-amber-300 transition-all duration-300 p-4 sm:p-6">
+                  <div className="flex items-start gap-2 sm:gap-3">
+                    <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center shrink-0 mt-0.5">
+                      <Sparkles className="w-3 h-3 sm:w-4 sm:h-4 text-amber-600" />
                     </div>
-                    <div>
-                      <h3 className="font-black text-base mb-2">{faq.q}</h3>
-                      <p className="text-sm text-muted-foreground leading-relaxed">{faq.a}</p>
+                    <div className="min-w-0">
+                      <h3 className="font-black text-sm sm:text-base mb-1 sm:mb-2 break-words">{faq.q}</h3>
+                      <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed break-words">{faq.a}</p>
                     </div>
                   </div>
                 </motion.div>
@@ -1414,44 +1407,44 @@ export default function GroupQiroahPage() {
         </div>
       </section>
 
-      {/* Final CTA - Premium */}
-      <section className="py-24">
+      {/* Final CTA - Mobile-First */}
+      <section className="py-16 sm:py-24">
         <div className="container mx-auto px-4 sm:px-6">
           <motion.div
             initial={{ opacity: 0, scale: 0.98 }}
             whileInView={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5 }}
-            className="institutional-card p-10 md:p-14 text-center max-w-4xl mx-auto bg-linear-to-br from-amber-50/30 via-orange-50/20 to-rose-50/30"
+            className="bg-card rounded-xl sm:rounded-2xl border border-border hover:border-amber-300 transition-all p-6 sm:p-8 md:p-10 lg:p-14 text-center max-w-4xl mx-auto bg-linear-to-br from-amber-50/30 via-orange-50/20 to-rose-50/30"
           >
-            <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-linear-to-br from-amber-500 to-orange-500 mb-6 shadow-xl">
-              <Smile className="w-12 h-12 text-white" />
+            <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-full bg-linear-to-br from-amber-500 to-orange-500 mb-4 sm:mb-6 shadow-xl">
+              <Smile className="w-8 h-8 sm:w-10 sm:h-10 md:w-12 md:h-12 text-white" />
             </div>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-black mb-4">Start Your Quran Reading Journey Today</h2>
-            <p className="text-muted-foreground mb-8 max-w-md mx-auto text-lg">
-             {` No matter your age or background - we're here to help you succeed.
-              Begin with a free, no-obligation assessment.`}
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black mb-3 sm:mb-4 px-2">Start Your Quran Reading Journey Today</h2>
+            <p className="text-sm sm:text-base md:text-lg text-muted-foreground mb-6 sm:mb-8 max-w-md mx-auto px-4">
+              No matter your age or background - we're here to help you succeed.
+              Begin with a free, no-obligation assessment.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/assessment">
-                <Button className="rounded-full px-10 py-5 font-black bg-linear-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white shadow-xl hover:shadow-2xl transition-all duration-300 group">
-                  <span className="flex items-center gap-2">
+            <div className="flex flex-col xs:flex-row gap-3 sm:gap-4 justify-center px-4">
+              <Link href="/assessment" className="w-full xs:w-auto">
+                <Button className="w-full rounded-full px-6 sm:px-8 md:px-10 py-4 sm:py-5 font-black bg-linear-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white shadow-xl hover:shadow-2xl transition-all duration-300 text-sm sm:text-base group">
+                  <span className="flex items-center justify-center gap-2">
                     BOOK FREE ASSESSMENT
-                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                    <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 group-hover:translate-x-1 transition-transform" />
                   </span>
                 </Button>
               </Link>
-              <Link href="/contact">
-                <Button variant="outline" className="rounded-full px-10 py-5 font-black border-amber-600 text-amber-600 hover:bg-amber-50 transition-all duration-300">
+              <Link href="/contact" className="w-full xs:w-auto">
+                <Button variant="outline" className="w-full rounded-full px-6 sm:px-8 md:px-10 py-4 sm:py-5 font-black text-sm sm:text-base border-amber-600 text-amber-600 hover:bg-amber-50 transition-all duration-300">
                   TALK TO ADVISOR
                 </Button>
               </Link>
             </div>
-            <div className="mt-6 flex flex-wrap justify-center gap-3">
-              <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">✨ Free 20-minute session</span>
-              <span className="text-xs text-muted-foreground">•</span>
-              <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">💝 No commitment</span>
-              <span className="text-xs text-muted-foreground">•</span>
-              <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">🌍 All ages welcome</span>
+            <div className="mt-5 sm:mt-6 flex flex-wrap justify-center gap-2 sm:gap-3 px-2">
+              <span className="inline-flex items-center gap-1 text-[10px] sm:text-xs text-muted-foreground">✨ Free 20-minute session</span>
+              <span className="text-[10px] sm:text-xs text-muted-foreground hidden xs:inline">•</span>
+              <span className="inline-flex items-center gap-1 text-[10px] sm:text-xs text-muted-foreground">💝 No commitment</span>
+              <span className="text-[10px] sm:text-xs text-muted-foreground hidden xs:inline">•</span>
+              <span className="inline-flex items-center gap-1 text-[10px] sm:text-xs text-muted-foreground">🌍 All ages welcome</span>
             </div>
           </motion.div>
         </div>
