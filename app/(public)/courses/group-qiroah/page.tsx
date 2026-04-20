@@ -1196,7 +1196,7 @@ export default function GroupQiroahPage() {
   const heroOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0.9]);
 
   return (
-    <main ref={containerRef} className="relative bg-background overflow-hidden">
+    <main ref={containerRef} className="relative pt-10 bg-background overflow-hidden">
       {/* Universal Background - Warm & Inviting */}
       <div className="fixed inset-0 pointer-events-none">
         <div className="absolute inset-0 opacity-[0.02] bg-[url('/islamic-pattern.svg')] bg-center bg-repeat" style={{ backgroundSize: "300px" }} />

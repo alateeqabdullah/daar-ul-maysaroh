@@ -84,14 +84,14 @@ const navigation = [
       },
       // Group Programs Section
       {
-        name: "─ GROUP PROGRAMS (CHILDREN) ─",
+        name: "─ GROUP PROGRAMS ─",
         divider: true,
         col: "full",
       },
       {
         name: "Group Qiro'ah",
         href: "/courses/group-qiroah",
-        desc: "Ages 7-12 • Learn to read with joy",
+        desc: "All Ages• Learn to read with joy",
         icon: Users,
         badge: "Popular",
         col: "left",
@@ -99,7 +99,7 @@ const navigation = [
       {
         name: "Juz Amma Group",
         href: "/courses/juz-amma",
-        desc: "Ages 6-12 • Memorize the last Juz",
+        desc: "All Ages• Memorize the last Juz",
         icon: Star,
         badge: "New",
         col: "right",
