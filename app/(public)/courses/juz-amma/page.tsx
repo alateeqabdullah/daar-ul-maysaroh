@@ -1,399 +1,1394 @@
+// // app/courses/juz-amma/page.tsx
+// "use client";
+
+// import { useState, useEffect, useRef } from "react";
+// import {
+//   motion,
+//   useScroll,
+//   useTransform,
+//   AnimatePresence,
+// } from "framer-motion";
+// import {
+//   BookOpen,
+//   Star,
+//   Clock,
+//   Calendar,
+//   Award,
+//   Shield,
+//   Users,
+//   Sparkles,
+//   ArrowRight,
+//   CheckCircle2,
+//   Heart,
+//   Moon,
+//   Sun,
+//   Cloud,
+//   Flower,
+//   Leaf,
+//   Gem,
+//   Crown,
+//   Target,
+//   TrendingUp,
+//   Zap,
+//   Play,
+//   Headphones,
+//   Mic,
+//   Volume2,
+//   Quote,
+//   ChevronRight,
+//   MapPin,
+//   GraduationCap,
+//   BadgeCheck,
+//   Trophy,
+//   Medal,
+//   Diamond,
+//   Compass,
+//   Feather,
+//   PenTool,
+//   Brain,
+//   Eye,
+//   Ear,
+//   MessageCircle,
+//   Gift,
+//   Rocket,
+//   Infinity,
+// } from "lucide-react";
+// import { Button } from "@/components/ui/button";
+// import { Reveal } from "@/components/shared/section-animation";
+// import Link from "next/link";
+
+
+// // Juz Amma Program Data - Premium Teal/Sapphire Theme
+// const PROGRAM_DATA = {
+//   name: "Juz Amma Memorization",
+//   tagline: "Where Every Child's Quranic Journey Begins",
+//   description:
+//     "A transformative program designed to help children and beginners memorize the 30th Juz of the Quran with precision, understanding, and a deep, lasting love for the Book of Allah.",
+//   ageGroup: "6-14 years",
+//   duration: "8-12 months",
+//   sessionsPerWeek: 2,
+//   sessionDuration: "45-60 minutes",
+//   classSize: "4-6 students (group) or 1-on-1",
+//   surahs: 37,
+//   verses: 564,
+//   priceRange: "$79 - $149/month",
+//   colors: {
+//     primary: "from-cyan-600 to-teal-600",
+//     secondary: "from-teal-500 to-cyan-500",
+//     accent: "from-emerald-500 to-cyan-500",
+//     light: "cyan-50",
+//     dark: "cyan-950",
+//     border: "cyan-200",
+//     text: "cyan-700",
+//   },
+// };
+
+// // Surah Categories with enhanced details
+// const SURAH_CATEGORIES = [
+//   {
+//     name: "The Illuminated Path",
+//     surahs: "Surah An-Nas to Al-Asr (114-103)",
+//     count: 12,
+//     description:
+//       "Short, powerful surahs that establish the foundation of faith and daily remembrance",
+//     icon: Star,
+//     difficulty: "Gentle Start",
+//     duration: "3-4 months",
+//     color: "from-cyan-400 to-teal-400",
+//   },
+//   {
+//     name: "The Rising Light",
+//     surahs: "Surah At-Takathur to Al-Qadr (102-97)",
+//     count: 6,
+//     description:
+//       "Deeper spiritual concepts that connect the child's heart to the divine message",
+//     icon: TrendingUp,
+//     difficulty: "Building Momentum",
+//     duration: "2-3 months",
+//     color: "from-teal-400 to-emerald-400",
+//   },
+//   {
+//     name: "The Crown of Achievement",
+//     surahs: "Surah Al-Alaq to An-Naba (96-78)",
+//     count: 19,
+//     description:
+//       "Extended surahs that develop memorization stamina and profound understanding",
+//     icon: Crown,
+//     difficulty: "Advanced Mastery",
+//     duration: "4-5 months",
+//     color: "from-emerald-400 to-cyan-400",
+//   },
+// ];
+
+// // Program Pillars
+// const PILLARS = [
+//   {
+//     icon: Shield,
+//     title: "Authentic Sanad",
+//     description:
+//       "Learn through an unbroken chain of transmission reaching back 1400 years",
+//     color: "cyan",
+//   },
+//   {
+//     icon: Mic,
+//     title: "Live Recitation",
+//     description: "Real-time correction from Ijazah-certified scholars",
+//     color: "teal",
+//   },
+//   {
+//     icon: Heart,
+//     title: "Meaningful Learning",
+//     description: "Understand the message, not just memorize the words",
+//     color: "emerald",
+//   },
+//   {
+//     icon: Award,
+//     title: "Progress Recognition",
+//     description: "Earn badges, certificates, and celebrate every milestone",
+//     color: "cyan",
+//   },
+// ];
+
+// // Learning Milestones
+// const MILESTONES = [
+//   {
+//     level: "Seedling",
+//     surahs: "1-5 Surahs",
+//     badge: "🌱",
+//     description: "First steps into Quranic memorization",
+//     color: "from-emerald-400 to-teal-400",
+//   },
+//   {
+//     level: "Blooming",
+//     surahs: "6-15 Surahs",
+//     badge: "🌸",
+//     description: "Building confidence and fluency",
+//     color: "from-teal-400 to-cyan-400",
+//   },
+//   {
+//     level: "Flourishing",
+//     surahs: "16-25 Surahs",
+//     badge: "🌿",
+//     description: "Developing memorization stamina",
+//     color: "from-cyan-400 to-sky-400",
+//   },
+//   {
+//     level: "Guardian",
+//     surahs: "26-37 Surahs",
+//     badge: "🏆",
+//     description: "Complete Juz Amma mastery",
+//     color: "from-emerald-500 to-cyan-500",
+//   },
+// ];
+
+// // Student Journey
+// const JOURNEY_STAGES = [
+//   {
+//     stage: "Discovery",
+//     icon: Compass,
+//     description: "Introduction to the beauty of Quranic memorization",
+//     duration: "First 2 months",
+//   },
+//   {
+//     stage: "Growth",
+//     icon: TrendingUp,
+//     description: "Building memorization skills and confidence",
+//     duration: "Months 3-6",
+//   },
+//   {
+//     stage: "Mastery",
+//     icon: Crown,
+//     description: "Achieving fluency and deep understanding",
+//     duration: "Months 7-12",
+//   },
+//   {
+//     stage: "Celebration",
+//     icon: Gift,
+//     description: "Completing Juz Amma with Ijazah preparation",
+//     duration: "Final month",
+//   },
+// ];
+
+// // Schedule Options
+// const SCHEDULE_OPTIONS = [
+//   { day: "Monday & Wednesday", time: "4:00 PM - 5:00 PM (EST)", icon: Sun },
+//   { day: "Tuesday & Thursday", time: "5:00 PM - 6:00 PM (EST)", icon: Moon },
+//   { day: "Saturday", time: "10:00 AM - 11:30 AM (EST)", icon: Sun },
+//   { day: "Sunday", time: "11:00 AM - 12:30 PM (EST)", icon: Sun },
+//   { day: "Flexible", time: "Custom schedule available", icon: Clock },
+// ];
+
+// // FAQ Data
+// const FAQS = [
+//   {
+//     q: "What if my child has never memorized before?",
+//     a: "Perfect! This program is designed for absolute beginners. We start with foundational techniques and build gradually, ensuring your child never feels overwhelmed.",
+//   },
+//   {
+//     q: "How much parent involvement is needed?",
+//     a: "Parents receive weekly progress reports and are encouraged to support revision at home (15-20 minutes daily). Our teachers provide structured guidance for parents too.",
+//   },
+//   {
+//     q: "What happens after completing Juz Amma?",
+//     a: "Graduates receive a certificate and can advance to our Juz Tabarak program or transition to the full Hifz track with Ijazah preparation.",
+//   },
+//   {
+//     q: "Can siblings join the same class?",
+//     a: "Yes! Siblings can join together, and we offer a 15% family discount for 3 or more enrollments from the same household.",
+//   },
+//   {
+//     q: "What technology is required?",
+//     a: "A computer or tablet with a camera and microphone, stable internet connection, and Zoom (free version works perfectly).",
+//   },
+//   {
+//     q: "Is there a trial period?",
+//     a: "We offer a free 20-minute assessment session where your child can experience our teaching style before committing.",
+//   },
+// ];
+
+// // Helper function
+// function cn(...classes: (string | boolean | undefined)[]) {
+//   return classes.filter(Boolean).join(" ");
+// }
+
+// export default function JuzAmmaPage() {
+//   const [selectedSchedule, setSelectedSchedule] = useState("");
+//   const [activeTab, setActiveTab] = useState("overview");
+//   const containerRef = useRef<HTMLElement>(null);
+//   const { scrollYProgress } = useScroll({
+//     target: containerRef,
+//     offset: ["start start", "end start"],
+//   });
+//   const heroY = useTransform(scrollYProgress, [0, 1], [0, -200]);
+//   const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
+
+//   return (
+//     <main ref={containerRef} className="relative bg-background overflow-hidden">
+//       {/* Premium Background Effects */}
+//       <div className="fixed inset-0 pointer-events-none">
+//         <div
+//           className="absolute inset-0 opacity-[0.02] bg-[url('/islamic-pattern.svg')] bg-center bg-repeat"
+//           style={{ backgroundSize: "300px" }}
+//         />
+//         <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-cyan-500/5 rounded-full blur-[150px]" />
+//         <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-teal-500/5 rounded-full blur-[150px]" />
+//         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-emerald-500/3 rounded-full blur-[200px]" />
+//       </div>
+
+//       {/* Hero Section with Parallax */}
+//       <motion.div
+//         style={{ y: heroY, opacity }}
+//         className="relative pt-24 sm:pt-28 md:pt-32 pb-16 sm:pb-20 md:pb-24"
+//       >
+//         <div className="container mx-auto px-4 sm:px-6">
+//           <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+//             {/* Left Content */}
+//             <div className="space-y-6 sm:space-y-8">
+//               <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-gradient-to-r from-cyan-500/10 to-teal-500/10 border border-cyan-500/20 text-cyan-700 text-[11px] font-black uppercase tracking-wider">
+//                 <Sparkles className="w-3.5 h-3.5" /> Award-Winning Children's
+//                 Program
+//               </div>
+
+//               <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tighter font-heading leading-[0.9]">
+//                 Juz{" "}
+//                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 via-teal-600 to-emerald-600">
+//                   Amma
+//                 </span>
+//                 <br />
+//                 Memorization
+//               </h1>
+
+//               <p className="text-lg sm:text-xl text-muted-foreground font-light leading-relaxed max-w-lg">
+//                 {PROGRAM_DATA.description}
+//               </p>
+
+//               <div className="flex flex-wrap gap-3">
+//                 <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-cyan-50 dark:bg-cyan-950/30 text-cyan-700 text-xs font-black">
+//                   <Users className="w-3.5 h-3.5" />
+//                   {PROGRAM_DATA.classSize}
+//                 </div>
+//                 <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-cyan-50 dark:bg-cyan-950/30 text-cyan-700 text-xs font-black">
+//                   <Clock className="w-3.5 h-3.5" />
+//                   {PROGRAM_DATA.sessionsPerWeek}x week •{" "}
+//                   {PROGRAM_DATA.sessionDuration}
+//                 </div>
+//                 <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-cyan-50 dark:bg-cyan-950/30 text-cyan-700 text-xs font-black">
+//                   <BookOpen className="w-3.5 h-3.5" />
+//                   {PROGRAM_DATA.surahs} Surahs
+//                 </div>
+//               </div>
+
+//               <div className="flex flex-col sm:flex-row gap-4 pt-4">
+//                 <Link href="/assessment">
+//                   <Button className="rounded-full px-8 py-4 sm:px-10 sm:py-5 font-black bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-700 hover:to-teal-700 text-white text-base sm:text-lg shadow-xl hover:shadow-2xl transition-all duration-300">
+//                     <span className="flex items-center gap-2">
+//                       START FREE ASSESSMENT
+//                       <Rocket className="w-4 h-4 sm:w-5 sm:h-5" />
+//                     </span>
+//                   </Button>
+//                 </Link>
+//                 <Link href="#curriculum">
+//                   <Button
+//                     variant="outline"
+//                     className="rounded-full px-8 py-4 sm:px-10 sm:py-5 font-black text-base sm:text-lg border-cyan-600 text-cyan-600 hover:bg-cyan-50"
+//                   >
+//                     VIEW CURRICULUM
+//                   </Button>
+//                 </Link>
+//               </div>
+//             </div>
+
+//             {/* Right Hero Visual */}
+//             <div className="relative">
+//               <div className="absolute -inset-4 bg-gradient-to-r from-cyan-500/20 to-teal-500/20 rounded-3xl blur-2xl" />
+//               <div className="relative institutional-card p-8 bg-gradient-to-br from-cyan-50/30 to-teal-50/30 dark:from-cyan-950/20 dark:to-teal-950/20 border-2 border-cyan-200 dark:border-cyan-800 rounded-3xl">
+//                 <div className="grid grid-cols-2 gap-6 mb-8">
+//                   {[
+//                     {
+//                       label: "Duration",
+//                       value: PROGRAM_DATA.duration,
+//                       icon: Calendar,
+//                     },
+//                     {
+//                       label: "Surahs",
+//                       value: PROGRAM_DATA.surahs,
+//                       icon: BookOpen,
+//                     },
+//                     { label: "Verses", value: PROGRAM_DATA.verses, icon: Star },
+//                     {
+//                       label: "Age Group",
+//                       value: PROGRAM_DATA.ageGroup,
+//                       icon: Users,
+//                     },
+//                   ].map((stat, i) => (
+//                     <div
+//                       key={i}
+//                       className="text-center p-3 rounded-xl bg-white/50 dark:bg-black/20"
+//                     >
+//                       <stat.icon className="w-5 h-5 text-cyan-600 mx-auto mb-2" />
+//                       <div className="text-2xl font-black text-cyan-600">
+//                         {stat.value}
+//                       </div>
+//                       <div className="text-xs text-muted-foreground">
+//                         {stat.label}
+//                       </div>
+//                     </div>
+//                   ))}
+//                 </div>
+//                 <div className="p-5 rounded-xl bg-gradient-to-r from-cyan-500/10 to-teal-500/10 border border-cyan-500/20">
+//                   <div className="flex items-center gap-3 mb-2">
+//                     <Gem className="w-6 h-6 text-cyan-600" />
+//                     <span className="font-black text-sm uppercase tracking-tight">
+//                       The Gateway to Quranic Memorization
+//                     </span>
+//                   </div>
+//                   <p className="text-sm text-muted-foreground">
+//                     Perfect your recitation of Juz Amma with proper Tajweed and
+//                     understanding of meanings
+//                   </p>
+//                 </div>
+//               </div>
+//             </div>
+//           </div>
+//         </div>
+//       </motion.div>
+
+//       {/* Stats Bar */}
+//       <div className="border-y border-border/50 bg-muted/20 py-6 mb-16">
+//         <div className="container mx-auto px-4 sm:px-6">
+//           <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 text-center">
+//             {[
+//               { label: "Active Students", value: "500+", icon: Users },
+//               { label: "Completion Rate", value: "94%", icon: Target },
+//               { label: "Parent Satisfaction", value: "98%", icon: Heart },
+//               { label: "Certified Graduates", value: "200+", icon: Award },
+//             ].map((stat, i) => (
+//               <div key={i}>
+//                 <div className="text-2xl sm:text-3xl font-black text-cyan-600">
+//                   {stat.value}
+//                 </div>
+//                 <div className="text-xs text-muted-foreground mt-1">
+//                   {stat.label}
+//                 </div>
+//               </div>
+//             ))}
+//           </div>
+//         </div>
+//       </div>
+
+//       {/* Program Pillars */}
+//       <section className="mb-24">
+//         <div className="container mx-auto px-4 sm:px-6">
+//           <div className="text-center max-w-2xl mx-auto mb-12">
+//             <div className="inline-flex items-center gap-2 text-cyan-600 font-black text-[10px] uppercase tracking-[0.3em] mb-4">
+//               <Shield className="w-3.5 h-3.5" /> Our Foundation
+//             </div>
+//             <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter font-heading mb-4">
+//               The{" "}
+//               <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-600 to-teal-600">
+//                 Al-Maysaroh
+//               </span>{" "}
+//               Difference
+//             </h2>
+//             <p className="text-muted-foreground">
+//               What makes our Juz Amma program truly exceptional
+//             </p>
+//           </div>
+
+//           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+//             {PILLARS.map((pillar, i) => {
+//               const Icon = pillar.icon;
+//               return (
+//                 <Reveal key={i} delay={i * 0.1}>
+//                   <div className="text-center p-6 rounded-2xl bg-gradient-to-br from-cyan-50/30 to-teal-50/30 border border-cyan-100 dark:border-cyan-800 group hover:-translate-y-2 transition-all duration-300">
+//                     <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-cyan-100 to-teal-100 dark:from-cyan-900/30 dark:to-teal-900/30 flex items-center justify-center group-hover:scale-110 transition-transform">
+//                       <Icon className="w-8 h-8 text-cyan-600" />
+//                     </div>
+//                     <h3 className="font-black text-lg mb-2">{pillar.title}</h3>
+//                     <p className="text-sm text-muted-foreground">
+//                       {pillar.description}
+//                     </p>
+//                   </div>
+//                 </Reveal>
+//               );
+//             })}
+//           </div>
+//         </div>
+//       </section>
+
+//       {/* Surah Journey - Interactive Timeline */}
+//       <section id="curriculum" className="mb-24 scroll-mt-24">
+//         <div className="container mx-auto px-4 sm:px-6">
+//           <div className="text-center max-w-2xl mx-auto mb-12">
+//             <div className="inline-flex items-center gap-2 text-cyan-600 font-black text-[10px] uppercase tracking-[0.3em] mb-4">
+//               <Compass className="w-3.5 h-3.5" /> Your Child's Path
+//             </div>
+//             <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter font-heading mb-4">
+//               A Journey Through{" "}
+//               <span className="text-cyan-600 italic">Juz Amma</span>
+//             </h2>
+//             <p className="text-muted-foreground">
+//               A carefully structured progression from beginner to confident
+//               reciter
+//             </p>
+//           </div>
+
+//           <div className="relative">
+//             <div className="absolute left-8 top-0 bottom-0 w-0.5 bg-gradient-to-b from-cyan-400 via-teal-400 to-emerald-400 hidden md:block" />
+//             <div className="space-y-8">
+//               {SURAH_CATEGORIES.map((category, idx) => {
+//                 const Icon = category.icon;
+//                 return (
+//                   <Reveal key={idx} delay={idx * 0.1}>
+//                     <div className="relative pl-0 md:pl-16">
+//                       <div className="hidden md:block absolute left-0 top-6 w-8 h-8 rounded-full bg-gradient-to-r from-cyan-500 to-teal-500 flex items-center justify-center text-white text-sm font-black shadow-lg">
+//                         {idx + 1}
+//                       </div>
+//                       <div className="institutional-card p-6 md:p-8 hover:border-cyan-300 transition-all">
+//                         <div className="flex flex-col md:flex-row gap-6">
+//                           <div className="md:w-64 shrink-0">
+//                             <div className="flex items-center gap-3 mb-3">
+//                               <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-cyan-100 to-teal-100 dark:from-cyan-900/30 dark:to-teal-900/30 flex items-center justify-center">
+//                                 <Icon className="w-6 h-6 text-cyan-600" />
+//                               </div>
+//                               <div>
+//                                 <h3 className="font-black text-xl">
+//                                   {category.name}
+//                                 </h3>
+//                                 <p className="text-xs text-cyan-600 font-black">
+//                                   {category.surahs}
+//                                 </p>
+//                               </div>
+//                             </div>
+//                             <div className="inline-flex px-2 py-1 rounded-full bg-cyan-100 dark:bg-cyan-900/30 text-cyan-700 text-[10px] font-black">
+//                               {category.difficulty} • {category.duration}
+//                             </div>
+//                           </div>
+//                           <div className="flex-1">
+//                             <p className="text-muted-foreground mb-4">
+//                               {category.description}
+//                             </p>
+//                             <div className="h-1.5 w-full bg-cyan-100 dark:bg-cyan-900/30 rounded-full overflow-hidden">
+//                               <motion.div
+//                                 initial={{ width: 0 }}
+//                                 whileInView={{ width: `${(idx + 1) * 33}%` }}
+//                                 transition={{ duration: 1, delay: 0.3 }}
+//                                 className="h-full bg-gradient-to-r from-cyan-500 to-teal-500 rounded-full"
+//                               />
+//                             </div>
+//                           </div>
+//                         </div>
+//                       </div>
+//                     </div>
+//                   </Reveal>
+//                 );
+//               })}
+//             </div>
+//           </div>
+//         </div>
+//       </section>
+
+//       {/* Milestones & Recognition */}
+//       <section className="mb-24 bg-gradient-to-r from-cyan-50/20 to-teal-50/20 py-16">
+//         <div className="container mx-auto px-4 sm:px-6">
+//           <div className="text-center max-w-2xl mx-auto mb-12">
+//             <div className="inline-flex items-center gap-2 text-cyan-600 font-black text-[10px] uppercase tracking-[0.3em] mb-4">
+//               <Trophy className="w-3.5 h-3.5" /> Celebrate Progress
+//             </div>
+//             <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter font-heading mb-4">
+//               Every Step{" "}
+//               <span className="text-cyan-600 italic">Deserves Recognition</span>
+//             </h2>
+//             <p className="text-muted-foreground">
+//               Motivating milestones that make memorization exciting
+//             </p>
+//           </div>
+
+//           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+//             {MILESTONES.map((milestone, i) => (
+//               <Reveal key={i} delay={i * 0.1}>
+//                 <div className="text-center p-6 rounded-2xl bg-white dark:bg-black/20 border border-cyan-100 dark:border-cyan-800 hover:shadow-xl transition-all">
+//                   <div className="text-5xl mb-3">{milestone.badge}</div>
+//                   <h3 className="font-black text-xl mb-1">{milestone.level}</h3>
+//                   <p className="text-sm text-cyan-600 font-black mb-2">
+//                     {milestone.surahs}
+//                   </p>
+//                   <p className="text-xs text-muted-foreground">
+//                     {milestone.description}
+//                   </p>
+//                 </div>
+//               </Reveal>
+//             ))}
+//           </div>
+//         </div>
+//       </section>
+
+//       {/* Learning Journey */}
+//       <section className="mb-24">
+//         <div className="container mx-auto px-4 sm:px-6">
+//           <div className="text-center max-w-2xl mx-auto mb-12">
+//             <div className="inline-flex items-center gap-2 text-cyan-600 font-black text-[10px] uppercase tracking-[0.3em] mb-4">
+//               <Infinity className="w-3.5 h-3.5" /> The Experience
+//             </div>
+//             <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter font-heading mb-4">
+//               Your Child's{" "}
+//               <span className="text-cyan-600 italic">Transformative</span>{" "}
+//               Journey
+//             </h2>
+//             <p className="text-muted-foreground">
+//               From first recitation to confident mastery
+//             </p>
+//           </div>
+
+//           <div className="grid md:grid-cols-4 gap-6">
+//             {JOURNEY_STAGES.map((stage, i) => {
+//               const Icon = stage.icon;
+//               return (
+//                 <Reveal key={i} delay={i * 0.1}>
+//                   <div className="text-center relative">
+//                     {i < 3 && (
+//                       <div className="hidden md:block absolute top-12 left-1/2 w-full h-0.5 bg-gradient-to-r from-cyan-300 to-teal-300" />
+//                     )}
+//                     <div className="relative z-10 w-16 h-16 mx-auto mb-4 rounded-full bg-gradient-to-br from-cyan-500 to-teal-500 flex items-center justify-center text-white text-xl font-black shadow-lg">
+//                       <Icon className="w-7 h-7" />
+//                     </div>
+//                     <h3 className="font-black text-lg mb-2">{stage.stage}</h3>
+//                     <p className="text-sm text-muted-foreground mb-1">
+//                       {stage.description}
+//                     </p>
+//                     <p className="text-xs text-cyan-600 font-black">
+//                       {stage.duration}
+//                     </p>
+//                   </div>
+//                 </Reveal>
+//               );
+//             })}
+//           </div>
+//         </div>
+//       </section>
+
+//       {/* Schedule & Pricing */}
+//       <section className="mb-24">
+//         <div className="container mx-auto px-4 sm:px-6">
+//           <div className="grid lg:grid-cols-2 gap-12">
+//             {/* Schedule */}
+//             <Reveal>
+//               <div className="institutional-card p-8">
+//                 <h3 className="font-black text-2xl mb-6 flex items-center gap-3">
+//                   <Calendar className="w-6 h-6 text-cyan-600" />
+//                   Class Schedule
+//                 </h3>
+//                 <div className="space-y-3">
+//                   {SCHEDULE_OPTIONS.map((slot, i) => {
+//                     const Icon = slot.icon;
+//                     return (
+//                       <div
+//                         key={i}
+//                         className="flex justify-between items-center p-3 rounded-xl bg-muted/30 border border-border hover:border-cyan-300 transition-all"
+//                       >
+//                         <div className="flex items-center gap-3">
+//                           <Icon className="w-4 h-4 text-cyan-600" />
+//                           <span className="font-black text-sm">{slot.day}</span>
+//                         </div>
+//                         <span className="text-sm text-muted-foreground">
+//                           {slot.time}
+//                         </span>
+//                       </div>
+//                     );
+//                   })}
+//                 </div>
+//                 <p className="text-xs text-muted-foreground mt-4 text-center">
+//                   All times in EST • Flexible scheduling available
+//                 </p>
+//               </div>
+//             </Reveal>
+
+//             {/* Pricing */}
+//             <Reveal delay={0.2}>
+//               <div className="institutional-card p-8 bg-gradient-to-br from-cyan-50/20 to-teal-50/20">
+//                 <h3 className="font-black text-2xl mb-6 flex items-center gap-3">
+//                   <Diamond className="w-6 h-6 text-cyan-600" />
+//                   Investment & Value
+//                 </h3>
+//                 <div className="space-y-4 mb-8">
+//                   <div className="flex justify-between items-center pb-3 border-b border-border">
+//                     <span className="font-black">Monthly Tuition</span>
+//                     <span className="text-2xl font-black text-cyan-600">
+//                       {PROGRAM_DATA.priceRange}
+//                     </span>
+//                   </div>
+//                   <div className="flex justify-between items-center pb-3 border-b border-border">
+//                     <span className="font-black">Family Discount</span>
+//                     <span className="font-black text-cyan-600">
+//                       15% off (3+ members)
+//                     </span>
+//                   </div>
+//                   <div className="flex justify-between items-center pb-3 border-b border-border">
+//                     <span className="font-black">Sibling Discount</span>
+//                     <span className="font-black text-cyan-600">10% off</span>
+//                   </div>
+//                   <div className="flex justify-between items-center">
+//                     <span className="font-black">Free Assessment</span>
+//                     <span className="font-black text-cyan-600">✓ Included</span>
+//                   </div>
+//                 </div>
+//                 <Link href="/assessment">
+//                   <Button className="w-full rounded-full py-4 font-black bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-700 hover:to-teal-700 text-white">
+//                     BOOK FREE ASSESSMENT
+//                     <ArrowRight className="w-4 h-4 ml-2" />
+//                   </Button>
+//                 </Link>
+//                 <p className="text-xs text-center text-muted-foreground mt-3">
+//                   20-minute session • No commitment
+//                 </p>
+//               </div>
+//             </Reveal>
+//           </div>
+//         </div>
+//       </section>
+
+//       {/* Testimonial Spotlight */}
+//       <section className="mb-24">
+//         <div className="container mx-auto px-4 sm:px-6">
+//           <div className="relative">
+//             <Quote className="absolute -top-6 -left-6 w-16 h-16 text-cyan-200 dark:text-cyan-800/30" />
+//             <div className="institutional-card p-8 md:p-12 text-center max-w-4xl mx-auto">
+//               <p className="text-xl md:text-2xl italic text-muted-foreground mb-6">
+//                 "My daughter was hesitant to start memorization, but the
+//                 teachers at Al-Maysaroh made it so engaging and fun. She now
+//                 looks forward to her classes and has memorized 15 surahs in just
+//                 4 months!"
+//               </p>
+//               <div className="flex items-center justify-center gap-3">
+//                 <div className="w-12 h-12 rounded-full bg-gradient-to-br from-cyan-600 to-teal-600 flex items-center justify-center text-white font-black text-lg">
+//                   S
+//                 </div>
+//                 <div className="text-left">
+//                   <h4 className="font-black">Sarah Johnson</h4>
+//                   <p className="text-sm text-muted-foreground">Parent, USA</p>
+//                 </div>
+//               </div>
+//             </div>
+//           </div>
+//         </div>
+//       </section>
+
+//       {/* FAQ Section */}
+//       <section className="mb-24">
+//         <div className="container mx-auto px-4 sm:px-6">
+//           <div className="text-center max-w-2xl mx-auto mb-12">
+//             <div className="inline-flex items-center gap-2 text-cyan-600 font-black text-[10px] uppercase tracking-[0.3em] mb-4">
+//               <MessageCircle className="w-3.5 h-3.5" /> Common Questions
+//             </div>
+//             <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter font-heading mb-4">
+//               Frequently Asked{" "}
+//               <span className="text-cyan-600 italic">Questions</span>
+//             </h2>
+//           </div>
+
+//           <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+//             {FAQS.map((faq, i) => (
+//               <Reveal key={i} delay={i * 0.05}>
+//                 <div className="institutional-card p-6 hover:border-cyan-300 transition-all">
+//                   <h3 className="font-black text-base mb-2">{faq.q}</h3>
+//                   <p className="text-sm text-muted-foreground">{faq.a}</p>
+//                 </div>
+//               </Reveal>
+//             ))}
+//           </div>
+//         </div>
+//       </section>
+
+//       {/* Final CTA */}
+//       <section className="pb-20">
+//         <div className="container mx-auto px-4 sm:px-6">
+//           <div className="institutional-card p-8 md:p-12 text-center max-w-4xl mx-auto bg-gradient-to-br from-cyan-600/5 to-teal-600/5">
+//             <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-cyan-500 to-teal-500 mb-6 shadow-lg">
+//               <Rocket className="w-10 h-10 text-white" />
+//             </div>
+//             <h2 className="text-3xl sm:text-4xl font-black mb-4">
+//               Ready to Begin Your Child's Journey?
+//             </h2>
+//             <p className="text-muted-foreground mb-8 max-w-md mx-auto">
+//               Join hundreds of families who have chosen Al-Maysaroh for their
+//               child's Quranic education
+//             </p>
+//             <div className="flex flex-col sm:flex-row gap-4 justify-center">
+//               <Link href="/assessment">
+//                 <Button className="rounded-full px-8 py-4 font-black bg-gradient-to-r from-cyan-600 to-teal-600 hover:from-cyan-700 hover:to-teal-700 text-white">
+//                   START FREE ASSESSMENT
+//                   <ArrowRight className="w-4 h-4 ml-2" />
+//                 </Button>
+//               </Link>
+//               <Link href="/contact">
+//                 <Button
+//                   variant="outline"
+//                   className="rounded-full px-8 py-4 font-black border-cyan-600 text-cyan-600 hover:bg-cyan-50"
+//                 >
+//                   TALK TO ADVISOR
+//                 </Button>
+//               </Link>
+//             </div>
+//             <p className="text-xs text-muted-foreground mt-4">
+//               Limited spots available for next cohort
+//             </p>
+//           </div>
+//         </div>
+//       </section>
+//     </main>
+//   );
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// app/courses/juz-amma/page.tsx
+"use client";
+
+import { useState, useEffect, useRef } from "react";
+import {
+  motion,
+  useScroll,
+  useTransform,
+  AnimatePresence,
+} from "framer-motion";
+import {
+  BookOpen,
+  Star,
+  Clock,
+  Calendar,
+  Award,
+  Shield,
+  Users,
+  Sparkles,
+  ArrowRight,
+  CheckCircle2,
+  Heart,
+  Moon,
+  Sun,
+  Gem,
+  Crown,
+  Target,
+  TrendingUp,
+  Zap,
+  Play,
+  Headphones,
+  Mic,
+  Volume2,
+  Quote,
+  ChevronRight,
+  GraduationCap,
+  BadgeCheck,
+  Trophy,
+  Medal,
+  Diamond,
+  Compass,
+  Brain,
+  Eye,
+  MessageCircle,
+  Gift,
+  Rocket,
+  Infinity,
+  Globe,
+  Briefcase,
+  Baby,
+  User,
+  Leaf,
+  Flower,
+  Feather,
+  PenTool,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Reveal } from "@/components/shared/section-animation";
 import Link from "next/link";
-import { EnrollmentForm } from "@/components/forms/enrollment-form";
-import {
-  Sparkles,
-  Users,
-  Clock,
-  Calendar,
-  Star,
-  Heart,
-  BookOpen,
-  CheckCircle2,
-  Shield,
-  CheckCircle,
-  ArrowRight,
-  Crown,
-  Volume2,
-  BookHeart,
-  Scroll,
-  Sun as SunIcon,
-  CloudSun,
-  Star as StarIcon,
-  Moon as MoonIcon,
-  Trophy,
-  MoonStar,
-} from "lucide-react";
-import { TrialForm } from "@/components/forms/trial-form";
 import { cn } from "@/lib/utils";
 
-// Mock data - replace with actual Prisma queries
-const JUZ_AMMA_DETAILS = {
-  name: "Juz Amma Group for Children",
-  tagline: "Memorize the Last Chapter with Joy & Understanding",
-  description: "A fun, engaging program where children ages 6-12 memorize Juz Amma (Surah 78-114) with proper Tajweed, understanding of meanings, and interactive activities.",
-  ageGroup: "6-12 years",
-  duration: "8 months",
-  sessionsPerWeek: 2,
-  sessionDuration: "50-90 minutes",
-  classSize: "5-8 students",
-  startDate: "March 2026",
+// Universal Program Data - Timeless Design
+const PROGRAM_DATA = {
+  name: "Juz Amma Memorization",
+  tagline: "The Gateway to Quranic Mastery",
+  description:
+    "A comprehensive program designed for anyone seeking to memorize the 30th Juz of the Quran with proper Tajweed, deep understanding, and a lasting connection to the Divine Word.",
+  audience: "All Ages • All Levels",
+  duration: "Flexible (6-18 months)",
+  sessionsPerWeek: "1-5 sessions",
+  sessionDuration: "30-60 minutes",
+  format: "1-on-1 or Small Groups",
   surahs: 37,
   verses: 564,
-  price: {
-    monthly: 15,
-    quarterly: 60,
-    annually: 120,
+  priceRange: "$69 - $149/month",
+  colors: {
+    primary: "from-amber-600 to-orange-600",
+    secondary: "from-orange-500 to-amber-500",
+    accent: "from-gold to-amber-600",
+    light: "amber-50",
+    dark: "amber-950",
+    border: "amber-200",
+    text: "amber-700",
   },
-  features: [
-    "Complete Juz Amma memorization",
-    "Meaning of each surah (simple Tafsir)",
-    "Tajweed rules for children",
-    "Fun memorization games",
-    "Progress certificates",
-    "Parent portal access",
-    "Weekly progress reports",
-    "Reward system with prizes",
-    "Audio recordings for practice",
-  ],
-  curriculum: [
-    {
-      level: "Level 1: Short Surahs",
-      months: "Months 1-2",
-      surahs: "Surah Al-Fatiha, An-Nas to Al-Falaq (Surah 114-105)",
-      topics: [
-        "Surah Al-Fatiha (The Opening)",
-        "Surah An-Nas (Mankind)",
-        "Surah Al-Falaq (The Daybreak)",
-        "Surah Al-Ikhlas (Sincerity)",
-        "Surah Al-Masad (The Palm Fiber)",
-        "Surah An-Nasr (Divine Support)",
-        "Memorization techniques for beginners",
-        "Basic pronunciation practice",
-      ],
-      icon: SunIcon,
-    },
-    {
-      level: "Level 2: Middle Surahs",
-      months: "Months 3-5",
-      surahs: "Surah Al-Kafirun to Al-Qadr (Surah 104-97)",
-      topics: [
-        "Surah Al-Kafirun (The Disbelievers)",
-        "Surah Al-Kawthar (Abundance)",
-        "Surah Al-Ma'un (Small Kindnesses)",
-        "Surah Quraysh (Quraysh)",
-        "Surah Al-Fil (The Elephant)",
-        "Surah Al-Humazah (The Slanderer)",
-        "Surah Al-Asr (The Time)",
-        "Surah At-Takathur (Competition)",
-        "Introduction to Tajweed rules",
-        "Meaning and stories behind surahs",
-      ],
-      icon: CloudSun,
-    },
-    {
-      level: "Level 3: Longer Surahs",
-      months: "Months 6-8",
-      surahs: "Surah Al-Qari'ah to An-Naba (Surah 96-78)",
-      topics: [
-        "Surah Al-Qari'ah (The Striking Hour)",
-        "Surah Al-Zalzalah (The Earthquake)",
-        "Surah Al-Bayyinah (The Clear Proof)",
-        "Surah Al-Qadr (The Night of Power)",
-        "Surah Al-Alaq (The Clot)",
-        "Surah At-Tin (The Fig)",
-        "Surah Al-Inshirah (The Relief)",
-        "Surah Ad-Duha (The Morning Hours)",
-        "Surah Al-Lail (The Night)",
-        "Surah Ash-Shams (The Sun)",
-        "Surah Al-Balad (The City)",
-        "Surah Al-Fajr (The Dawn)",
-        "Surah Al-Ghashiyah (The Overwhelming)",
-        "Surah Al-A'la (The Most High)",
-        "Surah At-Tariq (The Nightcomer)",
-        "Surah Al-Buruj (The Constellations)",
-        "Surah Al-Inshiqaq (The Splitting Open)",
-        "Surah Al-Mutaffifin (The Defrauding)",
-        "Surah Al-Infitar (The Cleaving)",
-        "Surah At-Takwir (The Overthrowing)",
-        "Surah Abasa (He Frowned)",
-        "Surah An-Nazi'at (Those Who Drag Forth)",
-        "Surah An-Naba (The Great News)",
-        "Complete revision and fluency",
-        "Public recitation practice",
-      ],
-      icon: MoonStar,
-    },
-  ],
-  schedule: [
-    { day: "Monday & Wednesday", time: "4:30 PM - 5:20 PM (EST)" },
-    { day: "Tuesday & Thursday", time: "5:30 PM - 6:20 PM (EST)" },
-    { day: "Saturday", time: "11:00 AM - 12:30 PM (EST)" },
-    { day: "Sunday", time: "10:00 AM - 11:30 AM (EST)" },
-  ],
-  teachers: [
-    {
-      name: "Ustadha Aisha Al-Makkiyyah",
-      qualifications: "Ijazah in Hifz & Tajweed, 12 years teaching children's Hifz programs",
-      specialty: "Juz Amma memorization specialist",
-    },
-    {
-      name: "Ustadh Yusuf Al-Madani",
-      qualifications: "Ijazah in the Ten Qira'at, 9 years experience with children",
-      specialty: "Tajweed and pronunciation expert",
-    },
-    {
-      name: "Ustadha Khadija Al-Misriyyah",
-      qualifications: "Child psychology background, 8 years teaching Juz Amma",
-      specialty: "Engaging young learners",
-    },
-  ],
-  benefits: [
-    {
-      icon: Crown,
-      title: "Complete Juz Amma",
-      description: "All 37 surahs from Surah An-Naba to An-Nas",
-    },
-    {
-      icon: Heart,
-      title: "Love for Quran",
-      description: "Build a lifelong connection through fun activities",
-    },
-    {
-      icon: Volume2,
-      title: "Proper Tajweed",
-      description: "Learn correct pronunciation from the start",
-    },
-    {
-      icon: BookHeart,
-      title: "Understand Meanings",
-      description: "Simple Tafsir tailored for children",
-    },
-    {
-      icon: Trophy,
-      title: "Reward System",
-      description: "Earn badges, certificates, and prizes",
-    },
-    {
-      icon: Users,
-      title: "Peer Motivation",
-      description: "Learn together in a supportive group",
-    },
-  ],
-  milestones: [
-    {
-      title: "Surah Al-Fatiha",
-      description: "Master the most important surah in prayer",
-      icon: Star,
-    },
-    {
-      title: "Al-Ikhlas & Al-Mu'awwidhatayn",
-      description: "The three protection surahs",
-      icon: Shield,
-    },
-    {
-      title: "Ayatul Kursi",
-      description: "The Throne Verse",
-      icon: Crown,
-    },
-    {
-      title: "Complete Juz Amma",
-      description: "All 37 surahs memorized perfectly",
-      icon: Trophy,
-    },
-  ],
-  rewards: [
-    {
-      name: "Bronze Reciter",
-      surahs: "5 surahs",
-      badge: "🎖️",
-    },
-    {
-      name: "Silver Reciter",
-      surahs: "15 surahs",
-      badge: "🏅",
-    },
-    {
-      name: "Gold Reciter",
-      surahs: "25 surahs",
-      badge: "🥇",
-    },
-    {
-      name: "Juz Amma Master",
-      surahs: "All 37 surahs",
-      badge: "🏆",
-    },
-  ],
-  faqs: [
-    {
-      q: "My child has never memorized before. Is this suitable?",
-      a: "Absolutely! We start from the very beginning with short, easy surahs. Our teachers are experienced in introducing memorization techniques to complete beginners.",
-    },
-    {
-      q: "How much time should we practice at home?",
-      a: "We recommend 15-20 minutes of daily revision. Our portal provides audio tracks and games to make home practice fun and engaging.",
-    },
-    {
-      q: "What if my child already knows some surahs?",
-      a: "We'll assess their level during the first session and place them appropriately. They can review known surahs while progressing to new ones.",
-    },
-    {
-      q: "Will my child learn the meanings of the surahs?",
-      a: "Yes! Each surah is taught with simple, age-appropriate explanations of its meaning and context. We use stories and activities to reinforce understanding.",
-    },
-    {
-      q: "What happens after completing Juz Amma?",
-      a: "Graduates receive a special certificate and can advance to our Juz Tabarak or full Hifz program. Many continue their memorization journey with us.",
-    },
-  ],
 };
 
-export default async function JuzAmmaAdmissionsPage() {
+// Universal Benefits - For Everyone
+const BENEFITS = [
+  {
+    icon: Shield,
+    title: "Authentic Sanad",
+    description:
+      "Learn through an unbroken chain of transmission reaching 1400 years",
+    audience: "All students",
+  },
+  {
+    icon: Brain,
+    title: "Cognitive Development",
+    description: "Enhance memory, focus, and mental discipline",
+    audience: "Children & Adults",
+  },
+  {
+    icon: Briefcase,
+    title: "Flexible Scheduling",
+    description: "Balance Quran with work, school, and family",
+    audience: "Professionals & Students",
+  },
+  {
+    icon: Heart,
+    title: "Spiritual Connection",
+    description: "Deepen your relationship with Allah's words",
+    audience: "Everyone",
+  },
+  {
+    icon: Mic,
+    title: "Live Correction",
+    description: "Real-time feedback from certified scholars",
+    audience: "All levels",
+  },
+  {
+    icon: Award,
+    title: "Ijazah Pathway",
+    description: "Progress toward formal certification",
+    audience: "Advanced students",
+  },
+];
+
+// Journey Paths - Different for Different Audiences
+const JOURNEY_PATHS = [
+  {
+    audience: "Children (6-12)",
+    icon: Baby,
+    pace: "Gentle & Engaging",
+    duration: "10-14 months",
+    features: [
+      "Fun activities",
+      "Reward system",
+      "Parent involvement",
+      "Short sessions",
+    ],
+    color: "from-emerald-500 to-teal-500",
+  },
+  {
+    audience: "Teens (13-17)",
+    icon: User,
+    pace: "Structured & Motivating",
+    duration: "8-12 months",
+    features: [
+      "Peer learning",
+      "Progress tracking",
+      "Meaningful tafsir",
+      "Goal setting",
+    ],
+    color: "from-blue-500 to-cyan-500",
+  },
+  {
+    audience: "Adults (18+)",
+    icon: GraduationCap,
+    pace: "Flexible & Consistent",
+    duration: "6-12 months",
+    features: [
+      "1-on-1 attention",
+      "Custom pacing",
+      "Deep understanding",
+      "Ijazah prep",
+    ],
+    color: "from-amber-500 to-orange-500",
+  },
+  {
+    audience: "Professionals",
+    icon: Briefcase,
+    pace: "Efficient & Sustainable",
+    duration: "10-16 months",
+    features: [
+      "Early morning slots",
+      "Weekend options",
+      "Revision focus",
+      "Practical approach",
+    ],
+    color: "from-purple-500 to-pink-500",
+  },
+];
+
+// Surah Categories - Universal Progression
+const SURAH_CATEGORIES = [
+  {
+    name: "The Foundation",
+    surahs: "Surah An-Nas to Al-Asr (114-103)",
+    count: 12,
+    description:
+      "Short, powerful surahs that establish daily remembrance and spiritual grounding",
+    icon: Leaf,
+    difficulty: "Beginner-Friendly",
+    duration: "3-5 months",
+  },
+  {
+    name: "The Growth",
+    surahs: "Surah At-Takathur to Al-Qadr (102-97)",
+    count: 6,
+    description:
+      "Deeper concepts that build understanding and memorization stamina",
+    icon: Flower,
+    difficulty: "Intermediate",
+    duration: "2-4 months",
+  },
+  {
+    name: "The Mastery",
+    surahs: "Surah Al-Alaq to An-Naba (96-78)",
+    count: 19,
+    description: "Extended surahs that develop fluency and profound connection",
+    icon: Crown,
+    difficulty: "Advanced",
+    duration: "4-6 months",
+  },
+];
+
+// Universal Milestones
+const MILESTONES = [
+  {
+    level: "Foundation Level",
+    surahs: "1-10",
+    badge: "🌱",
+    description: "Building confidence",
+  },
+  {
+    level: "Intermediate Level",
+    surahs: "11-20",
+    badge: "🌿",
+    description: "Developing fluency",
+  },
+  {
+    level: "Advanced Level",
+    surahs: "21-30",
+    badge: "🌳",
+    description: "Strengthening retention",
+  },
+  {
+    level: "Master Level",
+    surahs: "31-37",
+    badge: "🏆",
+    description: "Complete Juz Amma",
+  },
+];
+
+// Success Stories - Diverse Representation
+const SUCCESS_STORIES = [
+  {
+    name: "Aisha, 9",
+    type: "Child",
+    story:
+      "I used to struggle with reading, now I can recite 20 surahs from memory! My teacher makes learning so much fun.",
+    duration: "8 months",
+    icon: Baby,
+  },
+  {
+    name: "Omar, 28",
+    type: "Professional",
+    story:
+      "Balancing work and memorization seemed impossible. Al-Maysaroh's flexible scheduling made it possible. I'm halfway through Juz Amma!",
+    duration: "6 months",
+    icon: Briefcase,
+  },
+  {
+    name: "Fatima, 45",
+    type: "Mother",
+    story:
+      "Learning alongside my children has been a beautiful journey. The teachers are patient and encouraging at every step.",
+    duration: "10 months",
+    icon: Heart,
+  },
+  {
+    name: "Yusuf, 16",
+    type: "Teen",
+    story:
+      "The structured approach and progress tracking kept me motivated. I've completed Juz Amma and moving to Juz Tabarak!",
+    duration: "9 months",
+    icon: User,
+  },
+];
+
+// FAQ - Universal Questions
+const FAQS = [
+  {
+    q: "Can I join if I have no prior Arabic knowledge?",
+    a: "Absolutely! We have students starting from absolute zero. Our teachers are experienced in guiding beginners of all ages.",
+  },
+  {
+    q: "How much time do I need to dedicate daily?",
+    a: "We recommend 15-30 minutes of daily revision. Consistency matters more than quantity. Our teachers help you build sustainable habits.",
+  },
+  {
+    q: "What if I have a busy schedule?",
+    a: "We offer flexible scheduling with sessions available 7 days a week, including early morning and evening slots for working professionals.",
+  },
+  {
+    q: "Can I learn at my own pace?",
+    a: "Yes! Every student has a personalized learning plan. You can accelerate or take more time based on your goals and availability.",
+  },
+  {
+    q: "Is this program only for children?",
+    a: "Not at all! We have students ranging from 6 to 65+. The program is tailored to each individual's learning style and goals.",
+  },
+  {
+    q: "What's the difference between group and 1-on-1?",
+    a: "Group classes (4-6 students) offer peer motivation and lower cost. 1-on-1 provides personalized attention and flexible pacing. Both are highly effective.",
+  },
+];
+
+export default function JuzAmmaPage() {
+  const [selectedFormat, setSelectedFormat] = useState("flexible");
+  const containerRef = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end start"],
+  });
+  const heroY = useTransform(scrollYProgress, [0, 1], [0, -150]);
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0.8]);
+
   return (
-    <main className="pt-16 sm:pt-20 md:pt-24 lg:pt-28 xl:pt-32 bg-background overflow-x-hidden">
-      {/* Hero Section */}
-      <section className="relative overflow-hidden">
+    <main ref={containerRef} className="relative bg-background overflow-hidden">
+      {/* Universal Background */}
+      <div className="fixed inset-0 pointer-events-none">
+        <div
+          className="absolute inset-0 opacity-[0.02] bg-[url('/islamic-pattern.svg')] bg-center bg-repeat"
+          style={{ backgroundSize: "300px" }}
+        />
+        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-amber-500/5 rounded-full blur-[150px]" />
+        <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-orange-500/5 rounded-full blur-[150px]" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gold/3 rounded-full blur-[200px]" />
+      </div>
+
+      {/* Hero Section - Universal Welcome */}
+      <motion.div
+        style={{ y: heroY, opacity: heroOpacity }}
+        className="relative pt-24 sm:pt-28 md:pt-32 pb-16"
+      >
         <div className="container mx-auto px-4 sm:px-6">
-          <div className="max-w-6xl mx-auto py-8 sm:py-12 md:py-16 lg:py-20 space-y-6 sm:space-y-8 md:space-y-10">
-            {/* Breadcrumb */}
-            <div className="text-xs sm:text-sm text-muted-foreground">
-              <Link href="/courses" className="hover:text-primary-700 transition-colors">Programs</Link>
-             
-              <span className="mx-2">/</span>
-              <span className="text-primary-700 font-medium">Juz Amma Group</span>
+          <div className="max-w-4xl mx-auto text-center">
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 0.5 }}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-amber-500/10 to-orange-500/10 border border-amber-500/20 text-amber-700 text-[11px] font-black uppercase tracking-wider mb-6"
+            >
+              <Sparkles className="w-3.5 h-3.5" /> For Everyone • All Ages • All
+              Levels
+            </motion.div>
+
+            <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tighter font-heading leading-[1.1] mb-6">
+              Memorize{" "}
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-600 via-orange-600 to-gold">
+                Juz Amma
+              </span>
+            </h1>
+
+            <p className="text-xl text-muted-foreground font-light max-w-2xl mx-auto mb-8">
+              Whether you're 8 or 80, a busy professional or a dedicated student
+              — this program is designed for YOU. Start your Quranic journey
+              with expert guidance, flexible scheduling, and a supportive
+              community.
+            </p>
+
+            <div className="flex flex-wrap justify-center gap-4">
+              <Link href="/assessment">
+                <Button className="rounded-full px-8 py-4 sm:px-10 sm:py-5 font-black bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white text-base sm:text-lg shadow-xl">
+                  <span className="flex items-center gap-2">
+                    START YOUR JOURNEY
+                    <Rocket className="w-4 h-4 sm:w-5 sm:h-5" />
+                  </span>
+                </Button>
+              </Link>
+              <Link href="#paths">
+                <Button
+                  variant="outline"
+                  className="rounded-full px-8 py-4 sm:px-10 sm:py-5 font-black text-base sm:text-lg border-amber-600 text-amber-600"
+                >
+                  FIND YOUR PATH
+                </Button>
+              </Link>
             </div>
 
-            {/* Hero Content */}
-
-            <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 xl:gap-16">
-              <div className="lg:w-1/2 space-y-4 sm:space-y-6">
-                <Reveal>
-                  <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary-100 dark:bg-primary-900/30 text-primary-700 text-[11px] font-black uppercase tracking-wider">
-                    <Sparkles className="w-3.5 h-3.5" /> ENROLLING NOW • AGES 6-12
+            {/* Universal Stats */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 mt-12 pt-8 border-t border-border/50">
+              {[
+                { label: "Students of All Ages", value: "500+", icon: Users },
+                { label: "Success Rate", value: "94%", icon: Target },
+                { label: "Countries", value: "15+", icon: Globe },
+                { label: "Certified Graduates", value: "200+", icon: Award },
+              ].map((stat, i) => (
+                <div key={i}>
+                  <div className="text-2xl sm:text-3xl font-black text-amber-600">
+                    {stat.value}
                   </div>
-                </Reveal>
-
-                <Reveal delay={0.1}>
-                  <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black tracking-tighter font-heading leading-[0.9]">
-                    Juz Amma <span className="text-primary-700 italic">Group</span>
-                    <br />for Children
-                  </h1>
-                </Reveal>
-
-                <Reveal delay={0.2}>
-                  <p className="text-base sm:text-lg text-muted-foreground font-light leading-relaxed">
-                    {JUZ_AMMA_DETAILS.description}
-                  </p>
-                </Reveal>
-
-                <Reveal delay={0.3}>
-                  <div className="flex flex-wrap gap-3 pt-2">
-                    <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-accent/10 text-accent text-xs font-black">
-                      <BookOpen className="w-3.5 h-3.5" />
-                      {JUZ_AMMA_DETAILS.surahs} Surahs
-                    </div>
-                    <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-accent/10 text-accent text-xs font-black">
-                      <Users className="w-3.5 h-3.5" />
-                      {JUZ_AMMA_DETAILS.classSize}
-                    </div>
-                    <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-accent/10 text-accent text-xs font-black">
-                      <Clock className="w-3.5 h-3.5" />
-                      {JUZ_AMMA_DETAILS.sessionDuration}
-                    </div>
-                    <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-accent/10 text-accent text-xs font-black">
-                      <Calendar className="w-3.5 h-3.5" />
-                      {JUZ_AMMA_DETAILS.sessionsPerWeek}x/week
-                    </div>
-                  </div>
-                </Reveal>
-
-                <Reveal delay={0.4}>
-                  <div className="flex flex-col sm:flex-row gap-3 pt-4">
-                    <Link href="#enroll-form" className="w-full sm:w-auto">
-                      <Button className="w-full rounded-full px-6 py-3 sm:px-8 sm:py-4 font-black bg-primary-700 hover:bg-primary-800 text-sm sm:text-base min-h-[44px]">
-                        <span className="flex items-center justify-center gap-2 sm:gap-3">
-                          ENROLL NOW
-                          <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                        </span>
-                      </Button>
-                    </Link>
-                    <Link href="#trial-form" className="w-full sm:w-auto">
-                      <Button variant="outline" className="w-full rounded-full px-6 py-3 sm:px-8 sm:py-4 font-black text-sm sm:text-base min-h-[44px]">
-                        FREE TRIAL CLASS
-                      </Button>
-                    </Link>
-                  </div>
-                </Reveal>
-              </div>
-
-              {/* Hero Visual */}
-              <Reveal delay={0.4} className="lg:w-1/2">
-                <div className="institutional-card p-6 sm:p-8 bg-gradient-to-br from-primary-50/20 to-primary-100/10 dark:from-primary-950/20 dark:to-primary-900/10 border-2 border-primary-700/20">
-                  <div className="grid grid-cols-2 gap-4 sm:gap-6 mb-6">
-                    <div className="space-y-1">
-                      <div className="text-2xl sm:text-3xl font-black text-primary-700">$79</div>
-                      <div className="text-xs text-muted-foreground">Monthly</div>
-                    </div>
-                    <div className="space-y-1">
-                      <div className="text-2xl sm:text-3xl font-black text-primary-700">8 mo</div>
-                      <div className="text-xs text-muted-foreground">Duration</div>
-                    </div>
-                    <div className="space-y-1">
-                      <div className="text-2xl sm:text-3xl font-black text-primary-700">37</div>
-                      <div className="text-xs text-muted-foreground">Surahs</div>
-                    </div>
-                    <div className="space-y-1">
-                      <div className="text-2xl sm:text-3xl font-black text-primary-700">564</div>
-                      <div className="text-xs text-muted-foreground">Verses</div>
-                    </div>
-                  </div>
-                  
-                  <div className="grid grid-cols-3 gap-2 mb-4">
-                    <div className="p-2 rounded-lg bg-primary-700/10 text-center">
-                      <SunIcon className="w-4 h-4 mx-auto mb-1 text-primary-700" />
-                      <span className="text-xs">Short</span>
-                    </div>
-                    <div className="p-2 rounded-lg bg-primary-700/10 text-center">
-                      <MoonIcon className="w-4 h-4 mx-auto mb-1 text-primary-700" />
-                      <span className="text-xs">Middle</span>
-                    </div>
-                    <div className="p-2 rounded-lg bg-primary-700/10 text-center">
-                      <StarIcon className="w-4 h-4 mx-auto mb-1 text-primary-700" />
-                      <span className="text-xs">Long</span>
-                    </div>
-                  </div>
-
-                  <div className="p-4 sm:p-6 rounded-xl bg-primary-700/5 border border-primary-700/10">
-                    <div className="flex items-center gap-3 mb-2">
-                      <Trophy className="w-6 h-6 sm:w-7 sm:h-7 text-primary-700" />
-                      <div className="font-black text-base sm:text-lg uppercase tracking-tight">Reward-Based Learning</div>
-                    </div>
-                    <p className="text-sm text-muted-foreground">
-                      Badges • Certificates • Prizes • Progress Tracking
-                    </p>
+                  <div className="text-xs text-muted-foreground mt-1">
+                    {stat.label}
                   </div>
                 </div>
-              </Reveal>
+              ))}
+            </div>
+          </div>
+        </div>
+      </motion.div>
+
+      {/* Universal Benefits - For Everyone */}
+      <section className="py-16 bg-muted/20">
+        <div className="container mx-auto px-4 sm:px-6">
+          <div className="text-center max-w-2xl mx-auto mb-12">
+            <div className="inline-flex items-center gap-2 text-amber-600 font-black text-[10px] uppercase tracking-[0.3em] mb-4">
+              <Shield className="w-3.5 h-3.5" /> Benefits For All
+            </div>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter font-heading mb-4">
+              Designed for{" "}
+              <span className="text-amber-600 italic">Every Learner</span>
+            </h2>
+            <p className="text-muted-foreground">
+              Whether you're a beginner or advanced, child or adult — this
+              program works for you
+            </p>
+          </div>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {BENEFITS.map((benefit, i) => {
+              const Icon = benefit.icon;
+              return (
+                <Reveal key={i} delay={i * 0.1}>
+                  <div className="flex gap-4 p-5 rounded-xl bg-background border border-border hover:border-amber-300 transition-all group">
+                    <div className="w-12 h-12 rounded-xl bg-amber-50 dark:bg-amber-950/30 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                      <Icon className="w-6 h-6 text-amber-600" />
+                    </div>
+                    <div>
+                      <h3 className="font-black text-base mb-1">
+                        {benefit.title}
+                      </h3>
+                      <p className="text-sm text-muted-foreground">
+                        {benefit.description}
+                      </p>
+                      <p className="text-xs text-amber-600 font-black mt-1">
+                        {benefit.audience}
+                      </p>
+                    </div>
+                  </div>
+                </Reveal>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* Journey Paths - Choose Your Path */}
+      <section id="paths" className="py-16 scroll-mt-24">
+        <div className="container mx-auto px-4 sm:px-6">
+          <div className="text-center max-w-2xl mx-auto mb-12">
+            <div className="inline-flex items-center gap-2 text-amber-600 font-black text-[10px] uppercase tracking-[0.3em] mb-4">
+              <Compass className="w-3.5 h-3.5" /> Choose Your Path
+            </div>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter font-heading mb-4">
+              A Journey{" "}
+              <span className="text-amber-600 italic">Tailored to You</span>
+            </h2>
+            <p className="text-muted-foreground">
+              Different paths for different needs — all leading to the same
+              destination
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {JOURNEY_PATHS.map((path, i) => {
+              const Icon = path.icon;
+              return (
+                <Reveal key={i} delay={i * 0.1}>
+                  <div className="institutional-card p-6 text-center h-full hover:border-amber-300 transition-all group">
+                    <div
+                      className={`w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br ${path.color} flex items-center justify-center group-hover:scale-110 transition-transform`}
+                    >
+                      <Icon className="w-8 h-8 text-white" />
+                    </div>
+                    <h3 className="font-black text-xl mb-1">{path.audience}</h3>
+                    <p className="text-sm text-amber-600 font-black mb-2">
+                      {path.pace}
+                    </p>
+                    <p className="text-sm text-muted-foreground mb-3">
+                      {path.duration}
+                    </p>
+                    <div className="text-xs text-left space-y-1 pt-3 border-t border-border">
+                      {path.features.map((feature, idx) => (
+                        <div key={idx} className="flex items-center gap-2">
+                          <CheckCircle2 className="w-3 h-3 text-amber-600" />
+                          <span>{feature}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </Reveal>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* What You'll Learn - Surah Progression */}
+      <section className="py-16 bg-muted/20">
+        <div className="container mx-auto px-4 sm:px-6">
+          <div className="text-center max-w-2xl mx-auto mb-12">
+            <div className="inline-flex items-center gap-2 text-amber-600 font-black text-[10px] uppercase tracking-[0.3em] mb-4">
+              <BookOpen className="w-3.5 h-3.5" /> Your Journey
+            </div>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter font-heading mb-4">
+              What You'll <span className="text-amber-600 italic">Achieve</span>
+            </h2>
+            <p className="text-muted-foreground">
+              A clear progression from start to mastery
+            </p>
+          </div>
+
+          <div className="max-w-4xl mx-auto">
+            <div className="relative">
+              <div className="absolute left-6 top-0 bottom-0 w-0.5 bg-gradient-to-b from-amber-400 via-orange-400 to-gold hidden md:block" />
+              <div className="space-y-8">
+                {SURAH_CATEGORIES.map((category, idx) => {
+                  const Icon = category.icon;
+                  return (
+                    <Reveal key={idx} delay={idx * 0.1}>
+                      <div className="relative pl-0 md:pl-16">
+                        <div className="hidden md:block absolute left-0 top-6 w-12 h-12 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 flex items-center justify-center text-white font-black text-lg shadow-lg">
+                          {idx + 1}
+                        </div>
+                        <div className="institutional-card p-6 md:p-8">
+                          <div className="flex flex-col md:flex-row gap-6">
+                            <div className="md:w-64">
+                              <div className="flex items-center gap-3 mb-2">
+                                <div className="w-10 h-10 rounded-xl bg-amber-100 dark:bg-amber-950/30 flex items-center justify-center">
+                                  <Icon className="w-5 h-5 text-amber-600" />
+                                </div>
+                                <h3 className="font-black text-xl">
+                                  {category.name}
+                                </h3>
+                              </div>
+                              <p className="text-xs text-amber-600 font-black mb-2">
+                                {category.surahs}
+                              </p>
+                              <div className="inline-flex px-2 py-1 rounded-full bg-amber-100 dark:bg-amber-900/30 text-amber-700 text-[10px] font-black">
+                                {category.difficulty} • {category.duration}
+                              </div>
+                            </div>
+                            <div className="flex-1">
+                              <p className="text-muted-foreground">
+                                {category.description}
+                              </p>
+                              <div className="mt-3 h-1.5 w-full bg-amber-100 dark:bg-amber-900/30 rounded-full overflow-hidden">
+                                <motion.div
+                                  initial={{ width: 0 }}
+                                  whileInView={{ width: `${(idx + 1) * 33}%` }}
+                                  transition={{ duration: 1 }}
+                                  className="h-full bg-gradient-to-r from-amber-500 to-orange-500 rounded-full"
+                                />
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </Reveal>
+                  );
+                })}
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Stats Bar */}
-      <section className="border-y border-border/50 bg-muted/10">
+      {/* Universal Milestones */}
+      <section className="py-16">
         <div className="container mx-auto px-4 sm:px-6">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 py-6 sm:py-8">
-            {[
-              { value: "37", label: "Surahs", icon: BookOpen },
-              { value: "564", label: "Verses", icon: Scroll },
-              { value: "8", label: "Months", icon: Calendar },
-              { value: "5-8", label: "Students/Class", icon: Users },
-            ].map((stat, index) => (
-              <Reveal key={index} delay={index * 0.1}>
-                <div className="text-center">
-                  <div className="text-2xl sm:text-3xl md:text-4xl font-black text-primary-700">{stat.value}</div>
-                  <div className="text-xs sm:text-sm text-muted-foreground mt-1">{stat.label}</div>
+          <div className="text-center max-w-2xl mx-auto mb-12">
+            <div className="inline-flex items-center gap-2 text-amber-600 font-black text-[10px] uppercase tracking-[0.3em] mb-4">
+              <Trophy className="w-3.5 h-3.5" /> Celebrate Progress
+            </div>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter font-heading mb-4">
+              Every <span className="text-amber-600 italic">Milestone</span>{" "}
+              Matters
+            </h2>
+            <p className="text-muted-foreground">
+              Recognition at every stage keeps you motivated
+            </p>
+          </div>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {MILESTONES.map((milestone, i) => (
+              <Reveal key={i} delay={i * 0.1}>
+                <div className="text-center p-6 rounded-xl bg-gradient-to-br from-amber-50/30 to-orange-50/30 border border-amber-100 dark:border-amber-800">
+                  <div className="text-5xl mb-3">{milestone.badge}</div>
+                  <h3 className="font-black text-lg mb-1">{milestone.level}</h3>
+                  <p className="text-sm text-amber-600 font-black mb-2">
+                    {milestone.surahs} surahs
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    {milestone.description}
+                  </p>
                 </div>
               </Reveal>
             ))}
@@ -401,502 +1396,208 @@ export default async function JuzAmmaAdmissionsPage() {
         </div>
       </section>
 
-      {/* Benefits Section */}
-      <section className="py-12 sm:py-16 md:py-24 bg-gradient-to-b from-background to-primary-50/5 dark:to-primary-950/5">
+      {/* Success Stories - Diverse Voices */}
+      <section className="py-16 bg-muted/20">
         <div className="container mx-auto px-4 sm:px-6">
-          <div className="max-w-6xl mx-auto">
-            <Reveal>
-              <div className="text-center mb-12 sm:mb-16 space-y-4">
-                <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black tracking-tighter">
-                  Why Choose Our <span className="text-primary-700 italic">Juz Amma</span> Program
-                </h2>
-                <p className="text-base sm:text-lg text-muted-foreground max-w-3xl mx-auto">
-                  A comprehensive approach to memorization, understanding, and loving the Quran
-                </p>
-              </div>
-            </Reveal>
+          <div className="text-center max-w-2xl mx-auto mb-12">
+            <div className="inline-flex items-center gap-2 text-amber-600 font-black text-[10px] uppercase tracking-[0.3em] mb-4">
+              <Users className="w-3.5 h-3.5" /> Real Stories
+            </div>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter font-heading mb-4">
+              From Our <span className="text-amber-600 italic">Community</span>
+            </h2>
+            <p className="text-muted-foreground">
+              Students of all ages and backgrounds who found success
+            </p>
+          </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-              {JUZ_AMMA_DETAILS.benefits.map((benefit, index) => (
-                <Reveal key={index} delay={index * 0.1}>
-                  <div className="institutional-card p-5 sm:p-6 h-full hover:border-primary-700/30 transition-all duration-300">
-                    <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-lg bg-primary-50 dark:bg-primary-950/40 flex items-center justify-center mb-3">
-                      <benefit.icon className="w-5 h-5 sm:w-6 sm:h-6 text-primary-700" />
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {SUCCESS_STORIES.map((story, i) => {
+              const Icon = story.icon;
+              return (
+                <Reveal key={i} delay={i * 0.1}>
+                  <div className="institutional-card p-6 h-full flex flex-col">
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="w-12 h-12 rounded-full bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center text-white font-black text-lg">
+                        {story.name.charAt(0)}
+                      </div>
+                      <div>
+                        <h4 className="font-black">{story.name}</h4>
+                        <p className="text-xs text-amber-600 font-black">
+                          {story.type}
+                        </p>
+                      </div>
                     </div>
-                    <h3 className="font-black text-sm sm:text-base uppercase tracking-tight mb-2">{benefit.title}</h3>
-                    <p className="text-xs sm:text-sm text-muted-foreground">{benefit.description}</p>
+                    <Quote className="w-8 h-8 text-amber-200 dark:text-amber-800/30 mb-3" />
+                    <p className="text-sm text-muted-foreground italic flex-grow">
+                      "{story.story}"
+                    </p>
+                    <p className="text-xs text-amber-600 font-black mt-3">
+                      Completed in {story.duration}
+                    </p>
                   </div>
                 </Reveal>
-              ))}
-            </div>
+              );
+            })}
           </div>
         </div>
       </section>
 
-      {/* Curriculum Section */}
-      <section id="curriculum" className="py-12 sm:py-16 md:py-24">
+      {/* Flexible Format Options */}
+      <section className="py-16">
         <div className="container mx-auto px-4 sm:px-6">
-          <div className="max-w-6xl mx-auto">
-            <Reveal>
-              <div className="text-center mb-12 sm:mb-16 space-y-4">
-                <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black tracking-tighter">
-                  Step-by-Step <span className="text-primary-700 italic">Memorization</span>
-                </h2>
-                <p className="text-base sm:text-lg text-muted-foreground max-w-3xl mx-auto">
-                  A structured journey through all 37 surahs of Juz Amma
-                </p>
-              </div>
-            </Reveal>
-
-            <div className="space-y-6 sm:space-y-8">
-              {JUZ_AMMA_DETAILS.curriculum.map((level, index) => {
-                const Icon = level.icon;
-                return (
-                  <Reveal key={index} delay={index * 0.1}>
-                    <div className="institutional-card p-5 sm:p-6 md:p-8 hover:border-primary-700/30 transition-all duration-300">
-                      <div className="flex flex-col md:flex-row gap-6">
-                        <div className="md:w-80 flex-shrink-0">
-                          <div className="flex items-center gap-3 mb-3">
-                            <div className="w-10 h-10 rounded-lg bg-primary-700 text-white flex items-center justify-center">
-                              <Icon className="w-5 h-5" />
-                            </div>
-                            <div>
-                              <div className="font-black text-base sm:text-lg uppercase tracking-tight">{level.level}</div>
-                              <p className="text-xs text-primary-700 font-black mt-1">{level.months}</p>
-                            </div>
-                          </div>
-                          <p className="text-xs sm:text-sm text-muted-foreground font-medium mb-3">
-                            {level.surahs}
-                          </p>
-                        </div>
-                        
-                        <div className="flex-1">
-                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
-                            {level.topics.map((topic, idx) => (
-                              <div key={idx} className="flex items-center gap-2 p-2 rounded-lg bg-primary-50/50 dark:bg-primary-950/20">
-                                <CheckCircle2 className="w-3.5 h-3.5 text-primary-700 shrink-0" />
-                                <span className="text-xs sm:text-sm">{topic}</span>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </Reveal>
-                );
-              })}
+          <div className="text-center max-w-2xl mx-auto mb-12">
+            <div className="inline-flex items-center gap-2 text-amber-600 font-black text-[10px] uppercase tracking-[0.3em] mb-4">
+              <Users className="w-3.5 h-3.5" /> Choose Your Format
             </div>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter font-heading mb-4">
+              Learn Your <span className="text-amber-600 italic">Way</span>
+            </h2>
+            <p className="text-muted-foreground">
+              Flexible options to fit your lifestyle and learning preferences
+            </p>
           </div>
-        </div>
-      </section>
 
-      {/* Rewards & Milestones Section */}
-      <section className="py-12 sm:py-16 md:py-24 bg-linear-to-b from-background to-primary-50/5 dark:to-primary-950/5">
-        <div className="container mx-auto px-4 sm:px-6">
-          <div className="max-w-6xl mx-auto">
-            <Reveal>
-              <div className="text-center mb-12 sm:mb-16 space-y-4">
-                <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black tracking-tighter">
-                  Rewards & <span className="text-primary-700 italic">Achievements</span>
-                </h2>
-                <p className="text-base sm:text-lg text-muted-foreground max-w-3xl mx-auto">
-               {`   Celebrating every milestone in your child's memorization journey`}
-                </p>
-              </div>
-            </Reveal>
-
-            <div className="grid md:grid-cols-2 gap-8 sm:gap-12">
-              {/* Milestones */}
-              <div className="space-y-6">
-                <h3 className="font-black text-xl uppercase tracking-tight mb-4">Key Milestones</h3>
-                {JUZ_AMMA_DETAILS.milestones.map((milestone, index) => {
-                  const Icon = milestone.icon;
-                  return (
-                    <Reveal key={index} delay={index * 0.1}>
-                      <div className="flex items-start gap-4 p-4 rounded-xl bg-card border border-primary-700/10">
-                        <div className="w-10 h-10 rounded-lg bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center">
-                          <Icon className="w-5 h-5 text-primary-700" />
-                        </div>
-                        <div>
-                          <h4 className="font-black text-base uppercase tracking-tight mb-1">{milestone.title}</h4>
-                          <p className="text-sm text-muted-foreground">{milestone.description}</p>
-                        </div>
-                      </div>
-                    </Reveal>
-                  );
-                })}
-              </div>
-
-              {/* Reward Badges */}
-              <div className="space-y-6">
-                <h3 className="font-black text-xl uppercase tracking-tight mb-4">Achievement Badges</h3>
-                {JUZ_AMMA_DETAILS.rewards.map((reward, index) => (
-                  <Reveal key={index} delay={index * 0.1}>
-                    <div className="flex items-center justify-between p-4 rounded-xl bg-gradient-to-r from-accent/5 to-accent/10 border border-accent/20">
-                      <div className="flex items-center gap-4">
-                        <span className="text-3xl">{reward.badge}</span>
-                        <div>
-                          <h4 className="font-black text-base uppercase tracking-tight">{reward.name}</h4>
-                          <p className="text-xs text-muted-foreground">{reward.surahs}</p>
-                        </div>
-                      </div>
-                      <Trophy className="w-5 h-5 text-accent" />
-                    </div>
-                  </Reveal>
-                ))}
-
-                <div className="mt-8 p-6 rounded-xl bg-primary-700/5 border border-primary-700/20 text-center">
-                  <Crown className="w-8 h-8 mx-auto mb-3 text-primary-700" />
-                  <h4 className="font-black text-lg uppercase tracking-tight mb-2">Graduation Ceremony</h4>
-                  <p className="text-sm text-muted-foreground">
-                    All Juz Amma graduates receive a special certificate and are honored in our quarterly graduation ceremony.
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Schedule Section */}
-      <section className="py-12 sm:py-16 md:py-24">
-        <div className="container mx-auto px-4 sm:px-6">
-          <div className="max-w-6xl mx-auto">
-            <div className="grid md:grid-cols-2 gap-8 sm:gap-12 items-start">
-              <Reveal>
-                <div className="space-y-6">
-                  <h2 className="text-2xl sm:text-3xl md:text-4xl font-black tracking-tighter">
-                    Choose Your <span className="text-primary-700 italic">Schedule</span>
-                  </h2>
-                  <p className="text-base sm:text-lg text-muted-foreground">
-                   {` Multiple time slots available to fit your family's routine. All times shown in Eastern Time (EST).`}
-                  </p>
-                  
-                  <div className="space-y-3 sm:space-y-4">
-                    {JUZ_AMMA_DETAILS.schedule.map((slot, index) => (
-                      <div key={index} className="p-4 sm:p-5 rounded-xl bg-card border border-primary-700/10 hover:border-primary-700/30 transition-all">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-3">
-                            <Calendar className="w-4 h-4 sm:w-5 sm:h-5 text-primary-700" />
-                            <span className="font-black text-sm sm:text-base">{slot.day}</span>
-                          </div>
-                          <span className="text-xs sm:text-sm text-muted-foreground">{slot.time}</span>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </Reveal>
-
-              <Reveal delay={0.2}>
-                <div className="institutional-card p-6 sm:p-8 bg-linear-to-br from-accent/5 to-accent/10 border-2 border-accent/20">
-                  <h3 className="font-black text-xl sm:text-2xl uppercase tracking-tight mb-4 text-center">
-                    Free Trial Class
-                  </h3>
-                  <div className="text-center mb-6">
-                    <div className="text-4xl sm:text-5xl font-black text-accent mb-2">$0</div>
-                    <p className="text-sm text-muted-foreground">No commitment required</p>
-                  </div>
-                  <ul className="space-y-3 mb-6">
-                    {[
-                      "30-minute trial session",
-                      "Meet the teacher",
-                      "Sample our teaching method",
-                      "Assessment of your child's level",
-                      "Take home practice materials",
-                    ].map((item, idx) => (
-                      <li key={idx} className="flex items-center gap-3">
-                        <CheckCircle className="w-4 h-4 text-accent" />
-                        <span className="text-sm">{item}</span>
-                      </li>
-                    ))}
-                  </ul>
-                  <Link href="#trial-form">
-                    <Button className="w-full rounded-full bg-accent hover:bg-accent/90 text-white font-black">
-                      SCHEDULE FREE TRIAL
-                    </Button>
-                  </Link>
-                </div>
-              </Reveal>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Teachers Section */}
-      <section className="py-12 sm:py-16 md:py-24 bg-gradient-to-b from-background to-primary-50/5 dark:to-primary-950/5">
-        <div className="container mx-auto px-4 sm:px-6">
-          <div className="max-w-6xl mx-auto">
-            <Reveal>
-              <div className="text-center mb-12 sm:mb-16 space-y-4">
-                <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black tracking-tighter">
-                  Meet Your <span className="text-primary-700 italic">Teachers</span>
-                </h2>
-                <p className="text-base sm:text-lg text-muted-foreground max-w-3xl mx-auto">
-                  Experienced, patient educators who specialize in teaching children
-                </p>
-              </div>
-            </Reveal>
-
-            <div className="grid md:grid-cols-3 gap-6 sm:gap-8">
-              {JUZ_AMMA_DETAILS.teachers.map((teacher, index) => (
-                <Reveal key={index} delay={index * 0.1}>
-                  <div className="institutional-card p-5 sm:p-6 text-center h-full">
-                    <div className="w-20 h-20 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-primary-700 to-primary-800 flex items-center justify-center text-white font-black text-3xl">
-                      {teacher.name.charAt(0)}
-                    </div>
-                    <h3 className="font-black text-lg uppercase tracking-tight mb-2">{teacher.name}</h3>
-                    <p className="text-xs text-primary-700 font-black mb-3">{teacher.specialty}</p>
-                    <p className="text-xs sm:text-sm text-muted-foreground">{teacher.qualifications}</p>
-                  </div>
-                </Reveal>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Pricing Section */}
-      <section id="pricing" className="py-12 sm:py-16 md:py-24">
-        <div className="container mx-auto px-4 sm:px-6">
-          <div className="max-w-6xl mx-auto">
-            <Reveal>
-              <div className="text-center mb-12 sm:mb-16 space-y-4">
-                <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black tracking-tighter">
-                  Simple, <span className="text-primary-700 italic">Affordable</span> Plans
-                </h2>
-                <p className="text-base sm:text-lg text-muted-foreground max-w-3xl mx-auto">
-                  Choose the payment option that works best for your family
-                </p>
-              </div>
-            </Reveal>
-
-            <div className="grid md:grid-cols-3 gap-6 sm:gap-8">
-              {[
-                {
-                  name: "Monthly",
-                  price: "$20",
-                  period: "/month",
-                  description: "Perfect for trying out",
-                  features: ["No long-term commitment", "Cancel anytime", "Full access to all classes", "Weekly progress reports"],
-                  popular: false,
-                  planId: "monthly",
-                },
-                {
-                  name: "Quarterly",
-                  price: "$55",
-                  period: "/3 months",
-                  description: "Save 10%",
-                  features: ["Best value", "Priority scheduling", "Free practice materials", "Parent portal access", "Monthly progress calls"],
-                  popular: true,
-                  planId: "quarterly",
-                },
-                {
-                  name: "Annual",
-                  price: "$100",
-                  period: "/year",
-                  description: "Save 15% + bonus",
-                  features: ["Maximum savings", "Free trial class", "Certificate included", "Bonus workbook", "Graduation gift"],
-                  popular: false,
-                  planId: "annual",
-                },
-              ].map((plan, index) => (
-                <Reveal key={index} delay={index * 0.1}>
-                  <div className={cn(
-                    "institutional-card p-5 sm:p-6 md:p-8 h-full flex flex-col relative",
-                    plan.popular && "border-2 border-primary-700 shadow-royal"
-                  )}>
-                    {plan.popular && (
-                      <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-primary-700 text-white px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider">
-                        MOST POPULAR
+          <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
+            {[
+              {
+                title: "1-on-1 Private",
+                price: "$149/month",
+                features: [
+                  "Personalized attention",
+                  "Flexible scheduling",
+                  "Custom pacing",
+                  "Direct feedback",
+                ],
+                icon: User,
+                popular: false,
+              },
+              {
+                title: "Small Group",
+                price: "$89/month",
+                features: [
+                  "Peer motivation",
+                  "4-6 students",
+                  "Collaborative learning",
+                  "Lower cost",
+                ],
+                icon: Users,
+                popular: true,
+              },
+              {
+                title: "Self-Paced",
+                price: "$69/month",
+                features: [
+                  "Recorded lessons",
+                  "Weekly check-ins",
+                  "Flexible timing",
+                  "Progress tracking",
+                ],
+                icon: Clock,
+                popular: false,
+              },
+            ].map((format, i) => {
+              const Icon = format.icon;
+              return (
+                <Reveal key={i} delay={i * 0.1}>
+                  <div
+                    className={`institutional-card p-6 text-center h-full ${format.popular ? "border-2 border-amber-500 relative" : ""}`}
+                  >
+                    {format.popular && (
+                      <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-gradient-to-r from-amber-600 to-orange-600 text-white text-[10px] font-black uppercase tracking-wider">
+                        Most Popular
                       </div>
                     )}
-                    
-                    <div className="mb-4 sm:mb-6">
-                      <h3 className="font-black text-lg sm:text-xl uppercase tracking-tight mb-2">{plan.name}</h3>
-                      <div className="flex items-baseline gap-1">
-                        <span className="text-3xl sm:text-4xl font-black text-primary-700">{plan.price}</span>
-                        <span className="text-xs sm:text-sm text-muted-foreground">{plan.period}</span>
-                      </div>
-                      <p className="text-xs sm:text-sm text-muted-foreground mt-2">{plan.description}</p>
+                    <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-amber-100 dark:bg-amber-950/30 flex items-center justify-center">
+                      <Icon className="w-8 h-8 text-amber-600" />
                     </div>
-
-                    <ul className="space-y-2 sm:space-y-3 mb-6 flex-grow">
-                      {plan.features.map((feature, idx) => (
-                        <li key={idx} className="flex items-center gap-2 text-xs sm:text-sm">
-                          <CheckCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary-700 flex-shrink-0" />
+                    <h3 className="font-black text-xl mb-2">{format.title}</h3>
+                    <div className="text-2xl font-black text-amber-600 mb-4">
+                      {format.price}
+                    </div>
+                    <div className="space-y-2 text-left mb-6">
+                      {format.features.map((feature, idx) => (
+                        <div
+                          key={idx}
+                          className="flex items-center gap-2 text-sm"
+                        >
+                          <CheckCircle2 className="w-4 h-4 text-amber-600 shrink-0" />
                           <span>{feature}</span>
-                        </li>
+                        </div>
                       ))}
-                    </ul>
-
-                    <Link href={`#enroll-form?plan=${plan.planId}`} className="mt-auto">
-                      <Button 
-                        className={cn(
-                          "w-full rounded-full font-black",
-                          plan.popular 
-                            ? "bg-primary-700 hover:bg-primary-800 text-white" 
-                            : "bg-primary-700/10 hover:bg-primary-700/20 text-primary-700"
-                        )}
-                      >
-                        SELECT PLAN
+                    </div>
+                    <Link href="/assessment">
+                      <Button className="w-full rounded-full py-3 font-black bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white">
+                        Get Started
                       </Button>
                     </Link>
                   </div>
                 </Reveal>
-              ))}
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ - Universal Questions */}
+      <section className="py-16 bg-muted/20">
+        <div className="container mx-auto px-4 sm:px-6">
+          <div className="text-center max-w-2xl mx-auto mb-12">
+            <div className="inline-flex items-center gap-2 text-amber-600 font-black text-[10px] uppercase tracking-[0.3em] mb-4">
+              <MessageCircle className="w-3.5 h-3.5" /> Common Questions
             </div>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter font-heading mb-4">
+              Your <span className="text-amber-600 italic">Questions</span>,
+              Answered
+            </h2>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+            {FAQS.map((faq, i) => (
+              <Reveal key={i} delay={i * 0.05}>
+                <div className="institutional-card p-6 hover:border-amber-300 transition-all">
+                  <h3 className="font-black text-base mb-2">{faq.q}</h3>
+                  <p className="text-sm text-muted-foreground">{faq.a}</p>
+                </div>
+              </Reveal>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* ENROLLMENT FORM SECTION */}
-      <section id="enroll-form" className="py-12 sm:py-16 md:py-24 bg-gradient-to-b from-background to-primary-50/5 dark:to-primary-950/5 scroll-mt-20">
+      {/* Final Universal CTA */}
+      <section className="py-20">
         <div className="container mx-auto px-4 sm:px-6">
-          <div className="max-w-4xl mx-auto">
-            <Reveal>
-              <div className="text-center mb-8 sm:mb-12 space-y-4">
-                <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black tracking-tighter">
-                  Enroll Your <span className="text-primary-700 italic">Child</span> Today
-                </h2>
-                <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto">
-                  Complete the form below to secure your child's spot in our Juz Amma program
-                </p>
-              </div>
-            </Reveal>
-
-            <Reveal delay={0.1}>
-              <div className="institutional-card p-6 sm:p-8 md:p-10">
-                <EnrollmentForm 
-                  courseId="juz-amma"
-                  courseName="Juz Amma Group for Children"
-                  priceOptions={[
-                    { id: "monthly", name: "Monthly", price: 79 },
-                    { id: "quarterly", name: "Quarterly", price: 215 },
-                    { id: "annual", name: "Annual", price: 799 },
-                  ]}
-                  scheduleOptions={JUZ_AMMA_DETAILS.schedule.map((slot, index) => ({
-                    id: `slot-${index}`,
-                    label: `${slot.day} • ${slot.time}`,
-                  }))}
-                />
-              </div>
-            </Reveal>
-          </div>
-        </div>
-      </section>
-
-      {/* TRIAL FORM SECTION */}
-      <section id="trial-form" className="py-12 sm:py-16 md:py-24 bg-gradient-to-b from-background to-primary-50/5 dark:to-primary-950/5 scroll-mt-20">
-        <div className="container mx-auto px-4 sm:px-6">
-          <div className="max-w-4xl mx-auto">
-            <Reveal>
-              <div className="text-center mb-8 sm:mb-12 space-y-4">
-                <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black tracking-tighter">
-                  Schedule a  <span className="text-primary-700 italic">Free Assessment Class</span>
-                </h2>
-                <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto">
-                  Experience our teaching style and see if Juz Amma memorization is right for your child.
-                </p>
-              </div>
-            </Reveal>
-
-            <Reveal delay={0.1}>
-              <div className="institutional-card p-6 sm:p-8 md:p-10 border-2 border-accent/20 bg-gradient-to-br from-accent/5 to-accent/10">
-                <TrialForm 
-                  courseId="juz-amma"
-                  courseName="Juz Amma Group for Children"
-                  scheduleOptions={JUZ_AMMA_DETAILS.schedule.map((slot, index) => ({
-                    id: `trial-${index}`,
-                    label: `${slot.day} • ${slot.time}`,
-                  }))}
-                />
-              </div>
-            </Reveal>
-          </div>
-        </div>
-      </section>
-
-      {/* FAQ Section */}
-      <section className="py-12 sm:py-16 md:py-24">
-        <div className="container mx-auto px-4 sm:px-6">
-          <div className="max-w-4xl mx-auto">
-            <Reveal>
-              <div className="text-center mb-12 sm:mb-16 space-y-4">
-                <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black tracking-tighter">
-                  Frequently Asked <span className="text-primary-700 italic">Questions</span>
-                </h2>
-                <p className="text-base sm:text-lg text-muted-foreground">
-                  Everything parents need to know about Juz Amma memorization
-                </p>
-              </div>
-            </Reveal>
-
-            <div className="space-y-3 sm:space-y-4">
-              {JUZ_AMMA_DETAILS.faqs.map((faq, index) => (
-                <Reveal key={index} delay={index * 0.05}>
-                  <div className="institutional-card p-4 sm:p-6 hover:border-primary-700/30 transition-all duration-300">
-                    <h3 className="font-black text-sm sm:text-base uppercase tracking-tight mb-2">{faq.q}</h3>
-                    <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">{faq.a}</p>
-                  </div>
-                </Reveal>
-              ))}
+          <div className="institutional-card p-8 md:p-12 text-center max-w-4xl mx-auto bg-gradient-to-br from-amber-600/5 to-orange-600/5">
+            <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-amber-500 to-orange-500 mb-6 shadow-lg">
+              <Rocket className="w-10 h-10 text-white" />
             </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Final CTA */}
-      <section className="py-12 sm:py-16 md:py-24 bg-gradient-to-b from-background to-primary-50/5 dark:to-primary-950/5">
-        <div className="container mx-auto px-4 sm:px-6">
-          <div className="max-w-4xl mx-auto">
-            <Reveal>
-              <div className="institutional-card p-8 sm:p-10 md:p-12 text-center border-2 border-primary-700/20">
-                <MoonStar className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 mx-auto mb-4 sm:mb-6 text-primary-700" />
-                
-                <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black tracking-tighter mb-4">
-                  Begin Your Child's <span className="text-primary-700 italic">Juz Amma</span> Journey
-                </h2>
-                
-                <p className="text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto mb-6 sm:mb-8">
-                  Give your child the gift of memorizing the most recited portion of the Quran
-                </p>
-
-                <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <Link href="#enroll-form">
-                    <Button className="rounded-full px-8 py-4 sm:px-10 sm:py-5 font-black bg-primary-700 hover:bg-primary-800 text-base sm:text-lg min-h-[44px]">
-                      <span className="flex items-center gap-3">
-                        ENROLL NOW
-                        <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
-                      </span>
-                    </Button>
-                  </Link>
-                  
-                  <Link href="#trial-form">
-                    <Button variant="outline" className="rounded-full px-8 py-4 sm:px-10 sm:py-5 font-black text-base sm:text-lg min-h-[44px]">
-                      FREE TRIAL CLASS
-                    </Button>
-                  </Link>
-                </div>
-
-                <div className="mt-6 sm:mt-8 pt-6 sm:pt-8 border-t border-border/50">
-                  <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 text-xs sm:text-sm text-muted-foreground">
-                    <div className="flex items-center gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-primary-700" />
-                      37 Surahs Complete
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-primary-700" />
-                      Reward System
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <CheckCircle2 className="w-4 h-4 text-primary-700" />
-                      Graduation Ceremony
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </Reveal>
+            <h2 className="text-3xl sm:text-4xl font-black mb-4">
+              Start Your Juz Amma Journey Today
+            </h2>
+            <p className="text-muted-foreground mb-8 max-w-md mx-auto">
+              No matter your age, background, or schedule — we have a path for
+              you. Begin with a free, no-obligation assessment.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Link href="/assessment">
+                <Button className="rounded-full px-8 py-4 font-black bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white">
+                  BOOK FREE ASSESSMENT
+                  <ArrowRight className="w-4 h-4 ml-2" />
+                </Button>
+              </Link>
+              <Link href="/contact">
+                <Button
+                  variant="outline"
+                  className="rounded-full px-8 py-4 font-black border-amber-600 text-amber-600"
+                >
+                  TALK TO ADVISOR
+                </Button>
+              </Link>
+            </div>
+            <p className="text-xs text-muted-foreground mt-4">
+              Free 20-minute session • No commitment • All ages welcome
+            </p>
           </div>
         </div>
       </section>
