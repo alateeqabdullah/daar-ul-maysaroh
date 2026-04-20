@@ -1122,7 +1122,7 @@ export default function JuzAmmaPage() {
             <h1 className="text-4xl xs:text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tighter font-heading leading-[1.1] mb-4 sm:mb-6 px-2">
               Memorize{" "}
               <span className="text-transparent bg-clip-text bg-linear-to-r from-amber-600 via-orange-600 to-gold whitespace-nowrap">
-                Juz Amma
+                Juz 'Amma
               </span>
             </h1>
 
