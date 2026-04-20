@@ -1187,7 +1187,7 @@ export default function GroupQiroahPage() {
                       </div>
                       <div className="flex-1 min-w-0">
                         <h3 className="font-black text-base sm:text-lg mb-1">{benefit.title}</h3>
-                        <p className="text-xs sm:text-sm text-muted-foreground break-words">{benefit.description}</p>
+                        <p className="text-xs sm:text-sm text-muted-foreground wrap-break-word">{benefit.description}</p>
                         <div className="mt-1.5 sm:mt-2 inline-flex px-1.5 sm:px-2 py-0.5 rounded-full bg-amber-100 dark:bg-amber-900/30 text-amber-700 text-[8px] sm:text-[10px] font-black">
                           {benefit.audience}
                         </div>

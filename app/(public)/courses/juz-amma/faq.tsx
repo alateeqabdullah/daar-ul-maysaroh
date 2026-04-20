@@ -148,7 +148,7 @@ export function FAQSection() {
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6">
       {/* Search Bar */}
-      <div className="relative max-w-md mx-auto mb-8">
+      {/* <div className="relative max-w-md mx-auto mb-8">
         <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
         <input
           type="text"
@@ -167,10 +167,10 @@ export function FAQSection() {
             <X className="w-4 h-4 text-muted-foreground" />
           </button>
         )}
-      </div>
+      </div> */}
 
       {/* Mobile Filter Toggle */}
-      <div className="md:hidden flex justify-center mb-4">
+      {/* <div className="md:hidden flex justify-center mb-4">
         <button
           onClick={() => setShowFilters(!showFilters)}
           className="flex items-center gap-2 px-4 py-2 rounded-full bg-muted/30 border border-border text-sm font-medium"
@@ -183,10 +183,10 @@ export function FAQSection() {
             <ChevronDown className="w-4 h-4" />
           )}
         </button>
-      </div>
+      </div> */}
 
       {/* Category Filters */}
-      <div
+      {/* <div
         className={cn(
           "flex flex-wrap justify-center gap-2 mb-10 transition-all duration-300",
           !showFilters && "hidden md:flex",
@@ -213,10 +213,10 @@ export function FAQSection() {
             </button>
           );
         })}
-      </div>
+      </div> */}
 
       {/* Popular Questions Quick Access */}
-      {searchQuery === "" && activeCategory === "all" && (
+      {/* {searchQuery === "" && activeCategory === "all" && (
         <div className="mb-8">
           <div className="flex items-center justify-center gap-2 mb-4">
             <span className="text-xs font-black uppercase tracking-wider text-amber-600 bg-amber-100 dark:bg-amber-950/40 px-3 py-1 rounded-full">
@@ -243,15 +243,15 @@ export function FAQSection() {
             ))}
           </div>
         </div>
-      )}
+      )} */}
 
       {/* Results Info */}
-      {searchQuery && (
+      {/* {searchQuery && (
         <p className="text-center text-xs text-muted-foreground mb-4">
           Found {filteredFAQs.length} question
           {filteredFAQs.length !== 1 ? "s" : ""}
         </p>
-      )}
+      )} */}
 
       {/* FAQ Accordion Grid */}
       {filteredFAQs.length === 0 ? (
