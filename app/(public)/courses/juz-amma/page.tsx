@@ -284,7 +284,7 @@
 //           <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
 //             {/* Left Content */}
 //             <div className="space-y-6 sm:space-y-8">
-//               <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-gradient-to-r from-cyan-500/10 to-teal-500/10 border border-cyan-500/20 text-cyan-700 text-[11px] font-black uppercase tracking-wider">
+//               <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-linear-to-r from-cyan-500/10 to-teal-500/10 border border-cyan-500/20 text-cyan-700 text-[11px] font-black uppercase tracking-wider">
 //                 <Sparkles className="w-3.5 h-3.5" /> Award-Winning Children's
 //                 Program
 //               </div>
@@ -795,18 +795,15 @@
 // app/courses/juz-amma/page.tsx
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 import {
   motion,
   useScroll,
   useTransform,
-  AnimatePresence,
 } from "framer-motion";
 import {
   BookOpen,
-  Star,
   Clock,
-  Calendar,
   Award,
   Shield,
   Users,
@@ -814,44 +811,26 @@ import {
   ArrowRight,
   CheckCircle2,
   Heart,
-  Moon,
-  Sun,
-  Gem,
   Crown,
   Target,
-  TrendingUp,
-  Zap,
-  Play,
-  Headphones,
   Mic,
-  Volume2,
   Quote,
-  ChevronRight,
   GraduationCap,
-  BadgeCheck,
   Trophy,
-  Medal,
-  Diamond,
   Compass,
   Brain,
-  Eye,
   MessageCircle,
-  Gift,
   Rocket,
-  Infinity,
   Globe,
   Briefcase,
   Baby,
   User,
   Leaf,
   Flower,
-  Feather,
-  PenTool,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Reveal } from "@/components/shared/section-animation";
 import Link from "next/link";
-import { cn } from "@/lib/utils";
 
 // Universal Program Data - Timeless Design
 const PROGRAM_DATA = {
@@ -866,7 +845,7 @@ const PROGRAM_DATA = {
   format: "1-on-1 or Small Groups",
   surahs: 37,
   verses: 564,
-  priceRange: "$69 - $149/month",
+  priceRange: "$2+/month",
   colors: {
     primary: "from-amber-600 to-orange-600",
     secondary: "from-orange-500 to-amber-500",
@@ -930,7 +909,7 @@ const JOURNEY_PATHS = [
       "Fun activities",
       "Reward system",
       "Parent involvement",
-      "Short sessions",
+      "Tajweed basics",
     ],
     color: "from-emerald-500 to-teal-500",
   },
@@ -1039,7 +1018,7 @@ const MILESTONES = [
 // Success Stories - Diverse Representation
 const SUCCESS_STORIES = [
   {
-    name: "Aisha, 9",
+    name: "Zainab, 9",
     type: "Child",
     story:
       "I used to struggle with reading, now I can recite 20 surahs from memory! My teacher makes learning so much fun.",
@@ -1047,7 +1026,7 @@ const SUCCESS_STORIES = [
     icon: Baby,
   },
   {
-    name: "Omar, 28",
+    name: "Adewale, 28",
     type: "Professional",
     story:
       "Balancing work and memorization seemed impossible. Al-Maysaroh's flexible scheduling made it possible. I'm halfway through Juz Amma!",
@@ -1055,10 +1034,10 @@ const SUCCESS_STORIES = [
     icon: Briefcase,
   },
   {
-    name: "Fatima, 45",
+    name: "Fateema, 45",
     type: "Mother",
     story:
-      "Learning alongside my children has been a beautiful journey. The teachers are patient and encouraging at every step.",
+      "Learning alongside my children has been a beautiful journey.",
     duration: "10 months",
     icon: Heart,
   },
@@ -1066,7 +1045,7 @@ const SUCCESS_STORIES = [
     name: "Yusuf, 16",
     type: "Teen",
     story:
-      "The structured approach and progress tracking kept me motivated. I've completed Juz Amma and moving to Juz Tabarak!",
+      "I've completed Juz Amma and moving to Juz Tabarak!",
     duration: "9 months",
     icon: User,
   },
@@ -1134,7 +1113,7 @@ export default function JuzAmmaPage() {
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ duration: 0.5 }}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-amber-500/10 to-orange-500/10 border border-amber-500/20 text-amber-700 text-[11px] font-black uppercase tracking-wider mb-6"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-linear-to-r from-amber-500/10 to-orange-500/10 border border-amber-500/20 text-amber-700 text-[11px] font-black uppercase tracking-wider mb-6"
             >
               <Sparkles className="w-3.5 h-3.5" /> For Everyone • All Ages • All
               Levels
@@ -1142,21 +1121,18 @@ export default function JuzAmmaPage() {
 
             <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tighter font-heading leading-[1.1] mb-6">
               Memorize{" "}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-600 via-orange-600 to-gold">
+              <span className="text-transparent bg-clip-text bg-linear-to-r from-amber-600 via-orange-600 to-gold">
                 Juz Amma
               </span>
             </h1>
 
             <p className="text-xl text-muted-foreground font-light max-w-2xl mx-auto mb-8">
-              Whether you're 8 or 80, a busy professional or a dedicated student
-              — this program is designed for YOU. Start your Quranic journey
-              with expert guidance, flexible scheduling, and a supportive
-              community.
+            {`A transformative program designed for anyone, anywhere. Whether you're a child taking your first steps in memorization or an adult seeking to deepen your connection with the Quran, our comprehensive juz 'Amma curriculum and expert teachers will guide you every step of the way.`}
             </p>
 
             <div className="flex flex-wrap justify-center gap-4">
               <Link href="/assessment">
-                <Button className="rounded-full px-8 py-4 sm:px-10 sm:py-5 font-black bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white text-base sm:text-lg shadow-xl">
+                <Button className="rounded-full px-8 py-4 sm:px-10 sm:py-5 font-black bg-linear-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white text-base sm:text-lg shadow-xl">
                   <span className="flex items-center gap-2">
                     START YOUR JOURNEY
                     <Rocket className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -1207,8 +1183,8 @@ export default function JuzAmmaPage() {
               <span className="text-amber-600 italic">Every Learner</span>
             </h2>
             <p className="text-muted-foreground">
-              Whether you're a beginner or advanced, child or adult — this
-              program works for you
+                {` Whether you're a beginner or advanced, child or adult -- this
+                  program works for you. Here's how we make memorization accessible, effective, and transformative for everyone.`}
             </p>
           </div>
 
@@ -1264,7 +1240,7 @@ export default function JuzAmmaPage() {
                 <Reveal key={i} delay={i * 0.1}>
                   <div className="institutional-card p-6 text-center h-full hover:border-amber-300 transition-all group">
                     <div
-                      className={`w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br ${path.color} flex items-center justify-center group-hover:scale-110 transition-transform`}
+                      className={`w-16 h-16 mx-auto mb-4 rounded-2xl bg-linear-to-br ${path.color} flex items-center justify-center group-hover:scale-110 transition-transform`}
                     >
                       <Icon className="w-8 h-8 text-white" />
                     </div>
@@ -1308,14 +1284,14 @@ export default function JuzAmmaPage() {
 
           <div className="max-w-4xl mx-auto">
             <div className="relative">
-              <div className="absolute left-6 top-0 bottom-0 w-0.5 bg-gradient-to-b from-amber-400 via-orange-400 to-gold hidden md:block" />
+              <div className="absolute left-6 top-0 bottom-0 w-0.5 bg-linear-to-b from-amber-400 via-orange-400 to-gold hidden md:block" />
               <div className="space-y-8">
                 {SURAH_CATEGORIES.map((category, idx) => {
                   const Icon = category.icon;
                   return (
                     <Reveal key={idx} delay={idx * 0.1}>
                       <div className="relative pl-0 md:pl-16">
-                        <div className="hidden md:block absolute left-0 top-6 w-12 h-12 rounded-full bg-gradient-to-r from-amber-500 to-orange-500 flex items-center justify-center text-white font-black text-lg shadow-lg">
+                        <div className="hidden md:block absolute left-0 top-6 w-12 h-12 rounded-full bg-linear-to-r from-amber-500 to-orange-500 items-center justify-center text-white font-black text-lg shadow-lg">
                           {idx + 1}
                         </div>
                         <div className="institutional-card p-6 md:p-8">
@@ -1345,7 +1321,7 @@ export default function JuzAmmaPage() {
                                   initial={{ width: 0 }}
                                   whileInView={{ width: `${(idx + 1) * 33}%` }}
                                   transition={{ duration: 1 }}
-                                  className="h-full bg-gradient-to-r from-amber-500 to-orange-500 rounded-full"
+                                  className="h-full bg-linear-to-r from-amber-500 to-orange-500 rounded-full"
                                 />
                               </div>
                             </div>
@@ -1380,7 +1356,7 @@ export default function JuzAmmaPage() {
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {MILESTONES.map((milestone, i) => (
               <Reveal key={i} delay={i * 0.1}>
-                <div className="text-center p-6 rounded-xl bg-gradient-to-br from-amber-50/30 to-orange-50/30 border border-amber-100 dark:border-amber-800">
+                <div className="text-center p-6 rounded-xl bg-linear-to-br from-amber-50/30 to-orange-50/30 border border-amber-100 dark:border-amber-800">
                   <div className="text-5xl mb-3">{milestone.badge}</div>
                   <h3 className="font-black text-lg mb-1">{milestone.level}</h3>
                   <p className="text-sm text-amber-600 font-black mb-2">
@@ -1418,7 +1394,7 @@ export default function JuzAmmaPage() {
                 <Reveal key={i} delay={i * 0.1}>
                   <div className="institutional-card p-6 h-full flex flex-col">
                     <div className="flex items-center gap-3 mb-4">
-                      <div className="w-12 h-12 rounded-full bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center text-white font-black text-lg">
+                      <div className="w-12 h-12 rounded-full bg-linear-to-br from-amber-500 to-orange-500 flex items-center justify-center text-white font-black text-lg">
                         {story.name.charAt(0)}
                       </div>
                       <div>
@@ -1504,7 +1480,7 @@ export default function JuzAmmaPage() {
                     className={`institutional-card p-6 text-center h-full ${format.popular ? "border-2 border-amber-500 relative" : ""}`}
                   >
                     {format.popular && (
-                      <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-gradient-to-r from-amber-600 to-orange-600 text-white text-[10px] font-black uppercase tracking-wider">
+                      <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-linear-to-r from-amber-600 to-orange-600 text-white text-[10px] font-black uppercase tracking-wider">
                         Most Popular
                       </div>
                     )}
@@ -1527,7 +1503,7 @@ export default function JuzAmmaPage() {
                       ))}
                     </div>
                     <Link href="/assessment">
-                      <Button className="w-full rounded-full py-3 font-black bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white">
+                      <Button className="w-full rounded-full py-3 font-black bg-linear-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white">
                         Get Started
                       </Button>
                     </Link>
@@ -1568,8 +1544,8 @@ export default function JuzAmmaPage() {
       {/* Final Universal CTA */}
       <section className="py-20">
         <div className="container mx-auto px-4 sm:px-6">
-          <div className="institutional-card p-8 md:p-12 text-center max-w-4xl mx-auto bg-gradient-to-br from-amber-600/5 to-orange-600/5">
-            <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-amber-500 to-orange-500 mb-6 shadow-lg">
+          <div className="institutional-card p-8 md:p-12 text-center max-w-4xl mx-auto bg-linear-to-br from-amber-600/5 to-orange-600/5">
+            <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-linear-to-br from-amber-500 to-orange-500 mb-6 shadow-lg">
               <Rocket className="w-10 h-10 text-white" />
             </div>
             <h2 className="text-3xl sm:text-4xl font-black mb-4">
@@ -1581,7 +1557,7 @@ export default function JuzAmmaPage() {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/assessment">
-                <Button className="rounded-full px-8 py-4 font-black bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white">
+                <Button className="rounded-full px-8 py-4 font-black bg-linear-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white">
                   BOOK FREE ASSESSMENT
                   <ArrowRight className="w-4 h-4 ml-2" />
                 </Button>
