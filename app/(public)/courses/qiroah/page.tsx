@@ -667,7 +667,7 @@ export default function QiroahProgramPage() {
                 },
                 {
                   q: "What technology do I need?",
-                  a: "A computer, tablet, or smartphone with internet connection and a microphone. We use Zoom, Meet for live sessions and provide access to our learning portal.",
+                  a: "A computer, tablet, or smartphone with internet connection and a microphone. We use Google Meet/Zoom for live sessions and provide access to our learning portal.",
                 },
               ].map((faq, index) => (
                 <Reveal key={index} delay={index * 0.05}>

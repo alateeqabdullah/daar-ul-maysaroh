@@ -13,8 +13,7 @@ import {
   PenTool,
   FileText,
   Award,
-  Shield,
-  GraduationCap,
+
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Reveal } from "@/components/shared/section-animation";
@@ -70,7 +69,7 @@ export default function ArabicFluencyPage() {
                 <Reveal delay={0.3}>
                   <div className="flex flex-col sm:flex-row gap-3 pt-2">
                     <Link href="/admissions" className="w-full sm:w-auto">
-                      <Button className="w-full rounded-full px-6 py-3 sm:px-8 sm:py-4 font-black bg-gold hover:bg-gold/90 text-white text-sm sm:text-base min-h-[44px]">
+                      <Button className="w-full rounded-full px-6 py-3 sm:px-8 sm:py-4 font-black bg-gold hover:bg-gold/90 text-white text-sm sm:text-base min-h-11">
                         <span className="flex items-center justify-center gap-2 sm:gap-3">
                           START LANGUAGE JOURNEY
                           <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
@@ -80,7 +79,7 @@ export default function ArabicFluencyPage() {
                     <Link href="#curriculum" className="w-full sm:w-auto">
                       <Button
                         variant="outline"
-                        className="w-full rounded-full px-6 py-3 sm:px-8 sm:py-4 font-black text-sm sm:text-base min-h-[44px]"
+                        className="w-full rounded-full px-6 py-3 sm:px-8 sm:py-4 font-black text-sm sm:text-base min-h-11"
                       >
                         VIEW CURRICULUM
                       </Button>
@@ -91,12 +90,12 @@ export default function ArabicFluencyPage() {
 
               {/* Hero Visual */}
               <Reveal delay={0.4} className="lg:w-1/2">
-                <div className="institutional-card p-6 sm:p-8 bg-gradient-to-br from-gold/5 to-gold/10 border-2 border-gold/20">
+                <div className="institutional-card p-6 sm:p-8 bg-linear-to-br from-gold/5 to-gold/10 border-2 border-gold/20">
                   <div className="grid grid-cols-2 gap-4 sm:gap-6 mb-6">
                     {[
                       { value: "1", label: "Year", icon: Clock },
-                      { value: "Group", label: "Sessions", icon: Users },
-                      { value: "Beginner", label: "Level", icon: Target },
+                      { value: "1-1", label: "Sessions", icon: Users },
+                      { value: "All Levels", label: "Level", icon: Target },
                       { value: "Quranic", label: "Focus", icon: BookOpen },
                     ].map((stat, idx) => (
                       <div key={idx} className="space-y-1">
@@ -130,7 +129,7 @@ export default function ArabicFluencyPage() {
       </section>
 
       {/* Program Highlights */}
-      <section className="py-12 sm:py-16 md:py-24 bg-gradient-to-b from-background to-gold/5">
+      <section className="py-12 sm:py-16 md:py-24 bg-linear-to-b from-background to-gold/5">
         <div className="container mx-auto px-4 sm:px-6">
           <div className="max-w-6xl mx-auto">
             <Reveal>
@@ -210,7 +209,7 @@ export default function ArabicFluencyPage() {
             <div className="space-y-6 sm:space-y-8">
               {[
                 {
-                  phase: "Trimester 1",
+                  phase: "1",
                   title: "Foundation & Basics (4 Months)",
                   description:
                     "Establish core language skills and Quranic reading",
@@ -222,7 +221,7 @@ export default function ArabicFluencyPage() {
                   ],
                 },
                 {
-                  phase: "Trimester 2",
+                  phase: "2",
                   title: "Grammar & Structure (4 Months)",
                   description:
                     "Master classical Arabic grammar for comprehension",
@@ -234,7 +233,7 @@ export default function ArabicFluencyPage() {
                   ],
                 },
                 {
-                  phase: "Trimester 3",
+                  phase: "3",
                   title: "Fluency & Application (4 Months)",
                   description:
                     "Develop reading fluency and comprehension skills",
@@ -249,9 +248,9 @@ export default function ArabicFluencyPage() {
                 <Reveal key={index} delay={index * 0.1}>
                   <div className="institutional-card p-6 sm:p-8 md:p-10 hover:border-gold/30 transition-all duration-300">
                     <div className="flex flex-col md:flex-row md:items-start gap-6">
-                      <div className="md:w-48 flex-shrink-0">
+                      <div className="md:w-48 shrink-0">
                         <div className="inline-flex items-center gap-3 mb-3">
-                          <div className="w-10 h-10 rounded-lg bg-gold text-white flex items-center justify-center text-sm font-black">
+                          <div className="w-10 h-10 p-4 rounded-lg bg-gold text-white flex items-center justify-center text-sm font-black">
                             {phase.phase}
                           </div>
                           <div className="font-black text-lg uppercase tracking-tight">
@@ -270,7 +269,7 @@ export default function ArabicFluencyPage() {
                               key={idx}
                               className="flex items-center gap-3 p-3 rounded-lg bg-gold/5"
                             >
-                              <CheckCircle2 className="w-4 h-4 text-gold flex-shrink-0" />
+                              <CheckCircle2 className="w-4 h-4 text-gold shrink-0" />
                               <span className="text-sm font-medium">
                                 {point}
                               </span>
@@ -288,7 +287,7 @@ export default function ArabicFluencyPage() {
       </section>
 
       {/* Teaching Methodology */}
-      <section className="py-12 sm:py-16 md:py-24 bg-gradient-to-b from-background to-gold/5">
+      <section className="py-12 sm:py-16 md:py-24 bg-linear-to-b from-background to-gold/5">
         <div className="container mx-auto px-4 sm:px-6">
           <div className="max-w-6xl mx-auto">
             <Reveal>
@@ -366,7 +365,7 @@ export default function ArabicFluencyPage() {
                         "Continue self-study in classical works",
                       ].map((outcome, idx) => (
                         <div key={idx} className="flex items-center gap-3">
-                          <CheckCircle2 className="w-5 h-5 text-gold flex-shrink-0" />
+                          <CheckCircle2 className="w-5 h-5 text-gold shrink-0" />
                           <span className="font-medium">{outcome}</span>
                         </div>
                       ))}
@@ -389,7 +388,7 @@ export default function ArabicFluencyPage() {
                     </p>
 
                     <Link href="/admissions">
-                      <Button className="rounded-full px-8 py-4 font-black bg-gold hover:bg-gold/90 text-white min-h-[44px]">
+                      <Button className="rounded-full px-8 py-4 font-black bg-gold hover:bg-gold/90 text-white min-h-11">
                         ACHIEVE FLUENCY
                       </Button>
                     </Link>
@@ -402,7 +401,7 @@ export default function ArabicFluencyPage() {
       </section>
 
       {/* CTA Section */}
-      <section className="py-12 sm:py-16 md:py-24 bg-gradient-to-b from-background to-gold/5">
+      <section className="py-12 sm:py-16 md:py-24 bg-linear-to-b from-background to-gold/5">
         <div className="container mx-auto px-4 sm:px-6">
           <div className="max-w-4xl mx-auto">
             <Reveal>
@@ -411,7 +410,7 @@ export default function ArabicFluencyPage() {
 
                 <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter mb-4">
                   Unlock the{" "}
-                  <span className="text-gold italic">Quran's Language</span>
+                  <span className="text-gold italic">{`Quran's Language`}</span>
                 </h2>
 
                 <p className="text-lg sm:text-xl text-muted-foreground font-light max-w-2xl mx-auto mb-8">
@@ -421,7 +420,7 @@ export default function ArabicFluencyPage() {
 
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
                   <Link href="/admissions">
-                    <Button className="rounded-full px-8 py-4 sm:px-10 sm:py-5 font-black bg-gold hover:bg-gold/90 text-white text-base sm:text-lg min-h-[44px] w-full sm:w-auto">
+                    <Button className="rounded-full px-8 py-4 sm:px-10 sm:py-5 font-black bg-gold hover:bg-gold/90 text-white text-base sm:text-lg min-h-11 w-full sm:w-auto">
                       <span className="flex items-center gap-3">
                         START LEARNING ARABIC
                         <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -429,12 +428,12 @@ export default function ArabicFluencyPage() {
                     </Button>
                   </Link>
 
-                  <Link href="/contact">
+                  <Link href="/assessment">
                     <Button
                       variant="outline"
-                      className="rounded-full px-8 py-4 sm:px-10 sm:py-5 font-black text-base sm:text-lg min-h-[44px] w-full sm:w-auto"
+                      className="rounded-full px-8 py-4 sm:px-10 sm:py-5 font-black text-base sm:text-lg min-h-11 w-full sm:w-auto"
                     >
-                      FREE PLACEMENT TEST
+                      FREE ASSESSMENT SESSION
                     </Button>
                   </Link>
                 </div>
@@ -447,7 +446,7 @@ export default function ArabicFluencyPage() {
                     </div>
                     <div className="flex items-center gap-2">
                       <CheckCircle2 className="w-4 h-4 text-gold" />
-                      Group Learning Environment
+                      1 Year to Quranic Comprehension
                     </div>
                     <div className="flex items-center gap-2">
                       <CheckCircle2 className="w-4 h-4 text-gold" />
@@ -493,7 +492,7 @@ export default function ArabicFluencyPage() {
                 },
                 {
                   q: "Can I join if I already know some Arabic?",
-                  a: "Yes! We offer placement tests to determine your level. You can join at any trimester based on your current proficiency.",
+                  a: "Yes! We offer assessment session to determine your level. You can join at any trimester based on your current proficiency.",
                 },
                 {
                   q: "What materials are provided?",
