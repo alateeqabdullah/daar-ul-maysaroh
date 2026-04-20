@@ -1127,11 +1127,11 @@ export default function JuzAmmaPage() {
             </h1>
 
             <p className="text-xl text-muted-foreground font-light max-w-2xl mx-auto mb-8">
-            {`A transformative program designed for anyone, anywhere. Whether you're a child taking your first steps in memorization or an adult seeking to deepen your connection with the Quran, our comprehensive juz 'Amma curriculum and expert teachers will guide you every step of the way.`}
+              The most comprehensive, flexible, and effective program for memorizing the 30th Juz of the Quran, designed for anyone and everyone.
             </p>
 
             <div className="flex flex-wrap justify-center gap-4">
-              <Link href="/assessment">
+              <Link href="/admissions">
                 <Button className="rounded-full px-8 py-4 sm:px-10 sm:py-5 font-black bg-linear-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white text-base sm:text-lg shadow-xl">
                   <span className="flex items-center gap-2">
                     START YOUR JOURNEY
@@ -1152,10 +1152,10 @@ export default function JuzAmmaPage() {
             {/* Universal Stats */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 mt-12 pt-8 border-t border-border/50">
               {[
-                { label: "Students of All Ages", value: "500+", icon: Users },
+                { label: "Students of All Ages", value: "50+", icon: Users },
                 { label: "Success Rate", value: "94%", icon: Target },
                 { label: "Countries", value: "15+", icon: Globe },
-                { label: "Certified Graduates", value: "200+", icon: Award },
+                { label: "Certified Graduates", value: "20+", icon: Award },
               ].map((stat, i) => (
                 <div key={i}>
                   <div className="text-2xl sm:text-3xl font-black text-amber-600">
@@ -1228,7 +1228,7 @@ export default function JuzAmmaPage() {
               <span className="text-amber-600 italic">Tailored to You</span>
             </h2>
             <p className="text-muted-foreground">
-              Different paths for different needs — all leading to the same
+              Different paths for different needs - all leading to the same
               destination
             </p>
           </div>
@@ -1275,7 +1275,7 @@ export default function JuzAmmaPage() {
               <BookOpen className="w-3.5 h-3.5" /> Your Journey
             </div>
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter font-heading mb-4">
-              What You'll <span className="text-amber-600 italic">Achieve</span>
+              {`What You'll`} <span className="text-amber-600 italic">Achieve</span>
             </h2>
             <p className="text-muted-foreground">
               A clear progression from start to mastery
