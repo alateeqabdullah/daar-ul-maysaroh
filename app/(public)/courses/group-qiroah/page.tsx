@@ -961,12 +961,11 @@
 // }
 
 
-
 // app/courses/group-qiroah/page.tsx
 "use client";
 
 import { useState, useRef } from "react";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import {
   Star,
   Clock,
@@ -992,111 +991,66 @@ import {
   Flower,
   Sun,
   Baby,
+  Briefcase,
+  Zap,
+  Feather,
+  Coffee,
+  Moon,
+  Cloud,
+  Rainbow,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Reveal } from "@/components/shared/section-animation";
 import Link from "next/link";
+import { cn } from "@/lib/utils";
 
-// Universal Program Data - Warm & Inviting Theme
+// Premium Color Scheme - Sunset/Amber Theme
+const COLORS = {
+  primary: "from-amber-500 to-orange-600",
+  secondary: "from-orange-500 to-amber-500",
+  accent: "from-rose-500 to-amber-500",
+  light: "amber-50",
+  dark: "amber-950",
+  border: "amber-200",
+  text: "amber-700",
+  gradient: "from-amber-50/30 via-orange-50/20 to-rose-50/30",
+  glow: "from-amber-500/20 via-orange-500/15 to-rose-500/10",
+};
+
+// Program Data
 const PROGRAM_DATA = {
   name: "Group Qiro'ah",
   tagline: "Your First Step to Reading the Quran",
-  description: " A nurturing group learning experience for absolute beginners of all ages. Join us to build a strong Quranic foundation together!",
+  description: "A warm, nurturing group learning experience for absolute beginners of all ages. Join a community of learners on the same beautiful journey.",
   audience: "All Ages • Absolute Beginners Welcome",
   duration: "Flexible (6-12 months)",
   sessionsPerWeek: "1-3 sessions",
   sessionDuration: "45-60 minutes",
   format: "Small Groups (4-10 learners)",
   level: "Beginner to Intermediate",
-  priceRange: "$6/month",
-  colors: {
-    primary: "from-emerald-600 to-teal-600",
-    secondary: "from-teal-500 to-emerald-500",
-    accent: "from-green-500 to-emerald-500",
-    light: "emerald-50",
-    dark: "emerald-950",
-    border: "emerald-200",
-    text: "emerald-700",
-  },
+  priceRange: "$69",
+  pricePeriod: "per month",
 };
 
-// Core Benefits - Universal
+// Core Benefits
 const BENEFITS = [
-  {
-    icon: Smile,
-    title: "Supportive Environment",
-    description: "Learn at your own pace in a judgment-free space",
-    audience: "All learners",
-  },
-  {
-    icon: Users,
-    title: "Peer Learning",
-    description: "Grow together with fellow learners in small groups",
-    audience: "Everyone",
-  },
-  {
-    icon: Gamepad,
-    title: "Engaging Methods",
-    description: "Interactive activities that make learning stick",
-    audience: "All ages",
-  },
-  {
-    icon: Heart,
-    title: "Patient Instructors",
-    description: "Teachers who genuinely care about your progress",
-    audience: "All levels",
-  },
-  {
-    icon: Award,
-    title: "Progress Recognition",
-    description: "Celebrate every milestone along your journey",
-    audience: "All students",
-  },
-  {
-    icon: Calendar,
-    title: "Flexible Learning",
-    description: "Schedules that fit your life",
-    audience: "Everyone",
-  },
+  { icon: Smile, title: "Supportive Environment", description: "Learn at your own pace in a judgment-free space", audience: "All learners" },
+  { icon: Users, title: "Peer Learning", description: "Grow together with fellow learners in small groups", audience: "Everyone" },
+  { icon: Gamepad, title: "Engaging Methods", description: "Interactive activities that make learning stick", audience: "All ages" },
+  { icon: Heart, title: "Patient Instructors", description: "Teachers who genuinely care about your progress", audience: "All levels" },
+  { icon: Award, title: "Progress Recognition", description: "Celebrate every milestone along your journey", audience: "All students" },
+  { icon: Calendar, title: "Flexible Learning", description: "Schedules that fit your life", audience: "Everyone" },
 ];
 
-// Learning Journey - Universal Progression
+// Learning Journey
 const LEARNING_JOURNEY = [
-  {
-    stage: "Alphabet Foundation",
-    duration: "Foundation Phase",
-    focus: "Arabic letters, sounds, and basic recognition",
-    activities: ["Letter recognition", "Sound practice", "Writing basics", "Simple games"],
-    icon: Leaf,
-    color: "emerald",
-  },
-  {
-    stage: "Word Building",
-    duration: "Building Phase",
-    focus: "Connecting letters and forming words",
-    activities: ["Word construction", "Vocabulary building", "Reading practice", "Group activities"],
-    icon: Flower,
-    color: "teal",
-  },
-  {
-    stage: "Surah Reading",
-    duration: "Fluency Phase",
-    focus: "Reading short surahs with confidence",
-    activities: ["Surah practice", "Fluency drills", "Meaning discussion", "Revision games"],
-    icon: Crown,
-    color: "emerald",
-  },
-  {
-    stage: "Confident Reader",
-    duration: "Mastery Phase",
-    focus: "Independent Quran reading with proper rhythm",
-    activities: ["Fluency mastery", "Basic Tajweed", "Public reading", "Graduation"],
-    icon: Star,
-    color: "teal",
-  },
+  { stage: "Alphabet Foundation", duration: "Foundation Phase", focus: "Arabic letters, sounds, and basic recognition", activities: ["Letter recognition", "Sound practice", "Writing basics", "Simple games"], icon: Leaf },
+  { stage: "Word Building", duration: "Building Phase", focus: "Connecting letters and forming words", activities: ["Word construction", "Vocabulary building", "Reading practice", "Group activities"], icon: Flower },
+  { stage: "Surah Reading", duration: "Fluency Phase", focus: "Reading short surahs with confidence", activities: ["Surah practice", "Fluency drills", "Meaning discussion", "Revision games"], icon: Crown },
+  { stage: "Confident Reader", duration: "Mastery Phase", focus: "Independent Quran reading with proper rhythm", activities: ["Fluency mastery", "Basic Tajweed", "Public reading", "Graduation"], icon: Star },
 ];
 
-// Schedule Options - Flexible for All
+// Schedule Options
 const SCHEDULE_OPTIONS = [
   { day: "Monday & Wednesday", time: "Flexible (4-8 PM EST)", icon: Sun },
   { day: "Tuesday & Thursday", time: "Flexible (4-8 PM EST)", icon: Sun },
@@ -1105,112 +1059,46 @@ const SCHEDULE_OPTIONS = [
   { day: "Weekend Intensive", time: "Saturday & Sunday, 3 hours/week", icon: Calendar },
 ];
 
-// Success Stories - Diverse Learners
+// Success Stories
 const STORIES = [
-  {
-    name: "Abd-basit, 45",
-    type: "Working Professional",
-    quote: "I never thought I could learn Quran reading at my age. The patient teachers and supportive group made it possible.",
-    duration: "7 months",
-    icon: Briefcase,
-  },
-  {
-    name: "Qonitah, 9",
-    type: "Young Learner",
-    quote: "Learning to read the Quran is fun! I love the challenges and my friends in the class.",
-    duration: "6 months",
-    icon: Baby,
-  },
-  {
-    name: "Habeebah, 32",
-    type: "Busy Mother",
-    quote: "The flexible schedule allowed me to learn without sacrificing family time. I'm now reading short surahs confidently!",
-    duration: "6 months",
-    icon: Heart,
-  },
-  {
-    name: "Yusuf, 19",
-    type: "University Student",
-    quote: "The group setting kept me accountable and motivated. I've gone from zero to reading surahs confidently.",
-    duration: "7 months",
-    icon: GraduationCap,
-  },
+  { name: "Abdulbasit, 45", type: "Working Professional", quote: "I never thought I could learn Quran reading at my age. The patient teachers and supportive group made it possible.", duration: "7 months", icon: Briefcase },
+  { name: "Qonitah, 9", type: "Young Learner", quote: "Learning to read the Quran is fun! I love the challenges and my friends in the class.", duration: "6 months", icon: Baby },
+  { name: "Habeebah, 32", type: "Busy Mother", quote: "The flexible schedule allowed me to learn without sacrificing family time. I'm now reading short surahs confidently!", duration: "6 months", icon: Heart },
+  { name: "Yusuf, 19", type: "University Student", quote: "The group setting kept me accountable and motivated. I've gone from zero to reading surahs confidently.", duration: "7 months", icon: GraduationCap },
 ];
 
-// FAQ - Universal Questions
+// FAQ
 const FAQS = [
-  {
-    q: "Do I need any prior knowledge?",
-    a: "Not at all! This program is designed for absolute beginners. We start from the very basics and build gradually.",
-  },
-  {
-    q: "Is this only for children?",
-    a: "No! We have learners of all ages — from 7 to 70+. The program is tailored to each individual's pace and learning style.",
-  },
-  {
-    q: "How much time should I practice at home?",
-    a: "We recommend 10-15 minutes of daily practice. Consistency matters more than quantity.",
-  },
-  {
-    q: "What if I miss a class?",
-    a: "Recordings are available, and we offer flexible makeup options within the same week.",
-  },
-  {
-    q: "Can I switch to 1-on-1 later?",
-    a: "Absolutely! Many students start in groups and transition to private sessions as they advance.",
-  },
-  {
-    q: "Is there a free trial?",
-    a: "Yes! We offer a free 20-minute assessment session to experience our teaching style.",
-  },
+  { q: "Do I need any prior knowledge?", a: "Not at all! This program is designed for absolute beginners. We start from the very basics and build gradually." },
+  { q: "Is this only for children?", a: "No! We have learners of all ages - from 7 to 70+. The program is tailored to each individual's pace and learning style." },
+  { q: "How much time should I practice at home?", a: "We recommend 10-15 minutes of daily practice. Consistency matters more than quantity." },
+  { q: "What if I miss a class?", a: "Recordings are available, and we offer flexible makeup options within the same week." },
+  { q: "Can I switch to 1-on-1 later?", a: "Absolutely! Many students start in groups and transition to private sessions as they advance." },
+  { q: "Is there a free trial?", a: "Yes! We offer a free 20-30-minute assessment session to experience our teaching style." },
 ];
-
-
-
-// Custom icon for Briefcase (since it wasn't imported)
-function Briefcase(props: any) {
-  return (
-    <svg {...props} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-    </svg>
-  );
-}
-
-// Custom icon for Baby
-function BabyIcon(props: any) {
-  return (
-    <svg {...props} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
-    </svg>
-  );
-}
 
 export default function GroupQiroahPage() {
-  const [selectedFormat, setSelectedFormat] = useState("group");
   const containerRef = useRef<HTMLElement>(null);
-  const { scrollYProgress } = useScroll({
-    target: containerRef,
-    offset: ["start start", "end start"],
-  });
+  const { scrollYProgress } = useScroll({ target: containerRef, offset: ["start start", "end start"] });
   const heroY = useTransform(scrollYProgress, [0, 1], [0, -100]);
   const heroOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0.9]);
 
   return (
-    <main ref={containerRef} className="relative pt-10 bg-background overflow-hidden">
-      {/* Universal Background - Warm & Inviting */}
+    <main ref={containerRef} className="relative bg-background overflow-hidden">
+      {/* Premium Background Effects */}
       <div className="fixed inset-0 pointer-events-none">
         <div className="absolute inset-0 opacity-[0.02] bg-[url('/islamic-pattern.svg')] bg-center bg-repeat" style={{ backgroundSize: "300px" }} />
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-emerald-500/5 rounded-full blur-[150px]" />
-        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-teal-500/5 rounded-full blur-[150px]" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-green-500/3 rounded-full blur-[200px]" />
+        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-amber-500/5 rounded-full blur-[150px]" />
+        <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-orange-500/5 rounded-full blur-[150px]" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] bg-rose-500/3 rounded-full blur-[200px]" />
         
-        {/* Floating Elements */}
-        <div className="absolute top-20 left-10 w-3 h-3 bg-emerald-400/20 rounded-full animate-pulse" />
-        <div className="absolute bottom-32 right-20 w-4 h-4 bg-teal-400/20 rounded-full animate-pulse delay-300" />
-        <div className="absolute top-1/3 right-1/4 w-2 h-2 bg-green-400/20 rounded-full animate-pulse delay-700" />
+        {/* Animated Floating Elements */}
+        <motion.div animate={{ y: [0, -20, 0], opacity: [0.3, 0.6, 0.3] }} transition={{ duration: 4, repeat: Infinity }} className="absolute top-20 left-10 w-3 h-3 bg-amber-400/30 rounded-full" />
+        <motion.div animate={{ y: [0, -30, 0], opacity: [0.2, 0.5, 0.2] }} transition={{ duration: 5, repeat: Infinity, delay: 1 }} className="absolute bottom-32 right-20 w-4 h-4 bg-orange-400/30 rounded-full" />
+        <motion.div animate={{ y: [0, -15, 0], opacity: [0.4, 0.7, 0.4] }} transition={{ duration: 3.5, repeat: Infinity, delay: 2 }} className="absolute top-1/3 right-1/4 w-2 h-2 bg-rose-400/30 rounded-full" />
       </div>
 
-      {/* Hero Section - Universal Welcome */}
+      {/* Hero Section - Premium Design */}
       <motion.div style={{ y: heroY, opacity: heroOpacity }} className="relative pt-24 sm:pt-28 md:pt-32 pb-16">
         <div className="container mx-auto px-4 sm:px-6">
           <div className="max-w-4xl mx-auto text-center">
@@ -1218,82 +1106,81 @@ export default function GroupQiroahPage() {
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ duration: 0.5 }}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-emerald-500/10 to-teal-500/10 border border-emerald-500/20 text-emerald-700 text-[11px] font-black uppercase tracking-wider mb-6"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-to-r from-amber-500/10 to-orange-500/10 border border-amber-500/20 text-amber-700 text-[11px] font-black uppercase tracking-wider mb-6 backdrop-blur-sm"
             >
-              <Sparkles className="w-3.5 h-3.5" /> For Everyone • All Ages Welcome
+              <Sparkles className="w-3.5 h-3.5" /> 🌟 For Everyone • All Ages Welcome 🌟
             </motion.div>
             
-            <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tighter font-heading leading-[1.1] mb-6">
+            <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-black tracking-tighter font-heading leading-[1.1] mb-6">
               Learn to Read{" "}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 via-teal-600 to-green-600">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-600 via-orange-600 to-rose-600">
                 the Quran
               </span>
             </h1>
             
-            <p className="text-xl text-muted-foreground font-light max-w-2xl mx-auto mb-8">
+            <p className="text-xl text-muted-foreground font-light max-w-2xl mx-auto mb-8 leading-relaxed">
               {PROGRAM_DATA.description}
             </p>
             
             <div className="flex flex-wrap justify-center gap-3 mb-8">
-              <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 text-xs font-black">
-                <Users className="w-3.5 h-3.5" />
-                {PROGRAM_DATA.format}
-              </div>
-              <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 text-xs font-black">
-                <Clock className="w-3.5 h-3.5" />
-                {PROGRAM_DATA.sessionDuration} sessions
-              </div>
-              <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 text-xs font-black">
-                <Smile className="w-3.5 h-3.5" />
-                Beginner Friendly
-              </div>
+              {[
+                { icon: Users, text: PROGRAM_DATA.format },
+                { icon: Clock, text: `${PROGRAM_DATA.sessionDuration} sessions` },
+                { icon: Smile, text: "Beginner Friendly" },
+              ].map((item, i) => (
+                <div key={i} className="flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-950/30 dark:to-orange-950/30 border border-amber-200 dark:border-amber-800 text-amber-700 text-xs font-black">
+                  <item.icon className="w-3.5 h-3.5" />
+                  {item.text}
+                </div>
+              ))}
             </div>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/assessment">
-                <Button className="rounded-full px-8 py-4 sm:px-10 sm:py-5 font-black bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white text-base sm:text-lg shadow-xl">
+                <Button className="rounded-full px-10 py-5 sm:px-12 sm:py-6 font-black bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white text-base sm:text-lg shadow-xl hover:shadow-2xl transition-all duration-300 group">
                   <span className="flex items-center gap-2">
                     START FREE ASSESSMENT
-                    <Rocket className="w-4 h-4 sm:w-5 sm:h-5" />
+                    <Rocket className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform" />
                   </span>
                 </Button>
               </Link>
               <Link href="#journey">
-                <Button variant="outline" className="rounded-full px-8 py-4 sm:px-10 sm:py-5 font-black text-base sm:text-lg border-emerald-600 text-emerald-600">
+                <Button variant="outline" className="rounded-full px-10 py-5 sm:px-12 sm:py-6 font-black text-base sm:text-lg border-amber-600 text-amber-600 hover:bg-amber-50 transition-all duration-300">
                   EXPLORE THE JOURNEY
                 </Button>
               </Link>
             </div>
 
-            {/* Universal Stats */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 mt-12 pt-8 border-t border-border/50">
+            {/* Stats with Premium Cards */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-12 pt-8 border-t border-border/50">
               {[
-                { label: "Learners", value: "500+", icon: Users },
+                { label: "Happy Learners", value: "500+", icon: Users },
                 { label: "Success Rate", value: "95%", icon: Target },
-                { label: "Countries", value: "15+", icon: Globe },
-                { label: "Avg. Completion", value: "7 months", icon: Calendar },
+                { label: "Global Reach", value: "15+", icon: Globe },
+                { label: "Avg. Completion", value: "7 mo", icon: Calendar },
               ].map((stat, i) => (
-                <div key={i}>
-                  <div className="text-2xl sm:text-3xl font-black text-emerald-600">{stat.value}</div>
+                <motion.div key={i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }} className="p-4 rounded-2xl bg-gradient-to-br from-amber-50/50 to-orange-50/50 dark:from-amber-950/20 dark:to-orange-950/20 border border-amber-100 dark:border-amber-800">
+                  <stat.icon className="w-5 h-5 text-amber-600 mx-auto mb-2" />
+                  <div className="text-2xl sm:text-3xl font-black text-amber-600">{stat.value}</div>
                   <div className="text-xs text-muted-foreground mt-1">{stat.label}</div>
-                </div>
+                </motion.div>
               ))}
             </div>
           </div>
         </div>
       </motion.div>
 
-      {/* Core Benefits Section */}
-      <section className="py-16 bg-muted/20">
+      {/* Benefits Section - Premium Cards */}
+      <section className="py-20 bg-gradient-to-b from-background via-amber-50/5 to-orange-50/5">
         <div className="container mx-auto px-4 sm:px-6">
-          <div className="text-center max-w-2xl mx-auto mb-12">
-            <div className="inline-flex items-center gap-2 text-emerald-600 font-black text-[10px] uppercase tracking-[0.3em] mb-4">
-              <Heart className="w-3.5 h-3.5" /> Why Learners Love Us
+          <div className="text-center max-w-2xl mx-auto mb-14">
+            <div className="inline-flex items-center gap-2 text-amber-600 font-black text-[10px] uppercase tracking-[0.3em] mb-4">
+              <Heart className="w-3.5 h-3.5" /> Why Families Love Us
             </div>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter font-heading mb-4">
-              A <span className="text-emerald-600 italic">Supportive</span> Learning Environment
+            <h2 className="text-4xl sm:text-5xl md:text-6xl font-black tracking-tighter font-heading mb-4">
+              A <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-600 to-orange-600">Supportive</span> Learning Environment
             </h2>
-            <p className="text-muted-foreground">Where everyone can learn at their own pace</p>
+            <p className="text-muted-foreground text-lg">Where everyone can learn at their own pace, with encouragement every step of the way</p>
           </div>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -1301,16 +1188,20 @@ export default function GroupQiroahPage() {
               const Icon = benefit.icon;
               return (
                 <Reveal key={i} delay={i * 0.1}>
-                  <div className="flex gap-4 p-5 rounded-xl bg-background border border-border hover:border-emerald-300 transition-all group">
-                    <div className="w-12 h-12 rounded-xl bg-emerald-50 dark:bg-emerald-950/30 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
-                      <Icon className="w-6 h-6 text-emerald-600" />
+                  <motion.div whileHover={{ y: -5 }} className="group p-6 rounded-2xl bg-background border border-border hover:border-amber-300 shadow-lg hover:shadow-xl transition-all duration-300">
+                    <div className="flex gap-4">
+                      <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-amber-100 to-orange-100 dark:from-amber-950/50 dark:to-orange-950/50 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                        <Icon className="w-7 h-7 text-amber-600" />
+                      </div>
+                      <div>
+                        <h3 className="font-black text-lg mb-1">{benefit.title}</h3>
+                        <p className="text-sm text-muted-foreground">{benefit.description}</p>
+                        <div className="mt-2 inline-flex px-2 py-0.5 rounded-full bg-amber-100 dark:bg-amber-900/30 text-amber-700 text-[10px] font-black">
+                          {benefit.audience}
+                        </div>
+                      </div>
                     </div>
-                    <div>
-                      <h3 className="font-black text-base mb-1">{benefit.title}</h3>
-                      <p className="text-sm text-muted-foreground">{benefit.description}</p>
-                      <p className="text-xs text-emerald-600 font-black mt-1">{benefit.audience}</p>
-                    </div>
-                  </div>
+                  </motion.div>
                 </Reveal>
               );
             })}
@@ -1318,57 +1209,59 @@ export default function GroupQiroahPage() {
         </div>
       </section>
 
-      {/* Learning Journey - Beautiful Timeline */}
-      <section id="journey" className="py-16 scroll-mt-24">
+      {/* Learning Journey - Premium Timeline */}
+      <section id="journey" className="py-20 scroll-mt-24">
         <div className="container mx-auto px-4 sm:px-6">
-          <div className="text-center max-w-2xl mx-auto mb-12">
-            <div className="inline-flex items-center gap-2 text-emerald-600 font-black text-[10px] uppercase tracking-[0.3em] mb-4">
-              <Compass className="w-3.5 h-3.5" /> Your Path
+          <div className="text-center max-w-2xl mx-auto mb-14">
+            <div className="inline-flex items-center gap-2 text-amber-600 font-black text-[10px] uppercase tracking-[0.3em] mb-4">
+              <Compass className="w-3.5 h-3.5" /> Your Path to Mastery
             </div>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter font-heading mb-4">
-              From <span className="text-emerald-600 italic">First Letter</span> to <span className="text-emerald-600 italic">Confident Reader</span>
+            <h2 className="text-4xl sm:text-5xl md:text-6xl font-black tracking-tighter font-heading mb-4">
+              From <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-600 to-orange-600">First Letter</span> to <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-600 to-rose-600">Confident Reader</span>
             </h2>
-            <p className="text-muted-foreground">A clear, supportive progression designed for lasting success</p>
+            <p className="text-muted-foreground text-lg">A clear, supportive progression designed for lasting success</p>
           </div>
 
           <div className="relative max-w-4xl mx-auto">
-            <div className="absolute left-6 top-0 bottom-0 w-0.5 bg-gradient-to-b from-emerald-400 via-teal-400 to-green-400 hidden md:block" />
+            <div className="absolute left-7 top-0 bottom-0 w-0.5 bg-gradient-to-b from-amber-400 via-orange-400 to-rose-400 hidden md:block" />
             <div className="space-y-8">
               {LEARNING_JOURNEY.map((stage, idx) => {
                 const Icon = stage.icon;
                 return (
                   <Reveal key={idx} delay={idx * 0.1}>
-                    <div className="relative pl-0 md:pl-16">
-                      <div className="hidden md:block absolute left-0 top-6 w-12 h-12 rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 flex items-center justify-center text-white font-black text-lg shadow-lg">
+                    <div className="relative pl-0 md:pl-20">
+                      <div className="hidden md:flex absolute left-0 top-6 w-14 h-14 rounded-full bg-gradient-to-br from-amber-500 to-orange-500 items-center justify-center text-white font-black text-xl shadow-lg group-hover:scale-110 transition-transform">
                         {idx + 1}
                       </div>
-                      <div className="institutional-card p-6 md:p-8 hover:border-emerald-300 transition-all">
+                      <div className="institutional-card p-6 md:p-8 hover:border-amber-300 transition-all duration-300">
                         <div className="flex flex-col md:flex-row gap-6">
-                          <div className="md:w-64">
+                          <div className="md:w-72">
                             <div className="flex items-center gap-3 mb-2">
-                              <div className="w-10 h-10 rounded-xl bg-emerald-100 dark:bg-emerald-950/30 flex items-center justify-center">
-                                <Icon className="w-5 h-5 text-emerald-600" />
+                              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-100 to-orange-100 dark:from-amber-950/30 dark:to-orange-950/30 flex items-center justify-center">
+                                <Icon className="w-6 h-6 text-amber-600" />
                               </div>
-                              <h3 className="font-black text-xl">{stage.stage}</h3>
+                              <h3 className="font-black text-2xl">{stage.stage}</h3>
                             </div>
-                            <p className="text-sm text-emerald-600 font-black mb-2">{stage.duration}</p>
-                            <p className="text-sm text-muted-foreground">{stage.focus}</p>
+                            <div className="inline-flex px-3 py-1 rounded-full bg-amber-100 dark:bg-amber-900/30 text-amber-700 text-xs font-black mt-2">
+                              {stage.duration}
+                            </div>
+                            <p className="text-sm text-muted-foreground mt-3">{stage.focus}</p>
                           </div>
                           <div className="flex-1">
                             <div className="flex flex-wrap gap-2">
                               {stage.activities.map((activity, i) => (
-                                <div key={i} className="flex items-center gap-1 px-2 py-1 rounded-full bg-emerald-50 dark:bg-emerald-950/30 text-emerald-700 text-xs font-black">
-                                  <CheckCircle2 className="w-3 h-3" />
+                                <div key={i} className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-950/30 dark:to-orange-950/30 text-amber-700 text-xs font-black">
+                                  <CheckCircle2 className="w-3.5 h-3.5" />
                                   {activity}
                                 </div>
                               ))}
                             </div>
-                            <div className="mt-3 h-1.5 w-full bg-emerald-100 dark:bg-emerald-900/30 rounded-full overflow-hidden">
+                            <div className="mt-4 h-2 w-full bg-amber-100 dark:bg-amber-900/30 rounded-full overflow-hidden">
                               <motion.div
                                 initial={{ width: 0 }}
                                 whileInView={{ width: `${(idx + 1) * 25}%` }}
                                 transition={{ duration: 1 }}
-                                className="h-full bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full"
+                                className="h-full bg-gradient-to-r from-amber-500 to-orange-500 rounded-full"
                               />
                             </div>
                           </div>
@@ -1383,25 +1276,27 @@ export default function GroupQiroahPage() {
         </div>
       </section>
 
-      {/* Schedule & Pricing */}
-      <section className="py-16 bg-muted/20">
+      {/* Schedule & Pricing - Premium Cards */}
+      <section className="py-20 bg-gradient-to-b from-background via-amber-50/5 to-orange-50/5">
         <div className="container mx-auto px-4 sm:px-6">
-          <div className="grid lg:grid-cols-2 gap-12">
-            {/* Schedule */}
+          <div className="grid lg:grid-cols-2 gap-8">
+            {/* Schedule Card */}
             <Reveal>
-              <div className="institutional-card p-8">
-                <h3 className="font-black text-2xl mb-6 flex items-center gap-3">
-                  <Calendar className="w-6 h-6 text-emerald-600" />
-                  Flexible Schedule
-                </h3>
+              <div className="institutional-card p-8 hover:border-amber-300 transition-all duration-300">
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-100 to-orange-100 dark:from-amber-950/30 dark:to-orange-950/30 flex items-center justify-center">
+                    <Calendar className="w-6 h-6 text-amber-600" />
+                  </div>
+                  <h3 className="font-black text-2xl">Flexible Schedule</h3>
+                </div>
                 <div className="space-y-3">
                   {SCHEDULE_OPTIONS.map((slot, i) => {
                     const Icon = slot.icon;
                     return (
-                      <div key={i} className="p-3 rounded-xl bg-background border border-border hover:border-emerald-300 transition-all">
+                      <div key={i} className="p-4 rounded-xl bg-background border border-border hover:border-amber-300 transition-all">
                         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-2">
                           <div className="flex items-center gap-3">
-                            <Icon className="w-4 h-4 text-emerald-600" />
+                            <Icon className="w-4 h-4 text-amber-600" />
                             <span className="font-black text-sm">{slot.day}</span>
                           </div>
                           <span className="text-sm text-muted-foreground">{slot.time}</span>
@@ -1410,21 +1305,23 @@ export default function GroupQiroahPage() {
                     );
                   })}
                 </div>
-                <p className="text-xs text-muted-foreground mt-4 text-center">All times in EST • More time zones available • Custom schedules possible</p>
+                <p className="text-xs text-muted-foreground mt-4 text-center">✨ All times in EST • More time zones available • Custom schedules possible ✨</p>
               </div>
             </Reveal>
 
-            {/* Pricing */}
+            {/* Pricing Card */}
             <Reveal delay={0.2}>
-              <div className="institutional-card p-8 bg-gradient-to-br from-emerald-50/20 to-teal-50/20">
-                <h3 className="font-black text-2xl mb-6 flex items-center gap-3">
-                  <Gem className="w-6 h-6 text-emerald-600" />
-                  Simple, Transparent Pricing
-                </h3>
+              <div className="institutional-card p-8 bg-gradient-to-br from-amber-50/20 to-orange-50/20 hover:border-amber-300 transition-all duration-300">
+                <div className="flex items-center gap-3 mb-6">
+                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center shadow-lg">
+                    <Gem className="w-6 h-6 text-white" />
+                  </div>
+                  <h3 className="font-black text-2xl">Simple, Transparent Pricing</h3>
+                </div>
                 <div className="space-y-6">
                   <div className="text-center">
-                    <div className="text-4xl font-black text-emerald-600">{PROGRAM_DATA.priceRange}</div>
-                    <p className="text-sm text-muted-foreground">per month • includes all materials</p>
+                    <div className="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-600 to-orange-600">{PROGRAM_DATA.priceRange}</div>
+                    <p className="text-sm text-muted-foreground mt-1">{PROGRAM_DATA.pricePeriod} • includes all materials</p>
                   </div>
                   <div className="space-y-3">
                     {[
@@ -1435,16 +1332,16 @@ export default function GroupQiroahPage() {
                       "Free assessment session",
                       "Certificate upon completion",
                     ].map((feature, i) => (
-                      <div key={i} className="flex items-center gap-3 text-sm">
-                        <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                      <div key={i} className="flex items-center gap-3 text-sm p-2 rounded-lg hover:bg-amber-50/50 transition-colors">
+                        <CheckCircle2 className="w-4 h-4 text-amber-600 shrink-0" />
                         <span>{feature}</span>
                       </div>
                     ))}
                   </div>
                   <div className="pt-4 border-t border-border">
-                    <div className="flex justify-between items-center text-sm">
-                      <span className="text-muted-foreground">Family discount (3+ members)</span>
-                      <span className="font-black text-emerald-600">15% off</span>
+                    <div className="flex justify-between items-center text-sm p-3 rounded-lg bg-amber-50/30">
+                      <span className="font-black">Family discount (3+ members)</span>
+                      <span className="font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-600 to-orange-600">15% off</span>
                     </div>
                   </div>
                 </div>
@@ -1454,97 +1351,116 @@ export default function GroupQiroahPage() {
         </div>
       </section>
 
-      {/* Success Stories */}
-      <section className="py-16">
+      {/* Success Stories - Premium Cards */}
+      <section className="py-20">
         <div className="container mx-auto px-4 sm:px-6">
-          <div className="text-center max-w-2xl mx-auto mb-12">
-            <div className="inline-flex items-center gap-2 text-emerald-600 font-black text-[10px] uppercase tracking-[0.3em] mb-4">
-              <Users className="w-3.5 h-3.5" /> Real Stories
+          <div className="text-center max-w-2xl mx-auto mb-14">
+            <div className="inline-flex items-center gap-2 text-amber-600 font-black text-[10px] uppercase tracking-[0.3em] mb-4">
+              <Users className="w-3.5 h-3.5" /> Real Stories, Real Success
             </div>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter font-heading mb-4">
-              From Our <span className="text-emerald-600 italic">Community</span>
+            <h2 className="text-4xl sm:text-5xl md:text-6xl font-black tracking-tighter font-heading mb-4">
+              From Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-600 to-orange-600">Community</span>
             </h2>
-            <p className="text-muted-foreground">Learners of all ages who found their path with us</p>
+            <p className="text-muted-foreground text-lg">Learners of all ages who found their path with us</p>
           </div>
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {STORIES.map((story, i) => {
-              const Icon = story.icon === "briefcase" ? Briefcase : story.icon === "baby" ? BabyIcon : story.icon;
-              return (
-                <Reveal key={i} delay={i * 0.1}>
-                  <div className="institutional-card p-6 h-full flex flex-col">
-                    <div className="flex items-center gap-3 mb-4">
-                      <div className="w-12 h-12 rounded-full bg-gradient-to-br from-emerald-500 to-teal-500 flex items-center justify-center text-white font-black text-lg">
-                        {story.name.charAt(0)}
-                      </div>
-                      <div>
-                        <h4 className="font-black">{story.name}</h4>
-                        <p className="text-xs text-emerald-600 font-black">{story.type}</p>
-                      </div>
+            {STORIES.map((story, i) => (
+              <Reveal key={i} delay={i * 0.1}>
+                <motion.div whileHover={{ y: -5 }} className="institutional-card p-6 h-full flex flex-col group">
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-14 h-14 rounded-full bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center text-white font-black text-xl shadow-lg">
+                      {story.name.charAt(0)}
                     </div>
-                    <Quote className="w-8 h-8 text-emerald-200 dark:text-emerald-800/30 mb-3" />
-                    <p className="text-sm text-muted-foreground italic flex-grow">"{story.quote}"</p>
-                    <p className="text-xs text-emerald-600 font-black mt-3">Progress: {story.duration}</p>
+                    <div>
+                      <h4 className="font-black text-lg">{story.name}</h4>
+                      <p className="text-xs text-amber-600 font-black">{story.type}</p>
+                    </div>
                   </div>
-                </Reveal>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* FAQ Section */}
-      <section className="py-16 bg-muted/20">
-        <div className="container mx-auto px-4 sm:px-6">
-          <div className="text-center max-w-2xl mx-auto mb-12">
-            <div className="inline-flex items-center gap-2 text-emerald-600 font-black text-[10px] uppercase tracking-[0.3em] mb-4">
-              <MessageCircle className="w-3.5 h-3.5" /> Common Questions
-            </div>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter font-heading mb-4">
-              Frequently Asked <span className="text-emerald-600 italic">Questions</span>
-            </h2>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-            {FAQS.map((faq, i) => (
-              <Reveal key={i} delay={i * 0.05}>
-                <div className="institutional-card p-6 hover:border-emerald-300 transition-all">
-                  <h3 className="font-black text-base mb-2">{faq.q}</h3>
-                  <p className="text-sm text-muted-foreground">{faq.a}</p>
-                </div>
+                  <Quote className="w-8 h-8 text-amber-200 dark:text-amber-800/30 mb-3" />
+                  <p className="text-sm text-muted-foreground italic flex-grow leading-relaxed">"{story.quote}"</p>
+                  <div className="mt-4 pt-3 border-t border-border">
+                    <p className="text-xs font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-600 to-orange-600">✓ Completed in {story.duration}</p>
+                  </div>
+                </motion.div>
               </Reveal>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Final Universal CTA */}
-      <section className="pb-20">
+      {/* FAQ Section - Premium Accordion */}
+      <section className="py-20 bg-gradient-to-b from-background via-amber-50/5 to-orange-50/5">
         <div className="container mx-auto px-4 sm:px-6">
-          <div className="institutional-card p-8 md:p-12 text-center max-w-4xl mx-auto bg-gradient-to-br from-emerald-600/5 to-teal-600/5">
-            <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-emerald-500 to-teal-500 mb-6 shadow-lg">
-              <Smile className="w-10 h-10 text-white" />
+          <div className="text-center max-w-2xl mx-auto mb-14">
+            <div className="inline-flex items-center gap-2 text-amber-600 font-black text-[10px] uppercase tracking-[0.3em] mb-4">
+              <MessageCircle className="w-3.5 h-3.5" /> Common Questions
             </div>
-            <h2 className="text-3xl sm:text-4xl font-black mb-4">Start Your Quran Reading Journey Today</h2>
-            <p className="text-muted-foreground mb-8 max-w-md mx-auto">
+            <h2 className="text-4xl sm:text-5xl md:text-6xl font-black tracking-tighter font-heading mb-4">
+              Frequently Asked <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-600 to-orange-600">Questions</span>
+            </h2>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+            {FAQS.map((faq, i) => (
+              <Reveal key={i} delay={i * 0.05}>
+                <motion.div whileHover={{ y: -3 }} className="institutional-card p-6 hover:border-amber-300 transition-all duration-300">
+                  <div className="flex items-start gap-3">
+                    <div className="w-8 h-8 rounded-full bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center shrink-0 mt-0.5">
+                      <Sparkles className="w-4 h-4 text-amber-600" />
+                    </div>
+                    <div>
+                      <h3 className="font-black text-base mb-2">{faq.q}</h3>
+                      <p className="text-sm text-muted-foreground leading-relaxed">{faq.a}</p>
+                    </div>
+                  </div>
+                </motion.div>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Final CTA - Premium */}
+      <section className="py-24">
+        <div className="container mx-auto px-4 sm:px-6">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.98 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5 }}
+            className="institutional-card p-10 md:p-14 text-center max-w-4xl mx-auto bg-gradient-to-br from-amber-50/30 via-orange-50/20 to-rose-50/30"
+          >
+            <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-gradient-to-br from-amber-500 to-orange-500 mb-6 shadow-xl">
+              <Smile className="w-12 h-12 text-white" />
+            </div>
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-black mb-4">Start Your Quran Reading Journey Today</h2>
+            <p className="text-muted-foreground mb-8 max-w-md mx-auto text-lg">
               No matter your age or background — we're here to help you succeed.
               Begin with a free, no-obligation assessment.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/assessment">
-                <Button className="rounded-full px-8 py-4 font-black bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white">
-                  BOOK FREE ASSESSMENT
-                  <ArrowRight className="w-4 h-4 ml-2" />
+                <Button className="rounded-full px-10 py-5 font-black bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white shadow-xl hover:shadow-2xl transition-all duration-300 group">
+                  <span className="flex items-center gap-2">
+                    BOOK FREE ASSESSMENT
+                    <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  </span>
                 </Button>
               </Link>
               <Link href="/contact">
-                <Button variant="outline" className="rounded-full px-8 py-4 font-black border-emerald-600 text-emerald-600">
+                <Button variant="outline" className="rounded-full px-10 py-5 font-black border-amber-600 text-amber-600 hover:bg-amber-50 transition-all duration-300">
                   TALK TO ADVISOR
                 </Button>
               </Link>
             </div>
-            <p className="text-xs text-muted-foreground mt-4">Free 20-minute session • No commitment • All ages welcome</p>
-          </div>
+            <div className="mt-6 flex flex-wrap justify-center gap-3">
+              <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">✨ Free 20-minute session</span>
+              <span className="text-xs text-muted-foreground">•</span>
+              <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">💝 No commitment</span>
+              <span className="text-xs text-muted-foreground">•</span>
+              <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">🌍 All ages welcome</span>
+            </div>
+          </motion.div>
         </div>
       </section>
     </main>
