@@ -808,6 +808,7 @@ import {
   BookOpen,
   Brain,
   Briefcase,
+  Calendar,
   CheckCircle2,
   Clock,
   Compass,
@@ -1149,7 +1150,7 @@ export default function JuzAmmaPage() {
             </div>
 
             {/* Universal Stats - Mobile-First Grid */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-6 mt-8 sm:mt-12 pt-6 sm:pt-8 border-t border-border/50 px-2">
+            {/* <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-6 mt-8 sm:mt-12 pt-6 sm:pt-8 border-t border-border/50 px-2">
               {[
                 { label: "Students of All Ages", value: "50+", icon: Users },
                 { label: "Success Rate", value: "94%", icon: Target },
@@ -1165,7 +1166,24 @@ export default function JuzAmmaPage() {
                   </div>
                 </div>
               ))}
-            </div>
+            </div> */}
+
+
+               {/* Stats - Mobile-First Grid */}
+                        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mt-10 sm:mt-12 pt-6 sm:pt-8 border-t border-border/50 px-2">
+                          {[
+                            { label: "Students of All Ages ", value: "50+", icon: Users },
+                            { label: "Success Rate", value: "90%", icon: Target },
+                            { label: "Global Reach", value: "6+", icon: Globe },
+                            { label: "Certified Graduates", value: "20+", icon: Calendar },
+                          ].map((stat, i) => (
+                            <motion.div key={i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }} className="p-2.5 sm:p-4 rounded-xl sm:rounded-2xl bg-linear-to-br from-amber-50/50 to-orange-50/50 dark:from-amber-950/20 dark:to-orange-950/20 border border-amber-100 dark:border-amber-800">
+                              <stat.icon className="w-4 h-4 sm:w-5 sm:h-5 text-amber-600 mx-auto mb-1.5 sm:mb-2" />
+                              <div className="text-lg sm:text-2xl md:text-3xl font-black text-amber-600">{stat.value}</div>
+                              <div className="text-[10px] sm:text-xs text-muted-foreground mt-0.5 sm:mt-1">{stat.label}</div>
+                            </motion.div>
+                          ))}
+                        </div>
           </div>
         </div>
       </motion.div>
@@ -1182,8 +1200,8 @@ export default function JuzAmmaPage() {
               <span className="text-amber-600 italic">Every Learner</span>
             </h2>
             <p className="text-sm sm:text-base text-muted-foreground px-4">
-              Whether you're a beginner or advanced, child or adult -- this
-              program works for you. Here's how we make memorization accessible, effective, and transformative for everyone.
+            {`  Whether you're a beginner or advanced, child or adult -- this
+              program works for you. Here's how we make memorization accessible, effective, and transformative for everyone.`}
             </p>
           </div>
 
