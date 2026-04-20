@@ -760,27 +760,23 @@
 // app/courses/hifz/page.tsx
 "use client";
 
+import { PricingCalculatorHifz } from "@/components/public/pricing/pricing-calculator-universal";
 import { Reveal } from "@/components/shared/section-animation";
 import { Button } from "@/components/ui/button";
 import { motion, useScroll, useTransform } from "framer-motion";
 import {
   ArrowRight,
-  Award,
   BookOpen,
-  Brain,
   Briefcase,
   Calendar,
   CheckCircle2,
-  Clock,
   Compass,
   Crown,
   Flower,
-  Globe,
   GraduationCap,
   Heart,
   Leaf,
   MessageCircle,
-  Mic,
   Quote,
   Rocket,
   Shield,
@@ -792,10 +788,10 @@ import {
   ScrollText,
   Gem,
   Star,
+  Calculator,
 } from "lucide-react";
 import Link from "next/link";
 import { useRef } from "react";
-import { FAQSection } from "./faq";
 
 // Program Data
 const PROGRAM_DATA = {
@@ -1015,17 +1011,26 @@ export default function HifzProgramPage() {
   const heroOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0.9]);
 
   return (
-    <main ref={containerRef} className="relative pt-12 sm:pt-10 bg-background overflow-hidden">
+    <main
+      ref={containerRef}
+      className="relative pt-12 sm:pt-10 bg-background overflow-hidden"
+    >
       {/* Background - Hidden on mobile for performance */}
       <div className="hidden sm:block fixed inset-0 pointer-events-none">
-        <div className="absolute inset-0 opacity-[0.02] bg-[url('/islamic-pattern.svg')] bg-center bg-repeat" style={{ backgroundSize: "300px" }} />
+        <div
+          className="absolute inset-0 opacity-[0.02] bg-[url('/islamic-pattern.svg')] bg-center bg-repeat"
+          style={{ backgroundSize: "300px" }}
+        />
         <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-purple-600/5 rounded-full blur-[150px]" />
         <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-indigo-600/5 rounded-full blur-[150px]" />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gold/3 rounded-full blur-[200px]" />
       </div>
 
       {/* Hero Section */}
-      <motion.div style={{ y: heroY, opacity: heroOpacity }} className="relative pt-16 sm:pt-24 md:pt-28 lg:pt-32 pb-12 sm:pb-16">
+      <motion.div
+        style={{ y: heroY, opacity: heroOpacity }}
+        className="relative pt-16 sm:pt-24 md:pt-28 lg:pt-32 pb-12 sm:pb-16"
+      >
         <div className="container mx-auto px-4 sm:px-6">
           <div className="max-w-4xl mx-auto text-center">
             <motion.div
@@ -1034,7 +1039,8 @@ export default function HifzProgramPage() {
               transition={{ duration: 0.5 }}
               className="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-gradient-to-r from-purple-500/10 to-indigo-500/10 border border-purple-500/20 text-purple-700 text-[9px] sm:text-[11px] font-black uppercase tracking-wider mb-4 sm:mb-6"
             >
-              <Sparkles className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5" /> 🏆 The Noble Path of Memorization 🏆
+              <Sparkles className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5" /> 🏆 The
+              Noble Path of Memorization 🏆
             </motion.div>
 
             <h1 className="text-4xl xs:text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tighter font-heading leading-[1.1] mb-4 sm:mb-6 px-2">
@@ -1045,7 +1051,9 @@ export default function HifzProgramPage() {
             </h1>
 
             <p className="text-base sm:text-xl text-muted-foreground font-light max-w-2xl mx-auto mb-6 sm:mb-8 px-4">
-              A comprehensive, spiritually enriching program to memorize the entire Quran with proper Tajweed, deep understanding, and authentic Sanad certification.
+              A comprehensive, spiritually enriching program to memorize the
+              entire Quran with proper Tajweed, deep understanding, and
+              authentic Sanad certification.
             </p>
 
             <div className="flex flex-col xs:flex-row gap-3 sm:gap-4 justify-center px-4">
@@ -1058,7 +1066,10 @@ export default function HifzProgramPage() {
                 </Button>
               </Link>
               <Link href="#journey" className="w-full xs:w-auto">
-                <Button variant="outline" className="w-full rounded-full px-6 sm:px-8 py-3.5 sm:py-4 font-black text-sm sm:text-base border-purple-600 text-purple-600">
+                <Button
+                  variant="outline"
+                  className="w-full rounded-full px-6 sm:px-8 py-3.5 sm:py-4 font-black text-sm sm:text-base border-purple-600 text-purple-600"
+                >
                   EXPLORE THE PATH
                 </Button>
               </Link>
@@ -1072,10 +1083,20 @@ export default function HifzProgramPage() {
                 { label: "Juz", value: "30", icon: Star },
                 { label: "Ijazah Graduates", value: "200+", icon: Crown },
               ].map((stat, i) => (
-                <motion.div key={i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }} className="p-2.5 sm:p-4 rounded-xl sm:rounded-2xl bg-gradient-to-br from-purple-50/50 to-indigo-50/50 dark:from-purple-950/20 dark:to-indigo-950/20 border border-purple-100 dark:border-purple-800">
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.1 }}
+                  className="p-2.5 sm:p-4 rounded-xl sm:rounded-2xl bg-gradient-to-br from-purple-50/50 to-indigo-50/50 dark:from-purple-950/20 dark:to-indigo-950/20 border border-purple-100 dark:border-purple-800"
+                >
                   <stat.icon className="w-4 h-4 sm:w-5 sm:h-5 text-purple-600 mx-auto mb-1.5 sm:mb-2" />
-                  <div className="text-lg sm:text-2xl md:text-3xl font-black text-purple-600">{stat.value}</div>
-                  <div className="text-[10px] sm:text-xs text-muted-foreground mt-0.5 sm:mt-1">{stat.label}</div>
+                  <div className="text-lg sm:text-2xl md:text-3xl font-black text-purple-600">
+                    {stat.value}
+                  </div>
+                  <div className="text-[10px] sm:text-xs text-muted-foreground mt-0.5 sm:mt-1">
+                    {stat.label}
+                  </div>
                 </motion.div>
               ))}
             </div>
@@ -1091,7 +1112,9 @@ export default function HifzProgramPage() {
               <Crown className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> The Sacred Path
             </div>
             <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black tracking-tighter font-heading mb-3 sm:mb-4 px-2">
-              Why Our <span className="text-purple-600 italic">Hifz Program</span> is Unique
+              Why Our{" "}
+              <span className="text-purple-600 italic">Hifz Program</span> is
+              Unique
             </h2>
             <p className="text-sm sm:text-base text-muted-foreground px-4">
               A journey of a lifetime, guided by scholars with authentic Sanad
@@ -1108,9 +1131,15 @@ export default function HifzProgramPage() {
                       <Icon className="w-5 h-5 sm:w-6 sm:h-6 text-purple-600" />
                     </div>
                     <div className="min-w-0">
-                      <h3 className="font-black text-sm sm:text-base mb-0.5 sm:mb-1">{pillar.title}</h3>
-                      <p className="text-xs sm:text-sm text-muted-foreground break-words">{pillar.description}</p>
-                      <p className="text-[10px] sm:text-xs text-purple-600 font-black mt-1">{pillar.audience}</p>
+                      <h3 className="font-black text-sm sm:text-base mb-0.5 sm:mb-1">
+                        {pillar.title}
+                      </h3>
+                      <p className="text-xs sm:text-sm text-muted-foreground break-words">
+                        {pillar.description}
+                      </p>
+                      <p className="text-[10px] sm:text-xs text-purple-600 font-black mt-1">
+                        {pillar.audience}
+                      </p>
                     </div>
                   </div>
                 </Reveal>
@@ -1121,17 +1150,22 @@ export default function HifzProgramPage() {
       </section>
 
       {/* Journey Paths */}
-      <section id="paths" className="py-12 sm:py-16 scroll-mt-16 sm:scroll-mt-24">
+      <section
+        id="paths"
+        className="py-12 sm:py-16 scroll-mt-16 sm:scroll-mt-24"
+      >
         <div className="container mx-auto px-4 sm:px-6">
           <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-12">
             <div className="inline-flex items-center gap-2 text-purple-600 font-black text-[8px] sm:text-[10px] uppercase tracking-[0.2em] sm:tracking-[0.3em] mb-3 sm:mb-4">
               <Compass className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> Choose Your Path
             </div>
             <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black tracking-tighter font-heading mb-3 sm:mb-4 px-2">
-              A Journey <span className="text-purple-600 italic">Tailored to You</span>
+              A Journey{" "}
+              <span className="text-purple-600 italic">Tailored to You</span>
             </h2>
             <p className="text-sm sm:text-base text-muted-foreground px-4">
-              Different paths for different needs - all leading to becoming a Hafiz
+              Different paths for different needs - all leading to becoming a
+              Hafiz
             </p>
           </div>
 
@@ -1141,12 +1175,20 @@ export default function HifzProgramPage() {
               return (
                 <Reveal key={i} delay={i * 0.1}>
                   <div className="bg-card rounded-xl sm:rounded-2xl border border-border hover:border-purple-300 transition-all p-5 sm:p-6 text-center h-full group">
-                    <div className={`w-14 h-14 sm:w-16 sm:h-16 mx-auto mb-3 sm:mb-4 rounded-xl sm:rounded-2xl bg-gradient-to-br ${path.color} flex items-center justify-center group-hover:scale-110 transition-transform`}>
+                    <div
+                      className={`w-14 h-14 sm:w-16 sm:h-16 mx-auto mb-3 sm:mb-4 rounded-xl sm:rounded-2xl bg-gradient-to-br ${path.color} flex items-center justify-center group-hover:scale-110 transition-transform`}
+                    >
                       <Icon className="w-7 h-7 sm:w-8 sm:h-8 text-white" />
                     </div>
-                    <h3 className="font-black text-lg sm:text-xl mb-0.5 sm:mb-1">{path.audience}</h3>
-                    <p className="text-xs sm:text-sm text-purple-600 font-black mb-1.5 sm:mb-2">{path.pace}</p>
-                    <p className="text-xs sm:text-sm text-muted-foreground">{path.duration}</p>
+                    <h3 className="font-black text-lg sm:text-xl mb-0.5 sm:mb-1">
+                      {path.audience}
+                    </h3>
+                    <p className="text-xs sm:text-sm text-purple-600 font-black mb-1.5 sm:mb-2">
+                      {path.pace}
+                    </p>
+                    <p className="text-xs sm:text-sm text-muted-foreground">
+                      {path.duration}
+                    </p>
                   </div>
                 </Reveal>
               );
@@ -1156,17 +1198,23 @@ export default function HifzProgramPage() {
       </section>
 
       {/* Memorization Journey Timeline */}
-      <section id="journey" className="py-12 sm:py-16 bg-gradient-to-b from-background via-purple-50/5 to-indigo-50/5">
+      <section
+        id="journey"
+        className="py-12 sm:py-16 bg-gradient-to-b from-background via-purple-50/5 to-indigo-50/5"
+      >
         <div className="container mx-auto px-4 sm:px-6">
           <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-12">
             <div className="inline-flex items-center gap-2 text-purple-600 font-black text-[8px] sm:text-[10px] uppercase tracking-[0.2em] sm:tracking-[0.3em] mb-3 sm:mb-4">
-              <Compass className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> Your Path to Ijazah
+              <Compass className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> Your Path to
+              Ijazah
             </div>
             <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black tracking-tighter font-heading mb-3 sm:mb-4 px-2">
-              From <span className="text-purple-600 italic">First Ayah</span> to <span className="text-purple-600 italic">Complete Quran</span>
+              From <span className="text-purple-600 italic">First Ayah</span> to{" "}
+              <span className="text-purple-600 italic">Complete Quran</span>
             </h2>
             <p className="text-sm sm:text-base text-muted-foreground px-4">
-              A structured, spiritual journey to become a carrier of the Divine Word
+              A structured, spiritual journey to become a carrier of the Divine
+              Word
             </p>
           </div>
 
@@ -1189,18 +1237,27 @@ export default function HifzProgramPage() {
                                 <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg sm:rounded-xl bg-purple-100 dark:bg-purple-950/30 flex items-center justify-center">
                                   <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-purple-600" />
                                 </div>
-                                <h3 className="font-black text-lg sm:text-xl">{phase.stage}</h3>
+                                <h3 className="font-black text-lg sm:text-xl">
+                                  {phase.stage}
+                                </h3>
                               </div>
                               <div className="inline-flex px-2 py-0.5 sm:py-1 rounded-full bg-purple-100 dark:bg-purple-900/30 text-purple-700 text-[8px] sm:text-[10px] font-black">
                                 {phase.duration}
                               </div>
-                              <p className="text-xs sm:text-sm text-muted-foreground mt-2">{phase.focus}</p>
-                              <p className="text-xs font-black text-gold mt-1">{phase.juz}</p>
+                              <p className="text-xs sm:text-sm text-muted-foreground mt-2">
+                                {phase.focus}
+                              </p>
+                              <p className="text-xs font-black text-gold mt-1">
+                                {phase.juz}
+                              </p>
                             </div>
                             <div className="flex-1">
                               <div className="flex flex-wrap gap-2">
                                 {phase.activities.map((activity, i) => (
-                                  <div key={i} className="flex items-center gap-1.5 px-2 py-1 sm:px-3 sm:py-1.5 rounded-full bg-gradient-to-r from-purple-50 to-indigo-50 dark:from-purple-950/30 dark:to-indigo-950/30 text-purple-700 text-[10px] sm:text-xs font-black">
+                                  <div
+                                    key={i}
+                                    className="flex items-center gap-1.5 px-2 py-1 sm:px-3 sm:py-1.5 rounded-full bg-gradient-to-r from-purple-50 to-indigo-50 dark:from-purple-950/30 dark:to-indigo-950/30 text-purple-700 text-[10px] sm:text-xs font-black"
+                                  >
                                     <CheckCircle2 className="w-3 h-3" />
                                     {activity}
                                   </div>
@@ -1232,13 +1289,16 @@ export default function HifzProgramPage() {
         <div className="container mx-auto px-4 sm:px-6">
           <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-12">
             <div className="inline-flex items-center gap-2 text-purple-600 font-black text-[8px] sm:text-[10px] uppercase tracking-[0.2em] sm:tracking-[0.3em] mb-3 sm:mb-4">
-              <Trophy className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> Celebrate Progress
+              <Trophy className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> Celebrate
+              Progress
             </div>
             <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black tracking-tighter font-heading mb-3 sm:mb-4 px-2">
-              Every <span className="text-purple-600 italic">Milestone</span> Matters
+              Every <span className="text-purple-600 italic">Milestone</span>{" "}
+              Matters
             </h2>
             <p className="text-sm sm:text-base text-muted-foreground px-4">
-              Recognition at every stage keeps you motivated on your Hifz journey
+              Recognition at every stage keeps you motivated on your Hifz
+              journey
             </p>
           </div>
 
@@ -1246,10 +1306,18 @@ export default function HifzProgramPage() {
             {MILESTONES.map((milestone, i) => (
               <Reveal key={i} delay={i * 0.1}>
                 <div className="text-center p-4 sm:p-6 rounded-xl bg-gradient-to-br from-purple-50/30 to-indigo-50/30 border border-purple-100 dark:border-purple-800">
-                  <div className="text-3xl sm:text-5xl mb-2 sm:mb-3">{milestone.badge}</div>
-                  <h3 className="font-black text-sm sm:text-lg mb-0.5 sm:mb-1">{milestone.level}</h3>
-                  <p className="text-xs sm:text-sm text-purple-600 font-black mb-1 sm:mb-2">{milestone.juz} Juz</p>
-                  <p className="text-[10px] sm:text-sm text-muted-foreground">{milestone.description}</p>
+                  <div className="text-3xl sm:text-5xl mb-2 sm:mb-3">
+                    {milestone.badge}
+                  </div>
+                  <h3 className="font-black text-sm sm:text-lg mb-0.5 sm:mb-1">
+                    {milestone.level}
+                  </h3>
+                  <p className="text-xs sm:text-sm text-purple-600 font-black mb-1 sm:mb-2">
+                    {milestone.juz} Juz
+                  </p>
+                  <p className="text-[10px] sm:text-sm text-muted-foreground">
+                    {milestone.description}
+                  </p>
                 </div>
               </Reveal>
             ))}
@@ -1262,7 +1330,8 @@ export default function HifzProgramPage() {
         <div className="container mx-auto px-4 sm:px-6">
           <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-12">
             <div className="inline-flex items-center gap-2 text-purple-600 font-black text-[8px] sm:text-[10px] uppercase tracking-[0.2em] sm:tracking-[0.3em] mb-3 sm:mb-4">
-              <Users className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> Stories of Transformation
+              <Users className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> Stories of
+              Transformation
             </div>
             <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black tracking-tighter font-heading mb-3 sm:mb-4 px-2">
               From Our <span className="text-purple-600 italic">Huffadh</span>
@@ -1283,13 +1352,21 @@ export default function HifzProgramPage() {
                         {story.name.charAt(0)}
                       </div>
                       <div className="min-w-0">
-                        <h4 className="font-black text-sm sm:text-base truncate">{story.name}</h4>
-                        <p className="text-[10px] sm:text-xs text-purple-600 font-black">{story.type}</p>
+                        <h4 className="font-black text-sm sm:text-base truncate">
+                          {story.name}
+                        </h4>
+                        <p className="text-[10px] sm:text-xs text-purple-600 font-black">
+                          {story.type}
+                        </p>
                       </div>
                     </div>
                     <Quote className="w-6 h-6 sm:w-8 sm:h-8 text-purple-200 dark:text-purple-800/30 mb-2 sm:mb-3" />
-                    <p className="text-xs sm:text-sm text-muted-foreground italic grow leading-relaxed break-words">"{story.story}"</p>
-                    <p className="text-[10px] sm:text-xs text-purple-600 font-black mt-3">✓ Completed in {story.duration}</p>
+                    <p className="text-xs sm:text-sm text-muted-foreground italic grow leading-relaxed break-words">
+                      "{story.story}"
+                    </p>
+                    <p className="text-[10px] sm:text-xs text-purple-600 font-black mt-3">
+                      ✓ Completed in {story.duration}
+                    </p>
                   </div>
                 </Reveal>
               );
@@ -1299,19 +1376,24 @@ export default function HifzProgramPage() {
       </section>
 
       {/* Pricing & Format Options */}
-      <section className="py-12 sm:py-16">
+      {/* <section className="py-12 sm:py-16">
         <div className="container mx-auto px-4 sm:px-6">
           <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-12">
             <div className="inline-flex items-center gap-2 text-purple-600 font-black text-[8px] sm:text-[10px] uppercase tracking-[0.2em] sm:tracking-[0.3em] mb-3 sm:mb-4">
-              <Gem className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> Investment in Eternity
+              <Gem className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> Investment in
+              Eternity
             </div>
             <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black tracking-tighter font-heading mb-3 sm:mb-4 px-2">
-              Simple, <span className="text-purple-600 italic">Transparent</span> Pricing
+              Simple,{" "}
+              <span className="text-purple-600 italic">Transparent</span>{" "}
+              Pricing
             </h2>
             <p className="text-sm sm:text-base text-muted-foreground px-4">
               Choose the format that works best for your learning journey
             </p>
           </div>
+
+          
 
           <div className="grid md:grid-cols-3 gap-5 sm:gap-8 max-w-4xl mx-auto">
             {[
@@ -1393,17 +1475,42 @@ export default function HifzProgramPage() {
             })}
           </div>
         </div>
-      </section>
+      </section> */}
+
+
+<section className="py-12 sm:py-16">
+  <div className="container mx-auto px-4 sm:px-6">
+    <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-12">
+      <div className="inline-flex items-center gap-2 text-purple-600 font-black text-[8px] sm:text-[10px] uppercase tracking-[0.2em] sm:tracking-[0.3em] mb-3 sm:mb-4">
+        <Calculator className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> Calculate Your Tuition
+      </div>
+      <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black tracking-tighter font-heading mb-3 sm:mb-4 px-2">
+        Flexible <span className="text-purple-600 italic">Pricing</span> That Fits You
+      </h2>
+      <p className="text-sm sm:text-base text-muted-foreground px-4">
+        Your Hifz journey, your pace, your budget
+      </p>
+    </div>
+
+    <PricingCalculatorHifz dbPlans={[]} />
+    
+    <p className="text-xs text-center text-muted-foreground mt-4">
+      *Final price may vary based on scholar assignment
+    </p>
+  </div>
+</section>
 
       {/* FAQ Section */}
       <section className="py-12 sm:py-16 bg-gradient-to-b from-background via-purple-50/5 to-indigo-50/5">
         <div className="container mx-auto px-4 sm:px-6">
           <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-12">
             <div className="inline-flex items-center gap-2 text-purple-600 font-black text-[8px] sm:text-[10px] uppercase tracking-[0.2em] sm:tracking-[0.3em] mb-3 sm:mb-4">
-              <MessageCircle className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> Common Questions
+              <MessageCircle className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> Common
+              Questions
             </div>
             <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black tracking-tighter font-heading mb-3 sm:mb-4 px-2">
-              Frequently Asked <span className="text-purple-600 italic">Questions</span>
+              Frequently Asked{" "}
+              <span className="text-purple-600 italic">Questions</span>
             </h2>
           </div>
 
@@ -1416,8 +1523,12 @@ export default function HifzProgramPage() {
                       <Sparkles className="w-3 h-3 sm:w-4 sm:h-4 text-purple-600" />
                     </div>
                     <div>
-                      <h3 className="font-black text-sm sm:text-base mb-1 sm:mb-2">{faq.q}</h3>
-                      <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">{faq.a}</p>
+                      <h3 className="font-black text-sm sm:text-base mb-1 sm:mb-2">
+                        {faq.q}
+                      </h3>
+                      <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                        {faq.a}
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -1434,10 +1545,12 @@ export default function HifzProgramPage() {
             <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gradient-to-br from-purple-700 to-gold mb-4 sm:mb-6 shadow-lg">
               <Crown className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
             </div>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-black mb-3 sm:mb-4 px-2">Begin Your Journey to Become a Hafiz</h2>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-black mb-3 sm:mb-4 px-2">
+              Begin Your Journey to Become a Hafiz
+            </h2>
             <p className="text-sm sm:text-base text-muted-foreground mb-6 sm:mb-8 max-w-md mx-auto px-4">
-              Join the ranks of those who carry the Quran in their hearts.
-              Start with a free, no-obligation assessment.
+              Join the ranks of those who carry the Quran in their hearts. Start
+              with a free, no-obligation assessment.
             </p>
             <div className="flex flex-col xs:flex-row gap-3 sm:gap-4 justify-center px-4">
               <Link href="/assessment" className="w-full xs:w-auto">
@@ -1447,17 +1560,30 @@ export default function HifzProgramPage() {
                 </Button>
               </Link>
               <Link href="/contact" className="w-full xs:w-auto">
-                <Button variant="outline" className="w-full rounded-full px-6 sm:px-8 py-3 sm:py-4 font-black text-sm sm:text-base border-purple-600 text-purple-600">
+                <Button
+                  variant="outline"
+                  className="w-full rounded-full px-6 sm:px-8 py-3 sm:py-4 font-black text-sm sm:text-base border-purple-600 text-purple-600"
+                >
                   TALK TO ADVISOR
                 </Button>
               </Link>
             </div>
             <div className="flex flex-wrap justify-center gap-2 sm:gap-3 mt-4 sm:mt-6">
-              <span className="inline-flex items-center gap-1 text-[10px] sm:text-xs text-muted-foreground">✨ Free 30-minute assessment</span>
-              <span className="text-[10px] sm:text-xs text-muted-foreground">•</span>
-              <span className="inline-flex items-center gap-1 text-[10px] sm:text-xs text-muted-foreground">🏆 Ijazah certification</span>
-              <span className="text-[10px] sm:text-xs text-muted-foreground">•</span>
-              <span className="inline-flex items-center gap-1 text-[10px] sm:text-xs text-muted-foreground">📖 Authentic Sanad</span>
+              <span className="inline-flex items-center gap-1 text-[10px] sm:text-xs text-muted-foreground">
+                ✨ Free 30-minute assessment
+              </span>
+              <span className="text-[10px] sm:text-xs text-muted-foreground">
+                •
+              </span>
+              <span className="inline-flex items-center gap-1 text-[10px] sm:text-xs text-muted-foreground">
+                🏆 Ijazah certification
+              </span>
+              <span className="text-[10px] sm:text-xs text-muted-foreground">
+                •
+              </span>
+              <span className="inline-flex items-center gap-1 text-[10px] sm:text-xs text-muted-foreground">
+                📖 Authentic Sanad
+              </span>
             </div>
           </div>
         </div>
