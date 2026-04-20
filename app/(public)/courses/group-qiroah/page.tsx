@@ -1076,7 +1076,7 @@ export default function GroupQiroahPage() {
   const heroOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0.95]);
 
   return (
-    <main ref={containerRef} className="relative pt-0 sm:pt-12 bg-background overflow-hidden">
+    <main ref={containerRef} className="relative pt-12 sm:pt-12 bg-background overflow-hidden">
       {/* Premium Background Effects - Hidden on mobile for performance */}
       <div className="hidden sm:block fixed inset-0 pointer-events-none">
         <div className="absolute inset-0 opacity-[0.02] bg-[url('/islamic-pattern.svg')] bg-center bg-repeat" style={{ backgroundSize: "300px" }} />
@@ -1326,7 +1326,7 @@ export default function GroupQiroahPage() {
                     ].map((feature, i) => (
                       <div key={i} className="flex items-center gap-2 sm:gap-3 text-xs sm:text-sm p-1.5 sm:p-2 rounded-lg hover:bg-amber-50/50 transition-colors">
                         <CheckCircle2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-600 shrink-0" />
-                        <span className="break-words">{feature}</span>
+                        <span className="wrap-break-word">{feature}</span>
                       </div>
                     ))}
                   </div>
@@ -1364,7 +1364,7 @@ export default function GroupQiroahPage() {
                     </div>
                   </div>
                   <Quote className="w-6 h-6 sm:w-8 sm:h-8 text-amber-200 dark:text-amber-800/30 mb-2 sm:mb-3" />
-                  <p className="text-xs sm:text-sm text-muted-foreground italic grow leading-relaxed break-words">"{story.quote}"</p>
+                  <p className="text-xs sm:text-sm text-muted-foreground italic grow leading-relaxed wrap-break-word">{`"${story.quote}"`}</p>
                   <div className="mt-3 sm:mt-4 pt-2 sm:pt-3 border-t border-border">
                     <p className="text-[10px] sm:text-xs font-black text-transparent bg-clip-text bg-linear-to-r from-amber-600 to-orange-600">✓ Completed in {story.duration}</p>
                   </div>
@@ -1396,8 +1396,8 @@ export default function GroupQiroahPage() {
                       <Sparkles className="w-3 h-3 sm:w-4 sm:h-4 text-amber-600" />
                     </div>
                     <div className="min-w-0">
-                      <h3 className="font-black text-sm sm:text-base mb-1 sm:mb-2 break-words">{faq.q}</h3>
-                      <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed break-words">{faq.a}</p>
+                      <h3 className="font-black text-sm sm:text-base mb-1 sm:mb-2 wrap-break-word">{faq.q}</h3>
+                      <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed wrap-break-word">{faq.a}</p>
                     </div>
                   </div>
                 </motion.div>
@@ -1421,9 +1421,8 @@ export default function GroupQiroahPage() {
             </div>
             <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black mb-3 sm:mb-4 px-2">Start Your Quran Reading Journey Today</h2>
             <p className="text-sm sm:text-base md:text-lg text-muted-foreground mb-6 sm:mb-8 max-w-md mx-auto px-4">
-              No matter your age or background - we're here to help you succeed.
-              Begin with a free, no-obligation assessment.
-            </p>
+              Join a community of learners and experience the joy of reading the Quran with confidence and support. Your journey starts with a simple step.
+              </p>
             <div className="flex flex-col xs:flex-row gap-3 sm:gap-4 justify-center px-4">
               <Link href="/assessment" className="w-full xs:w-auto">
                 <Button className="w-full rounded-full px-6 sm:px-8 md:px-10 py-4 sm:py-5 font-black bg-linear-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white shadow-xl hover:shadow-2xl transition-all duration-300 text-sm sm:text-base group">
