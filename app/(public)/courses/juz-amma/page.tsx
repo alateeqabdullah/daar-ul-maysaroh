@@ -1251,14 +1251,14 @@ export default function JuzAmmaPage() {
                     <p className="text-sm text-muted-foreground mb-3">
                       {path.duration}
                     </p>
-                    <div className="text-xs text-left space-y-1 pt-3 border-t border-border">
+                    {/* <div className="text-xs text-left space-y-1 pt-3 border-t border-border">
                       {path.features.map((feature, idx) => (
                         <div key={idx} className="flex items-center gap-2">
                           <CheckCircle2 className="w-3 h-3 text-amber-600" />
                           <span>{feature}</span>
                         </div>
                       ))}
-                    </div>
+                    </div> */}
                   </div>
                 </Reveal>
               );
