@@ -624,7 +624,7 @@ export function Header() {
 
                                 {/* Group Programs */}
                                 <div className="text-xs font-black text-primary-700/60 uppercase tracking-wider mt-6 mb-2">
-                                  GROUP PROGRAMS (CHILDREN)
+                                  GROUP PROGRAMS
                                 </div>
                                 <div className="grid grid-cols-1 gap-2">
                                   {["Group Qiro'ah", "Juz Amma Group"].map(
