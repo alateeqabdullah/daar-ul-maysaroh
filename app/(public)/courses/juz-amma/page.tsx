@@ -1090,7 +1090,7 @@ export default function JuzAmmaPage() {
   const heroOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0.9]);
 
   return (
-    <main ref={containerRef} className="relative pt-0 sm:pt-10 bg-background overflow-hidden">
+    <main ref={containerRef} className="relative pt-12 sm:pt-10 bg-background overflow-hidden">
       {/* Universal Background - Hidden on mobile for performance */}
       <div className="hidden sm:block fixed inset-0 pointer-events-none">
         <div
