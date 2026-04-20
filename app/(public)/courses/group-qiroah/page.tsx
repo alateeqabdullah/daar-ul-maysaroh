@@ -964,8 +964,8 @@
 // app/courses/group-qiroah/page.tsx
 "use client";
 
-import { useState, useRef } from "react";
-import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
+import { useRef } from "react";
+import { motion, useScroll, useTransform } from "framer-motion";
 import {
   Star,
   Clock,
@@ -992,17 +992,10 @@ import {
   Sun,
   Baby,
   Briefcase,
-  Zap,
-  Feather,
-  Coffee,
-  Moon,
-  Cloud,
-  Rainbow,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Reveal } from "@/components/shared/section-animation";
 import Link from "next/link";
-import { cn } from "@/lib/utils";
 
 // Premium Color Scheme - Sunset/Amber Theme
 const COLORS = {
@@ -1028,7 +1021,7 @@ const PROGRAM_DATA = {
   sessionDuration: "45-60 minutes",
   format: "Small Groups (4-10 learners)",
   level: "Beginner to Intermediate",
-  priceRange: "$69",
+  priceRange: "$6",
   pricePeriod: "per month",
 };
 
@@ -1106,14 +1099,14 @@ export default function GroupQiroahPage() {
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ duration: 0.5 }}
-              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-gradient-to-r from-amber-500/10 to-orange-500/10 border border-amber-500/20 text-amber-700 text-[11px] font-black uppercase tracking-wider mb-6 backdrop-blur-sm"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-linear-to-r from-amber-500/10 to-orange-500/10 border border-amber-500/20 text-amber-700 text-[11px] font-black uppercase tracking-wider mb-6 backdrop-blur-sm"
             >
               <Sparkles className="w-3.5 h-3.5" /> 🌟 For Everyone • All Ages Welcome 🌟
             </motion.div>
             
             <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-black tracking-tighter font-heading leading-[1.1] mb-6">
               Learn to Read{" "}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-600 via-orange-600 to-rose-600">
+              <span className="text-transparent bg-clip-text bg-linear-to-r from-amber-600 via-orange-600 to-rose-600">
                 the Quran
               </span>
             </h1>
@@ -1128,7 +1121,7 @@ export default function GroupQiroahPage() {
                 { icon: Clock, text: `${PROGRAM_DATA.sessionDuration} sessions` },
                 { icon: Smile, text: "Beginner Friendly" },
               ].map((item, i) => (
-                <div key={i} className="flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-950/30 dark:to-orange-950/30 border border-amber-200 dark:border-amber-800 text-amber-700 text-xs font-black">
+                <div key={i} className="flex items-center gap-2 px-4 py-2 rounded-full bg-linear-to-r from-amber-50 to-orange-50 dark:from-amber-950/30 dark:to-orange-950/30 border border-amber-200 dark:border-amber-800 text-amber-700 text-xs font-black">
                   <item.icon className="w-3.5 h-3.5" />
                   {item.text}
                 </div>
@@ -1137,7 +1130,7 @@ export default function GroupQiroahPage() {
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/assessment">
-                <Button className="rounded-full px-10 py-5 sm:px-12 sm:py-6 font-black bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white text-base sm:text-lg shadow-xl hover:shadow-2xl transition-all duration-300 group">
+                <Button className="rounded-full px-10 py-5 sm:px-12 sm:py-6 font-black bg-linear-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white text-base sm:text-lg shadow-xl hover:shadow-2xl transition-all duration-300 group">
                   <span className="flex items-center gap-2">
                     START FREE ASSESSMENT
                     <Rocket className="w-4 h-4 sm:w-5 sm:h-5 group-hover:translate-x-1 transition-transform" />
@@ -1154,12 +1147,12 @@ export default function GroupQiroahPage() {
             {/* Stats with Premium Cards */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-12 pt-8 border-t border-border/50">
               {[
-                { label: "Happy Learners", value: "500+", icon: Users },
+                { label: "Happy Learners", value: "50+", icon: Users },
                 { label: "Success Rate", value: "95%", icon: Target },
-                { label: "Global Reach", value: "15+", icon: Globe },
+                { label: "Global Reach", value: "6+", icon: Globe },
                 { label: "Avg. Completion", value: "7 mo", icon: Calendar },
               ].map((stat, i) => (
-                <motion.div key={i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }} className="p-4 rounded-2xl bg-gradient-to-br from-amber-50/50 to-orange-50/50 dark:from-amber-950/20 dark:to-orange-950/20 border border-amber-100 dark:border-amber-800">
+                <motion.div key={i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }} className="p-4 rounded-2xl bg-linear-to-br from-amber-50/50 to-orange-50/50 dark:from-amber-950/20 dark:to-orange-950/20 border border-amber-100 dark:border-amber-800">
                   <stat.icon className="w-5 h-5 text-amber-600 mx-auto mb-2" />
                   <div className="text-2xl sm:text-3xl font-black text-amber-600">{stat.value}</div>
                   <div className="text-xs text-muted-foreground mt-1">{stat.label}</div>
@@ -1171,14 +1164,14 @@ export default function GroupQiroahPage() {
       </motion.div>
 
       {/* Benefits Section - Premium Cards */}
-      <section className="py-20 bg-gradient-to-b from-background via-amber-50/5 to-orange-50/5">
+      <section className="py-20 bg-linear-to-b from-background via-amber-50/5 to-orange-50/5">
         <div className="container mx-auto px-4 sm:px-6">
           <div className="text-center max-w-2xl mx-auto mb-14">
             <div className="inline-flex items-center gap-2 text-amber-600 font-black text-[10px] uppercase tracking-[0.3em] mb-4">
               <Heart className="w-3.5 h-3.5" /> Why Families Love Us
             </div>
             <h2 className="text-4xl sm:text-5xl md:text-6xl font-black tracking-tighter font-heading mb-4">
-              A <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-600 to-orange-600">Supportive</span> Learning Environment
+              A <span className="text-transparent bg-clip-text bg-linear-to-r from-amber-600 to-orange-600">Supportive</span> Learning Environment
             </h2>
             <p className="text-muted-foreground text-lg">Where everyone can learn at their own pace, with encouragement every step of the way</p>
           </div>
@@ -1190,7 +1183,7 @@ export default function GroupQiroahPage() {
                 <Reveal key={i} delay={i * 0.1}>
                   <motion.div whileHover={{ y: -5 }} className="group p-6 rounded-2xl bg-background border border-border hover:border-amber-300 shadow-lg hover:shadow-xl transition-all duration-300">
                     <div className="flex gap-4">
-                      <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-amber-100 to-orange-100 dark:from-amber-950/50 dark:to-orange-950/50 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
+                      <div className="w-14 h-14 rounded-xl bg-linear-to-br from-amber-100 to-orange-100 dark:from-amber-950/50 dark:to-orange-950/50 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform">
                         <Icon className="w-7 h-7 text-amber-600" />
                       </div>
                       <div>
@@ -1217,27 +1210,27 @@ export default function GroupQiroahPage() {
               <Compass className="w-3.5 h-3.5" /> Your Path to Mastery
             </div>
             <h2 className="text-4xl sm:text-5xl md:text-6xl font-black tracking-tighter font-heading mb-4">
-              From <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-600 to-orange-600">First Letter</span> to <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-600 to-rose-600">Confident Reader</span>
+              From <span className="text-transparent bg-clip-text bg-linear-to-r from-amber-600 to-orange-600">First Letter</span> to <span className="text-transparent bg-clip-text bg-linear-to-r from-orange-600 to-rose-600">Confident Reader</span>
             </h2>
             <p className="text-muted-foreground text-lg">A clear, supportive progression designed for lasting success</p>
           </div>
 
           <div className="relative max-w-4xl mx-auto">
-            <div className="absolute left-7 top-0 bottom-0 w-0.5 bg-gradient-to-b from-amber-400 via-orange-400 to-rose-400 hidden md:block" />
+            <div className="absolute left-7 top-0 bottom-0 w-0.5 bg-linear-to-b from-amber-400 via-orange-400 to-rose-400 hidden md:block" />
             <div className="space-y-8">
               {LEARNING_JOURNEY.map((stage, idx) => {
                 const Icon = stage.icon;
                 return (
                   <Reveal key={idx} delay={idx * 0.1}>
                     <div className="relative pl-0 md:pl-20">
-                      <div className="hidden md:flex absolute left-0 top-6 w-14 h-14 rounded-full bg-gradient-to-br from-amber-500 to-orange-500 items-center justify-center text-white font-black text-xl shadow-lg group-hover:scale-110 transition-transform">
+                      <div className="hidden md:flex absolute left-0 top-6 w-14 h-14 rounded-full bg-linear-to-br from-amber-500 to-orange-500 items-center justify-center text-white font-black text-xl shadow-lg group-hover:scale-110 transition-transform">
                         {idx + 1}
                       </div>
                       <div className="institutional-card p-6 md:p-8 hover:border-amber-300 transition-all duration-300">
                         <div className="flex flex-col md:flex-row gap-6">
                           <div className="md:w-72">
                             <div className="flex items-center gap-3 mb-2">
-                              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-100 to-orange-100 dark:from-amber-950/30 dark:to-orange-950/30 flex items-center justify-center">
+                              <div className="w-12 h-12 rounded-xl bg-linear-to-br from-amber-100 to-orange-100 dark:from-amber-950/30 dark:to-orange-950/30 flex items-center justify-center">
                                 <Icon className="w-6 h-6 text-amber-600" />
                               </div>
                               <h3 className="font-black text-2xl">{stage.stage}</h3>
@@ -1250,7 +1243,7 @@ export default function GroupQiroahPage() {
                           <div className="flex-1">
                             <div className="flex flex-wrap gap-2">
                               {stage.activities.map((activity, i) => (
-                                <div key={i} className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-950/30 dark:to-orange-950/30 text-amber-700 text-xs font-black">
+                                <div key={i} className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-linear-to-r from-amber-50 to-orange-50 dark:from-amber-950/30 dark:to-orange-950/30 text-amber-700 text-xs font-black">
                                   <CheckCircle2 className="w-3.5 h-3.5" />
                                   {activity}
                                 </div>
@@ -1261,7 +1254,7 @@ export default function GroupQiroahPage() {
                                 initial={{ width: 0 }}
                                 whileInView={{ width: `${(idx + 1) * 25}%` }}
                                 transition={{ duration: 1 }}
-                                className="h-full bg-gradient-to-r from-amber-500 to-orange-500 rounded-full"
+                                className="h-full bg-linear-to-r from-amber-500 to-orange-500 rounded-full"
                               />
                             </div>
                           </div>
@@ -1277,14 +1270,14 @@ export default function GroupQiroahPage() {
       </section>
 
       {/* Schedule & Pricing - Premium Cards */}
-      <section className="py-20 bg-gradient-to-b from-background via-amber-50/5 to-orange-50/5">
+      <section className="py-20 bg-linear-to-b from-background via-amber-50/5 to-orange-50/5">
         <div className="container mx-auto px-4 sm:px-6">
           <div className="grid lg:grid-cols-2 gap-8">
             {/* Schedule Card */}
             <Reveal>
               <div className="institutional-card p-8 hover:border-amber-300 transition-all duration-300">
                 <div className="flex items-center gap-3 mb-6">
-                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-100 to-orange-100 dark:from-amber-950/30 dark:to-orange-950/30 flex items-center justify-center">
+                  <div className="w-12 h-12 rounded-xl bg-linear-to-br from-amber-100 to-orange-100 dark:from-amber-950/30 dark:to-orange-950/30 flex items-center justify-center">
                     <Calendar className="w-6 h-6 text-amber-600" />
                   </div>
                   <h3 className="font-black text-2xl">Flexible Schedule</h3>
@@ -1305,27 +1298,27 @@ export default function GroupQiroahPage() {
                     );
                   })}
                 </div>
-                <p className="text-xs text-muted-foreground mt-4 text-center">✨ All times in EST • More time zones available • Custom schedules possible ✨</p>
+                {/* <p className="text-xs text-muted-foreground mt-4 text-center">✨ All times in EST • More time zones available • Custom schedules possible ✨</p> */}
               </div>
             </Reveal>
 
             {/* Pricing Card */}
             <Reveal delay={0.2}>
-              <div className="institutional-card p-8 bg-gradient-to-br from-amber-50/20 to-orange-50/20 hover:border-amber-300 transition-all duration-300">
+              <div className="institutional-card p-8 bg-linear-to-br from-amber-50/20 to-orange-50/20 hover:border-amber-300 transition-all duration-300">
                 <div className="flex items-center gap-3 mb-6">
-                  <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center shadow-lg">
+                  <div className="w-12 h-12 rounded-xl bg-linear-to-br from-amber-500 to-orange-500 flex items-center justify-center shadow-lg">
                     <Gem className="w-6 h-6 text-white" />
                   </div>
                   <h3 className="font-black text-2xl">Simple, Transparent Pricing</h3>
                 </div>
                 <div className="space-y-6">
                   <div className="text-center">
-                    <div className="text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-600 to-orange-600">{PROGRAM_DATA.priceRange}</div>
+                    <div className="text-5xl font-black text-transparent bg-clip-text bg-linear-to-r from-amber-600 to-orange-600">{PROGRAM_DATA.priceRange}</div>
                     <p className="text-sm text-muted-foreground mt-1">{PROGRAM_DATA.pricePeriod} • includes all materials</p>
                   </div>
                   <div className="space-y-3">
                     {[
-                      "2 small group sessions per week",
+                      "2-4 small group sessions per week",
                       "All digital learning materials",
                       "Progress tracking & reports",
                       "Parent/guardian portal access",
@@ -1339,10 +1332,10 @@ export default function GroupQiroahPage() {
                     ))}
                   </div>
                   <div className="pt-4 border-t border-border">
-                    <div className="flex justify-between items-center text-sm p-3 rounded-lg bg-amber-50/30">
+                    {/* <div className="flex justify-between items-center text-sm p-3 rounded-lg bg-amber-50/30">
                       <span className="font-black">Family discount (3+ members)</span>
-                      <span className="font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-600 to-orange-600">15% off</span>
-                    </div>
+                      <span className="font-black text-transparent bg-clip-text bg-linear-to-r from-amber-600 to-orange-600">15% off</span>
+                    </div> */}
                   </div>
                 </div>
               </div>
@@ -1359,7 +1352,7 @@ export default function GroupQiroahPage() {
               <Users className="w-3.5 h-3.5" /> Real Stories, Real Success
             </div>
             <h2 className="text-4xl sm:text-5xl md:text-6xl font-black tracking-tighter font-heading mb-4">
-              From Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-600 to-orange-600">Community</span>
+              From Our <span className="text-transparent bg-clip-text bg-linear-to-r from-amber-600 to-orange-600">Community</span>
             </h2>
             <p className="text-muted-foreground text-lg">Learners of all ages who found their path with us</p>
           </div>
@@ -1369,7 +1362,7 @@ export default function GroupQiroahPage() {
               <Reveal key={i} delay={i * 0.1}>
                 <motion.div whileHover={{ y: -5 }} className="institutional-card p-6 h-full flex flex-col group">
                   <div className="flex items-center gap-3 mb-4">
-                    <div className="w-14 h-14 rounded-full bg-gradient-to-br from-amber-500 to-orange-500 flex items-center justify-center text-white font-black text-xl shadow-lg">
+                    <div className="w-14 h-14 rounded-full bg-linear-to-br from-amber-500 to-orange-500 flex items-center justify-center text-white font-black text-xl shadow-lg">
                       {story.name.charAt(0)}
                     </div>
                     <div>
@@ -1378,9 +1371,9 @@ export default function GroupQiroahPage() {
                     </div>
                   </div>
                   <Quote className="w-8 h-8 text-amber-200 dark:text-amber-800/30 mb-3" />
-                  <p className="text-sm text-muted-foreground italic flex-grow leading-relaxed">"{story.quote}"</p>
+                  <p className="text-sm text-muted-foreground italic grow leading-relaxed">"{story.quote}"</p>
                   <div className="mt-4 pt-3 border-t border-border">
-                    <p className="text-xs font-black text-transparent bg-clip-text bg-gradient-to-r from-amber-600 to-orange-600">✓ Completed in {story.duration}</p>
+                    <p className="text-xs font-black text-transparent bg-clip-text bg-linear-to-r from-amber-600 to-orange-600">✓ Completed in {story.duration}</p>
                   </div>
                 </motion.div>
               </Reveal>
@@ -1390,14 +1383,14 @@ export default function GroupQiroahPage() {
       </section>
 
       {/* FAQ Section - Premium Accordion */}
-      <section className="py-20 bg-gradient-to-b from-background via-amber-50/5 to-orange-50/5">
+      <section className="py-20 bg-linear-to-b from-background via-amber-50/5 to-orange-50/5">
         <div className="container mx-auto px-4 sm:px-6">
           <div className="text-center max-w-2xl mx-auto mb-14">
             <div className="inline-flex items-center gap-2 text-amber-600 font-black text-[10px] uppercase tracking-[0.3em] mb-4">
               <MessageCircle className="w-3.5 h-3.5" /> Common Questions
             </div>
             <h2 className="text-4xl sm:text-5xl md:text-6xl font-black tracking-tighter font-heading mb-4">
-              Frequently Asked <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-600 to-orange-600">Questions</span>
+              Frequently Asked <span className="text-transparent bg-clip-text bg-linear-to-r from-amber-600 to-orange-600">Questions</span>
             </h2>
           </div>
 
@@ -1428,19 +1421,19 @@ export default function GroupQiroahPage() {
             initial={{ opacity: 0, scale: 0.98 }}
             whileInView={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5 }}
-            className="institutional-card p-10 md:p-14 text-center max-w-4xl mx-auto bg-gradient-to-br from-amber-50/30 via-orange-50/20 to-rose-50/30"
+            className="institutional-card p-10 md:p-14 text-center max-w-4xl mx-auto bg-linear-to-br from-amber-50/30 via-orange-50/20 to-rose-50/30"
           >
-            <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-gradient-to-br from-amber-500 to-orange-500 mb-6 shadow-xl">
+            <div className="inline-flex items-center justify-center w-24 h-24 rounded-full bg-linear-to-br from-amber-500 to-orange-500 mb-6 shadow-xl">
               <Smile className="w-12 h-12 text-white" />
             </div>
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-black mb-4">Start Your Quran Reading Journey Today</h2>
             <p className="text-muted-foreground mb-8 max-w-md mx-auto text-lg">
-              No matter your age or background — we're here to help you succeed.
-              Begin with a free, no-obligation assessment.
+             {` No matter your age or background - we're here to help you succeed.
+              Begin with a free, no-obligation assessment.`}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/assessment">
-                <Button className="rounded-full px-10 py-5 font-black bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white shadow-xl hover:shadow-2xl transition-all duration-300 group">
+                <Button className="rounded-full px-10 py-5 font-black bg-linear-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white shadow-xl hover:shadow-2xl transition-all duration-300 group">
                   <span className="flex items-center gap-2">
                     BOOK FREE ASSESSMENT
                     <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
