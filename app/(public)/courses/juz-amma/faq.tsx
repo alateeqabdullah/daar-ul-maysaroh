@@ -320,7 +320,7 @@ export function FAQSection() {
                         exit={{ height: 0, opacity: 0 }}
                         transition={{ duration: 0.3, ease: "easeInOut" }}
                       >
-                        <div className="px-5 pb-5 pt-0">
+                        <div className="px-5 pb-5 pt-3">
                           <div className="pl-0">
                             <p className="text-sm text-muted-foreground leading-relaxed">
                               {faq.a}
@@ -367,7 +367,7 @@ export function FAQSection() {
         transition={{ delay: 0.2 }}
         className="text-center mt-12 pt-6"
       >
-        <div className="inline-flex flex-col sm:flex-row items-center gap-3 px-6 py-4 rounded-2xl bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-950/30 dark:to-orange-950/30 border border-amber-200 dark:border-amber-800">
+        <div className="inline-flex flex-col sm:flex-row items-center gap-3 px-6 py-4 rounded-2xl bg-linear-to-r from-amber-50 to-orange-50 dark:from-amber-950/30 dark:to-orange-950/30 border border-amber-200 dark:border-amber-800">
           <div className="flex items-center gap-2">
             <MessageCircle className="w-5 h-5 text-amber-600" />
             <span className="text-sm font-bold">Still have questions?</span>
