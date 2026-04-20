@@ -831,6 +831,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Reveal } from "@/components/shared/section-animation";
 import Link from "next/link";
+import { FAQSection } from "./faq";
 
 // Universal Program Data - Timeless Design
 const PROGRAM_DATA = {
@@ -1291,7 +1292,7 @@ export default function JuzAmmaPage() {
                   return (
                     <Reveal key={idx} delay={idx * 0.1}>
                       <div className="relative pl-0 md:pl-16">
-                        <div className="hidden md:block absolute left-0 top-6 w-12 h-12 rounded-full bg-linear-to-r from-amber-500 to-orange-500 items-center justify-center text-white font-black text-lg shadow-lg">
+                        <div className="hidden md:block absolute left-0 top-6 w-12 h-12 rounded-full bg-linear-to-r from-amber-500 to-orange-500 items-center justify-center text-white font-black text-lg p-3 px-4.5 shadow-lg">
                           {idx + 1}
                         </div>
                         <div className="institutional-card p-6 md:p-8">
@@ -1405,8 +1406,8 @@ export default function JuzAmmaPage() {
                       </div>
                     </div>
                     <Quote className="w-8 h-8 text-amber-200 dark:text-amber-800/30 mb-3" />
-                    <p className="text-sm text-muted-foreground italic flex-grow">
-                      "{story.story}"
+                    <p className="text-sm text-muted-foreground italic grow">
+                      {`"${story.story}"`}
                     </p>
                     <p className="text-xs text-amber-600 font-black mt-3">
                       Completed in {story.duration}
@@ -1438,7 +1439,7 @@ export default function JuzAmmaPage() {
             {[
               {
                 title: "1-on-1 Private",
-                price: "$149/month",
+                price: "$2+/month",
                 features: [
                   "Personalized attention",
                   "Flexible scheduling",
@@ -1450,10 +1451,10 @@ export default function JuzAmmaPage() {
               },
               {
                 title: "Small Group",
-                price: "$89/month",
+                price: "$7/month",
                 features: [
                   "Peer motivation",
-                  "4-6 students",
+                  "4-10 students",
                   "Collaborative learning",
                   "Lower cost",
                 ],
@@ -1462,7 +1463,7 @@ export default function JuzAmmaPage() {
               },
               {
                 title: "Self-Paced",
-                price: "$69/month",
+                price: "$2+/month",
                 features: [
                   "Recorded lessons",
                   "Weekly check-ins",
@@ -1502,7 +1503,7 @@ export default function JuzAmmaPage() {
                         </div>
                       ))}
                     </div>
-                    <Link href="/assessment">
+                    <Link href="/admissions">
                       <Button className="w-full rounded-full py-3 font-black bg-linear-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white">
                         Get Started
                       </Button>
@@ -1516,7 +1517,7 @@ export default function JuzAmmaPage() {
       </section>
 
       {/* FAQ - Universal Questions */}
-      <section className="py-16 bg-muted/20">
+      {/* <section className="py-16 bg-muted/20">
         <div className="container mx-auto px-4 sm:px-6">
           <div className="text-center max-w-2xl mx-auto mb-12">
             <div className="inline-flex items-center gap-2 text-amber-600 font-black text-[10px] uppercase tracking-[0.3em] mb-4">
@@ -1539,7 +1540,9 @@ export default function JuzAmmaPage() {
             ))}
           </div>
         </div>
-      </section>
+      </section> */}
+      <FAQSection />
+
 
       {/* Final Universal CTA */}
       <section className="py-20">
