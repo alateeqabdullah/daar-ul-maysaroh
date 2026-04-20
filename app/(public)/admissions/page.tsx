@@ -1273,7 +1273,7 @@ export default function AdmissionsPage() {
               },
               {
                 q: "What documents do I need to apply?",
-                a: "A valid ID, educational background information, and proof of payment method are required for complete registration.",
+                a: " No documents are required for the initial application. However, you may be asked to provide proof of identity and educational background during the assessment phase.",
               },
               {
                 q: "Is there an age requirement for programs?",
