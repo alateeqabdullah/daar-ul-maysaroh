@@ -41,7 +41,7 @@ const FAQS = [
   },
   {
     q: "What's the difference between group and 1-on-1?",
-    a: "Group classes (4-6 students) offer peer motivation, collaborative learning, and lower cost ($89/month). 1-on-1 provides personalized attention, flexible pacing, and direct feedback ($149/month). Both are highly effective - choose based on your learning style.",
+    a: "Group classes (4-10 students) offer peer motivation, collaborative learning, and lower cost ($7/month). 1-on-1 provides personalized attention, flexible pacing, and direct feedback ($2+ per session/month). Both are highly effective - choose based on your learning style.",
     category: "Formats",
     popular: true,
   },
