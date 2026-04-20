@@ -4,19 +4,14 @@ import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ChevronDown,
-  Search,
   HelpCircle,
   TrendingUp,
-  X,
   MessageCircle,
   Clock,
   Users,
   Heart,
   Award,
-  ChevronUp,
-  Filter,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
 import Link from "next/link";
 import { Reveal } from "@/components/shared/section-animation";
 

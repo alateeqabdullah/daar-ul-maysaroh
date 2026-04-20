@@ -1398,7 +1398,7 @@ export default function JuzAmmaPage() {
                     </div>
                     <Quote className="w-6 h-6 sm:w-8 sm:h-8 text-amber-200 dark:text-amber-800/30 mb-2 sm:mb-3" />
                     <p className="text-xs sm:text-sm text-muted-foreground italic grow leading-relaxed break-words">
-                      "{story.story}"
+                      {`"${story.story}"`}
                     </p>
                     <p className="text-[10px] sm:text-xs text-amber-600 font-black mt-3">
                       Completed in {story.duration}
@@ -1508,7 +1508,7 @@ export default function JuzAmmaPage() {
       </section>
 
       {/* FAQ Section */}
-      * <section className="py-16 bg-muted/20">
+      <section className="py-16 bg-muted/20">
         <div className="container mx-auto px-4 sm:px-6">
           <div className="text-center max-w-2xl mx-auto mb-12">
             <div className="inline-flex items-center gap-2 text-amber-600 font-black text-[10px] uppercase tracking-[0.3em] mb-4">
