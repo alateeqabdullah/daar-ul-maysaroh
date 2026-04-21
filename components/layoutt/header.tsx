@@ -20,8 +20,6 @@ import {
   Globe,
   Star,
   RefreshCw,
-  Crown,
-  GraduationCap,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -31,6 +29,7 @@ import Image from "next/image";
 
 const navigation = [
   { name: "Home", href: "/" },
+  { name: "About", href: "/about" },
   {
     name: "Programs",
     href: "/courses",
@@ -38,7 +37,6 @@ const navigation = [
   },
   { name: "Faculty", href: "/teachers" },
   { name: "Pricing", href: "/pricing" },
-  { name: "About", href: "/about" },
   { name: "Contact", href: "/contact" },
 ];
 
@@ -300,7 +298,7 @@ export function Header() {
                             </div>
                             <Link
                               href={MEGA_MENU.featured.href}
-                              className="block p-4 rounded-xl bg-gradient-to-br from-primary-700/5 to-primary-700/10 border border-primary-700/20 hover:border-primary-700/40 transition-all group"
+                              className="block p-4 rounded-xl bg-linear-to-br from-primary-700/5 to-primary-700/10 border border-primary-700/20 hover:border-primary-700/40 transition-all group"
                             >
                               <div className="flex items-center gap-3">
                                 <div className="w-10 h-10 rounded-lg bg-primary-700/20 flex items-center justify-center">
@@ -2214,7 +2212,7 @@ export function Header() {
 // //                     <Button className="rounded-xl font-black px-8 bg-primary-700 hover:bg-primary-800 text-white shadow-lg text-[11px] tracking-widest relative overflow-hidden group h-11">
 // //                       <span className="relative z-10">ADMISSIONS</span>
 // //                       <motion.div
-// //                         className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12"
+// //                         className="absolute inset-0 bg-linear-to-r from-transparent via-white/20 to-transparent -skew-x-12"
 // //                         animate={{ x: ["-100%", "200%"] }}
 // //                         transition={{
 // //                           duration: 4,
