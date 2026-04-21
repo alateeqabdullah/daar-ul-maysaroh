@@ -200,6 +200,7 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 interface Program {
   id: string;
@@ -280,8 +281,8 @@ export function CourseCard({
       </div>
 
       {/* 2. CONTENT AREA - Mobile Optimized */}
-      <div className="grow space-y-3 sm:space-y-4 md:space-y-6 w-full">
-        <div>
+      <Link href={program.href} className="grow space-y-3 sm:space-y-4 md:space-y-6 w-full">
+        <div >
           <h3 className="text-xl sm:text-2xl md:text-3xl font-black uppercase tracking-tighter leading-tight sm:leading-none group-hover:text-primary-700 transition-colors mb-1 sm:mb-2 wrap-break-word">
             {program.name}
           </h3>
@@ -334,7 +335,7 @@ export function CourseCard({
             </span>
           )}
         </div>
-      </div>
+      </Link>
 
       {/* 3. COMMAND FOOTER - Mobile Optimized */}
       <div
