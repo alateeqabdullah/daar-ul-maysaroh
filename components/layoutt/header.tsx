@@ -20,8 +20,7 @@ import {
   Globe,
   Star,
   RefreshCw,
-  Crown,
-  GraduationCap,
+ 
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -300,7 +299,7 @@ export function Header() {
                             </div>
                             <Link
                               href={MEGA_MENU.featured.href}
-                              className="block p-5 rounded-xl bg-gradient-to-br from-primary-700/5 to-primary-700/10 border border-primary-700/20 hover:border-primary-700/40 transition-all group"
+                              className="block p-5 rounded-xl bg-linear-to-br from-primary-700/5 to-primary-700/10 border border-primary-700/20 hover:border-primary-700/40 transition-all group"
                             >
                               <div className="flex items-center gap-4">
                                 <div className="w-12 h-12 rounded-lg bg-primary-700/20 flex items-center justify-center">

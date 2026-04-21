@@ -5,18 +5,18 @@ import { CourseCard } from "@/components/public/courses/course-card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import { ArrowRight, Filter, Loader2, Search, X } from "lucide-react";
+import { ArrowRight, BookOpen, Filter, Globe, GraduationCap, Heart, Loader2, Mic, Search, X } from "lucide-react";
 import { useMemo, useState } from "react";
 
-// Categories
-const CATEGORIES = [
-  { id: "all", name: "All Programs", icon: "BookOpen" },
-  { id: "QURAN", name: "Quran", icon: "BookOpen" },
-  { id: "TAJWEED", name: "Tajweed", icon: "Mic" },
-  { id: "ARABIC", name: "Arabic", icon: "Globe" },
-  { id: "TAFSIR", name: "Tafsir", icon: "GraduationCap" },
-  { id: "CHILDREN", name: "Children", icon: "Heart" },
-];
+ // Categories
+ const CATEGORIES = [
+   { id: "all", name: "All Programs", icon: BookOpen, count: 0 },
+   { id: "QURAN", name: "Quran", icon: BookOpen, count: 0 },
+   { id: "TAJWEED", name: "Tajweed", icon: Mic, count: 0 },
+   { id: "ARABIC", name: "Arabic", icon: Globe, count: 0 },
+   { id: "TAFSIR", name: "Tafsir", icon: GraduationCap, count: 0 },
+   { id: "CHILDREN", name: "Children", icon: Heart, count: 0 },
+ ];
 
 // Sort Options
 const SORT_OPTIONS = [
@@ -60,6 +60,16 @@ export function CoursesClient({ initialPrograms }: CoursesClientProps) {
   const [visibleCount, setVisibleCount] = useState(6);
   const [isLoading, setIsLoading] = useState(false);
   const [viewType, setViewType] = useState<"grid" | "list">("grid");
+
+
+
+    // Calculate category counts
+  const categoriesWithCounts = CATEGORIES.map((cat) => ({
+    ...cat,
+    count: cat.id === "all" 
+      ? initialPrograms.length 
+      : initialPrograms.filter((c) => c.category === cat.id).length,
+  }));
 
   // Filter and sort courses
   const filteredCourses = useMemo(() => {
@@ -138,42 +148,38 @@ export function CoursesClient({ initialPrograms }: CoursesClientProps) {
         )}
       </div>
 
-      {/* Category Pills */}
-      <div className="overflow-x-auto pb-2 scrollbar-hide -mx-4 px-4">
-        <div className="flex items-center gap-1.5 sm:gap-2 min-w-max">
-          <Filter className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary-600 mr-0.5 sm:mr-1 shrink-0" />
-          {CATEGORIES.map((cat) => {
-            const count =
-              selectedCategory === "all"
-                ? initialPrograms.length
-                : initialPrograms.filter((c) => c.category === cat.id).length;
-            return (
-              <button
-                key={cat.id}
-                onClick={() => setSelectedCategory(cat.id)}
-                className={cn(
-                  "inline-flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-full text-[9px] sm:text-xs font-black uppercase tracking-wider transition-all whitespace-nowrap",
-                  selectedCategory === cat.id
-                    ? "bg-primary-700 text-white shadow-md"
-                    : "bg-primary-50 dark:bg-primary-950/40 text-primary-700 hover:bg-primary-100 dark:hover:bg-primary-900/60 border border-primary-100 dark:border-primary-800",
-                )}
-              >
-                {cat.name}
-                <span
-                  className={cn(
-                    "text-[8px] sm:text-[10px]",
-                    selectedCategory === cat.id
-                      ? "text-white/70"
-                      : "text-primary-700/70",
-                  )}
-                >
-                  ({count})
-                </span>
-              </button>
-            );
-          })}
-        </div>
-      </div>
+   
+      {/* Category Pills - Horizontal Scroll on Mobile with better UX */}
+          <div className="overflow-x-auto pb-2 scrollbar-hide -mx-4 px-4">
+            <div className="flex items-center gap-1.5 sm:gap-2 min-w-max">
+              <Filter className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary-600 mr-0.5 sm:mr-1 shrink-0" />
+              {categoriesWithCounts.map((cat) => {
+                const Icon = cat.icon;
+                return (
+                  <button
+                    key={cat.id}
+                    onClick={() => setSelectedCategory(cat.id)}
+                    className={cn(
+                      "inline-flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-full text-[9px] sm:text-xs font-black uppercase tracking-wider transition-all whitespace-nowrap touch-target",
+                      selectedCategory === cat.id
+                        ? "bg-primary-700 text-white shadow-md"
+                        : "bg-primary-50 dark:bg-primary-950/40 text-primary-700 hover:bg-primary-100 dark:hover:bg-primary-900/60 border border-primary-100 dark:border-primary-800"
+                    )}
+                  >
+                    <Icon className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+                    {cat.name}
+                    <span className={cn(
+                      "text-[8px] sm:text-[10px]",
+                      selectedCategory === cat.id ? "text-white/70" : "text-primary-700/70"
+                    )}>
+                      ({cat.count})
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
 
       {/* Sort, View Toggle & Clear Filters */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 pt-1 sm:pt-2">

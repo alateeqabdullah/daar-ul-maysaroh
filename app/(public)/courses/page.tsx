@@ -1331,7 +1331,7 @@ import { prisma } from "@/lib/prisma";
 import { Reveal } from "@/components/shared/section-animation";
 import {
   Landmark,
-  Sparkles,
+
   ArrowRight,
   Loader2,
   BookOpen,
@@ -1720,7 +1720,7 @@ export default async function CoursesPage() {
             </div>
           }
         >
-          <CoursesClient initialPrograms={allPrograms} />
+          <CoursesClient  initialPrograms={allPrograms} />
         </Suspense>
 
         {/* Bottom CTA */}
