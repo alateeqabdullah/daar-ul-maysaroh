@@ -20,6 +20,8 @@ import {
   Globe,
   Star,
   RefreshCw,
+  Crown,
+  GraduationCap,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -279,66 +281,66 @@ export function Header() {
                     )}
                   </Link>
 
-                  {/* MEGA MENU DROPDOWN */}
+                  {/* MEGA MENU DROPDOWN - ENLARGED */}
                   <AnimatePresence>
                     {item.dropdown && activeDropdown === item.name && (
                       <motion.div
                         initial={{ opacity: 0, y: 10, scale: 0.95 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                        className="absolute top-full left-1/2 -translate-x-1/2 w-[90vw] max-w-[900px] p-6 bg-white dark:bg-slate-950 border border-border/50 rounded-2xl shadow-3xl mt-2 z-50 max-h-[80vh] overflow-y-auto custom-scrollbar"
+                        className="absolute top-full left-1/2 -translate-x-1/2 w-[90vw] max-w-[1000px] p-8 bg-white dark:bg-slate-950 border border-border/50 rounded-2xl shadow-3xl mt-2 z-50 max-h-[85vh] overflow-y-auto custom-scrollbar"
                         role="menu"
                       >
-                        {/* 3-COLUMN GRID */}
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                          {/* Column 1: Featured */}
-                          <div className="space-y-4">
-                            <div className="text-[10px] font-black text-primary-700/60 uppercase tracking-[0.3em] mb-2">
+                        {/* 3-COLUMN GRID - ENLARGED */}
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                          {/* Column 1: Featured - ENLARGED */}
+                          <div className="space-y-5">
+                            <div className="text-xs font-black text-primary-700/60 uppercase tracking-[0.3em] mb-3">
                               FEATURED
                             </div>
                             <Link
                               href={MEGA_MENU.featured.href}
-                              className="block p-4 rounded-xl bg-linear-to-br from-primary-700/5 to-primary-700/10 border border-primary-700/20 hover:border-primary-700/40 transition-all group"
+                              className="block p-5 rounded-xl bg-gradient-to-br from-primary-700/5 to-primary-700/10 border border-primary-700/20 hover:border-primary-700/40 transition-all group"
                             >
-                              <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 rounded-lg bg-primary-700/20 flex items-center justify-center">
-                                  <MEGA_MENU.featured.icon className="w-5 h-5 text-primary-700" />
+                              <div className="flex items-center gap-4">
+                                <div className="w-12 h-12 rounded-lg bg-primary-700/20 flex items-center justify-center">
+                                  <MEGA_MENU.featured.icon className="w-6 h-6 text-primary-700" />
                                 </div>
                                 <div>
-                                  <div className="font-black text-sm group-hover:text-primary-700">
+                                  <div className="font-black text-base group-hover:text-primary-700">
                                     {MEGA_MENU.featured.name}
                                   </div>
-                                  <div className="text-xs text-muted-foreground">
+                                  <div className="text-sm text-muted-foreground">
                                     {MEGA_MENU.featured.desc}
                                   </div>
                                 </div>
-                                <Sparkles className="w-4 h-4 text-gold ml-auto opacity-50" />
+                                <Sparkles className="w-5 h-5 text-gold ml-auto opacity-50" />
                               </div>
                             </Link>
                           </div>
 
-                          {/* Column 2: 1-on-1 Programs */}
-                          <div className="space-y-3">
-                            <div className="text-[10px] font-black text-primary-700/60 uppercase tracking-[0.3em] mb-2">
+                          {/* Column 2: 1-on-1 Programs - ENLARGED */}
+                          <div className="space-y-4">
+                            <div className="text-xs font-black text-primary-700/60 uppercase tracking-[0.3em] mb-3">
                               1-on-1 PROGRAMS
                             </div>
-                            <div className="space-y-1">
+                            <div className="space-y-2">
                               {MEGA_MENU.oneOnOne.map((prog) => {
                                 const Icon = prog.icon;
                                 return (
                                   <Link
                                     key={prog.name}
                                     href={prog.href}
-                                    className="flex items-center gap-3 p-2 rounded-lg hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-colors group"
+                                    className="flex items-center gap-4 p-3 rounded-xl hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-colors group"
                                   >
-                                    <div className="w-8 h-8 rounded-lg bg-primary-700/10 flex items-center justify-center">
-                                      <Icon className="w-4 h-4 text-primary-700" />
+                                    <div className="w-10 h-10 rounded-lg bg-primary-700/10 flex items-center justify-center">
+                                      <Icon className="w-5 h-5 text-primary-700" />
                                     </div>
                                     <div className="flex-1">
-                                      <div className="font-black text-xs group-hover:text-primary-700">
+                                      <div className="font-black text-sm group-hover:text-primary-700">
                                         {prog.name}
                                       </div>
-                                      <div className="text-[10px] text-muted-foreground">
+                                      <div className="text-xs text-muted-foreground">
                                         {prog.desc}
                                       </div>
                                     </div>
@@ -348,35 +350,35 @@ export function Header() {
                             </div>
                           </div>
 
-                          {/* Column 3: Group Programs */}
-                          <div className="space-y-3">
-                            <div className="text-[10px] font-black text-primary-700/60 uppercase tracking-[0.3em] mb-2">
+                          {/* Column 3: Group Programs - ENLARGED */}
+                          <div className="space-y-4">
+                            <div className="text-xs font-black text-primary-700/60 uppercase tracking-[0.3em] mb-3">
                               GROUP PROGRAMS
                             </div>
-                            <div className="space-y-1">
+                            <div className="space-y-2">
                               {MEGA_MENU.groupPrograms.map((prog) => {
                                 const Icon = prog.icon;
                                 return (
                                   <Link
                                     key={prog.name}
                                     href={prog.href}
-                                    className="flex items-center gap-3 p-2 rounded-lg hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-colors group"
+                                    className="flex items-center gap-4 p-3 rounded-xl hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-colors group"
                                   >
-                                    <div className="w-8 h-8 rounded-lg bg-primary-700/10 flex items-center justify-center">
-                                      <Icon className="w-4 h-4 text-primary-700" />
+                                    <div className="w-10 h-10 rounded-lg bg-primary-700/10 flex items-center justify-center">
+                                      <Icon className="w-5 h-5 text-primary-700" />
                                     </div>
                                     <div className="flex-1">
                                       <div className="flex items-center gap-2">
-                                        <div className="font-black text-xs group-hover:text-primary-700">
+                                        <div className="font-black text-sm group-hover:text-primary-700">
                                           {prog.name}
                                         </div>
                                         {prog.badge && (
-                                          <span className="text-[8px] font-black px-1.5 py-0.5 rounded-full bg-gold/20 text-gold">
+                                          <span className="text-[9px] font-black px-2 py-0.5 rounded-full bg-gold/20 text-gold">
                                             {prog.badge}
                                           </span>
                                         )}
                                       </div>
-                                      <div className="text-[10px] text-muted-foreground">
+                                      <div className="text-xs text-muted-foreground">
                                         {prog.desc}
                                       </div>
                                     </div>
@@ -387,9 +389,9 @@ export function Header() {
                           </div>
                         </div>
 
-                        {/* Footer */}
-                        <div className="mt-6 pt-4 border-t border-border/50 flex justify-between items-center">
-                          <p className="text-[10px] text-muted-foreground">
+                        {/* Footer - ENLARGED */}
+                        <div className="mt-8 pt-5 border-t border-border/50 flex justify-between items-center">
+                          <p className="text-xs text-muted-foreground">
                             <span className="font-black text-primary-700">
                               1-on-1
                             </span>{" "}
@@ -401,10 +403,10 @@ export function Header() {
                           </p>
                           <Link
                             href="/courses"
-                            className="text-[10px] font-black text-primary-700 hover:underline flex items-center gap-1"
+                            className="text-xs font-black text-primary-700 hover:underline flex items-center gap-2"
                           >
                             VIEW ALL PROGRAMS
-                            <ChevronDown className="w-3 h-3 -rotate-90" />
+                            <ChevronDown className="w-4 h-4 -rotate-90" />
                           </Link>
                         </div>
                       </motion.div>
@@ -415,7 +417,7 @@ export function Header() {
             })}
           </ul>
 
-          {/* --- COMMAND ACTIONS --- */}
+          {/* --- COMMAND ACTIONS (unchanged) --- */}
           <div className="flex items-center space-x-2 md:space-x-3 lg:space-x-4 relative z-60">
             {/* Theme Toggle */}
             <Button
@@ -502,7 +504,7 @@ export function Header() {
         </nav>
       </header>
 
-      {/* --- MOBILE DRAWER --- */}
+      {/* --- MOBILE DRAWER (unchanged but keep for completeness) --- */}
       <AnimatePresence>
         {mobileMenuOpen && (
           <>
@@ -550,7 +552,6 @@ export function Header() {
                     >
                       {item.dropdown ? (
                         <div className="space-y-3">
-                          {/* Dropdown Toggle Button */}
                           <button
                             onClick={() => toggleMobileDropdown(item.name)}
                             className="flex items-center justify-between w-full text-lg font-black uppercase tracking-tighter px-3 py-2"
@@ -573,7 +574,6 @@ export function Header() {
                             />
                           </button>
 
-                          {/* Dropdown Content */}
                           <AnimatePresence>
                             {mobileDropdownOpen === item.name && (
                               <motion.div
@@ -582,7 +582,6 @@ export function Header() {
                                 exit={{ height: 0, opacity: 0 }}
                                 className="overflow-hidden space-y-4 pl-2"
                               >
-                                {/* Featured */}
                                 <Link
                                   href={MEGA_MENU.featured.href}
                                   onClick={() => setMobileMenuOpen(false)}
@@ -596,7 +595,6 @@ export function Header() {
                                   </div>
                                 </Link>
 
-                                {/* 1-on-1 Programs */}
                                 <div>
                                   <div className="text-xs font-black text-primary-700/60 uppercase tracking-wider mb-2">
                                     1-on-1 PROGRAMS
@@ -630,7 +628,6 @@ export function Header() {
                                   </div>
                                 </div>
 
-                                {/* Group Programs */}
                                 <div>
                                   <div className="text-xs font-black text-primary-700/60 uppercase tracking-wider mb-2">
                                     GROUP PROGRAMS
@@ -688,7 +685,6 @@ export function Header() {
                 </nav>
               </div>
 
-              {/* Mobile Actions */}
               <div className="mt-auto pt-6 space-y-4 pb-safe">
                 {session ? (
                   <div className="grid grid-cols-1 gap-3">
