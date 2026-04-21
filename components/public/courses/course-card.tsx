@@ -13,11 +13,33 @@ import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation"; // FIXED: Missing import
 
+interface Program {
+  id: string;
+  name: string;
+  description: string;
+  category: string;
+  subcategory: string;
+  duration: string;
+  level: string;
+  format: string;
+  basePrice: number;
+  price: string;
+  rating: number;
+  students: number;
+  features: string[];
+  popular: boolean;
+  badge?: string;
+  iconName: string;
+  color: string;
+  href: string;
+  isMock: boolean;
+}
+
 export function CourseCard({
   program,
   viewType,
 }: {
-  program: any;
+  program: Program;
   viewType: "grid" | "list";
 }) {
   const router = useRouter(); // FIXED: Initialize router
