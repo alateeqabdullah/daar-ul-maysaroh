@@ -569,6 +569,7 @@ import {
   MessageCircle,
   Gem,
   GraduationCap,
+  TrendingUp,
 } from "lucide-react";
 import Link from "next/link";
 import { useRef } from "react";
