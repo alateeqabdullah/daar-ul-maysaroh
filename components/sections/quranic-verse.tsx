@@ -71,15 +71,44 @@ const PREDEFINED_PARTICLES = [
   },
 ];
 
-export function QuranicVerse() {
-  const ref = useRef(null);
+interface QuranicVerseProps {
+  surah?: number;
+  ayah?: number;
+  showTafsir?: boolean;
+  showCopy?: boolean;
+  className?: string;
+}
+
+export function QuranicVerse({ 
+  surah = 15, 
+  ayah = 9, 
+  showTafsir = true,
+  showCopy = true,
+  className = ""
+}: QuranicVerseProps) {
+  const ref = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start end", "end start"],
   });
 
-  const isInView = useInView(ref, { amount: 0.5 });
+  const isInView = useInView(ref, { amount: 0.5, once: true });
   const [patternLoaded, setPatternLoaded] = useState(false);
+  const [patternError, setPatternError] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const [hasAnimated, setHasAnimated] = useState(false);
+  const [hasError, setHasError] = useState(false);
+
+  // Verse data
+  const verseData = useMemo(() => ({
+    surah,
+    ayah,
+    url: `https://quran.com/${surah}/${ayah}`,
+    arabic: "إِنَّا نَحْنُ نَزَّلْنَا ٱلذِّكْرَ وَإِنَّا لَهُۥ لَحَافِظُونَ",
+    translation: "Indeed, it is We who sent down the Quran and indeed, We will be its guardian.",
+    transliteration: "Inna nahnu nazzalna al-dhikra wa inna lahu la hafizoon",
+    reflection: "A divine promise: The Quran is preserved, and so is every heart that holds it."
+  }), [surah, ayah]);
 
   // Generate particle data using predefined values
   const particles = useMemo(() => {
@@ -99,14 +128,41 @@ export function QuranicVerse() {
     const img = new Image();
     img.src = "/islamic-pattern.svg";
     img.onload = () => setPatternLoaded(true);
+    img.onerror = () => {
+      console.warn("Failed to load pattern image");
+      setPatternError(true);
+      setPatternLoaded(true);
+    };
   }, []);
 
-  // Trigger subtle interaction when verse comes into view
+  // Trigger one-time animations when verse comes into view
   useEffect(() => {
-    if (isInView) {
-      console.log("Quranic verse in view");
+    if (isInView && !hasAnimated) {
+      setHasAnimated(true);
+      // Optional: track view event
+      console.log("Quranic verse viewed:", verseData.url);
     }
-  }, [isInView]);
+  }, [isInView, hasAnimated, verseData.url]);
+
+  // Copy verse to clipboard
+  const copyVerse = async () => {
+    try {
+      await navigator.clipboard.writeText(`${verseData.arabic}\n\n${verseData.translation}\n\n${verseData.url}`);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      console.error("Failed to copy:", err);
+    }
+  };
+
+  // Error boundary fallback
+  if (hasError) {
+    return (
+      <div className="py-12 text-center">
+        <p className="text-amber-500">Unable to load Quranic verse</p>
+      </div>
+    );
+  }
 
   const scale = useTransform(scrollYProgress, [0, 0.5], [0.8, 1]);
   const opacity = useTransform(scrollYProgress, [0, 0.3], [0, 1]);
@@ -120,7 +176,7 @@ export function QuranicVerse() {
       ref={ref}
       aria-label="Quranic Verse Display"
       role="region"
-      className="py-12 lg:py-32 relative overflow-hidden bg-slate-950 isolate"
+      className={`py-12 lg:py-32 relative overflow-hidden bg-slate-950 isolate ${className}`}
     >
       {/* Background Islamic Geometry Overlay with loading state */}
       <div
@@ -128,35 +184,35 @@ export function QuranicVerse() {
           patternLoaded ? "opacity-[0.03]" : "opacity-0"
         }`}
         style={{
-          backgroundImage: "url('/islamic-pattern.svg')",
+          backgroundImage: !patternError ? "url('/islamic-pattern.svg')" : "none",
           backgroundSize: "300px",
           backgroundRepeat: "repeat",
           backgroundPosition: "center",
         }}
       />
 
-      {/* Fallback pattern while loading */}
-      {!patternLoaded && (
+      {/* Fallback pattern while loading or error */}
+      {(!patternLoaded || patternError) && (
         <div className="absolute inset-0 opacity-[0.02] bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900" />
       )}
 
-      <div className="container mx-auto px-6 relative z-10 text-center space-y-12">
+      <div className="container mx-auto px-4 sm:px-6 relative z-10 text-center space-y-8 sm:space-y-12">
         <motion.div style={{ scale, opacity, y }}>
           {/* Arabic Verse - Surah Al-Hijr 15:9 - DIVINE PROTECTION */}
           <div
-            className="quran-monumental mb-10 drop-shadow-[0_0_30px_rgba(212,175,55,0.3)] relative"
+            className="quran-monumental mb-6 sm:mb-10 drop-shadow-[0_0_30px_rgba(212,175,55,0.3)] relative"
             dir="rtl"
             lang="ar"
-            aria-label="Surah Al-Hijr, Verse 9 - Indeed, it is We who sent down the Quran and indeed, We will be its guardian"
+            aria-label={`Surah Al-Hijr, Verse ${ayah} - ${verseData.translation}`}
           >
-            <span className="text-4xl md:text-8xl lg:text-9xl tracking-wider leading-relaxed block">
-              إِنَّا نَحْنُ نَزَّلْنَا ٱلذِّكْرَ وَإِنَّا لَهُۥ
+            <span className="text-3xl sm:text-6xl md:text-8xl lg:text-9xl tracking-wider leading-relaxed block break-words px-2">
+              {verseData.arabic.split(' ').slice(0, 5).join(' ')}
             </span>
-            <span className="text-4xl md:text-8xl lg:text-9xl tracking-wider leading-relaxed block mt-2">
-              لَحَافِظُونَ
+            <span className="text-3xl sm:text-6xl md:text-8xl lg:text-9xl tracking-wider leading-relaxed block mt-1 sm:mt-2 break-words px-2">
+              {verseData.arabic.split(' ').slice(5).join(' ')}
             </span>
-            <span className="text-3xl md:text-5xl lg:text-6xl text-amber-400/70 block mt-4">
-              ۝ ٩
+            <span className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl text-amber-400/70 block mt-3 sm:mt-4">
+              ۝ {ayah}
             </span>
 
             {/* Decorative dots */}
@@ -164,7 +220,7 @@ export function QuranicVerse() {
               {[1, 2, 3].map((dot) => (
                 <div
                   key={dot}
-                  className="w-2 h-2 rounded-full bg-amber-500/30"
+                  className="w-1.5 h-1.5 sm:w-2 sm:h-2 rounded-full bg-amber-500/30 animate-pulse"
                   style={{ animationDelay: `${dot * 200}ms` }}
                 />
               ))}
@@ -172,42 +228,42 @@ export function QuranicVerse() {
           </div>
 
           {/* Verse container */}
-          <div className="max-w-4xl mx-auto space-y-8">
+          <div className="max-w-4xl mx-auto space-y-6 sm:space-y-8 px-4">
             {/* English translation */}
             <h2
-              className="text-3xl md:text-5xl lg:text-6xl font-heading italic text-white/90 leading-tight"
+              className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-heading italic text-white/90 leading-tight"
               lang="en"
             >
               <span className="sr-only">Quranic Verse: </span>
-              {`"Indeed, it is We who sent down the Quran and indeed, We will be its guardian."`}
+              {verseData.translation}
             </h2>
+
+            {/* Transliteration */}
+            <p
+              className="text-xs sm:text-sm text-amber-500/60 font-mono"
+              aria-hidden="true"
+              lang="ar-Latn"
+            >
+              {verseData.transliteration}
+            </p>
 
             {/* Reference divider */}
             <div
-              className="flex items-center justify-center gap-6"
+              className="flex items-center justify-center gap-3 sm:gap-6"
               role="separator"
             >
-              <div className={dividerGradient + " w-12 md:w-20"} />
+              <div className={`${dividerGradient} w-12 sm:w-20`} />
 
-              <div className="flex flex-col items-center gap-2">
+              <div className="flex flex-col items-center gap-1 sm:gap-2">
                 <p
-                  className="text-xs font-black text-amber-400 uppercase tracking-[0.4em]"
-                  aria-label="Chapter 15, Verse 9"
+                  className="text-[10px] sm:text-xs font-black text-amber-400 uppercase tracking-[0.3em] sm:tracking-[0.4em]"
+                  aria-label={`Chapter ${surah}, Verse ${ayah}`}
                 >
-                  Surah Al-Hijr: 9
-                </p>
-
-                {/* Transliteration for accessibility */}
-                <p
-                  className="text-xs text-amber-500/70 font-medium"
-                  aria-hidden="true"
-                  lang="ar-Latn"
-                >
-                  Surah Al-Hijr, Ayah 9
+                  Surah Al-Hijr: {ayah}
                 </p>
               </div>
 
-              <div className={dividerGradient + " w-12 md:w-20"} />
+              <div className={`${dividerGradient} w-12 sm:w-20`} />
             </div>
 
             {/* Reflection note - Divine Promise */}
@@ -215,47 +271,66 @@ export function QuranicVerse() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 0.7 }}
               transition={{ delay: 0.5 }}
-              className="text-sm text-amber-300/50 italic max-w-2xl mx-auto"
+              className="text-xs sm:text-sm text-amber-300/50 italic max-w-2xl mx-auto"
             >
-              A divine promise: The Quran is preserved, and so is every heart
-              that holds it.
+              {verseData.reflection}
             </motion.p>
 
-            {/* Optional: Add a subtle CTA */}
-            <motion.button
-              whileHover={{ scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-              className="mt-8 px-8 py-3 rounded-full bg-gradient-to-r from-amber-900/20 to-amber-800/10 border border-amber-700/30 text-amber-300 hover:text-amber-200 hover:border-amber-500/50 transition-all duration-300 group"
-              aria-label="Learn more about this verse"
-              onClick={() => window.open("https://quran.com/15/9", "_blank")}
-            >
-              <span className="flex items-center gap-3">
-                <span className="text-sm font-semibold tracking-wide">
-                  Read Tafsir
-                </span>
-                <svg
-                  className="w-4 h-4 transform group-hover:translate-x-1 transition-transform"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
+            {/* Action Buttons */}
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4 mt-6 sm:mt-8">
+              {showTafsir && (
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="px-6 sm:px-8 py-2.5 sm:py-3 rounded-full bg-gradient-to-r from-amber-900/20 to-amber-800/10 border border-amber-700/30 text-amber-300 hover:text-amber-200 hover:border-amber-500/50 transition-all duration-300 group w-full sm:w-auto"
+                  aria-label="Read Tafsir explanation"
+                  onClick={() => window.open(verseData.url, "_blank")}
                 >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M14 5l7 7m0 0l-7 7m7-7H3"
-                  />
-                </svg>
-              </span>
-            </motion.button>
+                  <span className="flex items-center justify-center gap-2 sm:gap-3">
+                    <span className="text-xs sm:text-sm font-semibold tracking-wide">
+                      Read Tafsir
+                    </span>
+                    <svg
+                      className="w-3.5 h-3.5 sm:w-4 sm:h-4 transform group-hover:translate-x-1 transition-transform"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M14 5l7 7m0 0l-7 7m7-7H3"
+                      />
+                    </svg>
+                  </span>
+                </motion.button>
+              )}
+
+              {showCopy && (
+                <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="px-6 sm:px-8 py-2.5 sm:py-3 rounded-full bg-gradient-to-r from-amber-900/20 to-amber-800/10 border border-amber-700/30 text-amber-300 hover:text-amber-200 hover:border-amber-500/50 transition-all duration-300 group w-full sm:w-auto"
+                  aria-label="Copy verse to clipboard"
+                  onClick={copyVerse}
+                >
+                  <span className="flex items-center justify-center gap-2">
+                    <span className="text-xs sm:text-sm font-semibold tracking-wide">
+                      {copied ? "Copied! ✓" : "Copy Verse"}
+                    </span>
+                  </span>
+                </motion.button>
+              )}
+            </div>
           </div>
         </motion.div>
 
         {/* Ambient Glow - optimized for performance */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-[600px] h-[300px] bg-gradient-to-br from-amber-900/10 via-primary-700/10 to-transparent blur-[100px] -z-10 rounded-full opacity-60" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-[600px] h-[300px] bg-gradient-to-br from-amber-900/10 via-primary-700/10 to-transparent blur-[100px] -z-10 rounded-full opacity-60 pointer-events-none" />
 
-        {/* Performance-optimized floating particles */}
-        <div className="absolute inset-0 overflow-hidden -z-10 pointer-events-none">
+        {/* Performance-optimized floating particles - hidden on mobile */}
+        <div className="hidden sm:block absolute inset-0 overflow-hidden -z-10 pointer-events-none">
           {particles.map((particle) => (
             <div
               key={particle.id}
@@ -273,7 +348,6 @@ export function QuranicVerse() {
         </div>
       </div>
 
-      {/* CSS for floating animation */}
       <style jsx>{`
         @keyframes float {
           0%,
@@ -289,9 +363,19 @@ export function QuranicVerse() {
 
         /* Ensure proper Arabic font rendering */
         .quran-monumental {
-          font-family: "Amiri", "Scheherazade", "Lateef", serif;
+          font-family: "Amiri", "Scheherazade", "Lateef", "Noto Naskh Arabic", serif;
           font-weight: 400;
           text-align: center;
+          font-feature-settings: "kern" 1;
+          font-kerning: normal;
+        }
+
+        /* Responsive Arabic text */
+        @media (max-width: 640px) {
+          .quran-monumental span {
+            word-break: break-word;
+            line-height: 1.4;
+          }
         }
 
         /* High contrast mode support */
@@ -301,11 +385,29 @@ export function QuranicVerse() {
             color: CanvasText;
           }
         }
+
+        /* Reduce motion preference */
+        @media (prefers-reduced-motion: reduce) {
+          .quran-monumental span,
+          .quran-monumental div,
+          button {
+            animation: none !important;
+            transition: none !important;
+          }
+          
+          @keyframes float {
+            0%, 100% {
+              transform: translateY(0);
+            }
+            50% {
+              transform: translateY(0);
+            }
+          }
+        }
       `}</style>
     </section>
   );
 }
-
 
 
 
