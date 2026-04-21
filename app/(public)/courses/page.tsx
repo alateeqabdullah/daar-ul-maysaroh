@@ -779,16 +779,8 @@ import {
   Globe,
   GraduationCap,
   Heart,
-  Award,
   Users,
   Star,
-  Clock,
-  Calendar,
-  TrendingUp,
-  Crown,
-  RefreshCw,
-  Moon,
-  Sun,
   Shield,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -809,8 +801,8 @@ const ALL_COURSES = [
     duration: "2-3 years",
     level: "All Levels",
     format: "1-on-1",
-    basePrice: 149,
-    price: "$149",
+    basePrice: 2.25,
+    price: "$2.25+",
     rating: 4.9,
     students: 156,
     features: ["Ijazah Certification", "Daily Revision", "Progress Tracking", "Sanad Chain"],
@@ -830,8 +822,8 @@ const ALL_COURSES = [
     duration: "6 months",
     level: "Beginner to Advanced",
     format: "1-on-1",
-    basePrice: 89,
-    price: "$89",
+    basePrice: 2,
+    price: "$2+",
     rating: 4.8,
     students: 203,
     features: ["Audio Analysis", "Live Correction", "Mistake Tracking", "Certificate"],
@@ -850,8 +842,8 @@ const ALL_COURSES = [
     duration: "6-9 months",
     level: "Beginner to Intermediate",
     format: "Group (4-6)",
-    basePrice: 79,
-    price: "$79",
+    basePrice: 6,
+    price: "$6",
     rating: 4.7,
     students: 89,
     features: ["Peer Learning", "Group Practice", "Lower Cost", "Community Support"],
@@ -871,8 +863,8 @@ const ALL_COURSES = [
     duration: "1 year",
     level: "Beginner",
     format: "Group Sessions",
-    basePrice: 69,
-    price: "$69",
+    basePrice: 2,
+    price: "$2+",
     rating: 4.7,
     students: 312,
     features: ["Quranic Vocabulary", "Grammar Foundation", "Tafsir Integration", "Certificate"],
@@ -891,8 +883,8 @@ const ALL_COURSES = [
     duration: "1.5 years",
     level: "Advanced",
     format: "1-on-1",
-    basePrice: 129,
-    price: "$129",
+    basePrice: 2,
+    price: "$2+",
     rating: 4.9,
     students: 78,
     features: ["Classical Sources", "Thematic Studies", "Scholarly Mentorship", "Research Paper"],
@@ -911,8 +903,8 @@ const ALL_COURSES = [
     duration: "6-12 months",
     level: "Beginner",
     format: "1-on-1",
-    basePrice: 89,
-    price: "$89",
+    basePrice: 2,
+    price: "$2+",
     rating: 4.8,
     students: 156,
     features: ["Letter Recognition", "Fluency Practice", "Patient Instruction", "Progress Tracking"],
@@ -931,9 +923,9 @@ const ALL_COURSES = [
     subcategory: "Reading",
     duration: "6-9 months",
     level: "Beginner",
-    format: "Group (4-6)",
-    basePrice: 79,
-    price: "$79",
+    format: "Group (4-10)",
+    basePrice: 6,
+    price: "$6",
     rating: 4.8,
     students: 89,
     features: ["Interactive Games", "Reward System", "Parent Portal", "Weekly Updates"],
@@ -953,8 +945,8 @@ const ALL_COURSES = [
     duration: "6-12 months",
     level: "Beginner",
     format: "1-on-1",
-    basePrice: 79,
-    price: "$79",
+    basePrice: 7,
+    price: "$7+",
     rating: 4.9,
     students: 112,
     features: ["37 Surahs", "Meaning Explained", "Progress Badges", "Certificate"],
@@ -973,9 +965,9 @@ const ALL_COURSES = [
     subcategory: "Memorization",
     duration: "8-12 months",
     level: "Intermediate",
-    format: "Group (4-6)",
-    basePrice: 89,
-    price: "$89",
+    format: "Group (4-10)",
+    basePrice: 8,
+    price: "$8",
     rating: 4.8,
     students: 67,
     features: ["14 Surahs", "Deep Meanings", "Group Support", "Certificate"],
@@ -994,8 +986,8 @@ const ALL_COURSES = [
     duration: "Ongoing",
     level: "Advanced",
     format: "1-on-1",
-    basePrice: 99,
-    price: "$99",
+    basePrice: 9,
+    price: "$9+",
     rating: 4.9,
     students: 89,
     features: ["Structured Revision", "Weakness Identification", "Ijazah Prep", "Lifelong Preservation"],
@@ -1108,7 +1100,7 @@ export default function CoursesPage() {
         <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-12 md:mb-16">
           <Reveal>
             <div className="inline-flex items-center gap-1.5 sm:gap-2 text-primary-700 font-black text-[8px] sm:text-[10px] uppercase tracking-[0.2em] sm:tracking-[0.3em] mb-4 sm:mb-6">
-              <Sparkles className="w-3 h-3 sm:w-4 sm:h-4" /> Scholarly Curriculum 2026
+              <Sparkles className="w-3 h-3 sm:w-4 sm:h-4" /> Scholarly Curriculum {new Date().getFullYear()}
             </div>
             <h1 className="text-4xl xs:text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tighter font-heading leading-[1.1] mb-4 sm:mb-6 px-2">
               Sacred <span className="text-primary-700 italic">Pathways</span>
@@ -1125,10 +1117,10 @@ export default function CoursesPage() {
           {[
             { label: "Sacred Programs", value: ALL_COURSES.length, icon: BookOpen },
             { label: "Sanad-Based", value: "100%", icon: Shield },
-            { label: "Students Enrolled", value: "1,200+", icon: Users },
+            { label: "Students Enrolled", value: "100+", icon: Users },
             { label: "Avg Rating", value: "4.8", icon: Star },
           ].map((stat, i) => (
-            <motion.div key={i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }} className="p-2 sm:p-3 md:p-4 rounded-xl sm:rounded-2xl bg-gradient-to-br from-primary-50/50 to-indigo-50/50 dark:from-primary-950/20 dark:to-indigo-950/20 border border-primary-100 dark:border-primary-800 text-center">
+            <motion.div key={i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }} className="p-2 sm:p-3 md:p-4 rounded-xl sm:rounded-2xl bg-linear-to-br from-primary-50/50 to-indigo-50/50 dark:from-primary-950/20 dark:to-indigo-950/20 border border-primary-100 dark:border-primary-800 text-center">
               <stat.icon className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 text-primary-600 mx-auto mb-1 sm:mb-1.5 md:mb-2" />
               <div className="text-base sm:text-xl md:text-2xl lg:text-3xl font-black text-primary-600">{stat.value}</div>
               <div className="text-[8px] sm:text-[10px] md:text-xs text-muted-foreground mt-0.5 sm:mt-1">{stat.label}</div>
@@ -1263,7 +1255,7 @@ export default function CoursesPage() {
               "grid gap-3 sm:gap-4 md:gap-6 lg:gap-8",
               viewType === "grid" ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3" : "grid-cols-1"
             )}>
-              {visibleCourses.map((course, index) => (
+              {visibleCourses.map((course) => (
                 <CourseCard key={course.id} program={course} viewType={viewType} />
               ))}
             </div>
@@ -1296,7 +1288,7 @@ export default function CoursesPage() {
           <div className="bg-card rounded-xl sm:rounded-2xl border border-border hover:border-primary-300 transition-all p-6 sm:p-8 md:p-10 max-w-2xl mx-auto">
             <h3 className="text-xl sm:text-2xl font-black mb-2 sm:mb-3">Not Sure Where to Begin?</h3>
             <p className="text-sm sm:text-base text-muted-foreground mb-4 sm:mb-6 px-2">
-              Schedule a free assessment with our academic advisors. We'll help you find the perfect program for your journey.
+             {` Schedule a free assessment with our academic advisors. We'll help you find the perfect program for your journey.`}
             </p>
             <Link href="/assessment">
               <Button className="rounded-full px-6 sm:px-8 py-3 sm:py-4 font-black text-sm sm:text-base bg-primary-700 hover:bg-primary-800">
