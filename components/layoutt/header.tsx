@@ -34,109 +34,91 @@ const navigation = [
   {
     name: "Programs",
     href: "/courses",
-    dropdown: [
-      // Header Row - All Programs
-      {
-        name: "ALL PROGRAMS",
-        href: "/courses",
-        desc: "Browse our complete catalog",
-        icon: BookOpen,
-        featured: true,
-        col: "full",
-      },
-      // 1-on-1 Programs Section
-      {
-        name: "─ 1-on-1 PROGRAMS ─",
-        divider: true,
-        col: "full",
-      },
-      {
-        name: "Hifz Program",
-        href: "/courses/hifz",
-        desc: "Complete Quran memorization with Ijazah",
-        icon: BookMarked,
-        col: "left",
-      },
-      {
-        name: "Qiro'ah Program",
-        href: "/courses/qiroah",
-        desc: "Master Quran reading and recitation",
-        icon: Users,
-        col: "right",
-      },
-      {
-        name: "Tajweed Mastery",
-        href: "/courses/tajweed",
-        desc: "Scientific recitation rules",
-        icon: Mic,
-        col: "left",
-      },
-      {
-        name: "Arabic Language",
-        href: "/courses/arabic",
-        desc: "Unlock the Quranic language",
-        icon: Globe,
-        col: "right",
-      },
-      {
-        name: "Tafsir Studies",
-        href: "/courses/tafsir",
-        desc: "Deep Quranic understanding",
-        icon: BookOpen,
-        col: "right",
-      },
-      {
-        name: "Muroja'ah Program",
-        href: "/courses/murojaah",
-        desc: "Preserve & perfect your memorization",
-        icon: RefreshCw,
-        col: "left",
-      },
-      // Group Programs Section
-      {
-        name: "─ GROUP PROGRAMS ─",
-        divider: true,
-        col: "full",
-      },
-      {
-        name: "Group Qiro'ah",
-        href: "/courses/group-qiroah",
-        desc: "All Ages • Learn to read with joy",
-        icon: Users,
-        badge: "Popular",
-        col: "left",
-      },
-      {
-        name: "Group Tajweed",
-        href: "/courses/group-tajweed",
-        desc: "All Ages • Master Tajweed together",
-        icon: Mic,
-        badge: "New",
-        col: "right",
-      },
-      {
-        name: "Juz Amma Group",
-        href: "/courses/juz-amma",
-        desc: "All Ages • Memorize the last Juz",
-        icon: Star,
-        badge: "Popular",
-        col: "left",
-      },
-      {
-        name: "Juz Tabarak Group",
-        href: "/courses/juz-tabarak",
-        desc: "All Ages • Next step after Juz Amma",
-        icon: Star,
-        badge: "New",
-        col: "right",
-      },
-    ],
+    dropdown: true,
   },
   { name: "Faculty", href: "/teachers" },
   { name: "Pricing", href: "/pricing" },
   { name: "About", href: "/about" },
   { name: "Contact", href: "/contact" },
 ];
+
+// Mega menu data
+const MEGA_MENU = {
+  featured: {
+    name: "ALL PROGRAMS",
+    href: "/courses",
+    desc: "Browse our complete catalog",
+    icon: BookOpen,
+  },
+  oneOnOne: [
+    {
+      name: "Hifz Program",
+      href: "/courses/hifz",
+      icon: BookMarked,
+      desc: "Complete Quran memorization with Ijazah",
+    },
+    {
+      name: "Qiro'ah Program",
+      href: "/courses/qiroah",
+      icon: Users,
+      desc: "Master Quran reading and recitation",
+    },
+    {
+      name: "Tajweed Mastery",
+      href: "/courses/tajweed",
+      icon: Mic,
+      desc: "Scientific recitation rules",
+    },
+    {
+      name: "Arabic Language",
+      href: "/courses/arabic",
+      icon: Globe,
+      desc: "Unlock the Quranic language",
+    },
+    {
+      name: "Tafsir Studies",
+      href: "/courses/tafsir",
+      icon: BookOpen,
+      desc: "Deep Quranic understanding",
+    },
+    {
+      name: "Muroja'ah Program",
+      href: "/courses/murojaah",
+      icon: RefreshCw,
+      desc: "Preserve & perfect your memorization",
+    },
+  ],
+  groupPrograms: [
+    {
+      name: "Group Qiro'ah",
+      href: "/courses/group-qiroah",
+      icon: Users,
+      desc: "All Ages • Learn to read with joy",
+      badge: "Popular",
+    },
+    {
+      name: "Group Tajweed",
+      href: "/courses/group-tajweed",
+      icon: Mic,
+      desc: "All Ages • Master Tajweed together",
+      badge: "New",
+    },
+    {
+      name: "Juz Amma Group",
+      href: "/courses/juz-amma",
+      icon: Star,
+      desc: "All Ages • Memorize the last Juz",
+      badge: "Popular",
+    },
+    {
+      name: "Juz Tabarak Group",
+      href: "/courses/juz-tabarak",
+      icon: Star,
+      desc: "All Ages • Next step after Juz Amma",
+      badge: "New",
+    },
+  ],
+};
 
 // Throttle function for scroll performance
 function throttle<T extends (...args: unknown[]) => unknown>(
@@ -257,19 +239,17 @@ export function Header() {
           {/* --- DESKTOP NAVIGATION --- */}
           <ul className="hidden xl:flex items-center space-x-1">
             {navigation.map((item) => {
-              const isActive =
-                pathname === item.href ||
-                item.dropdown?.some(
-                  (sub) => !sub.divider && pathname === sub.href,
-                );
+              const isActive = pathname === item.href;
 
               return (
                 <li
                   key={item.name}
                   className="relative"
-                  onMouseEnter={() => setActiveDropdown(item.name)}
+                  onMouseEnter={() =>
+                    item.dropdown && setActiveDropdown(item.name)
+                  }
                   onMouseLeave={() => setActiveDropdown(null)}
-                  onFocus={() => setActiveDropdown(item.name)}
+                  onFocus={() => item.dropdown && setActiveDropdown(item.name)}
                   onBlur={(e) => {
                     if (!e.currentTarget.contains(e.relatedTarget as Node)) {
                       setActiveDropdown(null);
@@ -301,109 +281,116 @@ export function Header() {
                     )}
                   </Link>
 
-                  {/* DROPDOWN WITH GRID LAYOUT - Responsive width */}
+                  {/* MEGA MENU DROPDOWN */}
                   <AnimatePresence>
                     {item.dropdown && activeDropdown === item.name && (
                       <motion.div
                         initial={{ opacity: 0, y: 10, scale: 0.95 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                        className="absolute top-full left-0 w-[90vw] max-w-[650px] p-5 bg-white dark:bg-slate-950 border border-border/50 rounded-2xl shadow-3xl mt-2 z-50"
+                        className="absolute top-full left-1/2 -translate-x-1/2 w-[90vw] max-w-[900px] p-6 bg-white dark:bg-slate-950 border border-border/50 rounded-2xl shadow-3xl mt-2 z-50 max-h-[80vh] overflow-y-auto custom-scrollbar"
                         role="menu"
-                        aria-label={`${item.name} submenu`}
                       >
-                        {/* GRID CONTAINER */}
-                        <div className="grid grid-cols-2 gap-4">
-                          {item.dropdown.map((sub, idx) => {
-                            // Divider (full width)
-                            if (sub.divider) {
-                              return (
-                                <div key={idx} className="col-span-2 px-2 py-2">
-                                  <div className="text-[10px] font-black text-primary-700/60 uppercase tracking-[0.3em] text-center">
-                                    {sub.name}
-                                  </div>
-                                  <div className="h-px bg-linear-to-r from-transparent via-primary-700/20 to-transparent mt-1" />
+                        {/* 3-COLUMN GRID */}
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                          {/* Column 1: Featured */}
+                          <div className="space-y-4">
+                            <div className="text-[10px] font-black text-primary-700/60 uppercase tracking-[0.3em] mb-2">
+                              FEATURED
+                            </div>
+                            <Link
+                              href={MEGA_MENU.featured.href}
+                              className="block p-4 rounded-xl bg-gradient-to-br from-primary-700/5 to-primary-700/10 border border-primary-700/20 hover:border-primary-700/40 transition-all group"
+                            >
+                              <div className="flex items-center gap-3">
+                                <div className="w-10 h-10 rounded-lg bg-primary-700/20 flex items-center justify-center">
+                                  <MEGA_MENU.featured.icon className="w-5 h-5 text-primary-700" />
                                 </div>
-                              );
-                            }
-
-                            // Featured item (full width)
-                            if (sub.featured) {
-                              return (
-                                <Link
-                                  key={sub.name}
-                                  href={sub.href}
-                                  className="col-span-2 p-4 rounded-xl bg-linear-to-br from-primary-700/5 to-primary-700/10 border border-primary-700/20 hover:border-primary-700/40 transition-all group"
-                                  role="menuitem"
-                                  aria-current={
-                                    pathname === sub.href ? "page" : undefined
-                                  }
-                                >
-                                  <div className="flex items-center gap-4">
-                                    <div className="w-10 h-10 rounded-lg bg-primary-700/20 flex items-center justify-center">
-                                      {sub.icon && (
-                                        <sub.icon className="w-5 h-5 text-primary-700" />
-                                      )}
-                                    </div>
-                                    <div>
-                                      <div className="font-black text-base group-hover:text-primary-700 uppercase tracking-tight">
-                                        {sub.name}
-                                      </div>
-                                      <div className="text-xs text-muted-foreground mt-1">
-                                        {sub.desc}
-                                      </div>
-                                    </div>
-                                    <Sparkles className="w-4 h-4 text-gold ml-auto opacity-50" />
+                                <div>
+                                  <div className="font-black text-sm group-hover:text-primary-700">
+                                    {MEGA_MENU.featured.name}
                                   </div>
-                                </Link>
-                              );
-                            }
-
-                            // Regular grid items (left or right column)
-                            return (
-                              <Link
-                                key={sub.name}
-                                href={sub.href}
-                                className={cn(
-                                  "p-4 rounded-xl hover:bg-primary-50 dark:hover:bg-primary-900/20 group transition-all outline-none",
-                                  sub.col === "left"
-                                    ? "col-span-1"
-                                    : "col-span-1",
-                                )}
-                                role="menuitem"
-                                aria-current={
-                                  pathname === sub.href ? "page" : undefined
-                                }
-                              >
-                                <div className="flex items-start gap-3">
-                                  <div className="w-8 h-8 rounded-lg bg-primary-700/10 flex items-center justify-center shrink-0 group-hover:bg-primary-700/20 transition-colors">
-                                    {sub.icon && (
-                                      <sub.icon className="w-4 h-4 text-primary-700" />
-                                    )}
-                                  </div>
-                                  <div className="flex-1">
-                                    <div className="flex items-center gap-2">
-                                      <div className="font-black text-sm group-hover:text-primary-700 uppercase tracking-tight">
-                                        {sub.name}
-                                      </div>
-                                      {sub.badge && (
-                                        <span className="text-[8px] font-black px-1.5 py-0.5 rounded-full bg-gold/20 text-gold uppercase">
-                                          {sub.badge}
-                                        </span>
-                                      )}
-                                    </div>
-                                    <div className="text-[11px] text-muted-foreground mt-1 leading-relaxed">
-                                      {sub.desc}
-                                    </div>
+                                  <div className="text-xs text-muted-foreground">
+                                    {MEGA_MENU.featured.desc}
                                   </div>
                                 </div>
-                              </Link>
-                            );
-                          })}
+                                <Sparkles className="w-4 h-4 text-gold ml-auto opacity-50" />
+                              </div>
+                            </Link>
+                          </div>
+
+                          {/* Column 2: 1-on-1 Programs */}
+                          <div className="space-y-3">
+                            <div className="text-[10px] font-black text-primary-700/60 uppercase tracking-[0.3em] mb-2">
+                              1-on-1 PROGRAMS
+                            </div>
+                            <div className="space-y-1">
+                              {MEGA_MENU.oneOnOne.map((prog) => {
+                                const Icon = prog.icon;
+                                return (
+                                  <Link
+                                    key={prog.name}
+                                    href={prog.href}
+                                    className="flex items-center gap-3 p-2 rounded-lg hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-colors group"
+                                  >
+                                    <div className="w-8 h-8 rounded-lg bg-primary-700/10 flex items-center justify-center">
+                                      <Icon className="w-4 h-4 text-primary-700" />
+                                    </div>
+                                    <div className="flex-1">
+                                      <div className="font-black text-xs group-hover:text-primary-700">
+                                        {prog.name}
+                                      </div>
+                                      <div className="text-[10px] text-muted-foreground">
+                                        {prog.desc}
+                                      </div>
+                                    </div>
+                                  </Link>
+                                );
+                              })}
+                            </div>
+                          </div>
+
+                          {/* Column 3: Group Programs */}
+                          <div className="space-y-3">
+                            <div className="text-[10px] font-black text-primary-700/60 uppercase tracking-[0.3em] mb-2">
+                              GROUP PROGRAMS
+                            </div>
+                            <div className="space-y-1">
+                              {MEGA_MENU.groupPrograms.map((prog) => {
+                                const Icon = prog.icon;
+                                return (
+                                  <Link
+                                    key={prog.name}
+                                    href={prog.href}
+                                    className="flex items-center gap-3 p-2 rounded-lg hover:bg-primary-50 dark:hover:bg-primary-900/20 transition-colors group"
+                                  >
+                                    <div className="w-8 h-8 rounded-lg bg-primary-700/10 flex items-center justify-center">
+                                      <Icon className="w-4 h-4 text-primary-700" />
+                                    </div>
+                                    <div className="flex-1">
+                                      <div className="flex items-center gap-2">
+                                        <div className="font-black text-xs group-hover:text-primary-700">
+                                          {prog.name}
+                                        </div>
+                                        {prog.badge && (
+                                          <span className="text-[8px] font-black px-1.5 py-0.5 rounded-full bg-gold/20 text-gold">
+                                            {prog.badge}
+                                          </span>
+                                        )}
+                                      </div>
+                                      <div className="text-[10px] text-muted-foreground">
+                                        {prog.desc}
+                                      </div>
+                                    </div>
+                                  </Link>
+                                );
+                              })}
+                            </div>
+                          </div>
                         </div>
 
                         {/* Footer */}
-                        <div className="mt-4 pt-4 border-t border-border/50 flex justify-between items-center">
+                        <div className="mt-6 pt-4 border-t border-border/50 flex justify-between items-center">
                           <p className="text-[10px] text-muted-foreground">
                             <span className="font-black text-primary-700">
                               1-on-1
@@ -418,7 +405,7 @@ export function Header() {
                             href="/courses"
                             className="text-[10px] font-black text-primary-700 hover:underline flex items-center gap-1"
                           >
-                            VIEW ALL{" "}
+                            VIEW ALL PROGRAMS
                             <ChevronDown className="w-3 h-3 -rotate-90" />
                           </Link>
                         </div>
@@ -588,111 +575,103 @@ export function Header() {
                             />
                           </button>
 
-                          {/* Dropdown Content - Dynamic */}
+                          {/* Dropdown Content */}
                           <AnimatePresence>
                             {mobileDropdownOpen === item.name && (
                               <motion.div
                                 initial={{ height: 0, opacity: 0 }}
                                 animate={{ height: "auto", opacity: 1 }}
                                 exit={{ height: 0, opacity: 0 }}
-                                className="overflow-hidden space-y-3 pl-2"
+                                className="overflow-hidden space-y-4 pl-2"
                               >
-                                {/* Featured All Programs */}
-                                {item.dropdown?.find(
-                                  (d: any) => d.featured,
-                                ) && (
-                                  <Link
-                                    href="/courses"
-                                    onClick={() => setMobileMenuOpen(false)}
-                                    className="block p-4 rounded-xl bg-primary-700/10 border border-primary-700/20 mb-3"
-                                  >
-                                    <div className="font-black text-base">
-                                      ALL PROGRAMS
-                                    </div>
-                                    <div className="text-xs text-muted-foreground">
-                                      Browse complete catalog
-                                    </div>
-                                  </Link>
-                                )}
+                                {/* Featured */}
+                                <Link
+                                  href={MEGA_MENU.featured.href}
+                                  onClick={() => setMobileMenuOpen(false)}
+                                  className="block p-4 rounded-xl bg-primary-700/10 border border-primary-700/20"
+                                >
+                                  <div className="font-black text-sm">
+                                    {MEGA_MENU.featured.name}
+                                  </div>
+                                  <div className="text-xs text-muted-foreground">
+                                    {MEGA_MENU.featured.desc}
+                                  </div>
+                                </Link>
 
-                                {/* Dynamically render sections */}
-                                {(() => {
-                                  const sections: any[] = [];
-                                  let currentSection: any[] = [];
-
-                                  item.dropdown?.forEach(
-                                    (sub: any, idx: number) => {
-                                      if (sub.divider) {
-                                        if (currentSection.length > 0) {
-                                          sections.push([...currentSection]);
-                                          currentSection = [];
-                                        }
-                                        sections.push({
-                                          type: "divider",
-                                          name: sub.name,
-                                        });
-                                      } else if (!sub.featured) {
-                                        currentSection.push(sub);
-                                      }
-                                    },
-                                  );
-                                  if (currentSection.length > 0)
-                                    sections.push(currentSection);
-
-                                  return sections.map((section, secIdx) => {
-                                    if (section.type === "divider") {
+                                {/* 1-on-1 Programs */}
+                                <div>
+                                  <div className="text-xs font-black text-primary-700/60 uppercase tracking-wider mb-2">
+                                    1-on-1 PROGRAMS
+                                  </div>
+                                  <div className="grid grid-cols-1 gap-2">
+                                    {MEGA_MENU.oneOnOne.map((prog) => {
+                                      const Icon = prog.icon;
                                       return (
-                                        <div
-                                          key={secIdx}
-                                          className="text-xs font-black text-primary-700/60 uppercase tracking-wider mt-4 mb-2"
+                                        <Link
+                                          key={prog.name}
+                                          href={prog.href}
+                                          onClick={() =>
+                                            setMobileMenuOpen(false)
+                                          }
+                                          className="flex items-start gap-3 p-3 rounded-xl bg-muted/30 hover:bg-primary-50 transition-colors"
                                         >
-                                          {section.name
-                                            .replace(/─/g, "")
-                                            .trim()}
-                                        </div>
+                                          <div className="w-8 h-8 rounded-lg bg-primary-700/10 flex items-center justify-center">
+                                            <Icon className="w-4 h-4 text-primary-700" />
+                                          </div>
+                                          <div>
+                                            <div className="font-black text-sm">
+                                              {prog.name}
+                                            </div>
+                                            <div className="text-xs text-muted-foreground">
+                                              {prog.desc}
+                                            </div>
+                                          </div>
+                                        </Link>
                                       );
-                                    }
-                                    return (
-                                      <div
-                                        key={secIdx}
-                                        className="grid grid-cols-1 gap-2"
-                                      >
-                                        {section.map((prog: any) => {
-                                          const Icon = prog.icon;
-                                          return (
-                                            <Link
-                                              key={prog.name}
-                                              href={prog.href ?? "#"}
-                                              onClick={() =>
-                                                setMobileMenuOpen(false)
-                                              }
-                                              className="flex items-start gap-3 p-3 rounded-xl bg-muted/30 hover:bg-primary-50 transition-colors"
-                                            >
-                                              <div className="w-8 h-8 rounded-lg bg-primary-700/10 flex items-center justify-center">
-                                                <Icon className="w-4 h-4 text-primary-700" />
+                                    })}
+                                  </div>
+                                </div>
+
+                                {/* Group Programs */}
+                                <div>
+                                  <div className="text-xs font-black text-primary-700/60 uppercase tracking-wider mb-2">
+                                    GROUP PROGRAMS
+                                  </div>
+                                  <div className="grid grid-cols-1 gap-2">
+                                    {MEGA_MENU.groupPrograms.map((prog) => {
+                                      const Icon = prog.icon;
+                                      return (
+                                        <Link
+                                          key={prog.name}
+                                          href={prog.href}
+                                          onClick={() =>
+                                            setMobileMenuOpen(false)
+                                          }
+                                          className="flex items-start gap-3 p-3 rounded-xl bg-muted/30 hover:bg-primary-50 transition-colors"
+                                        >
+                                          <div className="w-8 h-8 rounded-lg bg-primary-700/10 flex items-center justify-center">
+                                            <Icon className="w-4 h-4 text-primary-700" />
+                                          </div>
+                                          <div>
+                                            <div className="flex items-center gap-2">
+                                              <div className="font-black text-sm">
+                                                {prog.name}
                                               </div>
-                                              <div className="flex-1">
-                                                <div className="flex items-center gap-2 flex-wrap">
-                                                  <div className="font-black text-sm">
-                                                    {prog.name}
-                                                  </div>
-                                                  {prog.badge && (
-                                                    <span className="text-[8px] font-black px-1.5 py-0.5 rounded-full bg-gold/20 text-gold">
-                                                      {prog.badge}
-                                                    </span>
-                                                  )}
-                                                </div>
-                                                <div className="text-xs text-muted-foreground">
-                                                  {prog.desc}
-                                                </div>
-                                              </div>
-                                            </Link>
-                                          );
-                                        })}
-                                      </div>
-                                    );
-                                  });
-                                })()}
+                                              {prog.badge && (
+                                                <span className="text-[8px] font-black px-1.5 py-0.5 rounded-full bg-gold/20 text-gold">
+                                                  {prog.badge}
+                                                </span>
+                                              )}
+                                            </div>
+                                            <div className="text-xs text-muted-foreground">
+                                              {prog.desc}
+                                            </div>
+                                          </div>
+                                        </Link>
+                                      );
+                                    })}
+                                  </div>
+                                </div>
                               </motion.div>
                             )}
                           </AnimatePresence>
