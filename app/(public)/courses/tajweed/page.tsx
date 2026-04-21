@@ -537,6 +537,7 @@ import {
   Crown,
   Gem,
   Headphones,
+  Heart,
   MessageCircle,
   Mic,
   Quote,
