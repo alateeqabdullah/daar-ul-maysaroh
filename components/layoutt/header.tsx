@@ -19,6 +19,9 @@ import {
   Mic,
   Globe,
   Star,
+  RefreshCw,
+  Crown,
+  GraduationCap,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -57,7 +60,7 @@ const navigation = [
       {
         name: "Qiro'ah Program",
         href: "/courses/qiroah",
-        desc: "Master Qiro'ah Reading and Recition",
+        desc: "Master Quran reading and recitation",
         icon: Users,
         col: "right",
       },
@@ -82,6 +85,13 @@ const navigation = [
         icon: BookOpen,
         col: "right",
       },
+      {
+        name: "Muroja'ah Program",
+        href: "/courses/murojaah",
+        desc: "Preserve & perfect your memorization",
+        icon: RefreshCw,
+        col: "left",
+      },
       // Group Programs Section
       {
         name: "─ GROUP PROGRAMS ─",
@@ -91,15 +101,31 @@ const navigation = [
       {
         name: "Group Qiro'ah",
         href: "/courses/group-qiroah",
-        desc: "All Ages• Learn to read with joy",
+        desc: "All Ages • Learn to read with joy",
         icon: Users,
         badge: "Popular",
         col: "left",
       },
       {
+        name: "Group Tajweed",
+        href: "/courses/group-tajweed",
+        desc: "All Ages • Master Tajweed together",
+        icon: Mic,
+        badge: "New",
+        col: "right",
+      },
+      {
         name: "Juz Amma Group",
         href: "/courses/juz-amma",
-        desc: "All Ages• Memorize the last Juz",
+        desc: "All Ages • Memorize the last Juz",
+        icon: Star,
+        badge: "Popular",
+        col: "left",
+      },
+      {
+        name: "Juz Tabarak Group",
+        href: "/courses/juz-tabarak",
+        desc: "All Ages • Next step after Juz Amma",
         icon: Star,
         badge: "New",
         col: "right",
@@ -198,16 +224,16 @@ export function Header() {
         className={cn(
           "fixed top-0 left-0 right-0 z-50 w-full transition-all duration-500 flex items-center",
           isScrolled
-            ? "glass-surface shadow-xl py-2 h-20 bg-background/80 backdrop-blur-lg supports-backdrop-filter:bg-background/60"
-            : "bg-transparent py-4 h-24",
+            ? "glass-surface shadow-xl py-1 sm:py-2 h-14 sm:h-20 bg-background/80 backdrop-blur-lg supports-backdrop-filter:bg-background/60"
+            : "bg-transparent py-2 sm:py-4 h-16 sm:h-24",
           "pt-safe",
         )}
       >
-        <nav className="container mx-auto px-4 md:px-6 flex items-center justify-between">
-          {/* --- LOGO SECTION --- */}
+        <nav className="container mx-auto px-3 sm:px-4 md:px-6 flex items-center justify-between">
+          {/* --- LOGO SECTION - Mobile Optimized --- */}
           <Link
             href="/"
-            className="flex items-center space-x-3 md:space-x-4 relative z-60 group outline-none min-h-11 min-w-11"
+            className="flex items-center space-x-2 sm:space-x-3 md:space-x-4 relative z-60 group outline-none min-h-10 sm:min-h-11 min-w-10 sm:min-w-11"
             onClick={() => setMobileMenuOpen(false)}
             aria-label="AL-MAYSAROH Institute - Home"
           >
@@ -216,20 +242,20 @@ export function Header() {
               width={100}
               height={100}
               alt="Al-Maysaroh Institute Logo"
-              className="w-10 h-10 md:w-12 md:h-12 bg-primary-700 rounded-2xl flex items-center justify-center shadow-2xl group-hover:rotate-6 group-focus-visible:rotate-6 transition-transform"
+              className="w-7 h-7 sm:w-10 sm:h-10 md:w-12 md:h-12 bg-primary-700 rounded-xl sm:rounded-2xl flex items-center justify-center shadow-2xl group-hover:rotate-6 group-focus-visible:rotate-6 transition-transform"
             />
             <div className="hidden lg:flex flex-col">
-              <h1 className="text-lg md:text-xl lg:text-2xl font-black tracking-tighter leading-none">
+              <h1 className="text-base sm:text-lg md:text-xl lg:text-2xl font-black tracking-tighter leading-none">
                 AL-MAYSAROH
               </h1>
-              <p className="text-[8px] md:text-[10px] text-primary-700 font-bold tracking-[0.3em] md:tracking-[0.4em] uppercase">
+              <p className="text-[7px] sm:text-[8px] md:text-[10px] text-primary-700 font-bold tracking-[0.2em] sm:tracking-[0.3em] md:tracking-[0.4em] uppercase">
                 Institute.
               </p>
             </div>
           </Link>
 
-          {/* --- DESKTOP NAVIGATION --- */}
-          <ul className="hidden xl:flex items-center space-x-1">
+          {/* --- DESKTOP NAVIGATION - Changed from xl to lg --- */}
+          <ul className="hidden lg:flex items-center space-x-0.5 xl:space-x-1">
             {navigation.map((item) => {
               const isActive =
                 pathname === item.href ||
@@ -256,7 +282,7 @@ export function Header() {
                     aria-haspopup={item.dropdown ? "true" : "false"}
                     aria-current={isActive ? "page" : undefined}
                     className={cn(
-                      "px-4 py-3 text-[13px] font-black flex items-center gap-1 transition-all uppercase tracking-wider outline-none min-h-11",
+                      "px-2 xl:px-4 py-2 xl:py-3 text-[11px] xl:text-[13px] font-black flex items-center gap-0.5 xl:gap-1 transition-all uppercase tracking-wider outline-none min-h-10 xl:min-h-11",
                       "focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 focus-visible:outline-none",
                       activeDropdown === item.name || isActive
                         ? "text-primary-700"
@@ -267,7 +293,7 @@ export function Header() {
                     {item.dropdown && (
                       <ChevronDown
                         className={cn(
-                          "w-3 h-3 md:w-4 md:h-4 opacity-50 transition-transform",
+                          "w-2.5 h-2.5 sm:w-3 sm:h-3 md:w-4 md:h-4 opacity-50 transition-transform",
                           activeDropdown === item.name && "rotate-180",
                         )}
                         aria-hidden="true"
@@ -275,25 +301,28 @@ export function Header() {
                     )}
                   </Link>
 
-                  {/* DROPDOWN WITH GRID LAYOUT */}
+                  {/* DROPDOWN - Responsive width */}
                   <AnimatePresence>
                     {item.dropdown && activeDropdown === item.name && (
                       <motion.div
                         initial={{ opacity: 0, y: 10, scale: 0.95 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                        className="absolute top-full left-0 w-[650px] p-5 bg-white dark:bg-slate-950 border border-border/50 rounded-2xl shadow-3xl mt-2 z-50"
+                        className="absolute top-full left-0 w-[85vw] max-w-[550px] lg:max-w-[600px] xl:max-w-[650px] p-4 sm:p-5 bg-white dark:bg-slate-950 border border-border/50 rounded-xl sm:rounded-2xl shadow-3xl mt-2 z-50"
                         role="menu"
                         aria-label={`${item.name} submenu`}
                       >
                         {/* GRID CONTAINER */}
-                        <div className="grid grid-cols-2 gap-4">
+                        <div className="grid grid-cols-2 gap-3 sm:gap-4">
                           {item.dropdown.map((sub, idx) => {
                             // Divider (full width)
                             if (sub.divider) {
                               return (
-                                <div key={idx} className="col-span-2 px-2 py-2">
-                                  <div className="text-[10px] font-black text-primary-700/60 uppercase tracking-[0.3em] text-center">
+                                <div
+                                  key={idx}
+                                  className="col-span-2 px-1 sm:px-2 py-1 sm:py-2"
+                                >
+                                  <div className="text-[9px] sm:text-[10px] font-black text-primary-700/60 uppercase tracking-[0.2em] sm:tracking-[0.3em] text-center">
                                     {sub.name}
                                   </div>
                                   <div className="h-px bg-linear-to-r from-transparent via-primary-700/20 to-transparent mt-1" />
@@ -307,37 +336,39 @@ export function Header() {
                                 <Link
                                   key={sub.name}
                                   href={sub.href}
-                                  className="col-span-2 p-4 rounded-xl bg-linear-to-br from-primary-700/5 to-primary-700/10 border border-primary-700/20 hover:border-primary-700/40 transition-all group"
+                                  className="col-span-2 p-3 sm:p-4 rounded-lg sm:rounded-xl bg-linear-to-br from-primary-700/5 to-primary-700/10 border border-primary-700/20 hover:border-primary-700/40 transition-all group"
                                   role="menuitem"
                                   aria-current={
                                     pathname === sub.href ? "page" : undefined
                                   }
                                 >
-                                  <div className="flex items-center gap-4">
-                                    <div className="w-10 h-10 rounded-lg bg-primary-700/20 flex items-center justify-center">
-                                      {sub.icon && <sub.icon className="w-5 h-5 text-primary-700" />}
+                                  <div className="flex items-center gap-3 sm:gap-4">
+                                    <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-primary-700/20 flex items-center justify-center">
+                                      {sub.icon && (
+                                        <sub.icon className="w-4 h-4 sm:w-5 sm:h-5 text-primary-700" />
+                                      )}
                                     </div>
                                     <div>
-                                      <div className="font-black text-base group-hover:text-primary-700 uppercase tracking-tight">
+                                      <div className="font-black text-sm sm:text-base group-hover:text-primary-700 uppercase tracking-tight">
                                         {sub.name}
                                       </div>
-                                      <div className="text-xs text-muted-foreground mt-1">
+                                      <div className="text-[10px] sm:text-xs text-muted-foreground mt-0.5 sm:mt-1">
                                         {sub.desc}
                                       </div>
                                     </div>
-                                    <Sparkles className="w-4 h-4 text-gold ml-auto opacity-50" />
+                                    <Sparkles className="w-3 h-3 sm:w-4 sm:h-4 text-gold ml-auto opacity-50" />
                                   </div>
                                 </Link>
                               );
                             }
 
-                            // Regular grid items (left or right column)
+                            // Regular grid items
                             return (
                               <Link
                                 key={sub.name}
                                 href={sub.href}
                                 className={cn(
-                                  "p-4 rounded-xl hover:bg-primary-50 dark:hover:bg-primary-900/20 group transition-all outline-none",
+                                  "p-2 sm:p-4 rounded-lg sm:rounded-xl hover:bg-primary-50 dark:hover:bg-primary-900/20 group transition-all outline-none",
                                   sub.col === "left"
                                     ? "col-span-1"
                                     : "col-span-1",
@@ -347,22 +378,24 @@ export function Header() {
                                   pathname === sub.href ? "page" : undefined
                                 }
                               >
-                                <div className="flex items-start gap-3">
-                                  <div className="w-8 h-8 rounded-lg bg-primary-700/10 flex items-center justify-center shrink-0 group-hover:bg-primary-700/20 transition-colors">
-                                    {sub.icon && <sub.icon className="w-4 h-4 text-primary-700" />}
+                                <div className="flex items-start gap-2 sm:gap-3">
+                                  <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-lg bg-primary-700/10 flex items-center justify-center shrink-0 group-hover:bg-primary-700/20 transition-colors">
+                                    {sub.icon && (
+                                      <sub.icon className="w-3 h-3 sm:w-4 sm:h-4 text-primary-700" />
+                                    )}
                                   </div>
-                                  <div className="flex-1">
-                                    <div className="flex items-center gap-2">
-                                      <div className="font-black text-sm group-hover:text-primary-700 uppercase tracking-tight">
+                                  <div className="flex-1 min-w-0">
+                                    <div className="flex items-center gap-1 sm:gap-2 flex-wrap">
+                                      <div className="font-black text-[10px] sm:text-sm group-hover:text-primary-700 uppercase tracking-tight">
                                         {sub.name}
                                       </div>
                                       {sub.badge && (
-                                        <span className="text-[8px] font-black px-1.5 py-0.5 rounded-full bg-gold/20 text-gold uppercase">
+                                        <span className="text-[7px] sm:text-[8px] font-black px-1 sm:px-1.5 py-0.5 rounded-full bg-gold/20 text-gold uppercase">
                                           {sub.badge}
                                         </span>
                                       )}
                                     </div>
-                                    <div className="text-[11px] text-muted-foreground mt-1 leading-relaxed">
+                                    <div className="text-[9px] sm:text-[11px] text-muted-foreground mt-0.5 sm:mt-1 leading-relaxed">
                                       {sub.desc}
                                     </div>
                                   </div>
@@ -373,8 +406,8 @@ export function Header() {
                         </div>
 
                         {/* Footer */}
-                        <div className="mt-4 pt-4 border-t border-border/50 flex justify-between items-center">
-                          <p className="text-[10px] text-muted-foreground">
+                        <div className="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-border/50 flex justify-between items-center">
+                          <p className="text-[8px] sm:text-[10px] text-muted-foreground">
                             <span className="font-black text-primary-700">
                               1-on-1
                             </span>{" "}
@@ -386,10 +419,10 @@ export function Header() {
                           </p>
                           <Link
                             href="/courses"
-                            className="text-[10px] font-black text-primary-700 hover:underline flex items-center gap-1"
+                            className="text-[8px] sm:text-[10px] font-black text-primary-700 hover:underline flex items-center gap-1"
                           >
                             VIEW ALL{" "}
-                            <ChevronDown className="w-3 h-3 -rotate-90" />
+                            <ChevronDown className="w-2.5 h-2.5 sm:w-3 sm:h-3 -rotate-90" />
                           </Link>
                         </div>
                       </motion.div>
@@ -400,32 +433,35 @@ export function Header() {
             })}
           </ul>
 
-          {/* --- COMMAND ACTIONS --- */}
-          <div className="flex items-center space-x-2 md:space-x-3 lg:space-x-4 relative z-60">
+          {/* --- COMMAND ACTIONS - Mobile Optimized --- */}
+          <div className="flex items-center space-x-1.5 sm:space-x-2 md:space-x-3 lg:space-x-4 relative z-60">
             {/* Theme Toggle */}
             <Button
               variant="ghost"
               size="icon"
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-              className="rounded-full bg-muted/20 hover:bg-primary-50 dark:hover:bg-primary-950/40 w-10 h-10 md:w-11 md:h-11 touch-target-lg"
+              className="rounded-full bg-muted/20 hover:bg-primary-50 dark:hover:bg-primary-950/40 w-8 h-8 sm:w-10 sm:h-10 md:w-11 md:h-11 touch-target-lg"
               aria-label="Toggle theme"
               disabled={!mounted}
             >
               {!mounted ? (
-                <div className="w-5 h-5 rounded-full bg-muted-foreground/20 animate-pulse" />
+                <div className="w-4 h-4 sm:w-5 sm:h-5 rounded-full bg-muted-foreground/20 animate-pulse" />
               ) : theme === "dark" ? (
-                <Sun className="h-5 w-5" aria-hidden="true" />
+                <Sun className="h-4 w-4 sm:h-5 sm:w-5" aria-hidden="true" />
               ) : (
-                <Moon className="h-5 w-5" aria-hidden="true" />
+                <Moon className="h-4 w-4 sm:h-5 sm:w-5" aria-hidden="true" />
               )}
             </Button>
 
-            <div className="hidden md:flex items-center gap-2 lg:gap-3">
+            <div className="hidden md:flex items-center gap-1.5 lg:gap-3">
               {session ? (
                 <Link href="/dashboard">
-                  <Button className="rounded-xl font-black px-5 lg:px-6 bg-primary-700 hover:bg-primary-800 text-white shadow-lg relative overflow-hidden group min-h-11">
-                    <span className="relative z-10 flex items-center gap-2 text-[11px] tracking-widest">
-                      <LayoutDashboard className="w-4 h-4" aria-hidden="true" />
+                  <Button className="rounded-xl font-black px-3 lg:px-5 xl:px-6 py-2 sm:py-2.5 bg-primary-700 hover:bg-primary-800 text-white shadow-lg relative overflow-hidden group min-h-10 sm:min-h-11 text-[9px] sm:text-[10px] lg:text-[11px] tracking-widest">
+                    <span className="relative z-10 flex items-center gap-1.5 sm:gap-2">
+                      <LayoutDashboard
+                        className="w-3 h-3 sm:w-4 sm:h-4"
+                        aria-hidden="true"
+                      />
                       DASHBOARD
                     </span>
                     <motion.div
@@ -444,13 +480,13 @@ export function Header() {
                   <Link href="/login">
                     <Button
                       variant="ghost"
-                      className="font-black text-[11px] tracking-widest uppercase px-4 min-h-11"
+                      className="font-black text-[9px] sm:text-[10px] lg:text-[11px] tracking-widest uppercase px-2 sm:px-3 lg:px-4 min-h-10 sm:min-h-11"
                     >
                       LOGIN
                     </Button>
                   </Link>
                   <Link href="/register">
-                    <Button className="rounded-xl font-black px-6 lg:px-8 bg-primary-700 hover:bg-primary-800 text-white shadow-lg text-[11px] tracking-widest relative overflow-hidden group min-h-11">
+                    <Button className="rounded-xl font-black px-3 sm:px-5 lg:px-6 xl:px-8 py-2 sm:py-2.5 bg-primary-700 hover:bg-primary-800 text-white shadow-lg text-[9px] sm:text-[10px] lg:text-[11px] tracking-widest relative overflow-hidden group min-h-10 sm:min-h-11">
                       <span className="relative z-10">REGISTER</span>
                       <motion.div
                         className="absolute inset-0 bg-linear-to-r from-transparent via-white/20 to-transparent -skew-x-12"
@@ -467,27 +503,33 @@ export function Header() {
               )}
             </div>
 
-            {/* Mobile Menu Toggle */}
+            {/* Mobile Menu Toggle - Better size for mobile */}
             <Button
               variant="ghost"
               size="icon"
-              className="xl:hidden rounded-xl bg-primary-700/10 text-primary-700 w-11 h-11 border border-primary-700/20 touch-target-lg"
+              className="lg:hidden rounded-xl bg-primary-700/10 text-primary-700 w-8 h-8 sm:w-10 sm:h-10 md:w-11 md:h-11 border border-primary-700/20 touch-target-lg"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               aria-expanded={mobileMenuOpen}
               aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
               aria-controls="mobile-navigation-drawer"
             >
               {mobileMenuOpen ? (
-                <X className="h-5 w-5 md:h-6 md:w-6" aria-hidden="true" />
+                <X
+                  className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6"
+                  aria-hidden="true"
+                />
               ) : (
-                <Menu className="h-5 w-5 md:h-6 md:w-6" aria-hidden="true" />
+                <Menu
+                  className="h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6"
+                  aria-hidden="true"
+                />
               )}
             </Button>
           </div>
         </nav>
       </header>
 
-      {/* --- MOBILE DRAWER (FIXED: Now togglable) --- */}
+      {/* --- MOBILE DRAWER - Optimized width --- */}
       <AnimatePresence>
         {mobileMenuOpen && (
           <>
@@ -496,7 +538,7 @@ export function Header() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               onClick={() => setMobileMenuOpen(false)}
-              className="fixed inset-0 bg-black/60 backdrop-blur-md z-90 xl:hidden"
+              className="fixed inset-0 bg-black/60 backdrop-blur-md z-90 lg:hidden"
               aria-hidden="true"
             />
 
@@ -505,40 +547,40 @@ export function Header() {
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className="fixed inset-y-0 right-0 z-100 w-full max-w-full sm:max-w-sm bg-background shadow-3xl xl:hidden flex flex-col p-4 sm:p-6 md:p-8 pt-24 sm:pt-28 md:pt-32 min-h-dvh overflow-y-auto"
+              className="fixed inset-y-0 right-0 z-100 w-[85vw] max-w-[85vw] sm:max-w-sm md:max-w-md bg-background shadow-3xl lg:hidden flex flex-col p-3 sm:p-4 md:p-6 lg:p-8 pt-20 sm:pt-24 md:pt-28 lg:pt-32 min-h-dvh overflow-y-auto"
               style={{
-                paddingBottom: "calc(2rem + env(safe-area-inset-bottom))",
+                paddingBottom: "calc(1.5rem + env(safe-area-inset-bottom))",
               }}
               id="mobile-navigation-drawer"
               role="dialog"
               aria-modal="true"
               aria-label="Mobile navigation menu"
             >
-              {/* Close button */}
+              {/* Close button - Better positioned */}
               <button
                 onClick={() => setMobileMenuOpen(false)}
-                className="absolute top-6 right-4 sm:right-6 p-2 rounded-full bg-muted/50 hover:bg-muted touch-target-lg"
+                className="absolute top-4 right-3 sm:top-5 sm:right-4 md:top-6 md:right-6 p-2 rounded-full bg-muted/50 hover:bg-muted touch-target-lg"
                 aria-label="Close menu"
               >
-                <X className="h-5 w-5" />
+                <X className="h-4 w-4 sm:h-5 sm:w-5" />
               </button>
 
               <div className="flex-1 overflow-y-auto hide-scrollbar">
                 <nav
-                  className="flex flex-col space-y-4"
+                  className="flex flex-col space-y-3 sm:space-y-4"
                   aria-label="Mobile navigation"
                 >
                   {navigation.map((item) => (
                     <div
                       key={item.name}
-                      className="border-b border-border/50 pb-4"
+                      className="border-b border-border/50 pb-3 sm:pb-4"
                     >
                       {item.dropdown ? (
-                        <div className="space-y-3">
+                        <div className="space-y-2 sm:space-y-3">
                           {/* Dropdown Toggle Button */}
                           <button
                             onClick={() => toggleMobileDropdown(item.name)}
-                            className="flex items-center justify-between w-full text-lg font-black uppercase tracking-tighter px-3 py-2"
+                            className="flex items-center justify-between w-full text-base sm:text-lg font-black uppercase tracking-tighter px-2 sm:px-3 py-1.5 sm:py-2 touch-target"
                           >
                             <span
                               className={
@@ -551,7 +593,7 @@ export function Header() {
                             </span>
                             <ChevronDown
                               className={cn(
-                                "w-5 h-5 transition-transform duration-300",
+                                "w-4 h-4 sm:w-5 sm:h-5 transition-transform duration-300",
                                 mobileDropdownOpen === item.name &&
                                   "rotate-180",
                               )}
@@ -565,107 +607,104 @@ export function Header() {
                                 initial={{ height: 0, opacity: 0 }}
                                 animate={{ height: "auto", opacity: 1 }}
                                 exit={{ height: 0, opacity: 0 }}
-                                className="overflow-hidden space-y-3 pl-2"
+                                className="overflow-hidden space-y-2 sm:space-y-3 pl-1 sm:pl-2"
                               >
                                 {/* Featured All Programs */}
-                                {item.dropdown.find((d) => d.featured) && (
+                                {item.dropdown?.find(
+                                  (d: any) => d.featured,
+                                ) && (
                                   <Link
                                     href="/courses"
                                     onClick={() => setMobileMenuOpen(false)}
-                                    className="block p-4 rounded-xl bg-primary-700/10 border border-primary-700/20 mb-3"
+                                    className="block p-3 sm:p-4 rounded-lg sm:rounded-xl bg-primary-700/10 border border-primary-700/20 mb-2 sm:mb-3"
                                   >
-                                    <div className="font-black text-base">
+                                    <div className="font-black text-sm sm:text-base">
                                       ALL PROGRAMS
                                     </div>
-                                    <div className="text-xs text-muted-foreground">
+                                    <div className="text-[10px] sm:text-xs text-muted-foreground">
                                       Browse complete catalog
                                     </div>
                                   </Link>
                                 )}
 
-                                {/* 1-on-1 Programs */}
-                                <div className="text-xs font-black text-primary-700/60 uppercase tracking-wider mt-4 mb-2">
-                                  1-on-1 PROGRAMS
-                                </div>
-                                <div className="grid grid-cols-1 gap-2">
-                                  {[
-                                    "Hifz Program",
-                                    "Tajweed Mastery",
-                                    "Arabic Language",
-                                    "Tafsir Studies",
-                                  ].map((name) => {
-                                    const prog = item.dropdown?.find(
-                                      (d) => d.name === name,
-                                    );
-                                    if (!prog || !prog.icon) return null;
-                                    const Icon = prog.icon;
-                                    return (
-                                      <Link
-                                        key={prog.name}
-                                        href={prog.href ?? "#"}
-                                        onClick={() => setMobileMenuOpen(false)}
-                                        className="flex items-start gap-3 p-3 rounded-xl bg-muted/30 hover:bg-primary-50 transition-colors"
-                                      >
-                                        <div className="w-8 h-8 rounded-lg bg-primary-700/10 flex items-center justify-center">
-                                          <Icon className="w-4 h-4 text-primary-700" />
-                                        </div>
-                                        <div>
-                                          <div className="font-black text-sm">
-                                            {prog.name}
-                                          </div>
-                                          <div className="text-xs text-muted-foreground">
-                                            {prog.desc}
-                                          </div>
-                                        </div>
-                                      </Link>
-                                    );
-                                  })}
-                                </div>
+                                {/* Dynamic sections */}
+                                {(() => {
+                                  const sections: any[] = [];
+                                  let currentSection: any[] = [];
 
-                                {/* Group Programs */}
-                                <div className="text-xs font-black text-primary-700/60 uppercase tracking-wider mt-6 mb-2">
-                                  GROUP PROGRAMS
-                                </div>
-                                <div className="grid grid-cols-1 gap-2">
-                                  {["Group Qiro'ah", "Juz Amma Group"].map(
-                                    (name) => {
-                                      const prog = item.dropdown?.find(
-                                        (d) => d.name === name,
-                                      );
-                                      if (!prog || !prog.icon) return null;
-                                      const Icon = prog.icon;
-                                      return (
-                                        <Link
-                                          key={prog.name}
-                                          href={prog.href ?? "#"}
-                                          onClick={() =>
-                                            setMobileMenuOpen(false)
-                                          }
-                                          className="flex items-start gap-3 p-3 rounded-xl bg-muted/30 hover:bg-primary-50 transition-colors"
-                                        >
-                                          <div className="w-8 h-8 rounded-lg bg-primary-700/10 flex items-center justify-center">
-                                            <Icon className="w-4 h-4 text-primary-700" />
-                                          </div>
-                                          <div>
-                                            <div className="flex items-center gap-2">
-                                              <div className="font-black text-sm">
-                                                {prog.name}
-                                              </div>
-                                              {prog.badge && (
-                                                <span className="text-[8px] font-black px-1.5 py-0.5 rounded-full bg-gold/20 text-gold">
-                                                  {prog.badge}
-                                                </span>
-                                              )}
-                                            </div>
-                                            <div className="text-xs text-muted-foreground">
-                                              {prog.desc}
-                                            </div>
-                                          </div>
-                                        </Link>
-                                      );
+                                  item.dropdown?.forEach(
+                                    (sub: any, idx: number) => {
+                                      if (sub.divider) {
+                                        if (currentSection.length > 0) {
+                                          sections.push([...currentSection]);
+                                          currentSection = [];
+                                        }
+                                        sections.push({
+                                          type: "divider",
+                                          name: sub.name,
+                                        });
+                                      } else if (!sub.featured) {
+                                        currentSection.push(sub);
+                                      }
                                     },
-                                  )}
-                                </div>
+                                  );
+                                  if (currentSection.length > 0)
+                                    sections.push(currentSection);
+
+                                  return sections.map((section, secIdx) => {
+                                    if (section.type === "divider") {
+                                      return (
+                                        <div
+                                          key={secIdx}
+                                          className="text-[9px] sm:text-xs font-black text-primary-700/60 uppercase tracking-wider mt-3 sm:mt-4 mb-1 sm:mb-2"
+                                        >
+                                          {section.name
+                                            .replace(/─/g, "")
+                                            .trim()}
+                                        </div>
+                                      );
+                                    }
+                                    return (
+                                      <div
+                                        key={secIdx}
+                                        className="grid grid-cols-1 gap-1.5 sm:gap-2"
+                                      >
+                                        {section.map((prog: any) => {
+                                          const Icon = prog.icon;
+                                          return (
+                                            <Link
+                                              key={prog.name}
+                                              href={prog.href ?? "#"}
+                                              onClick={() =>
+                                                setMobileMenuOpen(false)
+                                              }
+                                              className="flex items-start gap-2 sm:gap-3 p-2 sm:p-3 rounded-lg sm:rounded-xl bg-muted/30 hover:bg-primary-50 transition-colors"
+                                            >
+                                              <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-lg bg-primary-700/10 flex items-center justify-center shrink-0">
+                                                <Icon className="w-3 h-3 sm:w-4 sm:h-4 text-primary-700" />
+                                              </div>
+                                              <div className="flex-1 min-w-0">
+                                                <div className="flex items-center gap-1 sm:gap-2 flex-wrap">
+                                                  <div className="font-black text-[11px] sm:text-sm">
+                                                    {prog.name}
+                                                  </div>
+                                                  {prog.badge && (
+                                                    <span className="text-[7px] sm:text-[8px] font-black px-1 sm:px-1.5 py-0.5 rounded-full bg-gold/20 text-gold">
+                                                      {prog.badge}
+                                                    </span>
+                                                  )}
+                                                </div>
+                                                <div className="text-[9px] sm:text-xs text-muted-foreground">
+                                                  {prog.desc}
+                                                </div>
+                                              </div>
+                                            </Link>
+                                          );
+                                        })}
+                                      </div>
+                                    );
+                                  });
+                                })()}
                               </motion.div>
                             )}
                           </AnimatePresence>
@@ -674,7 +713,7 @@ export function Header() {
                         <Link
                           href={item.href}
                           onClick={() => setMobileMenuOpen(false)}
-                          className="block text-lg font-black uppercase tracking-tighter py-2 px-3"
+                          className="block text-base sm:text-lg font-black uppercase tracking-tighter py-1.5 sm:py-2 px-2 sm:px-3 touch-target"
                         >
                           {item.name}
                         </Link>
@@ -684,21 +723,21 @@ export function Header() {
                 </nav>
               </div>
 
-              {/* Mobile Actions */}
-              <div className="mt-auto pt-6 space-y-4 pb-safe">
+              {/* Mobile Actions - Better spacing */}
+              <div className="mt-auto pt-4 sm:pt-6 space-y-3 sm:space-y-4 pb-safe">
                 {session ? (
-                  <div className="grid grid-cols-1 gap-3">
+                  <div className="grid grid-cols-1 gap-2 sm:gap-3">
                     <Link
                       href="/dashboard"
                       onClick={() => setMobileMenuOpen(false)}
                     >
-                      <Button className="w-full h-14 rounded-2xl font-black bg-primary-700 text-white">
+                      <Button className="w-full h-12 sm:h-14 rounded-xl sm:rounded-2xl font-black text-sm sm:text-base bg-primary-700 text-white">
                         GO TO DASHBOARD
                       </Button>
                     </Link>
                     <Button
                       variant="outline"
-                      className="w-full h-14 rounded-2xl font-black border-2 text-red-500 border-red-500/20"
+                      className="w-full h-12 sm:h-14 rounded-xl sm:rounded-2xl font-black border-2 text-red-500 border-red-500/20 text-sm sm:text-base"
                       onClick={() => {
                         signOut();
                         setMobileMenuOpen(false);
@@ -708,12 +747,12 @@ export function Header() {
                     </Button>
                   </div>
                 ) : (
-                  <div className="grid grid-cols-1 gap-4">
+                  <div className="grid grid-cols-1 gap-2 sm:gap-4">
                     <Link
                       href="/register"
                       onClick={() => setMobileMenuOpen(false)}
                     >
-                      <Button className="w-full h-14 rounded-2xl font-black bg-primary-700 text-white">
+                      <Button className="w-full h-12 sm:h-14 rounded-xl sm:rounded-2xl font-black text-sm sm:text-base bg-primary-700 text-white">
                         REGISTER
                       </Button>
                     </Link>
@@ -723,7 +762,7 @@ export function Header() {
                     >
                       <Button
                         variant="outline"
-                        className="w-full h-14 rounded-2xl font-black border-2"
+                        className="w-full h-12 sm:h-14 rounded-xl sm:rounded-2xl font-black text-sm sm:text-base border-2"
                       >
                         SIGN IN
                       </Button>
@@ -737,10 +776,752 @@ export function Header() {
       </AnimatePresence>
     </>
   );
+
+
+
+  
 }
 
+// "use client";
 
+// import { useState, useEffect } from "react";
+// import { useSession, signOut } from "next-auth/react";
+// import { useTheme } from "next-themes";
+// import { motion, AnimatePresence } from "framer-motion";
+// import Logo from "@/public/logo.png";
+// import {
+//   BookOpen,
+//   ChevronDown,
+//   Sun,
+//   Moon,
+//   LayoutDashboard,
+//   Menu,
+//   X,
+//   Users,
+//   Sparkles,
+//   BookMarked,
+//   Mic,
+//   Globe,
+//   Star,
+// } from "lucide-react";
+// import { Button } from "@/components/ui/button";
+// import { cn } from "@/lib/utils";
+// import Link from "next/link";
+// import { usePathname } from "next/navigation";
+// import Image from "next/image";
 
+// const navigation = [
+//   { name: "Home", href: "/" },
+//   {
+//     name: "Programs",
+//     href: "/courses",
+//     dropdown: [
+//       // Header Row - All Programs
+//       {
+//         name: "ALL PROGRAMS",
+//         href: "/courses",
+//         desc: "Browse our complete catalog",
+//         icon: BookOpen,
+//         featured: true,
+//         col: "full",
+//       },
+//       // 1-on-1 Programs Section
+//       {
+//         name: "─ 1-on-1 PROGRAMS ─",
+//         divider: true,
+//         col: "full",
+//       },
+//       {
+//         name: "Hifz Program",
+//         href: "/courses/hifz",
+//         desc: "Complete Quran memorization with Ijazah",
+//         icon: BookMarked,
+//         col: "left",
+//       },
+//       {
+//         name: "Qiro'ah Program",
+//         href: "/courses/qiroah",
+//         desc: "Master Qiro'ah Reading and Recition",
+//         icon: Users,
+//         col: "right",
+//       },
+//       {
+//         name: "Tajweed Mastery",
+//         href: "/courses/tajweed",
+//         desc: "Scientific recitation rules",
+//         icon: Mic,
+//         col: "left",
+//       },
+//       {
+//         name: "Arabic Language",
+//         href: "/courses/arabic",
+//         desc: "Unlock the Quranic language",
+//         icon: Globe,
+//         col: "right",
+//       },
+//       {
+//         name: "Tafsir Studies",
+//         href: "/courses/tafsir",
+//         desc: "Deep Quranic understanding",
+//         icon: BookOpen,
+//         col: "right",
+//       },
+//       // Group Programs Section
+//       {
+//         name: "─ GROUP PROGRAMS ─",
+//         divider: true,
+//         col: "full",
+//       },
+//       {
+//         name: "Group Qiro'ah",
+//         href: "/courses/group-qiroah",
+//         desc: "All Ages• Learn to read with joy",
+//         icon: Users,
+//         badge: "Popular",
+//         col: "left",
+//       },
+//       {
+//         name: "Juz Amma Group",
+//         href: "/courses/juz-amma",
+//         desc: "All Ages• Memorize the last Juz",
+//         icon: Star,
+//         badge: "New",
+//         col: "right",
+//       },
+//     ],
+//   },
+//   { name: "Faculty", href: "/teachers" },
+//   { name: "Pricing", href: "/pricing" },
+//   { name: "About", href: "/about" },
+//   { name: "Contact", href: "/contact" },
+// ];
+
+// // Throttle function for scroll performance
+// function throttle<T extends (...args: unknown[]) => unknown>(
+//   func: T,
+//   limit: number,
+// ): (...args: Parameters<T>) => void {
+//   let inThrottle: boolean;
+//   return function (this: unknown, ...args: Parameters<T>) {
+//     if (!inThrottle) {
+//       func.apply(this, args);
+//       inThrottle = true;
+//       setTimeout(() => (inThrottle = false), limit);
+//     }
+//   };
+// }
+
+// export function Header() {
+//   const { data: session } = useSession();
+//   const { theme, setTheme } = useTheme();
+//   const [isScrolled, setIsScrolled] = useState(false);
+//   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+//   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+//   const [mobileDropdownOpen, setMobileDropdownOpen] = useState<string | null>(
+//     null,
+//   );
+//   const [mounted, setMounted] = useState(false);
+//   const pathname = usePathname();
+
+//   // Prevent hydration mismatch for theme toggle
+//   useEffect(() => {
+//     setMounted(true);
+
+//     const handleScroll = () => {
+//       setIsScrolled(window.scrollY > 20);
+//     };
+
+//     const throttledScroll = throttle(handleScroll, 100);
+//     window.addEventListener("scroll", throttledScroll, { passive: true });
+//     return () => window.removeEventListener("scroll", throttledScroll);
+//   }, []);
+
+//   // Lock body scroll when mobile menu is open
+//   useEffect(() => {
+//     if (mobileMenuOpen) {
+//       document.body.style.overflow = "hidden";
+//       document.body.style.touchAction = "none";
+//     } else {
+//       document.body.style.overflow = "";
+//       document.body.style.touchAction = "";
+//     }
+
+//     return () => {
+//       document.body.style.overflow = "";
+//       document.body.style.touchAction = "";
+//     };
+//   }, [mobileMenuOpen]);
+
+//   // Close mobile menu when route changes
+//   useEffect(() => {
+//     setMobileMenuOpen(false);
+//     setActiveDropdown(null);
+//     setMobileDropdownOpen(null);
+//   }, [pathname]);
+
+//   // Handle escape key to close mobile menu
+//   useEffect(() => {
+//     const handleEscape = (e: KeyboardEvent) => {
+//       if (e.key === "Escape" && mobileMenuOpen) {
+//         setMobileMenuOpen(false);
+//       }
+//     };
+
+//     window.addEventListener("keydown", handleEscape);
+//     return () => window.removeEventListener("keydown", handleEscape);
+//   }, [mobileMenuOpen]);
+
+//   // Toggle mobile dropdown
+//   const toggleMobileDropdown = (name: string) => {
+//     setMobileDropdownOpen(mobileDropdownOpen === name ? null : name);
+//   };
+
+//   return (
+//     <>
+//       <header
+//         className={cn(
+//           "fixed top-0 left-0 right-0 z-50 w-full transition-all duration-500 flex items-center",
+//           isScrolled
+//             ? "glass-surface shadow-xl py-2 h-20 bg-background/80 backdrop-blur-lg supports-backdrop-filter:bg-background/60"
+//             : "bg-transparent py-4 h-24",
+//           "pt-safe",
+//         )}
+//       >
+//         <nav className="container mx-auto px-4 md:px-6 flex items-center justify-between">
+//           {/* --- LOGO SECTION --- */}
+//           <Link
+//             href="/"
+//             className="flex items-center space-x-3 md:space-x-4 relative z-60 group outline-none min-h-11 min-w-11"
+//             onClick={() => setMobileMenuOpen(false)}
+//             aria-label="AL-MAYSAROH Institute - Home"
+//           >
+//             <Image
+//               src={Logo}
+//               width={100}
+//               height={100}
+//               alt="Al-Maysaroh Institute Logo"
+//               className="w-10 h-10 md:w-12 md:h-12 bg-primary-700 rounded-2xl flex items-center justify-center shadow-2xl group-hover:rotate-6 group-focus-visible:rotate-6 transition-transform"
+//             />
+//             <div className="hidden lg:flex flex-col">
+//               <h1 className="text-lg md:text-xl lg:text-2xl font-black tracking-tighter leading-none">
+//                 AL-MAYSAROH
+//               </h1>
+//               <p className="text-[8px] md:text-[10px] text-primary-700 font-bold tracking-[0.3em] md:tracking-[0.4em] uppercase">
+//                 Institute.
+//               </p>
+//             </div>
+//           </Link>
+
+//           {/* --- DESKTOP NAVIGATION --- */}
+//           <ul className="hidden xl:flex items-center space-x-1">
+//             {navigation.map((item) => {
+//               const isActive =
+//                 pathname === item.href ||
+//                 item.dropdown?.some(
+//                   (sub) => !sub.divider && pathname === sub.href,
+//                 );
+
+//               return (
+//                 <li
+//                   key={item.name}
+//                   className="relative"
+//                   onMouseEnter={() => setActiveDropdown(item.name)}
+//                   onMouseLeave={() => setActiveDropdown(null)}
+//                   onFocus={() => setActiveDropdown(item.name)}
+//                   onBlur={(e) => {
+//                     if (!e.currentTarget.contains(e.relatedTarget as Node)) {
+//                       setActiveDropdown(null);
+//                     }
+//                   }}
+//                 >
+//                   <Link
+//                     href={item.href}
+//                     aria-expanded={activeDropdown === item.name}
+//                     aria-haspopup={item.dropdown ? "true" : "false"}
+//                     aria-current={isActive ? "page" : undefined}
+//                     className={cn(
+//                       "px-4 py-3 text-[13px] font-black flex items-center gap-1 transition-all uppercase tracking-wider outline-none min-h-11",
+//                       "focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 focus-visible:outline-none",
+//                       activeDropdown === item.name || isActive
+//                         ? "text-primary-700"
+//                         : "text-foreground/80 hover:text-foreground",
+//                     )}
+//                   >
+//                     {item.name}
+//                     {item.dropdown && (
+//                       <ChevronDown
+//                         className={cn(
+//                           "w-3 h-3 md:w-4 md:h-4 opacity-50 transition-transform",
+//                           activeDropdown === item.name && "rotate-180",
+//                         )}
+//                         aria-hidden="true"
+//                       />
+//                     )}
+//                   </Link>
+
+//                   {/* DROPDOWN WITH GRID LAYOUT */}
+//                   <AnimatePresence>
+//                     {item.dropdown && activeDropdown === item.name && (
+//                       <motion.div
+//                         initial={{ opacity: 0, y: 10, scale: 0.95 }}
+//                         animate={{ opacity: 1, y: 0, scale: 1 }}
+//                         exit={{ opacity: 0, y: 10, scale: 0.95 }}
+//                         className="absolute top-full left-0 w-[650px] p-5 bg-white dark:bg-slate-950 border border-border/50 rounded-2xl shadow-3xl mt-2 z-50"
+//                         role="menu"
+//                         aria-label={`${item.name} submenu`}
+//                       >
+//                         {/* GRID CONTAINER */}
+//                         <div className="grid grid-cols-2 gap-4">
+//                           {item.dropdown.map((sub, idx) => {
+//                             // Divider (full width)
+//                             if (sub.divider) {
+//                               return (
+//                                 <div key={idx} className="col-span-2 px-2 py-2">
+//                                   <div className="text-[10px] font-black text-primary-700/60 uppercase tracking-[0.3em] text-center">
+//                                     {sub.name}
+//                                   </div>
+//                                   <div className="h-px bg-linear-to-r from-transparent via-primary-700/20 to-transparent mt-1" />
+//                                 </div>
+//                               );
+//                             }
+
+//                             // Featured item (full width)
+//                             if (sub.featured) {
+//                               return (
+//                                 <Link
+//                                   key={sub.name}
+//                                   href={sub.href}
+//                                   className="col-span-2 p-4 rounded-xl bg-linear-to-br from-primary-700/5 to-primary-700/10 border border-primary-700/20 hover:border-primary-700/40 transition-all group"
+//                                   role="menuitem"
+//                                   aria-current={
+//                                     pathname === sub.href ? "page" : undefined
+//                                   }
+//                                 >
+//                                   <div className="flex items-center gap-4">
+//                                     <div className="w-10 h-10 rounded-lg bg-primary-700/20 flex items-center justify-center">
+//                                       {sub.icon && <sub.icon className="w-5 h-5 text-primary-700" />}
+//                                     </div>
+//                                     <div>
+//                                       <div className="font-black text-base group-hover:text-primary-700 uppercase tracking-tight">
+//                                         {sub.name}
+//                                       </div>
+//                                       <div className="text-xs text-muted-foreground mt-1">
+//                                         {sub.desc}
+//                                       </div>
+//                                     </div>
+//                                     <Sparkles className="w-4 h-4 text-gold ml-auto opacity-50" />
+//                                   </div>
+//                                 </Link>
+//                               );
+//                             }
+
+//                             // Regular grid items (left or right column)
+//                             return (
+//                               <Link
+//                                 key={sub.name}
+//                                 href={sub.href}
+//                                 className={cn(
+//                                   "p-4 rounded-xl hover:bg-primary-50 dark:hover:bg-primary-900/20 group transition-all outline-none",
+//                                   sub.col === "left"
+//                                     ? "col-span-1"
+//                                     : "col-span-1",
+//                                 )}
+//                                 role="menuitem"
+//                                 aria-current={
+//                                   pathname === sub.href ? "page" : undefined
+//                                 }
+//                               >
+//                                 <div className="flex items-start gap-3">
+//                                   <div className="w-8 h-8 rounded-lg bg-primary-700/10 flex items-center justify-center shrink-0 group-hover:bg-primary-700/20 transition-colors">
+//                                     {sub.icon && <sub.icon className="w-4 h-4 text-primary-700" />}
+//                                   </div>
+//                                   <div className="flex-1">
+//                                     <div className="flex items-center gap-2">
+//                                       <div className="font-black text-sm group-hover:text-primary-700 uppercase tracking-tight">
+//                                         {sub.name}
+//                                       </div>
+//                                       {sub.badge && (
+//                                         <span className="text-[8px] font-black px-1.5 py-0.5 rounded-full bg-gold/20 text-gold uppercase">
+//                                           {sub.badge}
+//                                         </span>
+//                                       )}
+//                                     </div>
+//                                     <div className="text-[11px] text-muted-foreground mt-1 leading-relaxed">
+//                                       {sub.desc}
+//                                     </div>
+//                                   </div>
+//                                 </div>
+//                               </Link>
+//                             );
+//                           })}
+//                         </div>
+
+//                         {/* Footer */}
+//                         <div className="mt-4 pt-4 border-t border-border/50 flex justify-between items-center">
+//                           <p className="text-[10px] text-muted-foreground">
+//                             <span className="font-black text-primary-700">
+//                               1-on-1
+//                             </span>{" "}
+//                             or{" "}
+//                             <span className="font-black text-primary-700">
+//                               Group
+//                             </span>{" "}
+//                             • For all ages
+//                           </p>
+//                           <Link
+//                             href="/courses"
+//                             className="text-[10px] font-black text-primary-700 hover:underline flex items-center gap-1"
+//                           >
+//                             VIEW ALL{" "}
+//                             <ChevronDown className="w-3 h-3 -rotate-90" />
+//                           </Link>
+//                         </div>
+//                       </motion.div>
+//                     )}
+//                   </AnimatePresence>
+//                 </li>
+//               );
+//             })}
+//           </ul>
+
+//           {/* --- COMMAND ACTIONS --- */}
+//           <div className="flex items-center space-x-2 md:space-x-3 lg:space-x-4 relative z-60">
+//             {/* Theme Toggle */}
+//             <Button
+//               variant="ghost"
+//               size="icon"
+//               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+//               className="rounded-full bg-muted/20 hover:bg-primary-50 dark:hover:bg-primary-950/40 w-10 h-10 md:w-11 md:h-11 touch-target-lg"
+//               aria-label="Toggle theme"
+//               disabled={!mounted}
+//             >
+//               {!mounted ? (
+//                 <div className="w-5 h-5 rounded-full bg-muted-foreground/20 animate-pulse" />
+//               ) : theme === "dark" ? (
+//                 <Sun className="h-5 w-5" aria-hidden="true" />
+//               ) : (
+//                 <Moon className="h-5 w-5" aria-hidden="true" />
+//               )}
+//             </Button>
+
+//             <div className="hidden md:flex items-center gap-2 lg:gap-3">
+//               {session ? (
+//                 <Link href="/dashboard">
+//                   <Button className="rounded-xl font-black px-5 lg:px-6 bg-primary-700 hover:bg-primary-800 text-white shadow-lg relative overflow-hidden group min-h-11">
+//                     <span className="relative z-10 flex items-center gap-2 text-[11px] tracking-widest">
+//                       <LayoutDashboard className="w-4 h-4" aria-hidden="true" />
+//                       DASHBOARD
+//                     </span>
+//                     <motion.div
+//                       className="absolute inset-0 bg-linear-to-r from-transparent via-white/20 to-transparent -skew-x-12"
+//                       animate={{ x: ["-100%", "200%"] }}
+//                       transition={{
+//                         duration: 3,
+//                         repeat: Infinity,
+//                         ease: "easeInOut",
+//                       }}
+//                     />
+//                   </Button>
+//                 </Link>
+//               ) : (
+//                 <>
+//                   <Link href="/login">
+//                     <Button
+//                       variant="ghost"
+//                       className="font-black text-[11px] tracking-widest uppercase px-4 min-h-11"
+//                     >
+//                       LOGIN
+//                     </Button>
+//                   </Link>
+//                   <Link href="/register">
+//                     <Button className="rounded-xl font-black px-6 lg:px-8 bg-primary-700 hover:bg-primary-800 text-white shadow-lg text-[11px] tracking-widest relative overflow-hidden group min-h-11">
+//                       <span className="relative z-10">REGISTER</span>
+//                       <motion.div
+//                         className="absolute inset-0 bg-linear-to-r from-transparent via-white/20 to-transparent -skew-x-12"
+//                         animate={{ x: ["-100%", "200%"] }}
+//                         transition={{
+//                           duration: 4,
+//                           repeat: Infinity,
+//                           ease: "linear",
+//                         }}
+//                       />
+//                     </Button>
+//                   </Link>
+//                 </>
+//               )}
+//             </div>
+
+//             {/* Mobile Menu Toggle */}
+//             <Button
+//               variant="ghost"
+//               size="icon"
+//               className="xl:hidden rounded-xl bg-primary-700/10 text-primary-700 w-11 h-11 border border-primary-700/20 touch-target-lg"
+//               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+//               aria-expanded={mobileMenuOpen}
+//               aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+//               aria-controls="mobile-navigation-drawer"
+//             >
+//               {mobileMenuOpen ? (
+//                 <X className="h-5 w-5 md:h-6 md:w-6" aria-hidden="true" />
+//               ) : (
+//                 <Menu className="h-5 w-5 md:h-6 md:w-6" aria-hidden="true" />
+//               )}
+//             </Button>
+//           </div>
+//         </nav>
+//       </header>
+
+//       {/* --- MOBILE DRAWER (FIXED: Now togglable) --- */}
+//       <AnimatePresence>
+//         {mobileMenuOpen && (
+//           <>
+//             <motion.div
+//               initial={{ opacity: 0 }}
+//               animate={{ opacity: 1 }}
+//               exit={{ opacity: 0 }}
+//               onClick={() => setMobileMenuOpen(false)}
+//               className="fixed inset-0 bg-black/60 backdrop-blur-md z-90 xl:hidden"
+//               aria-hidden="true"
+//             />
+
+//             <motion.div
+//               initial={{ x: "100%" }}
+//               animate={{ x: 0 }}
+//               exit={{ x: "100%" }}
+//               transition={{ type: "spring", damping: 25, stiffness: 200 }}
+//               className="fixed inset-y-0 right-0 z-100 w-full max-w-full sm:max-w-sm bg-background shadow-3xl xl:hidden flex flex-col p-4 sm:p-6 md:p-8 pt-24 sm:pt-28 md:pt-32 min-h-dvh overflow-y-auto"
+//               style={{
+//                 paddingBottom: "calc(2rem + env(safe-area-inset-bottom))",
+//               }}
+//               id="mobile-navigation-drawer"
+//               role="dialog"
+//               aria-modal="true"
+//               aria-label="Mobile navigation menu"
+//             >
+//               {/* Close button */}
+//               <button
+//                 onClick={() => setMobileMenuOpen(false)}
+//                 className="absolute top-6 right-4 sm:right-6 p-2 rounded-full bg-muted/50 hover:bg-muted touch-target-lg"
+//                 aria-label="Close menu"
+//               >
+//                 <X className="h-5 w-5" />
+//               </button>
+
+//               <div className="flex-1 overflow-y-auto hide-scrollbar">
+//                 <nav
+//                   className="flex flex-col space-y-4"
+//                   aria-label="Mobile navigation"
+//                 >
+//                   {navigation.map((item) => (
+//                     <div
+//                       key={item.name}
+//                       className="border-b border-border/50 pb-4"
+//                     >
+//                       {item.dropdown ? (
+//                         <div className="space-y-3">
+//                           {/* Dropdown Toggle Button */}
+//                           <button
+//                             onClick={() => toggleMobileDropdown(item.name)}
+//                             className="flex items-center justify-between w-full text-lg font-black uppercase tracking-tighter px-3 py-2"
+//                           >
+//                             <span
+//                               className={
+//                                 mobileDropdownOpen === item.name
+//                                   ? "text-primary-700"
+//                                   : ""
+//                               }
+//                             >
+//                               {item.name}
+//                             </span>
+//                             <ChevronDown
+//                               className={cn(
+//                                 "w-5 h-5 transition-transform duration-300",
+//                                 mobileDropdownOpen === item.name &&
+//                                   "rotate-180",
+//                               )}
+//                             />
+//                           </button>
+
+//                           {/* Dropdown Content */}
+//                           <AnimatePresence>
+//                             {mobileDropdownOpen === item.name && (
+//                               <motion.div
+//                                 initial={{ height: 0, opacity: 0 }}
+//                                 animate={{ height: "auto", opacity: 1 }}
+//                                 exit={{ height: 0, opacity: 0 }}
+//                                 className="overflow-hidden space-y-3 pl-2"
+//                               >
+//                                 {/* Featured All Programs */}
+//                                 {item.dropdown.find((d) => d.featured) && (
+//                                   <Link
+//                                     href="/courses"
+//                                     onClick={() => setMobileMenuOpen(false)}
+//                                     className="block p-4 rounded-xl bg-primary-700/10 border border-primary-700/20 mb-3"
+//                                   >
+//                                     <div className="font-black text-base">
+//                                       ALL PROGRAMS
+//                                     </div>
+//                                     <div className="text-xs text-muted-foreground">
+//                                       Browse complete catalog
+//                                     </div>
+//                                   </Link>
+//                                 )}
+
+//                                 {/* 1-on-1 Programs */}
+//                                 <div className="text-xs font-black text-primary-700/60 uppercase tracking-wider mt-4 mb-2">
+//                                   1-on-1 PROGRAMS
+//                                 </div>
+//                                 <div className="grid grid-cols-1 gap-2">
+//                                   {[
+//                                     "Hifz Program",
+//                                     "Tajweed Mastery",
+//                                     "Arabic Language",
+//                                     "Tafsir Studies",
+//                                   ].map((name) => {
+//                                     const prog = item.dropdown?.find(
+//                                       (d) => d.name === name,
+//                                     );
+//                                     if (!prog || !prog.icon) return null;
+//                                     const Icon = prog.icon;
+//                                     return (
+//                                       <Link
+//                                         key={prog.name}
+//                                         href={prog.href ?? "#"}
+//                                         onClick={() => setMobileMenuOpen(false)}
+//                                         className="flex items-start gap-3 p-3 rounded-xl bg-muted/30 hover:bg-primary-50 transition-colors"
+//                                       >
+//                                         <div className="w-8 h-8 rounded-lg bg-primary-700/10 flex items-center justify-center">
+//                                           <Icon className="w-4 h-4 text-primary-700" />
+//                                         </div>
+//                                         <div>
+//                                           <div className="font-black text-sm">
+//                                             {prog.name}
+//                                           </div>
+//                                           <div className="text-xs text-muted-foreground">
+//                                             {prog.desc}
+//                                           </div>
+//                                         </div>
+//                                       </Link>
+//                                     );
+//                                   })}
+//                                 </div>
+
+//                                 {/* Group Programs */}
+//                                 <div className="text-xs font-black text-primary-700/60 uppercase tracking-wider mt-6 mb-2">
+//                                   GROUP PROGRAMS
+//                                 </div>
+//                                 <div className="grid grid-cols-1 gap-2">
+//                                   {["Group Qiro'ah", "Juz Amma Group"].map(
+//                                     (name) => {
+//                                       const prog = item.dropdown?.find(
+//                                         (d) => d.name === name,
+//                                       );
+//                                       if (!prog || !prog.icon) return null;
+//                                       const Icon = prog.icon;
+//                                       return (
+//                                         <Link
+//                                           key={prog.name}
+//                                           href={prog.href ?? "#"}
+//                                           onClick={() =>
+//                                             setMobileMenuOpen(false)
+//                                           }
+//                                           className="flex items-start gap-3 p-3 rounded-xl bg-muted/30 hover:bg-primary-50 transition-colors"
+//                                         >
+//                                           <div className="w-8 h-8 rounded-lg bg-primary-700/10 flex items-center justify-center">
+//                                             <Icon className="w-4 h-4 text-primary-700" />
+//                                           </div>
+//                                           <div>
+//                                             <div className="flex items-center gap-2">
+//                                               <div className="font-black text-sm">
+//                                                 {prog.name}
+//                                               </div>
+//                                               {prog.badge && (
+//                                                 <span className="text-[8px] font-black px-1.5 py-0.5 rounded-full bg-gold/20 text-gold">
+//                                                   {prog.badge}
+//                                                 </span>
+//                                               )}
+//                                             </div>
+//                                             <div className="text-xs text-muted-foreground">
+//                                               {prog.desc}
+//                                             </div>
+//                                           </div>
+//                                         </Link>
+//                                       );
+//                                     },
+//                                   )}
+//                                 </div>
+//                               </motion.div>
+//                             )}
+//                           </AnimatePresence>
+//                         </div>
+//                       ) : (
+//                         <Link
+//                           href={item.href}
+//                           onClick={() => setMobileMenuOpen(false)}
+//                           className="block text-lg font-black uppercase tracking-tighter py-2 px-3"
+//                         >
+//                           {item.name}
+//                         </Link>
+//                       )}
+//                     </div>
+//                   ))}
+//                 </nav>
+//               </div>
+
+//               {/* Mobile Actions */}
+//               <div className="mt-auto pt-6 space-y-4 pb-safe">
+//                 {session ? (
+//                   <div className="grid grid-cols-1 gap-3">
+//                     <Link
+//                       href="/dashboard"
+//                       onClick={() => setMobileMenuOpen(false)}
+//                     >
+//                       <Button className="w-full h-14 rounded-2xl font-black bg-primary-700 text-white">
+//                         GO TO DASHBOARD
+//                       </Button>
+//                     </Link>
+//                     <Button
+//                       variant="outline"
+//                       className="w-full h-14 rounded-2xl font-black border-2 text-red-500 border-red-500/20"
+//                       onClick={() => {
+//                         signOut();
+//                         setMobileMenuOpen(false);
+//                       }}
+//                     >
+//                       SIGN OUT
+//                     </Button>
+//                   </div>
+//                 ) : (
+//                   <div className="grid grid-cols-1 gap-4">
+//                     <Link
+//                       href="/register"
+//                       onClick={() => setMobileMenuOpen(false)}
+//                     >
+//                       <Button className="w-full h-14 rounded-2xl font-black bg-primary-700 text-white">
+//                         REGISTER
+//                       </Button>
+//                     </Link>
+//                     <Link
+//                       href="/login"
+//                       onClick={() => setMobileMenuOpen(false)}
+//                     >
+//                       <Button
+//                         variant="outline"
+//                         className="w-full h-14 rounded-2xl font-black border-2"
+//                       >
+//                         SIGN IN
+//                       </Button>
+//                     </Link>
+//                   </div>
+//                 )}
+//               </div>
+//             </motion.div>
+//           </>
+//         )}
+//       </AnimatePresence>
+//     </>
+//   );
+// }
 
 // "use client";
 
