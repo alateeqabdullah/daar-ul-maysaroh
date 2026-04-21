@@ -1089,7 +1089,7 @@ export default function CoursesPage() {
   };
 
   return (
-    <main className="pt-40 pb-12 sm:pb-16 md:pb-20 bg-background relative overflow-hidden">
+    <main className="pt-30 pb-12 sm:pb-16 md:pb-20 bg-background relative overflow-hidden">
       {/* Background Elements - Hidden on mobile for performance */}
       <div className="hidden sm:block absolute inset-0 opacity-[0.02] bg-[url('/islamic-pattern.svg')] bg-center bg-repeat" style={{ backgroundSize: "300px" }} />
       <div className="absolute top-0 right-0 w-[300px] sm:w-[500px] h-[300px] sm:h-[500px] bg-primary-700/5 rounded-full blur-[80px] sm:blur-[120px] -z-10" />
