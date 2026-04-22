@@ -589,7 +589,7 @@ Thank you for choosing Al-Maysaroh!
           >
             <p className="text-[8px] text-muted-foreground flex items-center justify-center gap-1">
               <Mail className="w-2.5 h-2.5" />
-              Didn't receive confirmation email? Check your spam folder
+             {` Didn't receive confirmation email? Check your spam folder`}
             </p>
           </motion.div>
 
