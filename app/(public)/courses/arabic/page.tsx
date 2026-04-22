@@ -796,7 +796,7 @@ export default function ArabicProgramPage() {
             </p>
 
             <div className="flex flex-col xs:flex-row gap-3 sm:gap-4 justify-center px-4">
-              <Link href="/assessment" className="w-full xs:w-auto">
+              <Link href="/admissions" className="w-full xs:w-auto">
                 <Button className="w-full rounded-full px-6 sm:px-8 py-3.5 sm:py-4 font-black bg-linear-to-r from-amber-700 to-orange-700 hover:from-amber-800 hover:to-orange-800 text-white text-sm sm:text-base shadow-xl">
                   <span className="flex items-center justify-center gap-2">
                     BEGIN YOUR JOURNEY

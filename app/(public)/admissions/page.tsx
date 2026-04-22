@@ -1,760 +1,1357 @@
+// "use client";
+
+// // ============= IMPORTS =============
+// import { useState, useEffect, useCallback, useMemo, useRef } from "react";
+// import {
+//   motion,
+//   useScroll,
+//   useTransform,
+//   AnimatePresence,
+// } from "framer-motion";
+// import {
+//   Calendar,
+//   CreditCard,
+//   Banknote,
+//   CheckCircle2,
+//   Shield,
+//   Users,
+//   Clock,
+//   BookOpen,
+//   Sparkles,
+//   Award,
+//   ArrowRight,
+//   FileText,
+//   Mail,
+//   Phone,
+//   User,
+//   MapPin,
+//   Loader2,
+//   AlertCircle,
+//   Check,
+//   Globe,
+//   Heart,
+//   GraduationCap,
+//   Star,
+//   TrendingUp,
+//   Zap,
+//   Lock,
+//   Eye,
+//   EyeOff,
+//   Send,
+//   MessageCircle,
+//   Building,
+//   School,
+//   ChevronDown,
+//   Menu,
+//   X,
+//   Sun,
+//   Moon,
+// } from "lucide-react";
+// import { Button } from "@/components/ui/button";
+// import Link from "next/link";
+// import { toast, Toaster } from "sonner";
+// import { useForm, Controller } from "react-hook-form";
+// import { zodResolver } from "@hookform/resolvers/zod";
+// import { z } from "zod";
+// import PhoneInput from "react-phone-input-2";
+// import "react-phone-input-2/lib/style.css";
+
+// // ============= TYPES & SCHEMAS =============
+
+// // Form validation schema with Zod
+// const admissionSchema = z.object({
+//   fullName: z
+//     .string()
+//     .min(2, "Name must be at least 2 characters")
+//     .max(100, "Name must be less than 100 characters")
+//     .regex(
+//       /^[a-zA-Z\s\-']+$/,
+//       "Name can only contain letters, spaces, hyphens, and apostrophes",
+//     ),
+//   email: z
+//     .string()
+//     .email("Invalid email address")
+//     .max(100, "Email must be less than 100 characters"),
+//   phone: z
+//     .string()
+//     .min(8, "Valid phone number required")
+//     .max(20, "Phone number too long"),
+//   country: z.string().min(1, "Please select your country"),
+//   program: z.string().min(1, "Please select a program"),
+//   message: z
+//     .string()
+//     .max(500, "Message must be less than 500 characters")
+//     .optional(),
+//   preferredTime: z.string().optional(),
+//   newsletterOptIn: z.boolean().optional(),
+// });
+
+// type AdmissionFormData = z.infer<typeof admissionSchema>;
+
+// // Program data with enhanced structure
+// const PROGRAMS = {
+//   qiroahAdult: {
+//     id: "qiroah-adult",
+//     name: "Qiro'ah Al-Quran (Adult)",
+//     category: "Quran Reading",
+//     price: "$2.25+",
+//     duration: "Flexible",
+//     level: "Beginner to Advanced",
+//     popular: true,
+//     features: [
+//       "Individual pacing",
+//       "Regular assessments",
+//       "Certificate upon completion",
+//     ],
+//     icon: BookOpen,
+//   },
+//   qiroahChildren: {
+//     id: "qiroah-children",
+//     name: "Group Qiro'ah - Children",
+//     category: "Children",
+//     price: "$2+",
+//     duration: "6 months",
+//     level: "Beginner",
+//     popular: true,
+//     features: ["Fun activities", "Peer learning", "Progress tracking"],
+//     icon: Users,
+//   },
+//   hifz: {
+//     id: "hifz",
+//     name: "Hifz Al-Quran",
+//     category: "Memorization",
+//     price: "$2.25+",
+//     duration: "2-5 years",
+//     level: "Intermediate",
+//     popular: true,
+//     features: ["Revision system", "Ijazah track", "Weekly tests"],
+//     icon: Award,
+//   },
+//   tajweed: {
+//     id: "tajweed",
+//     name: "Tajweed Al-Itqan",
+//     category: "Tajweed",
+//     price: "$2+",
+//     duration: "6-12 months",
+//     level: "Intermediate",
+//     popular: false,
+//     features: ["Rule mastery", "Practice sessions", "Error correction"],
+//     icon: Star,
+//   },
+//   arabic: {
+//     id: "arabic",
+//     name: "Quranic Arabic",
+//     category: "Arabic",
+//     price: "$2+",
+//     duration: "9-12 months",
+//     level: "Beginner",
+//     popular: false,
+//     features: ["Vocabulary building", "Grammar basics", "Quranic context"],
+//     icon: Globe,
+//   },
+//   ijazah: {
+//     id: "ijazah",
+//     name: "Ijazah Certification",
+//     category: "Advanced",
+//     price: "$3+",
+//     duration: "Variable",
+//     level: "Advanced",
+//     popular: false,
+//     features: ["Sanad chain", "Teacher authorization", "Global recognition"],
+//     icon: Shield,
+//   },
+// };
+
+// // Countries data
+// const COUNTRIES = [
+//   { code: "US", name: "United States", dialCode: "1" },
+//   { code: "GB", name: "United Kingdom", dialCode: "44" },
+//   { code: "CA", name: "Canada", dialCode: "1" },
+//   { code: "AU", name: "Australia", dialCode: "61" },
+//   { code: "NG", name: "Nigeria", dialCode: "234" },
+//   { code: "ZA", name: "South Africa", dialCode: "27" },
+//   { code: "EG", name: "Egypt", dialCode: "20" },
+//   { code: "SA", name: "Saudi Arabia", dialCode: "966" },
+//   { code: "AE", name: "UAE", dialCode: "971" },
+//   { code: "PK", name: "Pakistan", dialCode: "92" },
+//   { code: "IN", name: "India", dialCode: "91" },
+//   { code: "MY", name: "Malaysia", dialCode: "60" },
+//   { code: "ID", name: "Indonesia", dialCode: "62" },
+//   { code: "TR", name: "Turkey", dialCode: "90" },
+//   { code: "MA", name: "Morocco", dialCode: "212" },
+//   { code: "JO", name: "Jordan", dialCode: "962" },
+//   { code: "KW", name: "Kuwait", dialCode: "965" },
+//   { code: "QA", name: "Qatar", dialCode: "974" },
+//   { code: "BH", name: "Bahrain", dialCode: "973" },
+//   { code: "OM", name: "Oman", dialCode: "968" },
+//   { code: "LB", name: "Lebanon", dialCode: "961" },
+//   { code: "PS", name: "Palestine", dialCode: "970" },
+//   { code: "SY", name: "Syria", dialCode: "963" },
+//   { code: "IQ", name: "Iraq", dialCode: "964" },
+//   { code: "YE", name: "Yemen", dialCode: "967" },
+//   { code: "SD", name: "Sudan", dialCode: "249" },
+//   { code: "LY", name: "Libya", dialCode: "218" },
+//   { code: "TN", name: "Tunisia", dialCode: "216" },
+//   { code: "DZ", name: "Algeria", dialCode: "213" },
+//   { code: "FR", name: "France", dialCode: "33" },
+//   { code: "DE", name: "Germany", dialCode: "49" },
+//   { code: "NL", name: "Netherlands", dialCode: "31" },
+//   { code: "SE", name: "Sweden", dialCode: "46" },
+//   { code: "NO", name: "Norway", dialCode: "47" },
+//   { code: "DK", name: "Denmark", dialCode: "45" },
+//   { code: "FI", name: "Finland", dialCode: "358" },
+//   { code: "CH", name: "Switzerland", dialCode: "41" },
+//   { code: "AT", name: "Austria", dialCode: "43" },
+//   { code: "BE", name: "Belgium", dialCode: "32" },
+//   { code: "ES", name: "Spain", dialCode: "34" },
+//   { code: "IT", name: "Italy", dialCode: "39" },
+//   { code: "PT", name: "Portugal", dialCode: "351" },
+//   { code: "GR", name: "Greece", dialCode: "30" },
+//   { code: "PL", name: "Poland", dialCode: "48" },
+//   { code: "RU", name: "Russia", dialCode: "7" },
+//   { code: "CN", name: "China", dialCode: "86" },
+//   { code: "JP", name: "Japan", dialCode: "81" },
+//   { code: "KR", name: "South Korea", dialCode: "82" },
+//   { code: "BR", name: "Brazil", dialCode: "55" },
+//   { code: "MX", name: "Mexico", dialCode: "52" },
+//   { code: "AR", name: "Argentina", dialCode: "54" },
+//   { code: "CL", name: "Chile", dialCode: "56" },
+//   { code: "PE", name: "Peru", dialCode: "51" },
+//   { code: "CO", name: "Colombia", dialCode: "57" },
+//   { code: "VE", name: "Venezuela", dialCode: "58" },
+//   { code: "Other", name: "Other", dialCode: "" },
+// ];
+
+// // Timezone options
+// const TIMEZONES = [
+//   "EST (Eastern Time)",
+//   "CST (Central Time)",
+//   "MST (Mountain Time)",
+//   "PST (Pacific Time)",
+//   "GMT (London)",
+//   "CET (Central Europe)",
+//   "EET (Eastern Europe)",
+//   "GST (Gulf)",
+//   "AST (Arabia)",
+//   "IST (India)",
+//   "PKT (Pakistan)",
+//   "AWST (Australia West)",
+//   "AEST (Australia East)",
+//   "JST (Japan)",
+//   "NZST (New Zealand)",
+// ];
+
+// // ============= CUSTOM HOOKS =============
+
+// // Dark mode hook
+// const useDarkMode = () => {
+//   const [isDark, setIsDark] = useState(false);
+
+//   useEffect(() => {
+//     const isDarkMode =
+//       localStorage.getItem("darkMode") === "true" ||
+//       window.matchMedia("(prefers-color-scheme: dark)").matches;
+//     setIsDark(isDarkMode);
+//     if (isDarkMode) document.documentElement.classList.add("dark");
+//   }, []);
+
+//   const toggleDarkMode = useCallback(() => {
+//     setIsDark((prev) => {
+//       const newValue = !prev;
+//       localStorage.setItem("darkMode", String(newValue));
+//       if (newValue) document.documentElement.classList.add("dark");
+//       else document.documentElement.classList.remove("dark");
+//       return newValue;
+//     });
+//   }, []);
+
+//   return { isDark, toggleDarkMode };
+// };
+
+// // Scroll progress hook
+// const useScrollProgress = () => {
+//   const [progress, setProgress] = useState(0);
+
+//   useEffect(() => {
+//     const updateProgress = () => {
+//       const scrollTop = window.scrollY;
+//       const docHeight =
+//         document.documentElement.scrollHeight - window.innerHeight;
+//       const scrollPercent = (scrollTop / docHeight) * 100;
+//       setProgress(scrollPercent);
+//     };
+
+//     window.addEventListener("scroll", updateProgress);
+//     return () => window.removeEventListener("scroll", updateProgress);
+//   }, []);
+
+//   return progress;
+// };
+
+// // ============= COMPONENTS =============
+
+// // Animated number counter
+// const AnimatedCounter = ({
+//   value,
+//   label,
+//   icon: Icon,
+// }: {
+//   value: string;
+//   label: string;
+//   icon: any;
+// }) => {
+//   return (
+//     <motion.div
+//       initial={{ opacity: 0, y: 20 }}
+//       whileInView={{ opacity: 1, y: 0 }}
+//       transition={{ duration: 0.5 }}
+//       className="p-4 rounded-2xl bg-gradient-to-br from-amber-50/50 to-orange-50/50 dark:from-amber-950/20 dark:to-orange-950/20 border border-amber-100 dark:border-amber-800 text-center"
+//     >
+//       <Icon className="w-5 h-5 text-amber-600 mx-auto mb-2" />
+//       <div className="text-2xl sm:text-3xl font-black text-amber-600">
+//         {value}
+//       </div>
+//       <div className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mt-1">
+//         {label}
+//       </div>
+//     </motion.div>
+//   );
+// };
+
+// // Progress bar
+// const ProgressBar = ({ progress }: { progress: number }) => (
+//   <motion.div
+//     className="fixed top-0 left-0 right-0 h-1 bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 z-50"
+//     initial={{ width: 0 }}
+//     animate={{ width: `${progress}%` }}
+//     transition={{ duration: 0.1 }}
+//   />
+// );
+
+// // Toast notification component
+// const CustomToast = ({
+//   type,
+//   title,
+//   message,
+// }: {
+//   type: "success" | "error";
+//   title: string;
+//   message: string;
+// }) => (
+//   <div className="flex items-start gap-3 p-4 rounded-xl bg-white dark:bg-gray-800 shadow-xl border border-gray-200 dark:border-gray-700">
+//     {type === "success" ? (
+//       <CheckCircle2 className="w-5 h-5 text-green-500 shrink-0 mt-0.5" />
+//     ) : (
+//       <AlertCircle className="w-5 h-5 text-red-500 shrink-0 mt-0.5" />
+//     )}
+//     <div>
+//       <p className="font-black text-sm">{title}</p>
+//       <p className="text-xs text-muted-foreground mt-1">{message}</p>
+//     </div>
+//   </div>
+// );
+
+// // ============= MAIN PAGE COMPONENT =============
+
+// export default function AdmissionsPage() {
+//   const [isSubmitting, setIsSubmitting] = useState(false);
+//   const [showChat, setShowChat] = useState(false);
+//   const [selectedProgram, setSelectedProgram] = useState<string | null>(null);
+//   const { isDark, toggleDarkMode } = useDarkMode();
+//   const scrollProgress = useScrollProgress();
+//   const heroRef = useRef<HTMLElement>(null);
+
+//   const { scrollYProgress } = useScroll({
+//     target: heroRef,
+//     offset: ["start start", "end start"],
+//   });
+//   const heroY = useTransform(scrollYProgress, [0, 1], [0, -100]);
+
+//   // React Hook Form setup
+//   const {
+//     register,
+//     handleSubmit,
+//     control,
+//     formState: { errors },
+//     reset,
+//     watch,
+//     setValue,
+//   } = useForm<AdmissionFormData>({
+//     resolver: zodResolver(admissionSchema),
+//     defaultValues: {
+//       fullName: "",
+//       email: "",
+//       phone: "",
+//       country: "",
+//       program: "",
+//       message: "",
+//       preferredTime: "",
+//       newsletterOptIn: false,
+//     },
+//   });
+
+//   const selectedProgramValue = watch("program");
+
+//   // Get program details
+//   const getProgramDetails = useCallback((programId: string) => {
+//     return Object.values(PROGRAMS).find((p) => p.id === programId);
+//   }, []);
+
+//   // Form submission handler
+//   const onSubmit = async (data: AdmissionFormData) => {
+//     setIsSubmitting(true);
+
+//     const formPayload = new FormData();
+//     Object.entries(data).forEach(([key, value]) => {
+//       if (value) formPayload.append(key, String(value));
+//     });
+//     formPayload.append(
+//       "_subject",
+//       `New Admission: ${data.fullName} - ${data.program}`,
+//     );
+//     formPayload.append("_replyto", data.email);
+
+//     const endpoint =
+//       process.env.NEXT_PUBLIC_FORMSPREE_ENDPOINT ||
+//       "https://formspree.io/f/mykljjbl";
+
+//     try {
+//       const response = await fetch(endpoint, {
+//         method: "POST",
+//         body: formPayload,
+//         headers: { Accept: "application/json" },
+//       });
+
+//       if (response.ok) {
+//         toast.custom(
+//           () => (
+//             <CustomToast
+//               type="success"
+//               title="Application Submitted! 🎉"
+//               message="Our admissions council will review your application within 24 hours."
+//             />
+//           ),
+//           { duration: 6000 },
+//         );
+
+//         reset();
+//         setSelectedProgram(null);
+//       } else {
+//         throw new Error("Submission failed");
+//       }
+//     } catch (error) {
+//       toast.custom(
+//         () => (
+//           <CustomToast
+//             type="error"
+//             title="Submission Failed"
+//             message="Please check your information and try again."
+//           />
+//         ),
+//         { duration: 5000 },
+//       );
+//     } finally {
+//       setIsSubmitting(false);
+//     }
+//   };
+
+//   // Program cards component
+//   const ProgramCard = ({
+//     program,
+//   }: {
+//     program: (typeof PROGRAMS)[keyof typeof PROGRAMS];
+//   }) => {
+//     const Icon = program.icon;
+//     const isSelected = selectedProgram === program.id;
+
+//     return (
+//       <motion.div
+//         whileHover={{ y: -5 }}
+//         onClick={() => {
+//           setSelectedProgram(program.id);
+//           setValue("program", program.id);
+//         }}
+//         className={`cursor-pointer p-6 rounded-2xl border-2 transition-all ${
+//           isSelected
+//             ? "border-amber-500 bg-amber-50 dark:bg-amber-950/20 shadow-lg"
+//             : "border-border hover:border-amber-300 bg-card"
+//         }`}
+//       >
+//         <div className="flex items-start justify-between mb-4">
+//           <div className="w-12 h-12 rounded-xl bg-amber-100 dark:bg-amber-950/50 flex items-center justify-center">
+//             <Icon className="w-6 h-6 text-amber-600" />
+//           </div>
+//           {program.popular && (
+//             <span className="text-[9px] font-black px-2 py-1 rounded-full bg-amber-500 text-white">
+//               POPULAR
+//             </span>
+//           )}
+//         </div>
+//         <h4 className="font-black text-lg mb-1">{program.name}</h4>
+//         <p className="text-xs text-muted-foreground mb-3">
+//           {program.duration} • {program.level}
+//         </p>
+//         <div className="text-2xl font-black text-amber-600 mb-3">
+//           {program.price}
+//         </div>
+//         <div className="space-y-1.5">
+//           {program.features.slice(0, 2).map((feature, i) => (
+//             <div
+//               key={i}
+//               className="flex items-center gap-2 text-[10px] text-muted-foreground"
+//             >
+//               <Check className="w-3 h-3 text-amber-500" />
+//               {feature}
+//             </div>
+//           ))}
+//         </div>
+//       </motion.div>
+//     );
+//   };
+
+//   return (
+//     <>
+//       <ProgressBar progress={scrollProgress} />
+//       <Toaster position="top-right" richColors closeButton />
+
+//       {/* Dark mode toggle */}
+//       <button
+//         onClick={toggleDarkMode}
+//         className="fixed top-24 right-4 z-50 p-2 rounded-full bg-card border border-border shadow-lg hover:scale-110 transition-transform"
+//         aria-label="Toggle dark mode"
+//       >
+//         {isDark ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+//       </button>
+
+//       <main className="relative bg-background overflow-x-hidden">
+//         {/* Hero Section */}
+//         <section
+//           ref={heroRef}
+//           className="relative min-h-screen flex items-center"
+//         >
+//           <motion.div
+//             style={{ y: heroY }}
+//             className="container mx-auto px-4 sm:px-6 py-20"
+//           >
+//             <div className="max-w-6xl mx-auto">
+//               {/* Animated badge */}
+//               <motion.div
+//                 initial={{ opacity: 0, y: 20 }}
+//                 animate={{ opacity: 1, y: 0 }}
+//                 transition={{ duration: 0.5 }}
+//                 className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-amber-100 dark:bg-amber-950/50 text-amber-700 text-[10px] font-black uppercase tracking-wider mb-8"
+//               >
+//                 <Sparkles className="w-3.5 h-3.5 animate-pulse" />
+//                 2026 Academic Intake Now Open • Limited Slots Available
+//               </motion.div>
+
+//               <div className="grid lg:grid-cols-2 gap-12 lg:gap-20 items-start">
+//                 <div>
+//                   <motion.h1
+//                     initial={{ opacity: 0, x: -30 }}
+//                     animate={{ opacity: 1, x: 0 }}
+//                     transition={{ duration: 0.6, delay: 0.1 }}
+//                     className="text-6xl sm:text-7xl md:text-8xl lg:text-9xl font-black tracking-tighter leading-[0.9] mb-6"
+//                   >
+//                     Begin Your{" "}
+//                     <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-600 via-orange-600 to-rose-600">
+//                       Sacred Journey
+//                     </span>
+//                   </motion.h1>
+
+//                   <motion.p
+//                     initial={{ opacity: 0, x: -30 }}
+//                     animate={{ opacity: 1, x: 0 }}
+//                     transition={{ duration: 0.6, delay: 0.2 }}
+//                     className="text-lg sm:text-xl text-muted-foreground leading-relaxed mb-8"
+//                   >
+//                     Join a global community of learners. Our streamlined
+//                     admission process welcomes students from 50+ countries with
+//                     flexible payment options.
+//                   </motion.p>
+
+//                   <motion.div
+//                     initial={{ opacity: 0, y: 30 }}
+//                     animate={{ opacity: 1, y: 0 }}
+//                     transition={{ duration: 0.6, delay: 0.3 }}
+//                     className="flex flex-col sm:flex-row gap-4"
+//                   >
+//                     <Button className="rounded-full px-8 py-6 bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white font-black shadow-xl group">
+//                       START YOUR APPLICATION
+//                       <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
+//                     </Button>
+//                     <Button
+//                       variant="outline"
+//                       className="rounded-full px-8 py-6 font-black border-2"
+//                     >
+//                       REQUEST INFO PACKET
+//                     </Button>
+//                   </motion.div>
+//                 </div>
+
+//                 <motion.div
+//                   initial={{ opacity: 0, scale: 0.9 }}
+//                   animate={{ opacity: 1, scale: 1 }}
+//                   transition={{ duration: 0.6, delay: 0.2 }}
+//                   className="grid grid-cols-2 gap-4"
+//                 >
+//                   <AnimatedCounter
+//                     value="24-48"
+//                     label="Hours Processing"
+//                     icon={Clock}
+//                   />
+//                   <AnimatedCounter value="50+" label="Countries" icon={Globe} />
+//                   <AnimatedCounter
+//                     value="100%"
+//                     label="Online Process"
+//                     icon={Shield}
+//                   />
+//                   <AnimatedCounter
+//                     value="95%"
+//                     label="Success Rate"
+//                     icon={TrendingUp}
+//                   />
+//                 </motion.div>
+//               </div>
+//             </div>
+//           </motion.div>
+//         </section>
+
+//         {/* Programs Section */}
+//         <section className="py-20 bg-gradient-to-b from-transparent to-amber-50/10 dark:to-amber-950/5">
+//           <div className="container mx-auto px-4 sm:px-6">
+//             <div className="text-center max-w-2xl mx-auto mb-12">
+//               <h2 className="text-4xl sm:text-5xl font-black tracking-tighter mb-4">
+//                 Choose Your{" "}
+//                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-600 to-orange-600">
+//                   Path
+//                 </span>
+//               </h2>
+//               <p className="text-muted-foreground">
+//                 Select the program that aligns with your goals and schedule
+//               </p>
+//             </div>
+
+//             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+//               {Object.values(PROGRAMS).map((program, idx) => (
+//                 <ProgramCard key={idx} program={program} />
+//               ))}
+//             </div>
+//           </div>
+//         </section>
+
+//         {/* Application Form Section */}
+//         <section id="apply-now" className="py-20 scroll-mt-24">
+//           <div className="container mx-auto px-4 sm:px-6 max-w-5xl">
+//             <motion.div
+//               initial={{ opacity: 0, y: 50 }}
+//               whileInView={{ opacity: 1, y: 0 }}
+//               transition={{ duration: 0.6 }}
+//               className="bg-card/80 backdrop-blur-sm rounded-3xl border border-amber-500/20 p-6 sm:p-8 md:p-12 shadow-2xl"
+//             >
+//               <div className="text-center mb-10">
+//                 <h2 className="text-3xl sm:text-4xl font-black mb-3">
+//                   Begin Your Application
+//                 </h2>
+//                 <p className="text-muted-foreground">
+//                   Complete the form below and our admissions team will contact
+//                   you within 24 hours
+//                 </p>
+//               </div>
+
+//               <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+//                 {/* Personal Information */}
+//                 <div className="space-y-4">
+//                   <h3 className="text-sm font-black uppercase tracking-wider text-amber-600 flex items-center gap-2">
+//                     <User className="w-4 h-4" /> Personal Information
+//                   </h3>
+//                   <div className="grid md:grid-cols-2 gap-5">
+//                     <div>
+//                       <input
+//                         {...register("fullName")}
+//                         placeholder="Full Name *"
+//                         className={`w-full h-12 px-4 rounded-xl border ${
+//                           errors.fullName ? "border-red-500" : "border-border"
+//                         } bg-background focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all`}
+//                       />
+//                       {errors.fullName && (
+//                         <p className="text-xs text-red-500 mt-1">
+//                           {errors.fullName.message}
+//                         </p>
+//                       )}
+//                     </div>
+//                     <div>
+//                       <input
+//                         {...register("email")}
+//                         type="email"
+//                         placeholder="Email Address *"
+//                         className={`w-full h-12 px-4 rounded-xl border ${
+//                           errors.email ? "border-red-500" : "border-border"
+//                         } bg-background focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all`}
+//                       />
+//                       {errors.email && (
+//                         <p className="text-xs text-red-500 mt-1">
+//                           {errors.email.message}
+//                         </p>
+//                       )}
+//                     </div>
+//                     <div>
+//                       <Controller
+//                         name="phone"
+//                         control={control}
+//                         render={({ field }) => (
+//                           <PhoneInput
+//                             country={"us"}
+//                             value={field.value}
+//                             onChange={field.onChange}
+//                             inputClass="!w-full !h-12 !pl-12 !rounded-xl !border-border !bg-background"
+//                             containerClass="!w-full"
+//                             buttonClass="!rounded-l-xl !border-border"
+//                             dropdownClass="!rounded-xl"
+//                             enableSearch
+//                             searchPlaceholder="Search country..."
+//                           />
+//                         )}
+//                       />
+//                       {errors.phone && (
+//                         <p className="text-xs text-red-500 mt-1">
+//                           {errors.phone.message}
+//                         </p>
+//                       )}
+//                     </div>
+//                     <div>
+//                       <select
+//                         {...register("country")}
+//                         className={`w-full h-12 px-4 rounded-xl border ${
+//                           errors.country ? "border-red-500" : "border-border"
+//                         } bg-background focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all`}
+//                       >
+//                         <option value="">Select Country *</option>
+//                         {COUNTRIES.map((country) => (
+//                           <option key={country.code} value={country.name}>
+//                             {country.name}{" "}
+//                             {country.dialCode && `(+${country.dialCode})`}
+//                           </option>
+//                         ))}
+//                       </select>
+//                       {errors.country && (
+//                         <p className="text-xs text-red-500 mt-1">
+//                           {errors.country.message}
+//                         </p>
+//                       )}
+//                     </div>
+//                   </div>
+//                 </div>
+
+//                 {/* Program Selection */}
+//                 <div className="space-y-4">
+//                   <h3 className="text-sm font-black uppercase tracking-wider text-amber-600 flex items-center gap-2">
+//                     <GraduationCap className="w-4 h-4" /> Academic Program
+//                   </h3>
+//                   <div>
+//                     <select
+//                       {...register("program")}
+//                       className={`w-full h-12 px-4 rounded-xl border ${
+//                         errors.program ? "border-red-500" : "border-border"
+//                       } bg-background focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all`}
+//                     >
+//                       <option value="">Select a Program *</option>
+//                       {Object.values(PROGRAMS).map((program) => (
+//                         <option key={program.id} value={program.id}>
+//                           {program.name} - {program.price}/month
+//                         </option>
+//                       ))}
+//                     </select>
+//                     {errors.program && (
+//                       <p className="text-xs text-red-500 mt-1">
+//                         {errors.program.message}
+//                       </p>
+//                     )}
+//                   </div>
+
+//                   {selectedProgramValue &&
+//                     getProgramDetails(selectedProgramValue) && (
+//                       <motion.div
+//                         initial={{ opacity: 0, height: 0 }}
+//                         animate={{ opacity: 1, height: "auto" }}
+//                         className="p-4 rounded-xl bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800"
+//                       >
+//                         <p className="text-sm font-medium">
+//                           {getProgramDetails(selectedProgramValue)?.description}
+//                         </p>
+//                       </motion.div>
+//                     )}
+//                 </div>
+
+//                 {/* Additional Information */}
+//                 <div className="space-y-4">
+//                   <h3 className="text-sm font-black uppercase tracking-wider text-amber-600 flex items-center gap-2">
+//                     <MessageCircle className="w-4 h-4" /> Additional Information
+//                   </h3>
+//                   <div>
+//                     <textarea
+//                       {...register("message")}
+//                       rows={4}
+//                       placeholder="Tell us about your goals, current level, or any questions..."
+//                       className="w-full p-4 rounded-xl border border-border bg-background focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all resize-none"
+//                     />
+//                   </div>
+//                   <div>
+//                     <select
+//                       {...register("preferredTime")}
+//                       className="w-full h-12 px-4 rounded-xl border border-border bg-background focus:outline-none focus:ring-2 focus:ring-amber-500 transition-all"
+//                     >
+//                       <option value="">
+//                         Preferred Contact Time (Optional)
+//                       </option>
+//                       {TIMEZONES.map((tz) => (
+//                         <option key={tz} value={tz}>
+//                           {tz}
+//                         </option>
+//                       ))}
+//                     </select>
+//                   </div>
+//                 </div>
+
+//                 {/* Terms & Submit */}
+//                 <div className="space-y-6">
+//                   <label className="flex items-center gap-3 cursor-pointer">
+//                     <input
+//                       type="checkbox"
+//                       {...register("newsletterOptIn")}
+//                       className="w-4 h-4 rounded border-border text-amber-600 focus:ring-amber-500"
+//                     />
+//                     <span className="text-xs text-muted-foreground">
+//                       I agree to receive updates about my application and
+//                       programs
+//                     </span>
+//                   </label>
+
+//                   <Button
+//                     type="submit"
+//                     disabled={isSubmitting}
+//                     className="w-full rounded-full py-6 bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white font-black text-lg shadow-xl disabled:opacity-70"
+//                   >
+//                     {isSubmitting ? (
+//                       <span className="flex items-center justify-center gap-2">
+//                         <Loader2 className="w-5 h-5 animate-spin" />
+//                         SUBMITTING APPLICATION...
+//                       </span>
+//                     ) : (
+//                       <span className="flex items-center justify-center gap-2">
+//                         SUBMIT APPLICATION
+//                         <Send className="w-4 h-4" />
+//                       </span>
+//                     )}
+//                   </Button>
+
+//                   <p className="text-center text-[10px] text-muted-foreground">
+//                     By submitting, you agree to our{" "}
+//                     <Link
+//                       href="/privacy"
+//                       className="underline hover:text-amber-600"
+//                     >
+//                       Privacy Policy
+//                     </Link>{" "}
+//                     and{" "}
+//                     <Link
+//                       href="/terms"
+//                       className="underline hover:text-amber-600"
+//                     >
+//                       Terms of Service
+//                     </Link>
+//                   </p>
+//                 </div>
+//               </form>
+//             </motion.div>
+//           </div>
+//         </section>
+
+//         {/* Features Section */}
+//         <section className="py-20 bg-gradient-to-b from-amber-50/10 to-transparent dark:from-amber-950/5">
+//           <div className="container mx-auto px-4 sm:px-6">
+//             <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+//               {[
+//                 {
+//                   icon: Zap,
+//                   title: "Fast Processing",
+//                   desc: "24-48 hour application review",
+//                 },
+//                 {
+//                   icon: Shield,
+//                   title: "Secure Payment",
+//                   desc: "Multiple global payment options",
+//                 },
+//                 {
+//                   icon: Users,
+//                   title: "Global Community",
+//                   desc: "Students from 50+ countries",
+//                 },
+//                 {
+//                   icon: Award,
+//                   title: "Certified Teachers",
+//                   desc: "Qualified Ijazah holders",
+//                 },
+//                 {
+//                   icon: Calendar,
+//                   title: "Flexible Schedule",
+//                   desc: "Learn at your own pace",
+//                 },
+//                 {
+//                   icon: Heart,
+//                   title: "Supportive Environment",
+//                   desc: "Personalized attention",
+//                 },
+//               ].map((feature, idx) => (
+//                 <motion.div
+//                   key={idx}
+//                   initial={{ opacity: 0, y: 20 }}
+//                   whileInView={{ opacity: 1, y: 0 }}
+//                   transition={{ delay: idx * 0.1 }}
+//                   className="text-center p-6 rounded-2xl bg-card border border-border hover:border-amber-300 transition-all"
+//                 >
+//                   <feature.icon className="w-10 h-10 text-amber-500 mx-auto mb-4" />
+//                   <h3 className="font-black mb-2">{feature.title}</h3>
+//                   <p className="text-sm text-muted-foreground">
+//                     {feature.desc}
+//                   </p>
+//                 </motion.div>
+//               ))}
+//             </div>
+//           </div>
+//         </section>
+
+//         {/* FAQ Section */}
+//         <section className="py-20">
+//           <div className="container mx-auto px-4 sm:px-6 max-w-4xl">
+//             <div className="text-center mb-12">
+//               <h2 className="text-4xl sm:text-5xl font-black tracking-tighter mb-4">
+//                 Frequently Asked{" "}
+//                 <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-600 to-orange-600">
+//                   Questions
+//                 </span>
+//               </h2>
+//             </div>
+
+//             <div className="space-y-4">
+//               {[
+//                 {
+//                   q: "How long does admission take?",
+//                   a: "Applications are reviewed within 24 hours. You'll receive a response within 48 hours.",
+//                 },
+//                 {
+//                   q: "What payment methods are accepted?",
+//                   a: "We accept credit cards, bank transfers, mobile money, and Western Union.",
+//                 },
+//                 {
+//                   q: "Can I switch programs later?",
+//                   a: "Yes, you can switch programs with proper assessment and availability.",
+//                 },
+//                 {
+//                   q: "Is financial aid available?",
+//                   a: "Yes, Zakat-funded grants are available for eligible students.",
+//                 },
+//               ].map((faq, idx) => (
+//                 <motion.div
+//                   key={idx}
+//                   initial={{ opacity: 0 }}
+//                   whileInView={{ opacity: 1 }}
+//                   transition={{ delay: idx * 0.1 }}
+//                   className="p-6 rounded-2xl bg-card border border-border hover:border-amber-300 transition-all"
+//                 >
+//                   <h3 className="font-black mb-2">{faq.q}</h3>
+//                   <p className="text-muted-foreground">{faq.a}</p>
+//                 </motion.div>
+//               ))}
+//             </div>
+//           </div>
+//         </section>
+//       </main>
+//     </>
+//   );
+// }
+
+
+
+
+
+
+
+
+
+
+
+// app/admissions/page.tsx
 "use client";
 
-import { useState } from "react";
+import { Reveal } from "@/components/shared/section-animation";
+import { Button } from "@/components/ui/button";
+import { motion, useScroll, useTransform } from "framer-motion";
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
+import { useRef } from "react";
 import {
-  Calendar,
+  ArrowRight,
   CreditCard,
   Banknote,
   CheckCircle2,
   Shield,
   Users,
-  Clock,
   BookOpen,
   Sparkles,
-  Award,
-  ArrowRight,
   FileText,
-  Mail,
-  Phone,
-  User,
-  MapPin,
-  Loader2,
+  UserCheck,
+  MessageCircle,
+  GraduationCap,
+  Heart,
+  Target,
+  Compass,
+  Globe,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Reveal } from "@/components/shared/section-animation";
-import Link from "next/link";
-import { toast } from "sonner";
+
+// Program data for pre-selection
+const PROGRAMS = {
+  hifz: { name: "Hifz Al-Quran", color: "purple", path: "/courses/hifz" },
+  tajweed: { name: "Tajweed Al-Itqan", color: "blue", path: "/courses/tajweed" },
+  "group-tajweed": { name: "Group Tajweed", color: "teal", path: "/courses/group-tajweed" },
+  arabic: { name: "Al-Lughah Al-Arabiyyah", color: "amber", path: "/courses/arabic" },
+  tafsir: { name: "Tafsir Al-Mubin", color: "slate", path: "/courses/tafsir" },
+  qiroah: { name: "Qiro'ah Program", color: "teal", path: "/courses/qiroah" },
+  "group-qiroah": { name: "Group Qiro'ah", color: "green", path: "/courses/group-qiroah" },
+  "juz-amma": { name: "Juz Amma", color: "amber", path: "/courses/juz-amma" },
+  "juz-tabarak": { name: "Juz Tabarak", color: "purple", path: "/courses/juz-tabarak" },
+  murojaah: { name: "Muroja'ah Program", color: "rose", path: "/courses/murojaah" },
+};
 
 export default function AdmissionsPage() {
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [formData, setFormData] = useState({
-    fullName: "",
-    email: "",
-    phone: "",
-    country: "",
-    program: "",
-    message: "",
+  const searchParams = useSearchParams();
+  const preSelectedProgram = searchParams.get("program");
+  const containerRef = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: containerRef,
+    offset: ["start start", "end start"],
   });
+  const heroY = useTransform(scrollYProgress, [0, 1], [0, -50]);
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.5], [1, 0.9]);
 
-  const handleChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >,
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-
-    const formPayload = new FormData();
-    formPayload.append("fullName", formData.fullName);
-    formPayload.append("email", formData.email);
-    formPayload.append("phone", formData.phone);
-    formPayload.append("country", formData.country);
-    formPayload.append("program", formData.program);
-    formPayload.append("message", formData.message);
-
-    // Your Formspree endpoint
-    const endpoint = "https://formspree.io/f/mykljjbl";
-
-    try {
-      const response = await fetch(endpoint, {
-        method: "POST",
-        body: formPayload,
-        headers: {
-          Accept: "application/json",
-        },
-      });
-
-      const data = await response.json();
-
-      if (response.ok) {
-        toast.success("Application Submitted!", {
-          description:
-            "Our admissions council will review your application within 24 hours.",
-          duration: 5000,
-        });
-        // Reset form
-        setFormData({
-          fullName: "",
-          email: "",
-          phone: "",
-          country: "",
-          program: "",
-          message: "",
-        });
-      } else {
-        const errorMessage =
-          data.errors?.[0] || "Please check your information and try again.";
-        toast.error("Submission Failed", {
-          description: errorMessage,
-          duration: 5000,
-        });
-      }
-    } catch (error) {
-      console.error("Form submission error:", error);
-      toast.error("Network Error", {
-        description:
-          "Unable to connect. Please check your internet connection and try again.",
-        duration: 5000,
-      });
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+  const preSelectedProgramInfo = preSelectedProgram ? PROGRAMS[preSelectedProgram as keyof typeof PROGRAMS] : null;
 
   return (
-    <main className="pt-24 lg:pt-32 bg-background overflow-x-hidden selection:bg-gold/30">
+    <main ref={containerRef} className="relative pt-12 sm:pt-10 bg-background overflow-hidden">
+      {/* Background */}
+      <div className="hidden sm:block fixed inset-0 pointer-events-none">
+        <div className="absolute inset-0 opacity-[0.02] bg-[url('/islamic-pattern.svg')] bg-center bg-repeat" style={{ backgroundSize: "300px" }} />
+        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-primary-700/5 rounded-full blur-[150px]" />
+        <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-primary-700/5 rounded-full blur-[150px]" />
+      </div>
+
       {/* Hero Section */}
-      <section className="relative">
+      <motion.div style={{ y: heroY, opacity: heroOpacity }} className="relative pt-16 sm:pt-24 md:pt-28 lg:pt-32 pb-12 sm:pb-16">
         <div className="container mx-auto px-4 sm:px-6">
-          <div className="max-w-6xl mx-auto space-y-10">
-            {/* Breadcrumb */}
-            <nav className="text-[10px] sm:text-xs font-black uppercase tracking-[0.2em] sm:tracking-[0.3em] text-muted-foreground flex items-center gap-2">
-              <Link
-                href="/"
-                className="hover:text-primary-700 transition-colors"
+          <div className="max-w-4xl mx-auto text-center">
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 0.5 }}
+              className="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-linear-to-r from-primary-500/10 to-primary-600/10 border border-primary-500/20 text-primary-700 text-[9px] sm:text-[11px] font-black uppercase tracking-wider mb-4 sm:mb-6"
+            >
+              <Sparkles className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5" /> 🎓 Begin Your Sacred Journey 🎓
+            </motion.div>
+
+            <h1 className="text-4xl xs:text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tighter font-heading leading-[1.1] mb-4 sm:mb-6 px-2">
+              Al-Maysaroh{" "}
+              <span className="text-transparent bg-clip-text bg-linear-to-r from-primary-700 via-primary-600 to-primary-800 whitespace-nowrap">
+                Admissions
+              </span>
+            </h1>
+
+            <p className="text-base sm:text-xl text-muted-foreground font-light max-w-2xl mx-auto mb-6 sm:mb-8 px-4">
+              Begin your journey to Quranic mastery. Join a community of dedicated learners and certified scholars.
+            </p>
+
+            {/* Pre-selected Program Banner */}
+            {preSelectedProgramInfo && (
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mb-6 p-4 rounded-xl bg-primary-50/50 dark:bg-primary-950/30 border border-primary-200 dark:border-primary-800"
               >
-                Home
+                <p className="text-sm">
+                  <span className="font-black">{`You're applying for:`}</span>{" "}
+                  <Link href={preSelectedProgramInfo.path} className="text-primary-700 font-black hover:underline">
+                    {preSelectedProgramInfo.name}
+                  </Link>
+                </p>
+              </motion.div>
+            )}
+
+            <div className="flex flex-col xs:flex-row gap-3 sm:gap-4 justify-center px-4">
+              <Link href="/admissions/apply" className="w-full xs:w-auto">
+                <Button className="w-full rounded-full px-6 sm:px-8 py-3.5 sm:py-4 font-black bg-linear-to-r from-primary-700 to-primary-800 hover:from-primary-800 hover:to-primary-900 text-white text-sm sm:text-base shadow-xl">
+                  <span className="flex items-center justify-center gap-2">
+                    START YOUR APPLICATION
+                    <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                  </span>
+                </Button>
               </Link>
-              <span className="opacity-30">/</span>
-              <span className="text-primary-700">Admissions Protocol</span>
-            </nav>
-
-            <div className="flex flex-col lg:flex-row gap-16 items-start">
-              <div className="lg:w-1/2 space-y-8">
-                <Reveal>
-                  <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-primary-50 dark:bg-primary-950/50 border border-primary-700/10 text-primary-700 text-[10px] font-black uppercase tracking-[0.2em]">
-                    <Sparkles className="w-3.5 h-3.5" /> 2026 Academic Intake
-                    Now Open
-                  </div>
-                </Reveal>
-
-                <Reveal delay={0.1}>
-                  <h1 className="text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter font-heading leading-[0.9]">
-                    Al-Maysaroh <br />
-                    <span className="text-primary-700 italic">Admissions</span>
-                  </h1>
-                </Reveal>
-
-                <Reveal delay={0.2}>
-                  <p className="text-lg sm:text-xl text-muted-foreground font-medium leading-relaxed max-w-xl border-l-4 border-gold pl-6 py-1">
-                    Begin your sacred journey with a streamlined, transparent
-                    admission process. Our global enrollment system accommodates
-                    students from 50+ countries.
-                  </p>
-                </Reveal>
-
-                <Reveal delay={0.3}>
-                  <div className="flex flex-col sm:flex-row gap-4 pt-4">
-                    <Link href="#apply-now" className="w-full sm:w-auto">
-                      <Button className="w-full rounded-full px-10 py-7 font-black bg-primary-700 hover:bg-primary-800 text-base shadow-royal group transition-all">
-                        START APPLICATION
-                        <ArrowRight className="ml-2 w-4 h-4 transition-transform group-hover:translate-x-1" />
-                      </Button>
-                    </Link>
-                    <Link
-                      href="#financial-channels"
-                      className="w-full sm:w-auto"
-                    >
-                      <Button
-                        variant="outline"
-                        className="w-full rounded-full px-10 py-7 font-black text-base border-2"
-                      >
-                        PAYMENT OPTIONS
-                      </Button>
-                    </Link>
-                  </div>
-                </Reveal>
-              </div>
-
-              {/* Hero Stats Card */}
-              <Reveal delay={0.4} className="lg:w-1/2 w-full">
-                <div className="institutional-card p-6 sm:p-8 md:p-10 bg-card/40 backdrop-blur-xl border-primary-700/20 shadow-royal relative overflow-hidden">
-                  <div className="absolute top-0 right-0 w-32 h-32 bg-primary-700/10 blur-3xl rounded-full" />
-
-                  <div className="grid grid-cols-2 gap-6 sm:gap-8 mb-8 sm:mb-10">
-                    {[
-                      {
-                        value: "24-48",
-                        label: "Hours Processing",
-                        icon: Clock,
-                      },
-                      { value: "50+", label: "Countries", icon: Users },
-                      {
-                        value: "Global",
-                        label: "Payment Channels",
-                        icon: CreditCard,
-                      },
-                      { value: "100%", label: "Online Process", icon: Shield },
-                    ].map((stat, idx) => (
-                      <div key={idx} className="space-y-1 group">
-                        <stat.icon className="w-4 h-4 text-primary-700 mb-2 opacity-50 group-hover:opacity-100 transition-opacity" />
-                        <div className="text-2xl sm:text-3xl font-black text-primary-700 tracking-tighter">
-                          {stat.value}
-                        </div>
-                        <div className="text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-muted-foreground">
-                          {stat.label}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-
-                  <div className="p-4 sm:p-6 rounded-2xl bg-primary-50 dark:bg-primary-950/40 border border-primary-700/10">
-                    <div className="flex items-center gap-4 mb-2">
-                      <Award className="w-6 h-6 text-gold" />
-                      <div className="font-black text-xs sm:text-sm uppercase tracking-[0.2em]">
-                        Global Accessibility
-                      </div>
-                    </div>
-                    <p className="text-xs text-muted-foreground font-bold italic leading-relaxed">
-                      Bank transfers, international cards, mobile money, and
-                      Western Union accepted for universal access.
-                    </p>
-                  </div>
-                </div>
-              </Reveal>
+              <Link href="/assessment" className="w-full xs:w-auto">
+                <Button variant="outline" className="w-full rounded-full px-6 sm:px-8 py-3.5 sm:py-4 font-black text-sm sm:text-base border-primary-600 text-primary-600">
+                  FREE ASSESSMENT
+                </Button>
+              </Link>
             </div>
-          </div>
-        </div>
-      </section>
 
-      {/* Admissions Process - THE FOUR STEPS */}
-      <section className="py-24 sm:py-32 bg-linear-to-b from-transparent to-primary-50/10">
-        <div className="container mx-auto px-4 sm:px-6">
-          <div className="max-w-6xl mx-auto">
-            <Reveal>
-              <div className="text-center mb-20 space-y-4">
-                <h2 className="text-4xl md:text-6xl font-black tracking-tighter uppercase">
-                  Four-Step{" "}
-                  <span className="text-primary-700 italic">Protocol</span>
-                </h2>
-                <div className="h-1.5 w-24 bg-gold mx-auto rounded-full" />
-              </div>
-            </Reveal>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
+            {/* Stats Cards */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mt-10 sm:mt-12 pt-6 sm:pt-8 border-t border-border/50 px-2">
               {[
-                {
-                  step: "01",
-                  icon: FileText,
-                  title: "Assessment",
-                  description:
-                    "Complete online form with educational background and goals",
-                },
-                {
-                  step: "02",
-                  icon: CreditCard,
-                  title: "Settlement",
-                  description:
-                    "Choose payment method and complete financial registration",
-                },
-                {
-                  step: "03",
-                  icon: Users,
-                  title: "Scholar Match",
-                  description:
-                    "Our council assigns teacher based on your level and schedule",
-                },
-                {
-                  step: "04",
-                  icon: Calendar,
-                  title: "Orientation",
-                  description:
-                    "Portal access, materials, and first class scheduling",
-                },
-              ].map((step, index) => (
-                <Reveal key={index} delay={index * 0.1}>
-                  <div className="institutional-card p-8 sm:p-10 text-center hover:border-primary-700/40 transition-all relative group h-full">
-                    <div className="w-16 h-16 mx-auto mb-8 rounded-2xl bg-primary-50 dark:bg-primary-950/40 flex items-center justify-center relative group-hover:scale-110 transition-transform duration-500">
-                      <div className="absolute -top-3 -right-3 w-8 h-8 rounded-full bg-primary-700 text-white text-[10px] font-black flex items-center justify-center shadow-lg">
-                        {step.step}
-                      </div>
-                      <step.icon className="w-8 h-8 text-primary-700" />
-                    </div>
-                    <h3 className="text-lg font-black uppercase tracking-tight mb-4 italic">
-                      {step.title}
-                    </h3>
-                    <p className="text-sm text-muted-foreground font-medium leading-relaxed">
-                      {step.description}
-                    </p>
-                  </div>
-                </Reveal>
+                { label: "Active Students", value: "500+", icon: Users },
+                { label: "Certified Scholars", value: "15+", icon: GraduationCap },
+                { label: "Countries", value: "15+", icon: Globe },
+                { label: "Success Rate", value: "94%", icon: Target },
+              ].map((stat, i) => (
+                <motion.div key={i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }} className="p-2.5 sm:p-4 rounded-xl sm:rounded-2xl bg-linear-to-br from-primary-50/50 to-primary-100/30 dark:from-primary-950/20 dark:to-primary-900/20 border border-primary-100 dark:border-primary-800">
+                  <stat.icon className="w-4 h-4 sm:w-5 sm:h-5 text-primary-600 mx-auto mb-1.5 sm:mb-2" />
+                  <div className="text-lg sm:text-2xl md:text-3xl font-black text-primary-600">{stat.value}</div>
+                  <div className="text-[10px] sm:text-xs text-muted-foreground mt-0.5 sm:mt-1">{stat.label}</div>
+                </motion.div>
               ))}
             </div>
           </div>
         </div>
+      </motion.div>
+
+      {/* Admissions Process - 4 Steps */}
+      <section className="py-12 sm:py-16 bg-linear-to-b from-background via-primary-50/5 to-primary-100/5">
+        <div className="container mx-auto px-4 sm:px-6">
+          <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-12">
+            <div className="inline-flex items-center gap-2 text-primary-600 font-black text-[8px] sm:text-[10px] uppercase tracking-[0.2em] sm:tracking-[0.3em] mb-3 sm:mb-4">
+              <Compass className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> Your Journey
+            </div>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black tracking-tighter font-heading mb-3 sm:mb-4 px-2">
+              Four-Step <span className="text-primary-600 italic">Admissions</span> Protocol
+            </h2>
+            <p className="text-sm sm:text-base text-muted-foreground px-4">
+              A clear path from application to your first class
+            </p>
+          </div>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+            {[
+              { step: "01", icon: FileText, title: "Application", desc: "Complete online form with your educational background and goals", color: "from-primary-500 to-primary-600" },
+              { step: "02", icon: UserCheck, title: "Assessment", desc: "Meet with our scholars for level evaluation", color: "from-primary-600 to-primary-700" },
+              { step: "03", icon: CreditCard, title: "Enrollment", desc: "Choose payment method and complete registration", color: "from-primary-700 to-primary-800" },
+              { step: "04", icon: Users, title: "Scholar Match", desc: "Get assigned to your perfect teacher", color: "from-primary-800 to-primary-900" },
+            ].map((step, i) => (
+              <Reveal key={i} delay={i * 0.1}>
+                <div className="bg-card rounded-xl sm:rounded-2xl border border-border hover:border-primary-300 transition-all p-5 sm:p-6 text-center h-full group">
+                  <div className={`w-14 h-14 sm:w-16 sm:h-16 mx-auto mb-3 sm:mb-4 rounded-xl sm:rounded-2xl bg-linear-to-br ${step.color} flex items-center justify-center group-hover:scale-110 transition-transform`}>
+                    <step.icon className="w-7 h-7 sm:w-8 sm:h-8 text-white" />
+                  </div>
+                  <div className="text-xs text-primary-600 font-black mb-1">{step.step}</div>
+                  <h3 className="font-black text-lg sm:text-xl mb-1.5 sm:mb-2">{step.title}</h3>
+                  <p className="text-xs sm:text-sm text-muted-foreground">{step.desc}</p>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+        </div>
       </section>
 
-      {/* Global Payment Channels */}
-      <section id="financial-channels" className="py-24 sm:py-32 scroll-mt-24">
-        <div className="container mx-auto px-4 sm:px-6 max-w-6xl">
-          <Reveal>
-            <div className="text-center mb-20">
-              <h2 className="text-4xl md:text-6xl font-black tracking-tighter uppercase">
-                Global{" "}
-                <span className="text-primary-700 italic">Financial</span>{" "}
-                Channels
-              </h2>
+      {/* Financial Channels */}
+      <section className="py-12 sm:py-16">
+        <div className="container mx-auto px-4 sm:px-6">
+          <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-12">
+            <div className="inline-flex items-center gap-2 text-primary-600 font-black text-[8px] sm:text-[10px] uppercase tracking-[0.2em] sm:tracking-[0.3em] mb-3 sm:mb-4">
+              <CreditCard className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> Financial Channels
             </div>
-          </Reveal>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black tracking-tighter font-heading mb-3 sm:mb-4 px-2">
+              Flexible <span className="text-primary-600 italic">Payment</span> Options
+            </h2>
+            <p className="text-sm sm:text-base text-muted-foreground px-4">
+              Choose the payment method that works best for you
+            </p>
+          </div>
 
-          <div className="grid lg:grid-cols-2 gap-8 lg:gap-12">
+          <div className="grid lg:grid-cols-2 gap-6 sm:gap-8">
             {/* Instant Digital */}
-            <Reveal delay={0.1}>
-              <div className="institutional-card p-8 sm:p-10 md:p-12 border-2 border-primary-700/10 hover:border-primary-700/30 transition-all flex flex-col h-full">
-                <div className="flex items-start justify-between mb-8 sm:mb-10">
-                  <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-primary-700 flex items-center justify-center shadow-royal">
-                    <CreditCard className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
-                  </div>
-                  <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 rounded-full bg-primary-700/10 text-primary-700 text-[10px] font-black uppercase tracking-widest">
-                    <Sparkles className="w-3 h-3" /> Instant
-                  </div>
+            <div className="institutional-card p-6 sm:p-8 border-2 border-primary-700/10 hover:border-primary-700/30 transition-all">
+              <div className="flex items-start justify-between mb-6">
+                <div className="w-14 h-14 rounded-xl bg-primary-700 flex items-center justify-center">
+                  <CreditCard className="w-7 h-7 text-white" />
                 </div>
-
-                <h3 className="text-2xl sm:text-3xl font-black uppercase tracking-tighter mb-4 italic">
-                  Digital Settlement
-                </h3>
-                <p className="text-muted-foreground font-medium italic leading-relaxed mb-8">
-                  For students utilizing international credit/debit cards via
-                  our secure gateway.
-                </p>
-
-                <div className="space-y-4 mb-8 sm:mb-10 grow">
-                  {[
-                    "Immediate portal activation",
-                    "Secure Stripe processing",
-                    "Multi-currency support",
-                    "Auto-ledgering",
-                  ].map((feat, i) => (
-                    <div
-                      key={i}
-                      className="flex items-center gap-4 text-xs font-bold uppercase tracking-widest text-muted-foreground"
-                    >
-                      <CheckCircle2 className="w-4 h-4 text-primary-700 shrink-0" />
-                      {feat}
-                    </div>
-                  ))}
-                </div>
-
-                <div className="pt-8 border-t border-primary-700/5">
-                  <div className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-6">
-                    Supported: Visa, Mastercard, AMEX, Discover
-                  </div>
-                  <Button className="w-full rounded-full py-6 sm:py-7 bg-primary-700 hover:bg-primary-800 font-black text-xs sm:text-sm uppercase tracking-widest">
-                    PAY WITH CARD
-                  </Button>
+                <div className="px-3 py-1 rounded-full bg-primary-700/10 text-primary-700 text-[10px] font-black uppercase tracking-wider">
+                  Instant
                 </div>
               </div>
-            </Reveal>
+              <h3 className="text-xl font-black mb-2">Digital Settlement</h3>
+              <p className="text-muted-foreground text-sm mb-6">
+                Secure card processing via Stripe. Use any international Credit/Debit card for immediate portal access.
+              </p>
+              <ul className="space-y-2 mb-6">
+                {["Immediate portal activation", "Secure Stripe processing", "Multi-currency support", "Auto-ledgering"].map((feature, i) => (
+                  <li key={i} className="flex items-center gap-2 text-sm">
+                    <CheckCircle2 className="w-4 h-4 text-primary-600 shrink-0" />
+                    <span>{feature}</span>
+                  </li>
+                ))}
+              </ul>
+              <Button className="w-full rounded-full py-3 bg-primary-700 hover:bg-primary-800 text-white font-black">
+                PAY WITH CARD
+              </Button>
+            </div>
 
             {/* Manual Payment */}
-            <Reveal delay={0.2}>
-              <div className="institutional-card p-8 sm:p-10 md:p-12 border-2 border-accent/10 hover:border-accent/30 transition-all flex flex-col h-full">
-                <div className="flex items-start justify-between mb-8 sm:mb-10">
-                  <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-accent flex items-center justify-center shadow-lg shadow-accent/20">
-                    <Banknote className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
-                  </div>
-                  <div className="inline-flex items-center gap-2 px-3 sm:px-4 py-1.5 rounded-full bg-accent/10 text-accent text-[10px] font-black uppercase tracking-widest">
-                    <Shield className="w-3 h-3" /> Manual
-                  </div>
+            <div className="institutional-card p-6 sm:p-8 border-2 border-accent/10 hover:border-accent/30 transition-all">
+              <div className="flex items-start justify-between mb-6">
+                <div className="w-14 h-14 rounded-xl bg-accent flex items-center justify-center">
+                  <Banknote className="w-7 h-7 text-white" />
                 </div>
-
-                <h3 className="text-2xl sm:text-3xl font-black uppercase tracking-tighter mb-4 italic text-accent">
-                  Bank Remittance
-                </h3>
-                <p className="text-muted-foreground font-medium italic leading-relaxed mb-8">
-                  Preferred for regions utilizing Bank Transfers, M-Pesa, or
-                  Western Union.
-                </p>
-
-                <div className="space-y-4 mb-8 sm:mb-10 grow">
-                  {[
-                    "Bank details on application",
-                    "Upload receipt for verification",
-                    "Portal active in 12-24 hours",
-                    "Local remittance support",
-                  ].map((feat, i) => (
-                    <div
-                      key={i}
-                      className="flex items-center gap-4 text-xs font-bold uppercase tracking-widest text-muted-foreground"
-                    >
-                      <CheckCircle2 className="w-4 h-4 text-accent shrink-0" />
-                      {feat}
-                    </div>
-                  ))}
-                </div>
-
-                <div className="pt-8 border-t border-accent/5">
-                  <div className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-6">
-                    Processing: 12-24 Hours post-submission
-                  </div>
-                  <Button className="w-full rounded-full py-6 sm:py-7 bg-accent hover:bg-accent/90 font-black text-xs sm:text-sm uppercase tracking-widest">
-                    CHOOSE BANK TRANSFER
-                  </Button>
+                <div className="px-3 py-1 rounded-full bg-accent/10 text-accent text-[10px] font-black uppercase tracking-wider">
+                  Manual
                 </div>
               </div>
-            </Reveal>
+              <h3 className="text-xl font-black mb-2">Bank Remittance</h3>
+              <p className="text-muted-foreground text-sm mb-6">
+                Bank Transfer, Mobile Money, or Western Union. Submit receipt for manual portal activation.
+              </p>
+              <ul className="space-y-2 mb-6">
+                {["Bank details on application", "Upload receipt for verification", "Portal active in 12-24 hours", "Local remittance support"].map((feature, i) => (
+                  <li key={i} className="flex items-center gap-2 text-sm">
+                    <CheckCircle2 className="w-4 h-4 text-accent shrink-0" />
+                    <span>{feature}</span>
+                  </li>
+                ))}
+              </ul>
+              <Button variant="outline" className="w-full rounded-full py-3 border-accent text-accent font-black hover:bg-accent/10">
+                CHOOSE BANK TRANSFER
+              </Button>
+            </div>
           </div>
         </div>
       </section>
 
       {/* Tuition & Aid */}
-      <section className="py-24 sm:py-32 bg-linear-to-b from-transparent to-primary-50/10">
-        <div className="container mx-auto px-4 sm:px-6 max-w-6xl">
-          <Reveal>
-            <div className="text-center mb-20 space-y-4">
-              <h2 className="text-4xl md:text-6xl font-black tracking-tighter uppercase">
-                Tuition &{" "}
-                <span className="text-primary-700 italic">Support</span>
-              </h2>
-            </div>
-          </Reveal>
-
+      <section className="py-12 sm:py-16 bg-linear-to-b from-background via-primary-50/5 to-primary-100/5">
+        <div className="container mx-auto px-4 sm:px-6">
           <div className="grid lg:grid-cols-3 gap-6 sm:gap-8">
-            {/* Standard Tuition Card */}
-            <Reveal delay={0.1}>
-              <div className="institutional-card p-8 sm:p-10 h-full bg-card">
-                <BookOpen className="w-10 h-10 text-primary-700 mb-6" />
-                <h3 className="text-2xl font-black uppercase tracking-tighter mb-4">
-                  Standard Tuition
-                </h3>
-                <p className="text-sm text-muted-foreground font-medium italic leading-relaxed mb-8">
-                  Monthly tuition includes all digital materials and portal
-                  access.
-                </p>
-
-                <div className="space-y-4">
-                  {[
-                    { n: "Hifz Program", p: "$2.25+" },
-                    { n: "Tajweed Mastery", p: "$2+" },
-                    { n: "Arabic Fluency", p: "$2+" },
-                  ].map((row, i) => (
-                    <div
-                      key={i}
-                      className="flex justify-between items-center py-3 border-b border-primary-700/5"
-                    >
-                      <span className="text-xs font-black uppercase tracking-widest opacity-60">
-                        {row.n}
-                      </span>
-                      <span className="font-black text-primary-700">
-                        {row.p}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </Reveal>
-
-            {/* Zakat Card */}
-            <Reveal delay={0.2}>
-              <div className="institutional-card p-8 sm:p-10 h-full border-2 border-accent/20 bg-accent/5">
-                <Shield className="w-10 h-10 text-accent mb-6" />
-                <h3 className="text-2xl font-black uppercase tracking-tighter mb-4 italic text-accent">
-                  Zakat Grants
-                </h3>
-                <p className="text-sm text-muted-foreground font-medium italic leading-relaxed mb-8">
-                  For dedicated students facing financial hardship. Applications
-                  reviewed quarterly.
-                </p>
-
-                <div className="space-y-4 mb-8 sm:mb-10">
-                  {[
-                    "Council Review",
-                    "Proof of Dedication",
-                    "Limited Slots",
-                  ].map((txt, i) => (
-                    <div
-                      key={i}
-                      className="flex items-center gap-3 text-xs font-bold uppercase tracking-widest text-accent"
-                    >
-                      <CheckCircle2 className="w-3 h-3" /> {txt}
-                    </div>
-                  ))}
-                </div>
-
-                <Button className="w-full rounded-full py-6 bg-accent hover:bg-accent/90 font-black text-xs uppercase tracking-widest mt-auto">
-                  APPLY FOR AID
-                </Button>
-              </div>
-            </Reveal>
-
-            {/* Family Card */}
-            <Reveal delay={0.3}>
-              <div className="institutional-card p-8 sm:p-10 h-full border-2 border-gold/20 bg-gold/5">
-                <Users className="w-10 h-10 text-gold mb-6" />
-                <h3 className="text-2xl font-black uppercase tracking-tighter mb-4 italic text-gold">
-                  Family Rates
-                </h3>
-                <p className="text-sm text-muted-foreground font-medium italic leading-relaxed mb-8">
-                  Special rates for families learning together within one
-                  household.
-                </p>
-
-                <div className="p-6 rounded-2xl bg-white dark:bg-black/20 border border-gold/20 mb-6">
-                  <div className="text-2xl font-black text-gold tracking-tighter mb-1">
-                    15% Discount
+            {/* Standard Tuition */}
+            <div className="institutional-card p-6 sm:p-8">
+              <BookOpen className="w-10 h-10 text-primary-600 mb-4" />
+              <h3 className="text-xl font-black mb-2">Standard Tuition</h3>
+              <p className="text-muted-foreground text-sm mb-6">Monthly tuition includes all digital materials and portal access.</p>
+              <div className="space-y-3">
+                {[
+                  { program: "Hifz Program", price: "$200-300" },
+                  { program: "Tajweed Mastery", price: "$150-200" },
+                  { program: "Arabic Fluency", price: "$100-150" },
+                  { program: "Group Programs", price: "$79-89" },
+                ].map((item, i) => (
+                  <div key={i} className="flex justify-between items-center py-2 border-b border-border/50">
+                    <span className="text-sm font-black">{item.program}</span>
+                    <span className="text-primary-600 font-black">{item.price}</span>
                   </div>
-                  <div className="text-[10px] font-black uppercase tracking-widest opacity-60">
-                    For 3+ Household Members
-                  </div>
-                </div>
-
-                <Button
-                  variant="outline"
-                  className="w-full rounded-full py-6 border-gold text-gold font-black text-xs uppercase tracking-widest mt-auto"
-                >
-                  INQUIRE RATES
-                </Button>
+                ))}
               </div>
-            </Reveal>
+            </div>
+
+            {/* Zakat Grants */}
+            <div className="institutional-card p-6 sm:p-8 border-2 border-accent/20 bg-accent/5">
+              <Shield className="w-10 h-10 text-accent mb-4" />
+              <h3 className="text-xl font-black mb-2 text-accent">Zakat Grants</h3>
+              <p className="text-muted-foreground text-sm mb-6">For dedicated students facing financial hardship. Applications reviewed quarterly.</p>
+              <ul className="space-y-2 mb-6">
+                {["Council Review", "Proof of Dedication", "Limited Slots"].map((item, i) => (
+                  <li key={i} className="flex items-center gap-2 text-sm">
+                    <CheckCircle2 className="w-4 h-4 text-accent shrink-0" />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
+              <Button className="w-full rounded-full py-3 bg-accent hover:bg-accent/90 text-white font-black">
+                APPLY FOR AID
+              </Button>
+            </div>
+
+            {/* Family Rates */}
+            <div className="institutional-card p-6 sm:p-8 border-2 border-gold/20 bg-gold/5">
+              <Heart className="w-10 h-10 text-gold mb-4" />
+              <h3 className="text-xl font-black mb-2 text-gold">Family Rates</h3>
+              <p className="text-muted-foreground text-sm mb-6">Special rates for families learning together within one household.</p>
+              <div className="p-4 rounded-xl bg-white dark:bg-black/20 border border-gold/20 mb-6 text-center">
+                <div className="text-2xl font-black text-gold">15% Discount</div>
+                <div className="text-xs text-muted-foreground">For 3+ Household Members</div>
+              </div>
+              <Button variant="outline" className="w-full rounded-full py-3 border-gold text-gold font-black hover:bg-gold/10">
+                INQUIRE RATES
+              </Button>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Application Form - NOW FUNCTIONAL */}
-      <section id="apply-now" className="py-24 sm:py-32 scroll-mt-24">
-        <div className="container mx-auto px-4 sm:px-6 max-w-4xl">
-          <Reveal>
-            <div className="institutional-card p-8 sm:p-10 md:p-16 border-2 border-primary-700/20 bg-card/40 backdrop-blur-xl relative overflow-hidden">
-              <div className="absolute top-0 left-0 w-full h-2 bg-primary-700" />
-
-              <div className="text-center mb-12 sm:mb-16">
-                <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter uppercase mb-4 leading-none">
-                  Admission{" "}
-                  <span className="text-primary-700 italic text-2xl sm:text-3xl md:text-4xl block mt-2 tracking-widest">
-                    Gateway
-                  </span>
-                </h2>
-                <div className="h-1 w-12 bg-gold mx-auto rounded-full" />
-              </div>
-
-              <form
-                onSubmit={handleSubmit}
-                className="space-y-10 sm:space-y-12"
-              >
-                {/* Personal Information */}
-                <div className="space-y-6">
-                  <h3 className="text-xs font-black uppercase tracking-[0.4em] text-primary-700 border-b border-primary-700/10 pb-4">
-                    01. Personal Information
-                  </h3>
-                  <div className="grid sm:grid-cols-2 gap-6">
-                    <div className="space-y-2">
-                      <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
-                        Full Name *
-                      </label>
-                      <div className="relative">
-                        <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                        <input
-                          type="text"
-                          name="fullName"
-                          value={formData.fullName}
-                          onChange={handleChange}
-                          required
-                          placeholder="Enter your full name"
-                          className="w-full h-12 pl-10 pr-4 rounded-xl border border-border bg-background focus:border-primary-700 focus:ring-2 focus:ring-primary-500/20 outline-none transition-all"
-                        />
-                      </div>
-                    </div>
-                    <div className="space-y-2">
-                      <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
-                        Email Address *
-                      </label>
-                      <div className="relative">
-                        <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                        <input
-                          type="email"
-                          name="email"
-                          value={formData.email}
-                          onChange={handleChange}
-                          required
-                          placeholder="your@email.com"
-                          className="w-full h-12 pl-10 pr-4 rounded-xl border border-border bg-background focus:border-primary-700 focus:ring-2 focus:ring-primary-500/20 outline-none transition-all"
-                        />
-                      </div>
-                    </div>
-                    <div className="space-y-2">
-                      <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
-                        Phone Number *
-                      </label>
-                      <div className="relative">
-                        <Phone className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                        <input
-                          type="tel"
-                          name="phone"
-                          value={formData.phone}
-                          onChange={handleChange}
-                          required
-                          placeholder="+1 (555) 000-0000"
-                          className="w-full h-12 pl-10 pr-4 rounded-xl border border-border bg-background focus:border-primary-700 focus:ring-2 focus:ring-primary-500/20 outline-none transition-all"
-                        />
-                      </div>
-                    </div>
-                    <div className="space-y-2">
-                      <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
-                        Country *
-                      </label>
-                      <div className="relative">
-                        <MapPin className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                        <select
-                          name="country"
-                          value={formData.country}
-                          onChange={handleChange}
-                          required
-                          className="w-full h-12 pl-10 pr-4 rounded-xl border border-border bg-background focus:border-primary-700 focus:ring-2 focus:ring-primary-500/20 outline-none transition-all appearance-none"
-                        >
-                          <option value="">Select Country</option>
-                          <option value="United States">United States</option>
-                          <option value="United Kingdom">United Kingdom</option>
-                          <option value="Canada">Canada</option>
-                          <option value="Australia">Australia</option>
-                          <option value="Nigeria">Nigeria</option>
-                          <option value="South Africa">South Africa</option>
-                          <option value="Egypt">Egypt</option>
-                          <option value="Saudi Arabia">Saudi Arabia</option>
-                          <option value="UAE">UAE</option>
-                          <option value="Other">Other</option>
-                        </select>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Academic Intent */}
-                <div className="space-y-6">
-                  <h3 className="text-xs font-black uppercase tracking-[0.4em] text-primary-700 border-b border-primary-700/10 pb-4">
-                    02. Academic Intent
-                  </h3>
-                  <div className="space-y-6">
-                    <div className="space-y-2">
-                      <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
-                        Select Program *
-                      </label>
-                      <select
-                        name="program"
-                        value={formData.program}
-                        onChange={handleChange}
-                        required
-                        className="w-full h-12 px-4 rounded-xl border border-border bg-background focus:border-primary-700 focus:ring-2 focus:ring-primary-500/20 outline-none transition-all appearance-none"
-                      >
-                        <option value="">Select a program</option>
-                        <option value="qiroah">{`Qiro'ah Al-Quran`}</option>
-                        <option value="hifz">Hifz Al-Quran</option>
-                        <option value="tajweed">
-                          Tajweed Al-Itqan
-                        </option>
-                        <option value="arabic">Quranic Arabic</option>
-                        <option value="tafsir">
-                          Tafsir Al-Mubin
-                        </option>
-                        <option value="qiroah">
-                         {` Group Qiro'ah - Children (6 months)`}
-                        </option>
-                        <option value="juz-amma">
-                          Juz Amma Group - Children
-                        </option>
-                        <option value="ijazah">
-                          Ijazah Certification Track
-                        </option>
-                      </select>
-                    </div>
-                    <div className="space-y-2">
-                      <label className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
-                        Message / Additional Information
-                      </label>
-                      <textarea
-                        name="message"
-                        value={formData.message}
-                        onChange={handleChange}
-                        rows={4}
-                        placeholder="Tell us about your goals, current level, or any questions..."
-                        className="w-full p-4 rounded-xl border border-border bg-background focus:border-primary-700 focus:ring-2 focus:ring-primary-500/20 outline-none transition-all resize-none"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                {/* Honeypot spam protection */}
-                <input type="text" name="_gotcha" style={{ display: "none" }} />
-
-                {/* Submit Button */}
-                <div className="pt-8">
-                  <Button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="w-full rounded-full py-6 sm:py-8 bg-primary-700 hover:bg-primary-800 font-black text-base sm:text-lg shadow-royal group disabled:opacity-70 disabled:cursor-not-allowed"
-                  >
-                    {isSubmitting ? (
-                      <span className="flex items-center justify-center gap-2">
-                        <Loader2 className="w-5 h-5 animate-spin" />
-                        SUBMITTING...
-                      </span>
-                    ) : (
-                      <span className="flex items-center justify-center gap-2">
-                        COMPLETE DIGITAL APPLICATION
-                        <ArrowRight className="ml-2 w-5 h-5 transition-transform group-hover:translate-x-1" />
-                      </span>
-                    )}
-                  </Button>
-                  <p className="text-center text-[10px] font-black uppercase tracking-widest text-muted-foreground mt-6 opacity-60">
-                    Council review within 24 hours • Global processing active
-                  </p>
-                </div>
-              </form>
-            </div>
-          </Reveal>
-        </div>
-      </section>
-
       {/* FAQ Section */}
-      <section className="pb-24 sm:pb-32 lg:pb-48">
-        <div className="container mx-auto px-4 sm:px-6 max-w-4xl">
-          <Reveal>
-            <div className="text-center mb-20 space-y-4">
-              <h2 className="text-4xl md:text-5xl font-black tracking-tighter uppercase italic text-primary-700">
-                Admissions FAQ
-              </h2>
-              <div className="h-1 w-12 bg-gold mx-auto rounded-full" />
+      <section className="py-12 sm:py-16">
+        <div className="container mx-auto px-4 sm:px-6">
+          <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-12">
+            <div className="inline-flex items-center gap-2 text-primary-600 font-black text-[8px] sm:text-[10px] uppercase tracking-[0.2em] sm:tracking-[0.3em] mb-3 sm:mb-4">
+              <MessageCircle className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> Common Questions
             </div>
-          </Reveal>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black tracking-tighter font-heading mb-3 sm:mb-4 px-2">
+              Frequently Asked <span className="text-primary-600 italic">Questions</span>
+            </h2>
+          </div>
 
-          <div className="space-y-6">
+          <div className="grid md:grid-cols-2 gap-4 sm:gap-6 max-w-4xl mx-auto">
             {[
-              {
-                q: "How long does the admission process take?",
-                a: "Applications are reviewed within 24 hours. Portal activation typically occurs 48 hours after tuition settlement.",
-              },
-              {
-                q: "Can I change programs after enrollment?",
-                a: "Yes, curriculum shifts are always subject to teacher availability and may require a brief reassessment to ensure proper placement.",
-              },
-              {
-                q: "Is financial aid available?",
-                a: "Yes, Zakat-funded grants are available for eligible students facing financial hardship. Applications are reviewed quarterly.",
-              },
-              {
-                q: "What documents do I need to apply?",
-                a: " No documents are required for the initial application. However, you may be asked to provide proof of identity and educational background during the assessment phase.",
-              },
-              {
-                q: "Is there an age requirement for programs?",
-                a: "Children's programs accept ages 5-12. Adult programs are open to all ages 13 and above with appropriate reading levels.",
-              },
-            ].map((faq, index) => (
-              <Reveal key={index} delay={index * 0.05}>
-                <div className="institutional-card p-8 sm:p-10 hover:border-primary-700/40 transition-all group">
-                  <h3 className="font-black text-lg sm:text-xl uppercase tracking-tighter mb-4 group-hover:text-primary-700 transition-colors italic">
-                    {faq.q}
-                  </h3>
-                  <p className="text-muted-foreground font-medium leading-relaxed italic border-l-2 border-primary-700/10 pl-6">
-                    {faq.a}
-                  </p>
+              { q: "How long does the admission process take?", a: "Applications are reviewed within 24 hours. Portal activation typically occurs 48 hours after tuition settlement." },
+              { q: "Can I change programs after enrollment?", a: "Yes, curriculum shifts are permitted within the first academic month of your enrollment." },
+              { q: "Is financial aid available?", a: "Yes, Zakat-funded grants are available for eligible students facing financial hardship." },
+              { q: "What documents do I need to apply?", a: "A valid ID, educational background information, and proof of payment method are required." },
+              { q: "Is there an age requirement for programs?", a: "Children's programs accept ages 5-12. Adult programs are open to all ages 13 and above." },
+              { q: "Can I get a refund if I'm not satisfied?", a: "We offer a free assessment session before enrollment to ensure program fit." },
+            ].map((faq, i) => (
+              <Reveal key={i} delay={i * 0.05}>
+                <div className="bg-card rounded-xl sm:rounded-2xl border border-border hover:border-primary-300 transition-all p-5 sm:p-6">
+                  <div className="flex items-start gap-2 sm:gap-3">
+                    <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center shrink-0 mt-0.5">
+                      <Sparkles className="w-3 h-3 sm:w-4 sm:h-4 text-primary-600" />
+                    </div>
+                    <div>
+                      <h3 className="font-black text-sm sm:text-base mb-1 sm:mb-2">{faq.q}</h3>
+                      <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">{faq.a}</p>
+                    </div>
+                  </div>
                 </div>
               </Reveal>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Final CTA */}
+      <section className="py-12 sm:py-20">
+        <div className="container mx-auto px-4 sm:px-6">
+          <div className="bg-card rounded-xl sm:rounded-2xl border border-border hover:border-primary-300 transition-all p-6 sm:p-8 md:p-12 text-center max-w-4xl mx-auto bg-linear-to-br from-primary-600/5 to-primary-800/5">
+            <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-linear-to-br from-primary-700 to-primary-800 mb-4 sm:mb-6 shadow-lg">
+              <GraduationCap className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
+            </div>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-black mb-3 sm:mb-4 px-2">Ready to Begin Your Journey?</h2>
+            <p className="text-sm sm:text-base text-muted-foreground mb-6 sm:mb-8 max-w-md mx-auto px-4">
+              Join hundreds of students who have chosen Al-Maysaroh for their Quranic education.
+            </p>
+            <div className="flex flex-col xs:flex-row gap-3 sm:gap-4 justify-center px-4">
+              <Link href="/admissions/apply" className="w-full xs:w-auto">
+                <Button className="w-full rounded-full px-6 sm:px-8 py-3 sm:py-4 font-black bg-linear-to-r from-primary-700 to-primary-800 hover:from-primary-800 hover:to-primary-900 text-white">
+                  APPLY NOW
+                  <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 ml-1.5 sm:ml-2" />
+                </Button>
+              </Link>
+              <Link href="/contact" className="w-full xs:w-auto">
+                <Button variant="outline" className="w-full rounded-full px-6 sm:px-8 py-3 sm:py-4 font-black text-sm sm:text-base border-primary-600 text-primary-600">
+                  CONTACT ADMISSIONS
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
       </section>
