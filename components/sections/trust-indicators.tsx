@@ -117,7 +117,7 @@
 
 
 
-
+// components/sections/trust-indicators.tsx
 "use client";
 
 import { motion, useInView, useAnimation, Variants } from "framer-motion";
@@ -130,6 +130,7 @@ import {
   CheckCircle,
 } from "lucide-react";
 import { useRef, useEffect } from "react";
+import { cn } from "@/lib/utils";
 
 const TRUST_SEALS = [
   {
@@ -138,17 +139,15 @@ const TRUST_SEALS = [
     sub: "Verified Sanad Chains",
     description:
       "Direct transmission chains from certified scholars with documented isnad",
-    color: "from-emerald-500 to-teal-600",
-    bgColor: "emerald",
+    color: "purple",
   },
   {
     icon: Landmark,
     label: "Scholarly Council",
-    sub: "Traditional Sanad Lineage", // ✅ Sanad-focused
+    sub: "Traditional Sanad Lineage",
     description:
-      "Faculty with authenticated chains of transmission to the Prophet (ﷺ)", // ✅ Islamic authentication
-    color: "from-blue-500 to-cyan-600",
-    bgColor: "blue",
+      "Faculty with authenticated chains of transmission to the Prophet (ﷺ)",
+    color: "amber",
   },
   {
     icon: Award,
@@ -156,8 +155,7 @@ const TRUST_SEALS = [
     sub: "1-on-1 Academic Focus",
     description:
       "Personalized learning with dedicated master teachers and progress tracking",
-    color: "from-amber-500 to-orange-600",
-    bgColor: "amber",
+    color: "purple",
   },
   {
     icon: ScrollText,
@@ -165,10 +163,35 @@ const TRUST_SEALS = [
     sub: "Classical Methodology",
     description:
       "Study of classical Islamic sciences following authentic scholarly traditions",
-    color: "from-purple-500 to-violet-600",
-    bgColor: "purple",
+    color: "amber",
   },
 ];
+
+const getColorStyles = (color: string) => {
+  const styles = {
+    purple: {
+      gradient: "from-purple-600 to-purple-700",
+      bg: "bg-purple-100 dark:bg-purple-950/40",
+      border: "border-purple-200 dark:border-purple-800",
+      text: "text-purple-600",
+      light: "bg-purple-500/10",
+      ring: "ring-purple-500/20",
+      hover: "hover:border-purple-300",
+      via: "via-purple-500",
+    },
+    amber: {
+      gradient: "from-amber-500 to-amber-600",
+      bg: "bg-amber-100 dark:bg-amber-950/40",
+      border: "border-amber-200 dark:border-amber-800",
+      text: "text-amber-600",
+      light: "bg-amber-500/10",
+      ring: "ring-amber-500/20",
+      hover: "hover:border-amber-300",
+      via: "via-amber-500",
+    },
+  };
+  return styles[color as keyof typeof styles] || styles.purple;
+};
 
 export function TrustIndicators() {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -186,7 +209,7 @@ export function TrustIndicators() {
     visible: {
       opacity: 1,
       transition: {
-        staggerChildren: 0.15,
+        staggerChildren: 0.1,
         delayChildren: 0.1,
       },
     },
@@ -195,7 +218,7 @@ export function TrustIndicators() {
   const itemVariants: Variants = {
     hidden: {
       opacity: 0,
-      y: 30,
+      y: 20,
       scale: 0.95,
     },
     visible: {
@@ -204,114 +227,85 @@ export function TrustIndicators() {
       scale: 1,
       transition: {
         type: "spring",
-        stiffness: 100,
-        damping: 15,
-      },
-    },
-    hover: {
-      y: -8,
-      scale: 1.02,
-      transition: {
-        type: "spring",
-        stiffness: 400,
-        damping: 25,
+        stiffness: 200,
+        damping: 20,
       },
     },
   };
 
   const iconVariants = {
-    hidden: { rotate: -20, scale: 0 },
+    hidden: { scale: 0 },
     visible: {
-      rotate: 0,
       scale: 1,
       transition: {
         type: "spring" as const,
-        stiffness: 200,
-        damping: 15,
+        stiffness: 300,
+        damping: 20,
       },
-    },
-    hover: {
-      rotate: [0, -10, 10, 0],
-      transition: {
-        duration: 0.6,
-      },
-    },
-  };
-
-  const glowVariants = {
-    hidden: { scale: 0.8, opacity: 0 },
-    visible: {
-      scale: 1,
-      opacity: 1,
-      transition: {
-        delay: 0.3,
-        duration: 0.8,
-      },
-    },
-    hover: {
-      scale: 1.2,
-      opacity: 0.1,
     },
   };
 
   return (
     <section
       ref={containerRef}
-      className="relative py-16 md:py-24 overflow-hidden"
+      className="relative py-12 xs:py-16 sm:py-20 md:py-24 lg:py-32 overflow-hidden bg-gradient-to-b from-background via-purple-50/5 to-amber-50/5"
       aria-label="Trust Seals and Certifications"
     >
-      {/* Background Gradient */}
-      <div className="absolute inset-0 bg-linear-to-b from-background via-primary-50/5 to-background dark:from-background dark:via-primary-950/5 dark:to-background" />
+      {/* Background Elements - Simplified for mobile */}
+      <div className="hidden sm:block absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-0 right-0 w-96 h-96 bg-purple-600/5 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 left-0 w-96 h-96 bg-amber-500/5 rounded-full blur-3xl" />
+      </div>
 
-      {/* Animated floating particles */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {[...Array(12)].map((_, i) => (
+      {/* Animated particles - Hidden on mobile for performance */}
+      <div className="hidden lg:block absolute inset-0 overflow-hidden pointer-events-none">
+        {[...Array(6)].map((_, i) => (
           <motion.div
             key={i}
-            className="absolute w-1 h-1 bg-primary-500/20 rounded-full"
+            className="absolute w-1 h-1 bg-purple-500/20 rounded-full"
             animate={{
-              y: [0, -100, 0],
-              x: [0, Math.sin(i) * 50, 0],
-              opacity: [0, 0.5, 0],
+              y: [0, -80, 0],
+              x: [0, Math.sin(i) * 40, 0],
+              opacity: [0, 0.4, 0],
             }}
             transition={{
-              duration: 8 + i,
+              duration: 6 + i,
               repeat: Infinity,
               delay: i * 0.5,
               ease: "easeInOut",
             }}
             style={{
-              left: `${(i * 10) % 100}%`,
+              left: `${(i * 15) % 100}%`,
               top: `${20 + ((i * 7) % 60)}%`,
             }}
           />
         ))}
       </div>
 
-      <div className="container mx-auto px-4 sm:px-6 relative z-10">
+      <div className="container mx-auto px-4 xs:px-5 sm:px-6 relative z-10">
         {/* Section Header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-12 md:mb-16"
+          transition={{ duration: 0.5 }}
+          className="text-center mb-10 xs:mb-12 sm:mb-16 md:mb-20"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary-100 dark:bg-primary-900/30 border border-primary-200 dark:border-primary-800/30 mb-4">
-            <Sparkles className="w-4 h-4 text-primary-600 dark:text-primary-400" />
-            <span className="text-xs font-black uppercase tracking-[0.2em] text-primary-700 dark:text-primary-400">
+          <div className="inline-flex items-center gap-1.5 xs:gap-2 px-2.5 xs:px-3 py-1 xs:py-1.5 rounded-full bg-purple-100 dark:bg-purple-900/30 border border-purple-200 dark:border-purple-800 mb-3 xs:mb-4">
+            <Sparkles className="w-3 h-3 xs:w-3.5 xs:h-3.5 text-amber-500" />
+            <span className="text-[8px] xs:text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] text-purple-700 dark:text-purple-400">
               Certified Excellence
             </span>
           </div>
-          <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tighter leading-[0.9] md:leading-[0.8] font-heading mb-4">
+          <h2 className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tighter leading-[1.1] font-heading mb-3 xs:mb-4 px-2">
             Trusted by{" "}
-            <span className="text-primary bg-clip-text bg-linear-to-r italic from-primary-600 to-primary-800">
-              Scholars{" "}
+            <span className="bg-gradient-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent italic">
+              Scholars
             </span>{" "}
             Worldwide
           </h2>
-          <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
+          <p className="text-sm xs:text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto px-4">
             Our credentials are backed by centuries of Islamic scholarly
-            tradition
+            tradition with authentic Sanad chains.
           </p>
         </motion.div>
 
@@ -320,119 +314,91 @@ export function TrustIndicators() {
           variants={containerVariants}
           initial="hidden"
           animate={controls}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6"
+          className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-4 gap-4 xs:gap-5 sm:gap-6 md:gap-8"
         >
-          {TRUST_SEALS.map((seal, i) => (
-            <motion.div
-              key={i}
-              variants={itemVariants}
-              whileHover="hover"
-              className="relative group"
-            >
-              {/* Glow Effect */}
+          {TRUST_SEALS.map((seal, i) => {
+            const Icon = seal.icon;
+            const colors = getColorStyles(seal.color);
+            
+            return (
               <motion.div
-                variants={glowVariants}
-                className={`absolute -inset-0.5 bg-linear-to-br ${seal.color} rounded-2xl blur-xl opacity-0 group-hover:opacity-30 transition-opacity duration-500`}
-              />
-
-              {/* Main Card */}
-              <div className="relative bg-linear-to-br from-card to-card/80 backdrop-blur-sm border border-white/10 dark:border-white/5 rounded-2xl p-6 md:p-8 shadow-lg shadow-black/5 dark:shadow-black/20 overflow-hidden h-full">
-                {/* Corner Accent */}
-                <div
-                  className={`absolute top-0 right-0 w-16 h-16 bg-linear-to-bl ${seal.color} opacity-5 rounded-bl-full`}
-                />
-
-                {/* Icon Container */}
-                <div className="relative mb-6">
-                  <motion.div
-                    variants={iconVariants}
-                    className={`relative w-14 h-14 md:w-16 md:h-16 rounded-xl bg-linear-to-br ${seal.color} flex items-center justify-center shadow-lg`}
-                  >
-                    <seal.icon className="w-7 h-7 md:w-8 md:h-8 text-white" />
-
-                    {/* Animated Ring */}
-                    <motion.div
-                      className="absolute inset-0 border-2 border-white/30 rounded-xl"
-                      animate={{
-                        scale: [1, 1.1, 1],
-                        opacity: [0.5, 0.8, 0.5],
-                      }}
-                      transition={{
-                        duration: 2,
-                        repeat: Infinity,
-                        delay: i * 0.2,
-                      }}
-                    />
-                  </motion.div>
-
-                  {/* Floating Badge */}
-                  <motion.div
-                    animate={{
-                      y: [0, -5, 0],
-                    }}
-                    transition={{
-                      duration: 3,
-                      repeat: Infinity,
-                      delay: i * 0.3,
-                    }}
-                    className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-background border border-white/20 flex items-center justify-center shadow-md"
-                  >
-                    <CheckCircle className="w-3 h-3 text-emerald-500" />
-                  </motion.div>
-                </div>
-
-                {/* Content */}
-                <div className="space-y-3">
-                  <h3 className="text-lg md:text-xl font-black text-foreground leading-tight">
-                    {seal.label}
-                  </h3>
-                  <p
-                    className={`text-sm md:text-base font-bold uppercase tracking-widest bg-linear-to-r ${seal.color} bg-clip-text text-transparent`}
-                  >
-                    {seal.sub}
-                  </p>
-                  <p className="text-sm text-muted-foreground opacity-90 leading-relaxed">
-                    {seal.description}
-                  </p>
-                </div>
-
-                {/* Hover Line Indicator */}
-                <motion.div
-                  className="absolute bottom-0 left-0 right-0 h-1 bg-linear-to-r from-transparent via-current to-transparent opacity-0 group-hover:opacity-100"
-                  initial={{ scaleX: 0 }}
-                  whileHover={{ scaleX: 1 }}
-                  transition={{ duration: 0.3 }}
-                  style={{ color: `var(--color-${seal.bgColor}-500)` }}
-                />
-              </div>
-
-              {/* Floating Tag on Hover */}
-              <motion.div
-                initial={{ opacity: 0, y: 10, scale: 0.9 }}
-                whileHover={{ opacity: 1, y: 0, scale: 1 }}
-                className="absolute -top-3 left-1/2 -translate-x-1/2 z-20 px-3 py-1.5 rounded-full bg-background border border-white/10 shadow-lg"
+                key={i}
+                variants={itemVariants}
+                className="relative group"
               >
-                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-primary-700 dark:text-primary-400 whitespace-nowrap">
-                  Certified
-                </span>
+                {/* Glow Effect - Simplified */}
+                <div className={cn(
+                  "absolute -inset-0.5 bg-gradient-to-r rounded-xl xs:rounded-2xl blur-md opacity-0 group-hover:opacity-20 transition-opacity duration-500",
+                  colors.gradient
+                )} />
+
+                {/* Main Card */}
+                <div className={cn(
+                  "relative bg-card rounded-xl xs:rounded-2xl border border-border transition-all duration-300 p-5 xs:p-6 sm:p-6 md:p-7 lg:p-8 shadow-sm hover:shadow-xl overflow-hidden h-full",
+                  colors.hover
+                )}>
+                  
+                  {/* Corner Accent */}
+                  <div className={cn(
+                    "absolute top-0 right-0 w-16 h-16 bg-gradient-to-bl opacity-5 rounded-bl-full",
+                    colors.gradient
+                  )} />
+
+                  {/* Icon Container */}
+                  <div className="relative mb-4 xs:mb-5 sm:mb-6">
+                    <div className={cn(
+                      "relative w-12 h-12 xs:w-13 xs:h-13 sm:w-14 sm:h-14 md:w-16 md:h-16 rounded-xl xs:rounded-2xl bg-gradient-to-br flex items-center justify-center shadow-lg",
+                      colors.gradient
+                    )}>
+                      <Icon className="w-6 h-6 xs:w-6.5 xs:h-6.5 sm:w-7 sm:h-7 md:w-8 md:h-8 text-white" />
+                    </div>
+
+                    {/* Floating Badge */}
+                    <div className="absolute -top-1 -right-1 xs:-top-2 xs:-right-2 w-5 h-5 xs:w-6 xs:h-6 rounded-full bg-background border border-purple-200 dark:border-purple-800 flex items-center justify-center shadow-md">
+                      <CheckCircle className="w-2.5 h-2.5 xs:w-3 xs:h-3 text-emerald-500" />
+                    </div>
+                  </div>
+
+                  {/* Content */}
+                  <div className="space-y-2 xs:space-y-2.5 sm:space-y-3">
+                    <h3 className="text-base xs:text-lg sm:text-lg md:text-xl font-black text-foreground leading-tight">
+                      {seal.label}
+                    </h3>
+                    <p className={cn(
+                      "text-[10px] xs:text-[11px] sm:text-xs font-black uppercase tracking-wider",
+                      colors.text
+                    )}>
+                      {seal.sub}
+                    </p>
+                    <p className="text-[11px] xs:text-xs sm:text-sm text-muted-foreground leading-relaxed">
+                      {seal.description}
+                    </p>
+                  </div>
+
+                  {/* Hover Line Indicator */}
+                  <div className={cn(
+                    "absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent to-transparent scale-x-0 group-hover:scale-x-100 transition-transform duration-300",
+                    colors.via
+                  )} />
+                </div>
               </motion.div>
-            </motion.div>
-          ))}
+            );
+          })}
         </motion.div>
 
         {/* Bottom CTA */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ delay: 0.8, duration: 0.6 }}
-          className="text-center mt-12 md:mt-16"
+          transition={{ delay: 0.5, duration: 0.5 }}
+          className="text-center mt-10 xs:mt-12 sm:mt-16 md:mt-20"
         >
-          <div className="inline-flex items-center gap-3 text-sm text-muted-foreground">
-            <div className="h-px w-8 bg-linear-to-r from-transparent to-border" />
-            <span className="font-medium">
-              All certifications verified annually
+          <div className="inline-flex flex-col xs:flex-row items-center gap-2 xs:gap-3 text-xs xs:text-sm text-muted-foreground">
+            <div className="hidden xs:block h-px w-6 bg-gradient-to-r from-transparent to-border" />
+            <span className="font-medium text-[10px] xs:text-xs">
+              All certifications verified annually • Authentic Sanad chains
             </span>
-            <div className="h-px w-8 bg-linear-to-l from-transparent to-border" />
+            <div className="hidden xs:block h-px w-6 bg-gradient-to-l from-transparent to-border" />
           </div>
         </motion.div>
       </div>

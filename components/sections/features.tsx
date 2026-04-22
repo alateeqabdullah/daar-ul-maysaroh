@@ -224,7 +224,7 @@ import {
   Zap,
   Globe,
   ChevronRight,
-  Sparkles,
+
 } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -291,7 +291,7 @@ const getColorStyles = (color: string) => {
 
 export function Features() {
   return (
-    <section className="py-12 xs:py-16 sm:py-20 md:py-24 lg:py-32 bg-gradient-to-b from-background via-purple-50/5 to-amber-50/5 relative overflow-hidden">
+    <section className="py-12 xs:py-16 sm:py-20 md:py-24 lg:py-32 bg-linear-to-b from-background via-purple-50/5 to-amber-50/5 relative overflow-hidden">
       {/* Background Decoration */}
       <div className="hidden sm:block absolute inset-0 pointer-events-none">
         <div className="absolute top-1/4 left-0 w-80 h-80 bg-purple-600/5 rounded-full blur-3xl" />
@@ -308,7 +308,7 @@ export function Features() {
             </div>
             <h2 className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black tracking-tighter font-heading leading-[1.1]">
               Pillars of <br />
-              <span className="bg-gradient-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent italic">
+              <span className="bg-linear-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent italic">
                 Excellence.
               </span>
             </h2>
@@ -341,7 +341,7 @@ export function Features() {
                     {/* Hover Light Effect */}
                     <div
                       className={cn(
-                        "absolute inset-0 rounded-xl xs:rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-br from-purple-500/5 via-transparent to-transparent pointer-events-none"
+                        "absolute inset-0 rounded-xl xs:rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-linear-to-br from-purple-500/5 via-transparent to-transparent pointer-events-none"
                       )}
                     />
 
@@ -385,7 +385,7 @@ export function Features() {
                     </h3>
 
                     {/* Description */}
-                    <p className="text-xs xs:text-sm text-muted-foreground font-medium leading-relaxed mb-5 xs:mb-6 sm:mb-7 md:mb-8 flex-grow">
+                    <p className="text-xs xs:text-sm text-muted-foreground font-medium leading-relaxed mb-5 xs:mb-6 sm:mb-7 md:mb-8 grow">
                       {pillar.desc}
                     </p>
 
@@ -406,7 +406,7 @@ export function Features() {
                     {/* Decorative Bottom Line - FIXED */}
                     <div
                       className={cn(
-                        "absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent to-transparent scale-x-0 group-hover:scale-x-100 transition-transform duration-500",
+                        "absolute bottom-0 left-0 right-0 h-0.5 bg-linear-to-r from-transparent to-transparent scale-x-0 group-hover:scale-x-100 transition-transform duration-500",
                         colors.via
                       )}
                     />
