@@ -9,20 +9,15 @@ import {
   ArrowRight,
   Award,
   BookOpen,
-  Brain,
   Briefcase,
-  Calendar,
   CheckCircle2,
-  Clock,
   Compass,
   Crown,
   Mic,
   Quote,
   Rocket,
-  Shield,
   Sparkles,
   Target,
-  Trophy,
   User,
   Users,
   Volume2,
@@ -32,7 +27,6 @@ import {
   Heart,
   TrendingUp,
   MessageCircle,
-  Radio,
   Activity,
 } from "lucide-react";
 import Link from "next/link";
@@ -47,11 +41,11 @@ const PROGRAM_DATA = {
     "A collaborative group program designed to help students master the rules of Tajweed in a supportive, interactive environment. Perfect for those who prefer learning with peers.",
   audience: "Ages 12+ • Beginner to Intermediate",
   duration: "6-9 months",
-  sessionsPerWeek: "2 sessions",
-  sessionDuration: "50-60 minutes",
-  format: "Small Groups (4-6 students)",
+  sessionsPerWeek: "2-4 sessions",
+  sessionDuration: "30-60 minutes",
+  format: "Small Groups (4-10 students)",
   level: "Beginner to Intermediate",
-  priceRange: "$79",
+  priceRange: "$7",
   pricePeriod: "per month",
 };
 
@@ -291,7 +285,7 @@ export default function GroupTajweedPage() {
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ duration: 0.5 }}
-              className="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-gradient-to-r from-teal-500/10 to-cyan-500/10 border border-teal-500/20 text-teal-700 text-[9px] sm:text-[11px] font-black uppercase tracking-wider mb-4 sm:mb-6"
+              className="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-linear-to-r from-teal-500/10 to-cyan-500/10 border border-teal-500/20 text-teal-700 text-[9px] sm:text-[11px] font-black uppercase tracking-wider mb-4 sm:mb-6"
             >
               <Sparkles className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5" /> 🎙️ Master
               Tajweed Together 🎙️
@@ -299,7 +293,7 @@ export default function GroupTajweedPage() {
 
             <h1 className="text-4xl xs:text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tighter font-heading leading-[1.1] mb-4 sm:mb-6 px-2">
               Group{" "}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-teal-600 via-cyan-600 to-teal-700 whitespace-nowrap">
+              <span className="text-transparent bg-clip-text bg-linear-to-r from-teal-600 via-cyan-600 to-teal-700 whitespace-nowrap">
                 Tajweed
               </span>
             </h1>
@@ -311,8 +305,8 @@ export default function GroupTajweedPage() {
             </p>
 
             <div className="flex flex-col xs:flex-row gap-3 sm:gap-4 justify-center px-4">
-              <Link href="/assessment" className="w-full xs:w-auto">
-                <Button className="w-full rounded-full px-6 sm:px-8 py-3.5 sm:py-4 font-black bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-700 hover:to-cyan-700 text-white text-sm sm:text-base shadow-xl">
+              <Link href="/admissions" className="w-full xs:w-auto">
+                <Button className="w-full rounded-full px-6 sm:px-8 py-3.5 sm:py-4 font-black bg-linear-to-r from-teal-600 to-cyan-600 hover:from-teal-700 hover:to-cyan-700 text-white text-sm sm:text-base shadow-xl">
                   <span className="flex items-center justify-center gap-2">
                     JOIN A GROUP
                     <Rocket className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
@@ -333,7 +327,7 @@ export default function GroupTajweedPage() {
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mt-10 sm:mt-12 pt-6 sm:pt-8 border-t border-border/50 px-2">
               {[
                 { label: "Tajweed Rules", value: "40+", icon: BookOpen },
-                { label: "Class Size", value: "4-6", icon: Users },
+                { label: "Class Size", value: "4-10", icon: Users },
                 { label: "Success Rate", value: "94%", icon: Target },
                 { label: "Happy Students", value: "200+", icon: Award },
               ].map((stat, i) => (
@@ -342,7 +336,7 @@ export default function GroupTajweedPage() {
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.1 }}
-                  className="p-2.5 sm:p-4 rounded-xl sm:rounded-2xl bg-gradient-to-br from-teal-50/50 to-cyan-50/50 dark:from-teal-950/20 dark:to-cyan-950/20 border border-teal-100 dark:border-teal-800"
+                  className="p-2.5 sm:p-4 rounded-xl sm:rounded-2xl bg-linear-to-br from-teal-50/50 to-cyan-50/50 dark:from-teal-950/20 dark:to-cyan-950/20 border border-teal-100 dark:border-teal-800"
                 >
                   <stat.icon className="w-4 h-4 sm:w-5 sm:h-5 text-teal-600 mx-auto mb-1.5 sm:mb-2" />
                   <div className="text-lg sm:text-2xl md:text-3xl font-black text-teal-600">
@@ -359,7 +353,7 @@ export default function GroupTajweedPage() {
       </motion.div>
 
       {/* Core Pillars Section */}
-      <section className="py-12 sm:py-16 bg-gradient-to-b from-background via-teal-50/5 to-cyan-50/5">
+      <section className="py-12 sm:py-16 bg-linear-to-b from-background via-teal-50/5 to-cyan-50/5">
         <div className="container mx-auto px-4 sm:px-6">
           <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-12">
             <div className="inline-flex items-center gap-2 text-teal-600 font-black text-[8px] sm:text-[10px] uppercase tracking-[0.2em] sm:tracking-[0.3em] mb-3 sm:mb-4">
@@ -389,7 +383,7 @@ export default function GroupTajweedPage() {
                       <h3 className="font-black text-sm sm:text-base mb-0.5 sm:mb-1">
                         {pillar.title}
                       </h3>
-                      <p className="text-xs sm:text-sm text-muted-foreground break-words">
+                      <p className="text-xs sm:text-sm text-muted-foreground wrap-break-word">
                         {pillar.description}
                       </p>
                       <p className="text-[10px] sm:text-xs text-teal-600 font-black mt-1">
@@ -433,7 +427,7 @@ export default function GroupTajweedPage() {
                 <Reveal key={i} delay={i * 0.1}>
                   <div className="bg-card rounded-xl sm:rounded-2xl border border-border hover:border-teal-300 transition-all p-5 sm:p-6 text-center h-full group">
                     <div
-                      className={`w-14 h-14 sm:w-16 sm:h-16 mx-auto mb-3 sm:mb-4 rounded-xl sm:rounded-2xl bg-gradient-to-br ${path.color} flex items-center justify-center group-hover:scale-110 transition-transform`}
+                      className={`w-14 h-14 sm:w-16 sm:h-16 mx-auto mb-3 sm:mb-4 rounded-xl sm:rounded-2xl bg-linear-to-br ${path.color} flex items-center justify-center group-hover:scale-110 transition-transform`}
                     >
                       <Icon className="w-7 h-7 sm:w-8 sm:h-8 text-white" />
                     </div>
@@ -457,7 +451,7 @@ export default function GroupTajweedPage() {
       {/* Learning Journey Timeline */}
       <section
         id="journey"
-        className="py-12 sm:py-16 bg-gradient-to-b from-background via-teal-50/5 to-cyan-50/5"
+        className="py-12 sm:py-16 bg-linear-to-b from-background via-teal-50/5 to-cyan-50/5"
       >
         <div className="container mx-auto px-4 sm:px-6">
           <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-12">
@@ -477,14 +471,14 @@ export default function GroupTajweedPage() {
 
           <div className="max-w-4xl mx-auto">
             <div className="relative">
-              <div className="hidden md:block absolute left-6 top-0 bottom-0 w-0.5 bg-gradient-to-b from-teal-500 via-cyan-500 to-teal-600" />
+              <div className="hidden md:block absolute left-6 top-0 bottom-0 w-0.5 bg-linear-to-b from-teal-500 via-cyan-500 to-teal-600" />
               <div className="space-y-6 sm:space-y-8">
                 {LEARNING_JOURNEY.map((phase, idx) => {
                   const Icon = phase.icon;
                   return (
                     <Reveal key={idx} delay={idx * 0.1}>
                       <div className="relative md:pl-16">
-                        <div className="hidden md:flex absolute left-0 top-6 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-r from-teal-600 to-cyan-600 items-center justify-center text-white font-black text-base sm:text-lg shadow-lg">
+                        <div className="hidden md:flex absolute left-0 top-6 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-linear-to-r from-teal-600 to-cyan-600 items-center justify-center text-white font-black text-base sm:text-lg shadow-lg">
                           {idx + 1}
                         </div>
                         <div className="bg-card rounded-xl sm:rounded-2xl border border-border hover:border-teal-300 transition-all p-5 sm:p-6 md:p-8">
@@ -510,7 +504,7 @@ export default function GroupTajweedPage() {
                                 {phase.topics.map((topic, i) => (
                                   <div
                                     key={i}
-                                    className="flex items-center gap-1.5 px-2 py-1 sm:px-3 sm:py-1.5 rounded-full bg-gradient-to-r from-teal-50 to-cyan-50 dark:from-teal-950/30 dark:to-cyan-950/30 text-teal-700 text-[10px] sm:text-xs font-black"
+                                    className="flex items-center gap-1.5 px-2 py-1 sm:px-3 sm:py-1.5 rounded-full bg-linear-to-r from-teal-50 to-cyan-50 dark:from-teal-950/30 dark:to-cyan-950/30 text-teal-700 text-[10px] sm:text-xs font-black"
                                   >
                                     <CheckCircle2 className="w-3 h-3" />
                                     {topic}
@@ -522,7 +516,7 @@ export default function GroupTajweedPage() {
                                   initial={{ width: 0 }}
                                   whileInView={{ width: `${(idx + 1) * 33}%` }}
                                   transition={{ duration: 1 }}
-                                  className="h-full bg-gradient-to-r from-teal-600 to-cyan-600 rounded-full"
+                                  className="h-full bg-linear-to-r from-teal-600 to-cyan-600 rounded-full"
                                 />
                               </div>
                             </div>
@@ -564,7 +558,7 @@ export default function GroupTajweedPage() {
       </section>
 
       {/* Success Stories */}
-      <section className="py-12 sm:py-16 bg-gradient-to-b from-background via-teal-50/5 to-cyan-50/5">
+      <section className="py-12 sm:py-16 bg-linear-to-b from-background via-teal-50/5 to-cyan-50/5">
         <div className="container mx-auto px-4 sm:px-6">
           <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-12">
             <div className="inline-flex items-center gap-2 text-teal-600 font-black text-[8px] sm:text-[10px] uppercase tracking-[0.2em] sm:tracking-[0.3em] mb-3 sm:mb-4">
@@ -586,7 +580,7 @@ export default function GroupTajweedPage() {
                 <Reveal key={i} delay={i * 0.1}>
                   <div className="bg-card rounded-xl sm:rounded-2xl border border-border hover:border-teal-300 transition-all p-5 sm:p-6 h-full flex flex-col">
                     <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
-                      <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-br from-teal-600 to-cyan-600 flex items-center justify-center text-white font-black text-base sm:text-lg shrink-0">
+                      <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-linear-to-br from-teal-600 to-cyan-600 flex items-center justify-center text-white font-black text-base sm:text-lg shrink-0">
                         {story.name.charAt(0)}
                       </div>
                       <div className="min-w-0">
@@ -599,8 +593,8 @@ export default function GroupTajweedPage() {
                       </div>
                     </div>
                     <Quote className="w-6 h-6 sm:w-8 sm:h-8 text-teal-200 dark:text-teal-800/30 mb-2 sm:mb-3" />
-                    <p className="text-xs sm:text-sm text-muted-foreground italic grow leading-relaxed break-words">
-                      "{story.story}"
+                    <p className="text-xs sm:text-sm text-muted-foreground italic grow leading-relaxed wrap-break-word">
+                     {` "${story.story}"`}
                     </p>
                     <p className="text-[10px] sm:text-xs text-teal-600 font-black mt-3">
                       ✓ Completed in {story.duration}
@@ -654,8 +648,8 @@ export default function GroupTajweedPage() {
       {/* Final CTA */}
       <section className="py-12 sm:py-20">
         <div className="container mx-auto px-4 sm:px-6">
-          <div className="bg-card rounded-xl sm:rounded-2xl border border-border hover:border-teal-300 transition-all p-6 sm:p-8 md:p-12 text-center max-w-4xl mx-auto bg-gradient-to-br from-teal-600/5 to-cyan-600/5">
-            <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gradient-to-br from-teal-600 to-cyan-600 mb-4 sm:mb-6 shadow-lg">
+          <div className="bg-card rounded-xl sm:rounded-2xl border border-border hover:border-teal-300 transition-all p-6 sm:p-8 md:p-12 text-center max-w-4xl mx-auto bg-linear-to-br from-teal-600/5 to-cyan-600/5">
+            <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-linear-to-br from-teal-600 to-cyan-600 mb-4 sm:mb-6 shadow-lg">
               <Mic className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
             </div>
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-black mb-3 sm:mb-4 px-2">
@@ -667,7 +661,7 @@ export default function GroupTajweedPage() {
             </p>
             <div className="flex flex-col xs:flex-row gap-3 sm:gap-4 justify-center px-4">
               <Link href="/assessment" className="w-full xs:w-auto">
-                <Button className="w-full rounded-full px-6 sm:px-8 py-3 sm:py-4 font-black text-sm sm:text-base bg-gradient-to-r from-teal-600 to-cyan-600 hover:from-teal-700 hover:to-cyan-700 text-white">
+                <Button className="w-full rounded-full px-6 sm:px-8 py-3 sm:py-4 font-black text-sm sm:text-base bg-linear-to-r from-teal-600 to-cyan-600 hover:from-teal-700 hover:to-cyan-700 text-white">
                   BOOK FREE ASSESSMENT
                   <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 ml-1.5 sm:ml-2" />
                 </Button>

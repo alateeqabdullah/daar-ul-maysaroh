@@ -1146,7 +1146,7 @@ export default function GroupQiroahPage() {
             {/* Stats - Mobile-First Grid */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mt-10 sm:mt-12 pt-6 sm:pt-8 border-t border-border/50 px-2">
               {[
-                { label: "Happy Learners", value: "50+", icon: Users },
+                { label: "Happy Learners", value: "100+", icon: Users },
                 { label: "Success Rate", value: "95%", icon: Target },
                 { label: "Global Reach", value: "6+", icon: Globe },
                 { label: "Avg. Completion", value: "7 mo", icon: Calendar },

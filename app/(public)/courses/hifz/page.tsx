@@ -317,7 +317,7 @@
 // //             <div className="flex flex-col sm:flex-row gap-4 justify-center">
 // //               <Button
 // //                 size="lg"
-// //                 className="bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600"
+// //                 className="bg-linear-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600"
 // //                 asChild
 // //               >
 // //                 <Link href="/auth/signup">
@@ -786,7 +786,7 @@ import {
   User,
   Users,
   ScrollText,
-  Gem,
+
   Star,
   Calculator,
 } from "lucide-react";
@@ -799,16 +799,16 @@ const PROGRAM_DATA = {
   tagline: "The Sacred Journey of Memorization",
   description:
     "A comprehensive, spiritually enriching program to memorize the entire Quran with proper Tajweed, deep understanding, and authentic Sanad certification.",
-  audience: "Ages 12+ • Committed Learners",
+  audience: "Ages 5+ • Committed Learners",
   duration: "2-3 years",
-  sessionsPerWeek: "3-5 sessions",
-  sessionDuration: "45-60 minutes",
+  sessionsPerWeek: "1-5 sessions",
+  sessionDuration: "30-60 minutes",
   format: "1-on-1 Private Sessions",
   level: "Beginner to Advanced",
   surahs: 114,
   verses: 6236,
   juz: 30,
-  priceRange: "$149",
+  priceRange: "$2.25",
   pricePeriod: "per month",
 };
 
@@ -962,30 +962,30 @@ const MILESTONES = [
 // Success Stories
 const SUCCESS_STORIES = [
   {
-    name: "Ahmed, 24",
+    name: "'Aliyyu, 24",
     type: "Hafiz Graduate",
-    story: "The structured approach and constant encouragement kept me motivated throughout my 2-year journey. The Ijazah ceremony was unforgettable.",
+    story: "The structured approach and constant encouragement kept me motivated throughout my 2-year journey. The Graduation/Certification ceremony was unforgettable.",
     duration: "24 months",
     icon: Crown,
   },
   {
-    name: "Fatima, 35",
-    type: "Mother of 3",
-    story: "Balancing family and Hifz seemed impossible, but my teacher's patience and flexible schedule made it possible. I'm now a Hafidha!",
+    name: "Fatimah, 25",
+    type: "Mother of 1",
+    story: "Balancing family and Hifz seemed impossible, but my teacher's patience and flexible schedule made it possible. I'm now a half Hafidhah",
     duration: "30 months",
     icon: Heart,
   },
   {
-    name: "Dr. Omar, 42",
+    name: "Zainab, 28",
     type: "Medical Professional",
     story: "As a busy doctor, I needed a program that respects my time. The 1-on-1 attention and structured revision system helped me complete Hifz.",
     duration: "28 months",
     icon: Briefcase,
   },
   {
-    name: "Yusuf, 19",
+    name: "Muhsin, 19",
     type: "University Student",
-    story: "The teachers don't just teach memorization; they instill love for the Quran. The journey transformed my relationship with Allah.",
+    story: "The teachers don't just teach memorization; they instill love for the Quran.",
     duration: "26 months",
     icon: GraduationCap,
   },
@@ -993,10 +993,10 @@ const SUCCESS_STORIES = [
 
 // FAQ
 const FAQS = [
-  { q: "What is the minimum age to start Hifz?", a: "We accept students from age 12 and above. Younger students may be accepted based on assessment." },
-  { q: "How many hours should I practice daily?", a: "We recommend 1-2 hours of memorization plus 1 hour of revision daily. Consistency is key." },
+  { q: "What is the minimum age to start Hifz?", a: "We accept students from age 7 and above. Younger students may be accepted based on assessment." },
+  { q: "How many hours should I practice daily?", a: "We recommend 1-2 hours of memorization plus 1 hour of revision daily if planning to complete in 2-3years. Consistency is key." },
   { q: "What if I forget what I memorized?", a: "Our revision system is designed to prevent forgetting. Regular revision sessions are built into the program." },
-  { q: "Do I get an Ijazah upon completion?", a: "Yes! Upon successful completion, you receive an Ijazah with complete Sanad to Prophet Muhammad (ﷺ)." },
+  { q: "Do I get an Ijazah/certificate upon completion?", a: "Yes! Upon successful completion, you receive an certificate/Ijazah with complete Sanad to Prophet Muhammad (ﷺ)." },
   { q: "Can I join if I already know some Juz?", a: "Absolutely! We'll assess your level and create a personalized plan from where you are." },
   { q: "Is there a trial period?", a: "Yes! We offer a free 30-minute assessment session to evaluate your level and goals." },
 ];
@@ -1037,7 +1037,7 @@ export default function HifzProgramPage() {
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ duration: 0.5 }}
-              className="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-gradient-to-r from-purple-500/10 to-indigo-500/10 border border-purple-500/20 text-purple-700 text-[9px] sm:text-[11px] font-black uppercase tracking-wider mb-4 sm:mb-6"
+              className="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-linear-to-r from-purple-500/10 to-indigo-500/10 border border-purple-500/20 text-purple-700 text-[9px] sm:text-[11px] font-black uppercase tracking-wider mb-4 sm:mb-6"
             >
               <Sparkles className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5" /> 🏆 The
               Noble Path of Memorization 🏆
@@ -1045,7 +1045,7 @@ export default function HifzProgramPage() {
 
             <h1 className="text-4xl xs:text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tighter font-heading leading-[1.1] mb-4 sm:mb-6 px-2">
               Hifz{" "}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-700 via-indigo-700 to-gold whitespace-nowrap">
+              <span className="text-transparent bg-clip-text bg-linear-to-r from-purple-700 via-indigo-700 to-gold whitespace-nowrap">
                 Al-Quran
               </span>
             </h1>
@@ -1058,7 +1058,7 @@ export default function HifzProgramPage() {
 
             <div className="flex flex-col xs:flex-row gap-3 sm:gap-4 justify-center px-4">
               <Link href="/assessment" className="w-full xs:w-auto">
-                <Button className="w-full rounded-full px-6 sm:px-8 py-3.5 sm:py-4 font-black bg-gradient-to-r from-purple-700 to-indigo-800 hover:from-purple-800 hover:to-indigo-900 text-white text-sm sm:text-base shadow-xl">
+                <Button className="w-full rounded-full px-6 sm:px-8 py-3.5 sm:py-4 font-black bg-linear-to-r from-purple-700 to-indigo-800 hover:from-purple-800 hover:to-indigo-900 text-white text-sm sm:text-base shadow-xl">
                   <span className="flex items-center justify-center gap-2">
                     BEGIN YOUR HIFZ JOURNEY
                     <Rocket className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
@@ -1081,14 +1081,14 @@ export default function HifzProgramPage() {
                 { label: "Total Surahs", value: "114", icon: BookOpen },
                 { label: "Total Verses", value: "6,236", icon: ScrollText },
                 { label: "Juz", value: "30", icon: Star },
-                { label: "Ijazah Graduates", value: "200+", icon: Crown },
+                { label: "Graduates", value: "20+", icon: Crown },
               ].map((stat, i) => (
                 <motion.div
                   key={i}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: i * 0.1 }}
-                  className="p-2.5 sm:p-4 rounded-xl sm:rounded-2xl bg-gradient-to-br from-purple-50/50 to-indigo-50/50 dark:from-purple-950/20 dark:to-indigo-950/20 border border-purple-100 dark:border-purple-800"
+                  className="p-2.5 sm:p-4 rounded-xl sm:rounded-2xl bg-linear-to-br from-purple-50/50 to-indigo-50/50 dark:from-purple-950/20 dark:to-indigo-950/20 border border-purple-100 dark:border-purple-800"
                 >
                   <stat.icon className="w-4 h-4 sm:w-5 sm:h-5 text-purple-600 mx-auto mb-1.5 sm:mb-2" />
                   <div className="text-lg sm:text-2xl md:text-3xl font-black text-purple-600">
@@ -1105,7 +1105,7 @@ export default function HifzProgramPage() {
       </motion.div>
 
       {/* Core Pillars Section */}
-      <section className="py-12 sm:py-16 bg-gradient-to-b from-background via-purple-50/5 to-indigo-50/5">
+      <section className="py-12 sm:py-16 bg-linear-to-b from-background via-purple-50/5 to-indigo-50/5">
         <div className="container mx-auto px-4 sm:px-6">
           <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-12">
             <div className="inline-flex items-center gap-2 text-purple-600 font-black text-[8px] sm:text-[10px] uppercase tracking-[0.2em] sm:tracking-[0.3em] mb-3 sm:mb-4">
@@ -1134,7 +1134,7 @@ export default function HifzProgramPage() {
                       <h3 className="font-black text-sm sm:text-base mb-0.5 sm:mb-1">
                         {pillar.title}
                       </h3>
-                      <p className="text-xs sm:text-sm text-muted-foreground break-words">
+                      <p className="text-xs sm:text-sm text-muted-foreground wrap-break-word">
                         {pillar.description}
                       </p>
                       <p className="text-[10px] sm:text-xs text-purple-600 font-black mt-1">
@@ -1176,7 +1176,7 @@ export default function HifzProgramPage() {
                 <Reveal key={i} delay={i * 0.1}>
                   <div className="bg-card rounded-xl sm:rounded-2xl border border-border hover:border-purple-300 transition-all p-5 sm:p-6 text-center h-full group">
                     <div
-                      className={`w-14 h-14 sm:w-16 sm:h-16 mx-auto mb-3 sm:mb-4 rounded-xl sm:rounded-2xl bg-gradient-to-br ${path.color} flex items-center justify-center group-hover:scale-110 transition-transform`}
+                      className={`w-14 h-14 sm:w-16 sm:h-16 mx-auto mb-3 sm:mb-4 rounded-xl sm:rounded-2xl bg-linear-to-br ${path.color} flex items-center justify-center group-hover:scale-110 transition-transform`}
                     >
                       <Icon className="w-7 h-7 sm:w-8 sm:h-8 text-white" />
                     </div>
@@ -1200,7 +1200,7 @@ export default function HifzProgramPage() {
       {/* Memorization Journey Timeline */}
       <section
         id="journey"
-        className="py-12 sm:py-16 bg-gradient-to-b from-background via-purple-50/5 to-indigo-50/5"
+        className="py-12 sm:py-16 bg-linear-to-b from-background via-purple-50/5 to-indigo-50/5"
       >
         <div className="container mx-auto px-4 sm:px-6">
           <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-12">
@@ -1220,14 +1220,14 @@ export default function HifzProgramPage() {
 
           <div className="max-w-4xl mx-auto">
             <div className="relative">
-              <div className="hidden md:block absolute left-6 top-0 bottom-0 w-0.5 bg-gradient-to-b from-purple-500 via-indigo-500 to-gold" />
+              <div className="hidden md:block absolute left-6 top-0 bottom-0 w-0.5 bg-linear-to-b from-purple-500 via-indigo-500 to-gold" />
               <div className="space-y-6 sm:space-y-8">
                 {MEMORIZATION_JOURNEY.map((phase, idx) => {
                   const Icon = phase.icon;
                   return (
                     <Reveal key={idx} delay={idx * 0.1}>
                       <div className="relative md:pl-16">
-                        <div className="hidden md:flex absolute left-0 top-6 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-r from-purple-600 to-indigo-700 items-center justify-center text-white font-black text-base sm:text-lg shadow-lg">
+                        <div className="hidden md:flex absolute left-0 top-6 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-linear-to-r from-purple-600 to-indigo-700 items-center justify-center text-white font-black text-base sm:text-lg shadow-lg">
                           {idx + 1}
                         </div>
                         <div className="bg-card rounded-xl sm:rounded-2xl border border-border hover:border-purple-300 transition-all p-5 sm:p-6 md:p-8">
@@ -1256,7 +1256,7 @@ export default function HifzProgramPage() {
                                 {phase.activities.map((activity, i) => (
                                   <div
                                     key={i}
-                                    className="flex items-center gap-1.5 px-2 py-1 sm:px-3 sm:py-1.5 rounded-full bg-gradient-to-r from-purple-50 to-indigo-50 dark:from-purple-950/30 dark:to-indigo-950/30 text-purple-700 text-[10px] sm:text-xs font-black"
+                                    className="flex items-center gap-1.5 px-2 py-1 sm:px-3 sm:py-1.5 rounded-full bg-linear-to-r from-purple-50 to-indigo-50 dark:from-purple-950/30 dark:to-indigo-950/30 text-purple-700 text-[10px] sm:text-xs font-black"
                                   >
                                     <CheckCircle2 className="w-3 h-3" />
                                     {activity}
@@ -1268,7 +1268,7 @@ export default function HifzProgramPage() {
                                   initial={{ width: 0 }}
                                   whileInView={{ width: `${(idx + 1) * 33}%` }}
                                   transition={{ duration: 1 }}
-                                  className="h-full bg-gradient-to-r from-purple-600 to-gold rounded-full"
+                                  className="h-full bg-linear-to-r from-purple-600 to-gold rounded-full"
                                 />
                               </div>
                             </div>
@@ -1305,7 +1305,7 @@ export default function HifzProgramPage() {
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-6">
             {MILESTONES.map((milestone, i) => (
               <Reveal key={i} delay={i * 0.1}>
-                <div className="text-center p-4 sm:p-6 rounded-xl bg-gradient-to-br from-purple-50/30 to-indigo-50/30 border border-purple-100 dark:border-purple-800">
+                <div className="text-center p-4 sm:p-6 rounded-xl bg-linear-to-br from-purple-50/30 to-indigo-50/30 border border-purple-100 dark:border-purple-800">
                   <div className="text-3xl sm:text-5xl mb-2 sm:mb-3">
                     {milestone.badge}
                   </div>
@@ -1326,7 +1326,7 @@ export default function HifzProgramPage() {
       </section>
 
       {/* Success Stories */}
-      <section className="py-12 sm:py-16 bg-gradient-to-b from-background via-purple-50/5 to-indigo-50/5">
+      <section className="py-12 sm:py-16 bg-linear-to-b from-background via-purple-50/5 to-indigo-50/5">
         <div className="container mx-auto px-4 sm:px-6">
           <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-12">
             <div className="inline-flex items-center gap-2 text-purple-600 font-black text-[8px] sm:text-[10px] uppercase tracking-[0.2em] sm:tracking-[0.3em] mb-3 sm:mb-4">
@@ -1348,7 +1348,7 @@ export default function HifzProgramPage() {
                 <Reveal key={i} delay={i * 0.1}>
                   <div className="bg-card rounded-xl sm:rounded-2xl border border-border hover:border-purple-300 transition-all p-5 sm:p-6 h-full flex flex-col">
                     <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
-                      <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-br from-purple-600 to-indigo-700 flex items-center justify-center text-white font-black text-base sm:text-lg shrink-0">
+                      <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-linear-to-br from-purple-600 to-indigo-700 flex items-center justify-center text-white font-black text-base sm:text-lg shrink-0">
                         {story.name.charAt(0)}
                       </div>
                       <div className="min-w-0">
@@ -1361,8 +1361,8 @@ export default function HifzProgramPage() {
                       </div>
                     </div>
                     <Quote className="w-6 h-6 sm:w-8 sm:h-8 text-purple-200 dark:text-purple-800/30 mb-2 sm:mb-3" />
-                    <p className="text-xs sm:text-sm text-muted-foreground italic grow leading-relaxed break-words">
-                      "{story.story}"
+                    <p className="text-xs sm:text-sm text-muted-foreground italic grow leading-relaxed wrap-break-word">
+                     {` "${story.story}"`}
                     </p>
                     <p className="text-[10px] sm:text-xs text-purple-600 font-black mt-3">
                       ✓ Completed in {story.duration}
@@ -1446,7 +1446,7 @@ export default function HifzProgramPage() {
                 <Reveal key={i} delay={i * 0.1}>
                   <div className={`bg-card rounded-xl sm:rounded-2xl border border-border hover:border-purple-300 transition-all p-5 sm:p-6 text-center h-full ${format.popular ? "border-2 border-purple-500 relative" : ""}`}>
                     {format.popular && (
-                      <div className="absolute -top-2.5 sm:-top-3 left-1/2 -translate-x-1/2 px-2 sm:px-3 py-0.5 sm:py-1 rounded-full bg-gradient-to-r from-purple-700 to-indigo-800 text-white text-[8px] sm:text-[10px] font-black uppercase tracking-wider whitespace-nowrap">
+                      <div className="absolute -top-2.5 sm:-top-3 left-1/2 -translate-x-1/2 px-2 sm:px-3 py-0.5 sm:py-1 rounded-full bg-linear-to-r from-purple-700 to-indigo-800 text-white text-[8px] sm:text-[10px] font-black uppercase tracking-wider whitespace-nowrap">
                         Most Popular
                       </div>
                     )}
@@ -1465,7 +1465,7 @@ export default function HifzProgramPage() {
                       ))}
                     </div>
                     <Link href="/assessment">
-                      <Button className="w-full rounded-full py-2.5 sm:py-3 font-black text-xs sm:text-sm bg-gradient-to-r from-purple-700 to-indigo-800 hover:from-purple-800 hover:to-indigo-900 text-white">
+                      <Button className="w-full rounded-full py-2.5 sm:py-3 font-black text-xs sm:text-sm bg-linear-to-r from-purple-700 to-indigo-800 hover:from-purple-800 hover:to-indigo-900 text-white">
                         Begin Your Journey
                       </Button>
                     </Link>
@@ -1501,7 +1501,7 @@ export default function HifzProgramPage() {
 </section>
 
       {/* FAQ Section */}
-      <section className="py-12 sm:py-16 bg-gradient-to-b from-background via-purple-50/5 to-indigo-50/5">
+      <section className="py-12 sm:py-16 bg-linear-to-b from-background via-purple-50/5 to-indigo-50/5">
         <div className="container mx-auto px-4 sm:px-6">
           <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-12">
             <div className="inline-flex items-center gap-2 text-purple-600 font-black text-[8px] sm:text-[10px] uppercase tracking-[0.2em] sm:tracking-[0.3em] mb-3 sm:mb-4">
@@ -1541,8 +1541,8 @@ export default function HifzProgramPage() {
       {/* Final CTA */}
       <section className="py-12 sm:py-20">
         <div className="container mx-auto px-4 sm:px-6">
-          <div className="bg-card rounded-xl sm:rounded-2xl border border-border hover:border-purple-300 transition-all p-6 sm:p-8 md:p-12 text-center max-w-4xl mx-auto bg-gradient-to-br from-purple-600/5 to-indigo-600/5">
-            <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gradient-to-br from-purple-700 to-gold mb-4 sm:mb-6 shadow-lg">
+          <div className="bg-card rounded-xl sm:rounded-2xl border border-border hover:border-purple-300 transition-all p-6 sm:p-8 md:p-12 text-center max-w-4xl mx-auto bg-linear-to-br from-purple-600/5 to-indigo-600/5">
+            <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-linear-to-br from-purple-700 to-gold mb-4 sm:mb-6 shadow-lg">
               <Crown className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
             </div>
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-black mb-3 sm:mb-4 px-2">
@@ -1554,7 +1554,7 @@ export default function HifzProgramPage() {
             </p>
             <div className="flex flex-col xs:flex-row gap-3 sm:gap-4 justify-center px-4">
               <Link href="/assessment" className="w-full xs:w-auto">
-                <Button className="w-full rounded-full px-6 sm:px-8 py-3 sm:py-4 font-black text-sm sm:text-base bg-gradient-to-r from-purple-700 to-indigo-800 hover:from-purple-800 hover:to-indigo-900 text-white">
+                <Button className="w-full rounded-full px-6 sm:px-8 py-3 sm:py-4 font-black text-sm sm:text-base bg-linear-to-r from-purple-700 to-indigo-800 hover:from-purple-800 hover:to-indigo-900 text-white">
                   BOOK FREE ASSESSMENT
                   <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 ml-1.5 sm:ml-2" />
                 </Button>
