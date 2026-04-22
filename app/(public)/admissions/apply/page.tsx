@@ -35,86 +35,23 @@ import { cn } from "@/lib/utils";
 
 // Program data
 const PROGRAMS = {
-  hifz: {
-    name: "Hifz Al-Quran",
-    duration: "2-3 years",
-    format: "1-on-1",
-    price: "$200-300/month",
-  },
-  tajweed: {
-    name: "Tajweed Al-Itqan",
-    duration: "6-12 months",
-    format: "1-on-1",
-    price: "$150-200/month",
-  },
-  "group-tajweed": {
-    name: "Group Tajweed",
-    duration: "6-9 months",
-    format: "Group (4-6)",
-    price: "$79/month",
-  },
-  arabic: {
-    name: "Al-Lughah Al-Arabiyyah",
-    duration: "12-18 months",
-    format: "1-on-1",
-    price: "$100-150/month",
-  },
-  tafsir: {
-    name: "Tafsir Al-Mubin",
-    duration: "12-18 months",
-    format: "1-on-1",
-    price: "$150-200/month",
-  },
-  qiroah: {
-    name: "Qiro'ah Program",
-    duration: "6-12 months",
-    format: "1-on-1",
-    price: "$100-150/month",
-  },
-  "group-qiroah": {
-    name: "Group Qiro'ah",
-    duration: "6-9 months",
-    format: "Group (4-6)",
-    price: "$69/month",
-  },
-  "juz-amma": {
-    name: "Juz Amma",
-    duration: "6-12 months",
-    format: "Group",
-    price: "$89/month",
-  },
-  "juz-tabarak": {
-    name: "Juz Tabarak",
-    duration: "8-12 months",
-    format: "Group",
-    price: "$89/month",
-  },
-  murojaah: {
-    name: "Muroja'ah Program",
-    duration: "Ongoing",
-    format: "1-on-1",
-    price: "$100-150/month",
-  },
+  hifz: { name: "Hifz Al-Quran", duration: "2-3 years", format: "1-on-1", price: "$2.25/month" },
+  tajweed: { name: "Tajweed Al-Itqan", duration: "6-12 months", format: "1-on-1", price: "$2+/month" },
+  "group-tajweed": { name: "Group Tajweed", duration: "6-9 months", format: "Group (4-10)", price: "$6/month" },
+  arabic: { name: "Al-Lughah Al-Arabiyyah", duration: "12-18 months", format: "1-on-1", price: "$2+/month" },
+  tafsir: { name: "Tafsir Al-Mubin", duration: "12-18 months", format: "1-on-1", price: "$2+/month" },
+  qiroah: { name: "Qiro'ah Program", duration: "6-12 months", format: "1-on-1", price: "$2+/month" },
+  "group-qiroah": { name: "Group Qiro'ah", duration: "6-9 months", format: "Group (4-10)", price: "$6/month" },
+  "juz-amma": { name: "Juz Amma", duration: "6-12 months", format: "Group", price: "$7/month" },
+  "juz-tabarak": { name: "Juz Tabarak", duration: "8-12 months", format: "Group", price: "$8/month" },
+  murojaah: { name: "Muroja'ah Program", duration: "Ongoing", format: "1-on-1", price: "$3/month" },
 };
 
 // Country list
 const COUNTRIES = [
-  "United States",
-  "United Kingdom",
-  "Canada",
-  "Australia",
-  "Nigeria",
-  "South Africa",
-  "Egypt",
-  "Saudi Arabia",
-  "UAE",
-  "India",
-  "Pakistan",
-  "Malaysia",
-  "Indonesia",
-  "Turkey",
-  "Morocco",
-  "Other",
+  "United States", "United Kingdom", "Canada", "Australia", "Nigeria",
+  "South Africa", "Egypt", "Saudi Arabia", "UAE", "India", "Pakistan",
+  "Malaysia", "Indonesia", "Turkey", "Morocco", "Other",
 ];
 
 // How did you hear options
@@ -143,21 +80,11 @@ const LANGUAGES = [
 
 // Time zones
 const TIME_ZONES = [
-  "America/New_York (EST)",
-  "America/Chicago (CST)",
-  "America/Denver (MST)",
-  "America/Los_Angeles (PST)",
-  "Europe/London (GMT)",
-  "Europe/Paris (CET)",
-  "Asia/Dubai (GST)",
-  "Asia/Riyadh (AST)",
-  "Asia/Karachi (PKT)",
-  "Asia/Kolkata (IST)",
-  "Asia/Jakarta (WIB)",
-  "Australia/Sydney (AEST)",
-  "Africa/Lagos (WAT)",
-  "Africa/Cairo (EET)",
-  "Africa/Johannesburg (SAST)",
+  "America/New_York (EST)", "America/Chicago (CST)", "America/Denver (MST)",
+  "America/Los_Angeles (PST)", "Europe/London (GMT)", "Europe/Paris (CET)",
+  "Asia/Dubai (GST)", "Asia/Riyadh (AST)", "Asia/Karachi (PKT)",
+  "Asia/Kolkata (IST)", "Asia/Jakarta (WIB)", "Australia/Sydney (AEST)",
+  "Africa/Lagos (WAT)", "Africa/Cairo (EET)", "Africa/Johannesburg (SAST)",
 ];
 
 // Formspree Endpoint
@@ -175,7 +102,6 @@ export default function ApplyPage() {
   const [touched, setTouched] = useState<Record<string, boolean>>({});
 
   const [formData, setFormData] = useState({
-    // Personal Information
     fullName: "",
     email: "",
     phone: "",
@@ -184,21 +110,15 @@ export default function ApplyPage() {
     country: "",
     city: "",
     timeZone: "",
-
-    // Academic Information
     programInterest: preSelectedProgram,
     currentLevel: "",
     previousStudy: "",
     previousInstitution: "",
     goals: "",
-
-    // Family Information (for minors)
     isMinor: false,
     parentName: "",
     parentEmail: "",
     parentPhone: "",
-
-    // Additional Information
     preferredLanguage: "english",
     howDidYouHear: "",
     referralCode: "",
@@ -206,8 +126,6 @@ export default function ApplyPage() {
     financialAidRequest: false,
     accessibilityNeeds: "",
     notes: "",
-
-    // Consent
     agreeTerms: false,
     agreeContact: false,
   });
@@ -215,64 +133,48 @@ export default function ApplyPage() {
   // Auto-detect user's time zone
   useEffect(() => {
     const detectedTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    const formattedTimeZone =
-      TIME_ZONES.find((tz) => tz.includes(detectedTimeZone.split("/")[1])) ||
-      TIME_ZONES[0];
+    const formattedTimeZone = TIME_ZONES.find(tz => tz.includes(detectedTimeZone.split('/')[1])) || TIME_ZONES[0];
     setUserTimeZone(formattedTimeZone);
-    setFormData((prev) => ({ ...prev, timeZone: formattedTimeZone }));
+    setFormData(prev => ({ ...prev, timeZone: formattedTimeZone }));
   }, []);
 
   const handleChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >,
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
     const { name, value, type } = e.target;
     const checked = (e.target as HTMLInputElement).checked;
-
-    setFormData((prev) => ({
-      ...prev,
-      [name]: type === "checkbox" ? checked : value,
+    
+    setFormData((prev) => ({ 
+      ...prev, 
+      [name]: type === 'checkbox' ? checked : value 
     }));
-
-    // Clear error when user starts typing
+    
     if (errors[name]) {
-      setErrors((prev) => ({ ...prev, [name]: "" }));
+      setErrors(prev => ({ ...prev, [name]: "" }));
     }
   };
 
-  const handleBlur = (
-    e: React.FocusEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >,
-  ) => {
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name } = e.target;
-    setTouched((prev) => ({ ...prev, [name]: true }));
+    setTouched(prev => ({ ...prev, [name]: true }));
     validateField(name, formData[name as keyof typeof formData] as string);
   };
 
   const validateField = (name: string, value: string) => {
     let error = "";
-
+    
     switch (name) {
       case "fullName":
         if (!value.trim()) error = "Full name is required";
         else if (value.length < 2) error = "Name must be at least 2 characters";
-        else if (value.length > 100)
-          error = "Name must be less than 100 characters";
         break;
       case "email":
         if (!value.trim()) error = "Email is required";
-        else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value))
-          error = "Invalid email format";
+        else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) error = "Invalid email format";
         break;
       case "phone":
         if (!value.trim()) error = "Phone number is required";
-        else if (
-          !/^[\+]?[(]?[0-9]{1,4}[)]?[-\s\.]?[(]?[0-9]{1,4}[)]?[-\s\.]?[0-9]{1,6}[-\s\.]?[0-9]{1,6}$/.test(
-            value,
-          )
-        )
+        else if (!/^[\+]?[(]?[0-9]{1,4}[)]?[-\s\.]?[(]?[0-9]{1,4}[)]?[-\s\.]?[0-9]{1,6}[-\s\.]?[0-9]{1,6}$/.test(value)) 
           error = "Invalid phone number";
         break;
       case "country":
@@ -284,35 +186,25 @@ export default function ApplyPage() {
       case "programInterest":
         if (!value) error = "Please select a program";
         break;
-      case "parentEmail":
-        if (
-          formData.isMinor &&
-          value &&
-          !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
-        )
-          error = "Invalid email format";
-        break;
     }
-
-    setErrors((prev) => ({ ...prev, [name]: error }));
+    
+    setErrors(prev => ({ ...prev, [name]: error }));
     return !error;
   };
 
   const validateStep = () => {
-    const fieldsToValidate =
-      step === 1
-        ? ["fullName", "email", "phone", "country"]
-        : step === 2
-          ? ["currentLevel", "programInterest"]
-          : [];
-
+    const fieldsToValidate = step === 1 
+      ? ["fullName", "email", "phone", "country"]
+      : step === 2 
+      ? ["currentLevel", "programInterest"]
+      : [];
+    
     let isValid = true;
-    fieldsToValidate.forEach((field) => {
+    fieldsToValidate.forEach(field => {
       const value = formData[field as keyof typeof formData] as string;
       if (!validateField(field, value)) isValid = false;
     });
-
-    // Validate parent info if minor
+    
     if (step === 1 && formData.isMinor) {
       if (!formData.parentName) {
         toast.error("Parent/Guardian name is required for minors");
@@ -323,20 +215,13 @@ export default function ApplyPage() {
         isValid = false;
       }
     }
-
+    
     return isValid;
   };
 
   const canProceed = () => {
     if (step === 1) {
-      const baseValid =
-        formData.fullName &&
-        formData.email &&
-        formData.phone &&
-        formData.country &&
-        !errors.fullName &&
-        !errors.email &&
-        !errors.phone;
+      const baseValid = formData.fullName && formData.email && formData.phone && formData.country && !errors.fullName && !errors.email && !errors.phone;
       if (formData.isMinor) {
         return baseValid && formData.parentName && formData.parentPhone;
       }
@@ -346,6 +231,10 @@ export default function ApplyPage() {
       return formData.programInterest && formData.currentLevel;
     }
     return true;
+  };
+
+  const generateReferenceNumber = () => {
+    return `ALM-${Date.now().toString().slice(-8)}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
   };
 
   const nextStep = () => {
@@ -362,26 +251,25 @@ export default function ApplyPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+    
     if (!formData.agreeTerms) {
       toast.error("Please agree to the Terms & Conditions");
       return;
     }
-
+    
     setIsSubmitting(true);
 
+    const referenceNumber = generateReferenceNumber();
     const formDataToSend = new FormData();
     Object.entries(formData).forEach(([key, value]) => {
       if (value !== undefined && value !== false) {
         formDataToSend.append(key, value.toString());
       }
     });
+    formDataToSend.append("referenceNumber", referenceNumber);
     formDataToSend.append("userTimeZone", userTimeZone);
     formDataToSend.append("submittedAt", new Date().toISOString());
-    formDataToSend.append(
-      "_subject",
-      `[Al-Maysaroh] New Application - ${formData.fullName}`,
-    );
+    formDataToSend.append("_subject", `[Al-Maysaroh] New Application - ${formData.fullName}`);
     formDataToSend.append("_replyto", formData.email);
 
     try {
@@ -392,11 +280,18 @@ export default function ApplyPage() {
       });
 
       if (response.ok) {
+        // Store submission data in sessionStorage for success page protection
+        sessionStorage.setItem('applicationSubmitted', 'true');
+        sessionStorage.setItem('applicationReference', referenceNumber);
+        sessionStorage.setItem('applicationEmail', formData.email);
+        sessionStorage.setItem('applicationName', formData.fullName);
+        sessionStorage.setItem('applicationTimestamp', new Date().toISOString());
+        
         toast.success("Application Submitted!", {
-          description:
-            "Our admissions team will review your application within 24 hours.",
+          description: "Our admissions team will review your application within 24 hours.",
           duration: 5000,
         });
+        
         router.push("/admissions/success");
       } else {
         throw new Error("Submission failed");
@@ -414,22 +309,9 @@ export default function ApplyPage() {
     ? PROGRAMS[formData.programInterest as keyof typeof PROGRAMS]
     : null;
 
-  // Get min and max dates for date of birth
   const today = new Date();
-  const minDate = new Date(
-    today.getFullYear() - 100,
-    today.getMonth(),
-    today.getDate(),
-  )
-    .toISOString()
-    .split("T")[0];
-  const maxDate = new Date(
-    today.getFullYear() - 5,
-    today.getMonth(),
-    today.getDate(),
-  )
-    .toISOString()
-    .split("T")[0];
+  const minDate = new Date(today.getFullYear() - 100, today.getMonth(), today.getDate()).toISOString().split('T')[0];
+  const maxDate = new Date(today.getFullYear() - 5, today.getMonth(), today.getDate()).toISOString().split('T')[0];
 
   return (
     <main className="pt-24 sm:pt-28 md:pt-32 pb-12 sm:pb-16 md:pb-20 bg-background min-h-screen">
@@ -442,7 +324,7 @@ export default function ApplyPage() {
           </div>
           <h1 className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl font-black tracking-tighter font-heading mb-2 sm:mb-3 px-2">
             Application{" "}
-            <span className="bg-linear-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent italic">
+            <span className="bg-gradient-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent italic">
               Form
             </span>
           </h1>
@@ -463,7 +345,7 @@ export default function ApplyPage() {
                 className={cn(
                   "w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center font-black text-xs sm:text-sm transition-all",
                   step >= s.step
-                    ? "bg-linear-to-r from-purple-600 to-purple-700 text-white shadow-md"
+                    ? "bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-md"
                     : "bg-muted text-muted-foreground",
                 )}
               >
@@ -481,7 +363,7 @@ export default function ApplyPage() {
                   className={cn(
                     "w-8 sm:w-12 md:w-16 h-0.5 mx-1 sm:mx-2",
                     step > s.step
-                      ? "bg-linear-to-r from-purple-600 to-amber-500"
+                      ? "bg-gradient-to-r from-purple-600 to-amber-500"
                       : "bg-muted",
                   )}
                 />
@@ -496,7 +378,7 @@ export default function ApplyPage() {
             <input type="text" name="_gotcha" style={{ display: "none" }} />
 
             <AnimatePresence mode="wait">
-              {/* Step 1: Personal Information - Enhanced */}
+              {/* Step 1: Personal Information */}
               {step === 1 && (
                 <motion.div
                   key="step1"
@@ -505,12 +387,11 @@ export default function ApplyPage() {
                   exit={{ opacity: 0, x: -20 }}
                   className="space-y-5 sm:space-y-6"
                 >
-                  <h2 className="text-lg sm:text-xl font-black mb-3 sm:mb-4 bg-linear-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent">
+                  <h2 className="text-lg sm:text-xl font-black mb-3 sm:mb-4 bg-gradient-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent">
                     Personal Information
                   </h2>
 
                   <div className="grid sm:grid-cols-2 gap-4 sm:gap-5">
-                    {/* Full Name */}
                     <div className="space-y-1.5 sm:space-y-2">
                       <Label className="text-[10px] sm:text-xs font-black uppercase tracking-wider">
                         Full Name <span className="text-red-500">*</span>
@@ -525,9 +406,7 @@ export default function ApplyPage() {
                           required
                           className={cn(
                             "pl-9 sm:pl-10 py-2 sm:py-2.5 text-sm",
-                            errors.fullName &&
-                              touched.fullName &&
-                              "border-red-500 focus:border-red-500",
+                            errors.fullName && touched.fullName && "border-red-500 focus:border-red-500"
                           )}
                           placeholder="Enter your full name"
                         />
@@ -540,10 +419,9 @@ export default function ApplyPage() {
                       )}
                     </div>
 
-                    {/* Email */}
                     <div className="space-y-1.5 sm:space-y-2">
                       <Label className="text-[10px] sm:text-xs font-black uppercase tracking-wider">
-                        Email Address <span className="text-red-500">*</span>
+                        Email <span className="text-red-500">*</span>
                       </Label>
                       <div className="relative">
                         <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 sm:w-4 sm:h-4 text-purple-500" />
@@ -556,9 +434,7 @@ export default function ApplyPage() {
                           required
                           className={cn(
                             "pl-9 sm:pl-10 py-2 sm:py-2.5 text-sm",
-                            errors.email &&
-                              touched.email &&
-                              "border-red-500 focus:border-red-500",
+                            errors.email && touched.email && "border-red-500 focus:border-red-500"
                           )}
                           placeholder="your@email.com"
                         />
@@ -571,10 +447,9 @@ export default function ApplyPage() {
                       )}
                     </div>
 
-                    {/* Phone */}
                     <div className="space-y-1.5 sm:space-y-2">
                       <Label className="text-[10px] sm:text-xs font-black uppercase tracking-wider">
-                        Phone Number <span className="text-red-500">*</span>
+                        Phone <span className="text-red-500">*</span>
                       </Label>
                       <div className="relative">
                         <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 sm:w-4 sm:h-4 text-purple-500" />
@@ -587,9 +462,7 @@ export default function ApplyPage() {
                           required
                           className={cn(
                             "pl-9 sm:pl-10 py-2 sm:py-2.5 text-sm",
-                            errors.phone &&
-                              touched.phone &&
-                              "border-red-500 focus:border-red-500",
+                            errors.phone && touched.phone && "border-red-500 focus:border-red-500"
                           )}
                           placeholder="+123 456 7890"
                         />
@@ -602,11 +475,9 @@ export default function ApplyPage() {
                       )}
                     </div>
 
-                    {/* Emergency Phone - NEW */}
                     <div className="space-y-1.5 sm:space-y-2">
                       <Label className="text-[10px] sm:text-xs font-black uppercase tracking-wider">
-                        Emergency Contact Phone{" "}
-                        <span className="text-amber-500">(Optional)</span>
+                        Emergency Phone <span className="text-amber-500">(Optional)</span>
                       </Label>
                       <div className="relative">
                         <AlertTriangle className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-500" />
@@ -620,7 +491,6 @@ export default function ApplyPage() {
                       </div>
                     </div>
 
-                    {/* Date of Birth */}
                     <div className="space-y-1.5 sm:space-y-2">
                       <Label className="text-[10px] sm:text-xs font-black uppercase tracking-wider">
                         Date of Birth
@@ -639,7 +509,6 @@ export default function ApplyPage() {
                       </div>
                     </div>
 
-                    {/* Country */}
                     <div className="space-y-1.5 sm:space-y-2">
                       <Label className="text-[10px] sm:text-xs font-black uppercase tracking-wider">
                         Country <span className="text-red-500">*</span>
@@ -653,17 +522,13 @@ export default function ApplyPage() {
                           onBlur={handleBlur}
                           required
                           className={cn(
-                            "w-full h-9 sm:h-10 pl-9 sm:pl-10 rounded-md border border-input bg-background px-3 py-1.5 sm:py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500",
-                            errors.country &&
-                              touched.country &&
-                              "border-red-500",
+                            "w-full h-9 sm:h-10 pl-9 sm:pl-10 rounded-md border border-input bg-background px-3 py-1.5 sm:py-2 text-sm",
+                            errors.country && touched.country && "border-red-500"
                           )}
                         >
                           <option value="">Select country</option>
                           {COUNTRIES.map((c) => (
-                            <option key={c} value={c}>
-                              {c}
-                            </option>
+                            <option key={c} value={c}>{c}</option>
                           ))}
                         </select>
                       </div>
@@ -675,7 +540,6 @@ export default function ApplyPage() {
                       )}
                     </div>
 
-                    {/* City */}
                     <div className="space-y-1.5 sm:space-y-2">
                       <Label className="text-[10px] sm:text-xs font-black uppercase tracking-wider">
                         City
@@ -692,7 +556,6 @@ export default function ApplyPage() {
                       </div>
                     </div>
 
-                    {/* Time Zone - Auto-detected */}
                     <div className="space-y-1.5 sm:space-y-2">
                       <Label className="text-[10px] sm:text-xs font-black uppercase tracking-wider">
                         Time Zone
@@ -706,9 +569,7 @@ export default function ApplyPage() {
                           className="w-full h-9 sm:h-10 pl-9 sm:pl-10 rounded-md border border-input bg-background px-3 py-1.5 sm:py-2 text-sm"
                         >
                           {TIME_ZONES.map((tz) => (
-                            <option key={tz} value={tz}>
-                              {tz}
-                            </option>
+                            <option key={tz} value={tz}>{tz}</option>
                           ))}
                         </select>
                       </div>
@@ -717,7 +578,6 @@ export default function ApplyPage() {
                       </p>
                     </div>
 
-                    {/* Minor Status - NEW */}
                     <div className="space-y-1.5 sm:space-y-2">
                       <div className="flex items-center gap-2 mt-2">
                         <input
@@ -728,22 +588,17 @@ export default function ApplyPage() {
                           onChange={handleChange}
                           className="w-4 h-4 rounded border-purple-300 text-purple-600 focus:ring-purple-500"
                         />
-                        <Label
-                          htmlFor="isMinor"
-                          className="text-xs font-black cursor-pointer"
-                        >
+                        <Label htmlFor="isMinor" className="text-xs font-black cursor-pointer">
                           I am under 18 years old
                         </Label>
                       </div>
                     </div>
 
-                    {/* Parent/Guardian Information - Conditional */}
                     {formData.isMinor && (
                       <>
                         <div className="space-y-1.5 sm:space-y-2">
                           <Label className="text-[10px] sm:text-xs font-black uppercase tracking-wider">
-                            Parent/Guardian Full Name{" "}
-                            <span className="text-red-500">*</span>
+                            Parent/Guardian Name <span className="text-red-500">*</span>
                           </Label>
                           <div className="relative">
                             <UserPlus className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 sm:w-4 sm:h-4 text-purple-500" />
@@ -776,8 +631,7 @@ export default function ApplyPage() {
 
                         <div className="space-y-1.5 sm:space-y-2">
                           <Label className="text-[10px] sm:text-xs font-black uppercase tracking-wider">
-                            Parent/Guardian Phone{" "}
-                            <span className="text-red-500">*</span>
+                            Parent/Guardian Phone <span className="text-red-500">*</span>
                           </Label>
                           <div className="relative">
                             <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 sm:w-4 sm:h-4 text-purple-500" />
@@ -787,7 +641,7 @@ export default function ApplyPage() {
                               value={formData.parentPhone}
                               onChange={handleChange}
                               className="pl-9 sm:pl-10 py-2 sm:py-2.5 text-sm"
-                              placeholder="Parent/Guardian phone number"
+                              placeholder="Parent/Guardian phone"
                             />
                           </div>
                         </div>
@@ -797,7 +651,7 @@ export default function ApplyPage() {
                 </motion.div>
               )}
 
-              {/* Step 2: Academic Information - Enhanced */}
+              {/* Step 2: Academic Information */}
               {step === 2 && (
                 <motion.div
                   key="step2"
@@ -806,16 +660,14 @@ export default function ApplyPage() {
                   exit={{ opacity: 0, x: -20 }}
                   className="space-y-5 sm:space-y-6"
                 >
-                  <h2 className="text-lg sm:text-xl font-black mb-3 sm:mb-4 bg-linear-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent">
+                  <h2 className="text-lg sm:text-xl font-black mb-3 sm:mb-4 bg-gradient-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent">
                     Academic Information
                   </h2>
 
                   <div className="space-y-4 sm:space-y-5">
-                    {/* Program Interest */}
                     <div className="space-y-1.5 sm:space-y-2">
                       <Label className="text-[10px] sm:text-xs font-black uppercase tracking-wider">
-                        Program of Interest{" "}
-                        <span className="text-red-500">*</span>
+                        Program of Interest <span className="text-red-500">*</span>
                       </Label>
                       <select
                         name="programInterest"
@@ -825,26 +677,20 @@ export default function ApplyPage() {
                         required
                         className={cn(
                           "w-full h-9 sm:h-10 rounded-md border border-input bg-background px-3 py-1.5 sm:py-2 text-sm",
-                          errors.programInterest &&
-                            touched.programInterest &&
-                            "border-red-500",
+                          errors.programInterest && touched.programInterest && "border-red-500"
                         )}
                       >
                         <option value="">Select a program</option>
-                        <option value="hifz">
-                          Hifz Al-Quran (Full Memorization)
-                        </option>
-                        <option value="tajweed">
-                          Tajweed Al-Itqan (Mastery)
-                        </option>
+                        <option value="hifz">Hifz Al-Quran (Full Memorization)</option>
+                        <option value="tajweed">Tajweed Al-Itqan (Mastery)</option>
                         <option value="group-tajweed">Group Tajweed</option>
                         <option value="arabic">Al-Lughah Al-Arabiyyah</option>
                         <option value="tafsir">Tafsir Al-Mubin</option>
-                        <option value="qiroah">{`Qiro'ah Program`}</option>
-                        <option value="group-qiroah">{`Group Qiro'ah`}</option>
-                        <option value="juz-amma">{`Juz 'Amma`}</option>
+                        <option value="qiroah">Qiro'ah Program</option>
+                        <option value="group-qiroah">Group Qiro'ah</option>
+                        <option value="juz-amma">Juz Amma (Children)</option>
                         <option value="juz-tabarak">Juz Tabarak</option>
-                        <option value="murojaah">{`Muroja'ah Program`}</option>
+                        <option value="murojaah">Muroja'ah Program</option>
                       </select>
                       {errors.programInterest && touched.programInterest && (
                         <p className="text-[10px] text-red-500 mt-1 flex items-center gap-1">
@@ -854,40 +700,23 @@ export default function ApplyPage() {
                       )}
                     </div>
 
-                    {/* Program Details Card */}
                     {selectedProgramInfo && (
-                      <div className="p-3 sm:p-4 rounded-lg bg-linear-to-r from-purple-50 to-amber-50 dark:from-purple-950/30 dark:to-amber-950/30 border border-purple-200 dark:border-purple-800">
+                      <div className="p-3 sm:p-4 rounded-lg bg-gradient-to-r from-purple-50 to-amber-50 dark:from-purple-950/30 dark:to-amber-950/30 border border-purple-200 dark:border-purple-800">
                         <p className="text-xs sm:text-sm mb-1">
-                          <span className="font-black text-purple-600">
-                            Program Details:
-                          </span>
+                          <span className="font-black text-purple-600">Program Details:</span>
                         </p>
                         <div className="grid grid-cols-2 gap-2 text-xs">
-                          <div>
-                            <span className="font-black">Name:</span>{" "}
-                            {selectedProgramInfo.name}
-                          </div>
-                          <div>
-                            <span className="font-black">Duration:</span>{" "}
-                            {selectedProgramInfo.duration}
-                          </div>
-                          <div>
-                            <span className="font-black">Format:</span>{" "}
-                            {selectedProgramInfo.format}
-                          </div>
-                          <div>
-                            <span className="font-black">Price:</span>{" "}
-                            {selectedProgramInfo.price}
-                          </div>
+                          <div><span className="font-black">Name:</span> {selectedProgramInfo.name}</div>
+                          <div><span className="font-black">Duration:</span> {selectedProgramInfo.duration}</div>
+                          <div><span className="font-black">Format:</span> {selectedProgramInfo.format}</div>
+                          <div><span className="font-black">Price:</span> {selectedProgramInfo.price}</div>
                         </div>
                       </div>
                     )}
 
-                    {/* Current Level */}
                     <div className="space-y-1.5 sm:space-y-2">
                       <Label className="text-[10px] sm:text-xs font-black uppercase tracking-wider">
-                        Current Quran Reading Level{" "}
-                        <span className="text-red-500">*</span>
+                        Current Level <span className="text-red-500">*</span>
                       </Label>
                       <select
                         name="currentLevel"
@@ -897,27 +726,15 @@ export default function ApplyPage() {
                         required
                         className={cn(
                           "w-full h-9 sm:h-10 rounded-md border border-input bg-background px-3 py-1.5 sm:py-2 text-sm",
-                          errors.currentLevel &&
-                            touched.currentLevel &&
-                            "border-red-500",
+                          errors.currentLevel && touched.currentLevel && "border-red-500"
                         )}
                       >
                         <option value="">Select your level</option>
-                        <option value="beginner">
-                          Beginner - Cannot read Arabic
-                        </option>
-                        <option value="some">
-                          Some Knowledge - Can read slowly
-                        </option>
-                        <option value="intermediate">
-                          Intermediate - Can read fluently
-                        </option>
-                        <option value="advanced">
-                          Advanced - Some memorization
-                        </option>
-                        <option value="master">
-                          Master - Complete Quran / Ijazah candidate
-                        </option>
+                        <option value="beginner">Beginner - Cannot read Arabic</option>
+                        <option value="some">Some Knowledge - Can read slowly</option>
+                        <option value="intermediate">Intermediate - Can read fluently</option>
+                        <option value="advanced">Advanced - Some memorization</option>
+                        <option value="master">Master - Complete Quran / Ijazah candidate</option>
                       </select>
                       {errors.currentLevel && touched.currentLevel && (
                         <p className="text-[10px] text-red-500 mt-1 flex items-center gap-1">
@@ -927,10 +744,9 @@ export default function ApplyPage() {
                       )}
                     </div>
 
-                    {/* Previous Institution - NEW */}
                     <div className="space-y-1.5 sm:space-y-2">
                       <Label className="text-[10px] sm:text-xs font-black uppercase tracking-wider">
-                        Previous Quran Institution/School
+                        Previous Institution
                       </Label>
                       <div className="relative">
                         <Building className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 sm:w-4 sm:h-4 text-purple-500" />
@@ -939,15 +755,14 @@ export default function ApplyPage() {
                           value={formData.previousInstitution}
                           onChange={handleChange}
                           className="pl-9 sm:pl-10 py-2 sm:py-2.5 text-sm"
-                          placeholder="Name of previous institution (if any)"
+                          placeholder="Previous Quran institution (if any)"
                         />
                       </div>
                     </div>
 
-                    {/* Preferred Language - NEW */}
                     <div className="space-y-1.5 sm:space-y-2">
                       <Label className="text-[10px] sm:text-xs font-black uppercase tracking-wider">
-                        Preferred Language for Instruction
+                        Preferred Language
                       </Label>
                       <div className="relative">
                         <Languages className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 sm:w-4 sm:h-4 text-purple-500" />
@@ -966,7 +781,6 @@ export default function ApplyPage() {
                       </div>
                     </div>
 
-                    {/* Expected Start Date - NEW */}
                     <div className="space-y-1.5 sm:space-y-2">
                       <Label className="text-[10px] sm:text-xs font-black uppercase tracking-wider">
                         Expected Start Date
@@ -978,16 +792,15 @@ export default function ApplyPage() {
                           type="date"
                           value={formData.expectedStartDate}
                           onChange={handleChange}
-                          min={new Date().toISOString().split("T")[0]}
+                          min={new Date().toISOString().split('T')[0]}
                           className="pl-9 sm:pl-10 py-2 sm:py-2.5 text-sm"
                         />
                       </div>
                     </div>
 
-                    {/* Previous Study */}
                     <div className="space-y-1.5 sm:space-y-2">
                       <Label className="text-[10px] sm:text-xs font-black uppercase tracking-wider">
-                        Previous Quran Study
+                        Previous Study
                       </Label>
                       <textarea
                         name="previousStudy"
@@ -999,7 +812,6 @@ export default function ApplyPage() {
                       />
                     </div>
 
-                    {/* Goals */}
                     <div className="space-y-1.5 sm:space-y-2">
                       <Label className="text-[10px] sm:text-xs font-black uppercase tracking-wider">
                         Your Goals
@@ -1014,7 +826,6 @@ export default function ApplyPage() {
                       />
                     </div>
 
-                    {/* Financial Aid Request - NEW */}
                     <div className="space-y-1.5 sm:space-y-2">
                       <div className="flex items-center gap-2">
                         <input
@@ -1025,12 +836,9 @@ export default function ApplyPage() {
                           onChange={handleChange}
                           className="w-4 h-4 rounded border-purple-300 text-purple-600 focus:ring-purple-500"
                         />
-                        <Label
-                          htmlFor="financialAidRequest"
-                          className="text-xs font-black cursor-pointer flex items-center gap-2"
-                        >
-                          <DollarSign className="w-3.5 h-3.5 text-amber-500" />I
-                          would like to inquire about financial aid/scholarships
+                        <Label htmlFor="financialAidRequest" className="text-xs font-black cursor-pointer flex items-center gap-2">
+                          <DollarSign className="w-3.5 h-3.5 text-amber-500" />
+                          I would like to inquire about financial aid
                         </Label>
                       </div>
                     </div>
@@ -1038,7 +846,7 @@ export default function ApplyPage() {
                 </motion.div>
               )}
 
-              {/* Step 3: Additional Information - Enhanced */}
+              {/* Step 3: Additional Information */}
               {step === 3 && (
                 <motion.div
                   key="step3"
@@ -1047,12 +855,11 @@ export default function ApplyPage() {
                   exit={{ opacity: 0, x: -20 }}
                   className="space-y-5 sm:space-y-6"
                 >
-                  <h2 className="text-lg sm:text-xl font-black mb-3 sm:mb-4 bg-linear-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent">
+                  <h2 className="text-lg sm:text-xl font-black mb-3 sm:mb-4 bg-gradient-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent">
                     Additional Information
                   </h2>
 
                   <div className="space-y-4 sm:space-y-5">
-                    {/* How did you hear */}
                     <div className="space-y-1.5 sm:space-y-2">
                       <Label className="text-[10px] sm:text-xs font-black uppercase tracking-wider">
                         How did you hear about us?
@@ -1065,32 +872,27 @@ export default function ApplyPage() {
                       >
                         <option value="">Select an option</option>
                         {HEAR_OPTIONS.map((o) => (
-                          <option key={o} value={o}>
-                            {o}
-                          </option>
+                          <option key={o} value={o}>{o}</option>
                         ))}
                       </select>
                     </div>
 
-                    {/* Referral Code */}
                     <div className="space-y-1.5 sm:space-y-2">
                       <Label className="text-[10px] sm:text-xs font-black uppercase tracking-wider">
-                        Referral Code (if any)
+                        Referral Code
                       </Label>
                       <Input
                         name="referralCode"
                         value={formData.referralCode}
                         onChange={handleChange}
                         className="py-2 sm:py-2.5 text-sm"
-                        placeholder="Enter referral code"
+                        placeholder="Enter referral code if any"
                       />
                     </div>
 
-                    {/* Accessibility Needs - NEW */}
                     <div className="space-y-1.5 sm:space-y-2">
                       <Label className="text-[10px] sm:text-xs font-black uppercase tracking-wider">
-                        Accessibility Needs{" "}
-                        <span className="text-amber-500">(Optional)</span>
+                        Accessibility Needs
                       </Label>
                       <textarea
                         name="accessibilityNeeds"
@@ -1102,7 +904,6 @@ export default function ApplyPage() {
                       />
                     </div>
 
-                    {/* Additional Notes */}
                     <div className="space-y-1.5 sm:space-y-2">
                       <Label className="text-[10px] sm:text-xs font-black uppercase tracking-wider">
                         Additional Notes
@@ -1117,36 +918,23 @@ export default function ApplyPage() {
                       />
                     </div>
 
-                    {/* Consent Section */}
                     <div className="space-y-3 sm:space-y-4 pt-2 sm:pt-4">
                       <div className="flex items-start gap-2 sm:gap-3">
                         <Checkbox
                           id="agreeTerms"
                           checked={formData.agreeTerms}
                           onCheckedChange={(checked) =>
-                            setFormData((prev) => ({
-                              ...prev,
-                              agreeTerms: checked as boolean,
-                            }))
+                            setFormData(prev => ({ ...prev, agreeTerms: checked as boolean }))
                           }
-                          className="mt-0.5 border-purple-300 data-[state=checked]:bg-purple-600 data-[state=checked]:border-purple-600"
+                          className="mt-0.5 border-purple-300 data-[state=checked]:bg-purple-600"
                         />
-                        <Label
-                          htmlFor="agreeTerms"
-                          className="text-xs sm:text-sm font-medium cursor-pointer leading-relaxed"
-                        >
+                        <Label htmlFor="agreeTerms" className="text-xs sm:text-sm font-medium cursor-pointer leading-relaxed">
                           I agree to the{" "}
-                          <Link
-                            href="/legal"
-                            className="text-purple-600 font-black hover:underline"
-                          >
+                          <Link href="/legal" className="text-purple-600 font-black hover:underline">
                             Terms & Conditions
                           </Link>{" "}
                           and{" "}
-                          <Link
-                            href="/privacy"
-                            className="text-purple-600 font-black hover:underline"
-                          >
+                          <Link href="/privacy" className="text-purple-600 font-black hover:underline">
                             Privacy Policy
                           </Link>{" "}
                           <span className="text-red-500">*</span>
@@ -1158,19 +946,12 @@ export default function ApplyPage() {
                           id="agreeContact"
                           checked={formData.agreeContact}
                           onCheckedChange={(checked) =>
-                            setFormData((prev) => ({
-                              ...prev,
-                              agreeContact: checked as boolean,
-                            }))
+                            setFormData(prev => ({ ...prev, agreeContact: checked as boolean }))
                           }
-                          className="mt-0.5 border-purple-300 data-[state=checked]:bg-purple-600 data-[state=checked]:border-purple-600"
+                          className="mt-0.5 border-purple-300 data-[state=checked]:bg-purple-600"
                         />
-                        <Label
-                          htmlFor="agreeContact"
-                          className="text-xs sm:text-sm font-medium cursor-pointer leading-relaxed"
-                        >
-                          I agree to receive communications about my application
-                          via email and SMS
+                        <Label htmlFor="agreeContact" className="text-xs sm:text-sm font-medium cursor-pointer leading-relaxed">
+                          I agree to receive communications about my application via email and SMS
                         </Label>
                       </div>
                     </div>
@@ -1186,9 +967,9 @@ export default function ApplyPage() {
                   type="button"
                   onClick={prevStep}
                   variant="outline"
-                  className="rounded-full px-5 sm:px-6 py-2.5 sm:py-3 font-black text-sm border-purple-300 text-purple-600 hover:bg-purple-50 dark:hover:bg-purple-950/20 order-2 xs:order-1"
+                  className="rounded-full px-5 sm:px-6 py-2.5 sm:py-3 font-black text-sm border-purple-300 text-purple-600 hover:bg-purple-50 order-2 xs:order-1"
                 >
-                  <ChevronLeft className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1 sm:mr-2" />
+                  <ChevronLeft className="w-3.5 h-3.5 mr-1" />
                   Back
                 </Button>
               )}
@@ -1198,26 +979,26 @@ export default function ApplyPage() {
                   onClick={nextStep}
                   disabled={!canProceed()}
                   className={cn(
-                    "rounded-full px-5 sm:px-6 py-2.5 sm:py-3 font-black text-sm bg-linear-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white order-1 xs:order-2",
+                    "rounded-full px-5 sm:px-6 py-2.5 sm:py-3 font-black text-sm bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white order-1 xs:order-2",
                     !canProceed() && "opacity-50 cursor-not-allowed",
-                    step === 1 && "ml-auto",
+                    step === 1 && "ml-auto"
                   )}
                 >
                   Continue
-                  <ChevronRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 ml-1 sm:ml-2" />
+                  <ChevronRight className="w-3.5 h-3.5 ml-1" />
                 </Button>
               ) : (
                 <Button
                   type="submit"
                   disabled={!formData.agreeTerms || isSubmitting}
-                  className="rounded-full px-6 sm:px-8 py-2.5 sm:py-3 font-black text-sm bg-linear-to-r from-purple-600 to-amber-600 hover:from-purple-700 hover:to-amber-700 text-white order-1 xs:order-2 ml-auto"
+                  className="rounded-full px-6 sm:px-8 py-2.5 sm:py-3 font-black text-sm bg-gradient-to-r from-purple-600 to-amber-600 hover:from-purple-700 hover:to-amber-700 text-white order-1 xs:order-2 ml-auto"
                 >
                   {isSubmitting ? (
-                    <Loader2 className="w-4 h-4 sm:w-5 sm:h-5 animate-spin" />
+                    <Loader2 className="w-4 h-4 animate-spin" />
                   ) : (
                     <>
                       Submit Application
-                      <CheckCircle2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 ml-1 sm:ml-2" />
+                      <CheckCircle2 className="w-3.5 h-3.5 ml-1" />
                     </>
                   )}
                 </Button>
@@ -1226,7 +1007,6 @@ export default function ApplyPage() {
           </form>
         </div>
 
-        {/* Help Text */}
         <p className="text-center text-[10px] sm:text-xs text-muted-foreground mt-6 sm:mt-8">
           <Shield className="w-3 h-3 inline mr-1" />
           Your information is secure and encrypted. We never share your data.

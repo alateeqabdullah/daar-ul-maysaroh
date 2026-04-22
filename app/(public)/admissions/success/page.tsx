@@ -1,10 +1,12 @@
 // app/admissions/success/page.tsx
 "use client";
 
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { useState, useEffect } from "react";
+import { toast } from "sonner";
 import {
   CheckCircle2,
   ArrowRight,
@@ -19,31 +21,58 @@ import {
   Copy,
   Check,
   Download,
-  Share2,
+  Loader2,
   Instagram,
   Facebook,
   Twitter,
   Youtube,
-  ExternalLink,
   ChevronRight,
   Send,
+  Shield,
 } from "lucide-react";
-import { toast } from "sonner";
 
 export default function AdmissionsSuccessPage() {
+  const router = useRouter();
+  const [isAuthorized, setIsAuthorized] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [copied, setCopied] = useState(false);
-  const [referenceNumber] = useState(() => {
-    // Generate a random reference number
-    return `ALM-${Date.now().toString().slice(-8)}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
+  const [applicationData, setApplicationData] = useState({
+    reference: "",
+    email: "",
+    name: "",
+    timestamp: "",
   });
-
   const [timeRemaining, setTimeRemaining] = useState({
     hours: 24,
     minutes: 0,
     seconds: 0,
   });
 
-  // Countdown timer for estimated response time
+  // Check authorization on mount
+  useEffect(() => {
+    const hasSubmitted = sessionStorage.getItem("applicationSubmitted");
+    const reference = sessionStorage.getItem("applicationReference");
+    const email = sessionStorage.getItem("applicationEmail");
+    const name = sessionStorage.getItem("applicationName");
+    const timestamp = sessionStorage.getItem("applicationTimestamp");
+
+    if (hasSubmitted === "true" && reference && email) {
+      setIsAuthorized(true);
+      setApplicationData({
+        reference,
+        email,
+        name: name || "Student",
+        timestamp: timestamp || new Date().toISOString(),
+      });
+    } else {
+      // Redirect to home page if unauthorized
+      router.replace("/");
+    }
+
+    setIsLoading(false);
+  }, [router]);
+
+  // Countdown timer
   useEffect(() => {
     const targetTime = new Date();
     targetTime.setHours(targetTime.getHours() + 24);
@@ -67,7 +96,7 @@ export default function AdmissionsSuccessPage() {
   }, []);
 
   const copyReferenceNumber = () => {
-    navigator.clipboard.writeText(referenceNumber);
+    navigator.clipboard.writeText(applicationData.reference);
     setCopied(true);
     toast.success("Reference number copied!", {
       description: "Save this for future reference",
@@ -80,12 +109,14 @@ export default function AdmissionsSuccessPage() {
     const summary = `
 Al-Maysaroh Academy - Application Summary
 ===========================================
-Reference Number: ${referenceNumber}
-Date Submitted: ${new Date().toLocaleString()}
+Reference Number: ${applicationData.reference}
+Name: ${applicationData.name}
+Email: ${applicationData.email}
+Date Submitted: ${new Date(applicationData.timestamp).toLocaleString()}
 Status: Pending Review
 
 Next Steps:
-1. Check email for confirmation
+1. Check your email for confirmation
 2. Await contact within 24-48 hours
 3. Schedule free assessment
 4. Receive teacher matching
@@ -102,7 +133,7 @@ Thank you for choosing Al-Maysaroh!
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `Al-Maysaroh-Application-${referenceNumber}.txt`;
+    a.download = `Al-Maysaroh-Application-${applicationData.reference}.txt`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -111,7 +142,6 @@ Thank you for choosing Al-Maysaroh!
   };
 
   const addToCalendar = () => {
-    // Create calendar event for follow-up reminder
     const event = {
       title: "Al-Maysaroh Application Follow-up",
       description: "Check status of my application to Al-Maysaroh Academy",
@@ -123,8 +153,25 @@ Thank you for choosing Al-Maysaroh!
 
     const calendarUrl = `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(event.title)}&details=${encodeURIComponent(event.description)}&dates=${event.startTime.replace(/[-:]/g, "").split(".")[0]}/${event.endTime.replace(/[-:]/g, "").split(".")[0]}`;
     window.open(calendarUrl, "_blank");
-    toast.success("Add to calendar reminder set!");
+    toast.success("Calendar reminder set!");
   };
+
+  // Show loading state
+  if (isLoading) {
+    return (
+      <main className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <Loader2 className="w-8 h-8 animate-spin text-purple-600 mx-auto mb-4" />
+          <p className="text-muted-foreground">Verifying access...</p>
+        </div>
+      </main>
+    );
+  }
+
+  // Don't render if not authorized
+  if (!isAuthorized) {
+    return null;
+  }
 
   return (
     <main className="pt-24 sm:pt-28 md:pt-32 pb-12 sm:pb-16 md:pb-20 bg-background min-h-screen flex items-center justify-center">
@@ -156,11 +203,11 @@ Thank you for choosing Al-Maysaroh!
 
           {/* Description */}
           <p className="text-sm sm:text-base text-muted-foreground mb-6 sm:mb-8 px-4">
-            Thank you for applying to Al-Maysaroh. Our admissions team will
-            review your application within 24 hours.
+            Thank you for applying to Al-Maysaroh, {applicationData.name}. Our
+            admissions team will review your application within 24 hours.
           </p>
 
-          {/* Reference Number - NEW */}
+          {/* Reference Number */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -172,7 +219,7 @@ Thank you for choosing Al-Maysaroh!
             </p>
             <div className="flex items-center justify-center gap-2">
               <p className="text-lg sm:text-xl font-black text-purple-600 font-mono">
-                {referenceNumber}
+                {applicationData.reference}
               </p>
               <button
                 onClick={copyReferenceNumber}
@@ -191,7 +238,7 @@ Thank you for choosing Al-Maysaroh!
             </p>
           </motion.div>
 
-          {/* Estimated Response Timer - NEW */}
+          {/* Estimated Response Timer */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -250,7 +297,7 @@ Thank you for choosing Al-Maysaroh!
               </span>
             </h3>
 
-            {/* Progress Tracker - NEW */}
+            {/* Progress Tracker */}
             <div className="mb-4">
               <div className="flex justify-between mb-1">
                 <span className="text-[8px] sm:text-[9px] font-black uppercase tracking-wider text-purple-600">
@@ -276,25 +323,21 @@ Thank you for choosing Al-Maysaroh!
                   icon: Mail,
                   text: "Check your email for application confirmation",
                   color: "purple",
-                  completed: false,
                 },
                 {
                   icon: Clock,
                   text: "Our team will contact you within 24-48 hours",
                   color: "amber",
-                  completed: false,
                 },
                 {
                   icon: Calendar,
-                  text: "You'll be invited for a free assessment session if applicable",
+                  text: "You'll be invited for a free assessment session",
                   color: "purple",
-                  completed: false,
                 },
                 {
                   icon: Users,
                   text: "Receive teacher matching and enrollment details",
                   color: "amber",
-                  completed: false,
                 },
               ].map((item, idx) => {
                 const Icon = item.icon;
@@ -320,7 +363,7 @@ Thank you for choosing Al-Maysaroh!
             </div>
           </motion.div>
 
-          {/* Action Buttons - NEW */}
+          {/* Action Buttons */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -329,14 +372,14 @@ Thank you for choosing Al-Maysaroh!
           >
             <button
               onClick={downloadApplicationSummary}
-              className="flex items-center justify-center gap-2 px-3 py-2 rounded-lg border border-purple-200 dark:border-purple-800 text-purple-600 font-black text-xs hover:bg-purple-50 dark:hover:bg-purple-950/20 transition-all"
+              className="flex items-center justify-center gap-2 px-3 py-2 rounded-lg border border-purple-200 dark:border-purple-800 text-purple-600 font-black text-xs hover:bg-purple-50 transition-all"
             >
               <Download className="w-3.5 h-3.5" />
               Download Summary
             </button>
             <button
               onClick={addToCalendar}
-              className="flex items-center justify-center gap-2 px-3 py-2 rounded-lg border border-amber-200 dark:border-amber-800 text-amber-600 font-black text-xs hover:bg-amber-50 dark:hover:bg-amber-950/20 transition-all"
+              className="flex items-center justify-center gap-2 px-3 py-2 rounded-lg border border-amber-200 dark:border-amber-800 text-amber-600 font-black text-xs hover:bg-amber-50 transition-all"
             >
               <Calendar className="w-3.5 h-3.5" />
               Add to Calendar
@@ -356,14 +399,14 @@ Thank you for choosing Al-Maysaroh!
             <div className="flex flex-col xs:flex-row gap-2 sm:gap-3 justify-center">
               <a
                 href="mailto:info.almaysaroh@gmail.com"
-                className="inline-flex items-center justify-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 rounded-full bg-purple-50 dark:bg-purple-950/30 text-purple-600 font-black text-xs sm:text-sm hover:bg-purple-100 dark:hover:bg-purple-950/50 transition-all duration-300"
+                className="inline-flex items-center justify-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 rounded-full bg-purple-50 dark:bg-purple-950/30 text-purple-600 font-black text-xs sm:text-sm hover:bg-purple-100 transition-all"
               >
                 <Mail className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 info.almaysaroh@gmail.com
               </a>
               <a
                 href="tel:+2349110163930"
-                className="inline-flex items-center justify-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 rounded-full bg-amber-50 dark:bg-amber-950/30 text-amber-600 font-black text-xs sm:text-sm hover:bg-amber-100 dark:hover:bg-amber-950/50 transition-all duration-300"
+                className="inline-flex items-center justify-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 rounded-full bg-amber-50 dark:bg-amber-950/30 text-amber-600 font-black text-xs sm:text-sm hover:bg-amber-100 transition-all"
               >
                 <Phone className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 +234 911 016 3930
@@ -372,7 +415,7 @@ Thank you for choosing Al-Maysaroh!
                 href="https://wa.me/2349110163930"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center justify-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 rounded-full bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 font-black text-xs sm:text-sm hover:bg-emerald-100 dark:hover:bg-emerald-950/50 transition-all duration-300"
+                className="inline-flex items-center justify-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 rounded-full bg-emerald-50 dark:bg-emerald-950/30 text-emerald-600 font-black text-xs sm:text-sm hover:bg-emerald-100 transition-all"
               >
                 <MessageCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                 WhatsApp
@@ -380,7 +423,7 @@ Thank you for choosing Al-Maysaroh!
             </div>
           </motion.div>
 
-          {/* Social Media Follow - NEW */}
+          {/* Social Media Follow */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -394,25 +437,25 @@ Thank you for choosing Al-Maysaroh!
               {[
                 {
                   icon: Instagram,
-                  url: "https://instagram.com/almaysaroh",
+                  url: "https://instagram.com",
                   label: "Instagram",
                   color: "hover:text-pink-600",
                 },
                 {
                   icon: Facebook,
-                  url: "https://facebook.com/almaysaroh",
+                  url: "https://facebook.com",
                   label: "Facebook",
                   color: "hover:text-blue-600",
                 },
                 {
                   icon: Twitter,
-                  url: "https://twitter.com/almaysaroh",
+                  url: "https://twitter.com",
                   label: "Twitter",
                   color: "hover:text-sky-500",
                 },
                 {
                   icon: Youtube,
-                  url: "https://youtube.com/almaysaroh",
+                  url: "https://youtube.com",
                   label: "YouTube",
                   color: "hover:text-red-600",
                 },
@@ -434,7 +477,7 @@ Thank you for choosing Al-Maysaroh!
             </div>
           </motion.div>
 
-          {/* FAQ Quick Links - NEW */}
+          {/* Quick Links */}
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -455,7 +498,7 @@ Thank you for choosing Al-Maysaroh!
                 href="/courses"
                 className="inline-flex items-center gap-1 text-[10px] font-black text-purple-600 hover:underline"
               >
-                Explore Courses <ExternalLink className="w-3 h-3" />
+                Explore Courses
               </Link>
               <Link
                 href="/contact"
@@ -487,11 +530,11 @@ Thank you for choosing Al-Maysaroh!
             <Link href="/">
               <Button
                 variant="outline"
-                className="rounded-full px-6 sm:px-8 py-2.5 sm:py-3 font-black text-sm border-purple-300 text-purple-600 hover:bg-purple-50 dark:hover:bg-purple-950/20 transition-all duration-300 group"
+                className="rounded-full px-6 sm:px-8 py-2.5 sm:py-3 font-black text-sm border-purple-300 text-purple-600 hover:bg-purple-50 transition-all group"
               >
-                <Home className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1.5 sm:mr-2 group-hover:scale-110 transition-transform" />
+                <Home className="w-3.5 h-3.5 mr-1.5 group-hover:scale-110 transition-transform" />
                 Return to Home
-                <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 ml-1.5 sm:ml-2 group-hover:translate-x-1 transition-transform" />
+                <ArrowRight className="w-3.5 h-3.5 ml-1.5 group-hover:translate-x-1 transition-transform" />
               </Button>
             </Link>
           </motion.div>
@@ -511,7 +554,7 @@ Thank you for choosing Al-Maysaroh!
                 {
                   name: "Twitter",
                   icon: "🐦",
-                  url: "https://twitter.com/intent/tweet?text=I%27ve%20just%20applied%20to%20Al-Maysaroh%20to%20study%20the%20Quran!%20Excited%20to%20begin%20this%20journey%20%F0%9F%93%96%F0%9F%8C%99",
+                  url: "https://twitter.com/intent/tweet?text=I%27ve%20just%20applied%20to%20Al-Maysaroh%20to%20study%20the%20Quran!",
                 },
                 {
                   name: "Facebook",
@@ -521,7 +564,7 @@ Thank you for choosing Al-Maysaroh!
                 {
                   name: "WhatsApp",
                   icon: "💬",
-                  url: "https://wa.me/?text=I%27ve%20just%20applied%20to%20Al-Maysaroh%20to%20study%20the%20Quran!%20Excited%20to%20begin%20this%20journey%20%F0%9F%93%96%F0%9F%8C%99",
+                  url: "https://wa.me/?text=I%27ve%20just%20applied%20to%20Al-Maysaroh%20to%20study%20the%20Quran!",
                 },
               ].map((social, i) => (
                 <a
@@ -537,7 +580,7 @@ Thank you for choosing Al-Maysaroh!
             </div>
           </motion.div>
 
-          {/* Email Confirmation Reminder - NEW */}
+          {/* Email Reminder */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -546,9 +589,17 @@ Thank you for choosing Al-Maysaroh!
           >
             <p className="text-[8px] text-muted-foreground flex items-center justify-center gap-1">
               <Mail className="w-2.5 h-2.5" />
-             {` Didn't receive confirmation email? Check your spam folder`}
+              Didn't receive confirmation email? Check your spam folder
             </p>
           </motion.div>
+
+          {/* Security Notice */}
+          <div className="mt-4">
+            <p className="text-[8px] text-muted-foreground flex items-center justify-center gap-1">
+              <Shield className="w-2.5 h-2.5" />
+              This is a secured page. Your information is protected.
+            </p>
+          </div>
         </motion.div>
       </div>
     </main>
