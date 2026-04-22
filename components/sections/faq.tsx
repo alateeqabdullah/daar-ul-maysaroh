@@ -8,13 +8,12 @@ import {
   ChevronDown,
   HelpCircle,
   MessageCircle,
-  Sparkles,
+ 
   Mail,
   Phone,
   ChevronRight,
 } from "lucide-react";
 import Link from "next/link";
-import { cn } from "@/lib/utils";
 
 const FAQS = [
   {
@@ -45,6 +44,13 @@ const FAQS = [
       "Yes! Upon completing your program, students receive a Certificate of Completion. Those who excel can continue to our Ijazah track for formal certification with a complete Sanad chain to Prophet Muhammad (ﷺ).",
     category: "Certification",
   },
+  {
+    id: 5,
+    question: "Can I switch between group and 1-on-1 classes?",
+    answer:
+      "Yes, you can switch formats at the end of any month. We understand that your needs may change as you progress, and we want to provide flexibility to ensure you get the best learning experience.",
+    category: "Flexibility",
+  }
 ];
 
 export function FAQ() {
@@ -55,7 +61,7 @@ export function FAQ() {
   };
 
   return (
-    <section className="py-12 xs:py-16 sm:py-20 md:py-24 lg:py-32 bg-gradient-to-b from-background via-purple-50/5 to-amber-50/5 relative overflow-hidden">
+    <section className="py-12 xs:py-16 sm:py-20 md:py-24 lg:py-32 bg-linear-to-b from-background via-purple-50/5 to-amber-50/5 relative overflow-hidden">
       {/* Background Decoration */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-0 right-0 w-96 h-96 bg-purple-600/5 rounded-full blur-3xl" />
@@ -74,7 +80,7 @@ export function FAQ() {
             </div>
             <h2 className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl font-black tracking-tighter font-heading leading-[1.1] mb-3 xs:mb-4">
               Frequently Asked{" "}
-              <span className="bg-gradient-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent italic">
+              <span className="bg-linear-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent italic">
                 Questions
               </span>
             </h2>
@@ -149,7 +155,7 @@ export function FAQ() {
         {/* Still Have Questions CTA */}
         <Reveal delay={0.35}>
           <div className="mt-10 xs:mt-12 sm:mt-16 text-center">
-            <div className="inline-flex flex-col sm:flex-row items-center gap-3 sm:gap-4 px-5 xs:px-6 py-4 xs:py-5 rounded-2xl bg-gradient-to-r from-purple-50 to-amber-50 dark:from-purple-950/30 dark:to-amber-950/30 border border-purple-200 dark:border-purple-800">
+            <div className="inline-flex flex-col sm:flex-row items-center gap-3 sm:gap-4 px-5 xs:px-6 py-4 xs:py-5 rounded-2xl bg-linear-to-r from-purple-50 to-amber-50 dark:from-purple-950/30 dark:to-amber-950/30 border border-purple-200 dark:border-purple-800">
               <div className="flex items-center gap-2">
                 <MessageCircle className="w-4 h-4 xs:w-5 xs:h-5 text-amber-500" />
                 <span className="text-xs xs:text-sm font-bold">
@@ -158,7 +164,7 @@ export function FAQ() {
               </div>
               <div className="flex flex-col xs:flex-row gap-2 xs:gap-3">
                 <Link href="/contact">
-                  <button className="px-4 xs:px-5 py-1.5 xs:py-2 rounded-full bg-gradient-to-r from-purple-600 to-purple-700 text-white font-black text-[10px] xs:text-xs uppercase tracking-wider hover:from-purple-700 hover:to-purple-800 transition-all shadow-md">
+                  <button className="px-4 xs:px-5 py-1.5 xs:py-2 rounded-full bg-linear-to-r from-purple-600 to-purple-700 text-white font-black text-[10px] xs:text-xs uppercase tracking-wider hover:from-purple-700 hover:to-purple-800 transition-all shadow-md">
                     Contact Support
                   </button>
                 </Link>
