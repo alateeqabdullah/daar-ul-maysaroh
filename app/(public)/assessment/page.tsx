@@ -718,7 +718,7 @@
 // app/assessment/page.tsx
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import {
   Clock,
   User,
@@ -744,8 +744,6 @@ import {
   Video,
   Mic,
   AlertCircle,
-  Check,
-  X,
   Sun,
   Moon,
   AlertTriangle,
@@ -820,10 +818,10 @@ const ASSESSMENT_TYPES = [
 const LANGUAGES = [
   { value: "english", label: "English", fluency: "Native/Professional" },
   { value: "arabic", label: "Arabic", fluency: "Native/Professional" },
-  { value: "urdu", label: "Urdu", fluency: "Fluent" },
-  { value: "hindi", label: "Hindi", fluency: "Fluent" },
-  { value: "bengali", label: "Bengali", fluency: "Fluent" },
-  { value: "french", label: "French", fluency: "Fluent" },
+  // { value: "urdu", label: "Urdu", fluency: "Fluent" },
+  // { value: "hindi", label: "Hindi", fluency: "Fluent" },
+  // { value: "bengali", label: "Bengali", fluency: "Fluent" },
+  // { value: "french", label: "French", fluency: "Fluent" },
   { value: "hausa", label: "Hausa", fluency: "Fluent" },
   { value: "yoruba", label: "Yoruba", fluency: "Fluent" },
 ];
@@ -1137,7 +1135,7 @@ export default function AssessmentPage() {
   }
 
   return (
-    <main className="min-h-screen bg-background overflow-hidden py-12 sm:py-20 md:py-24 lg:py-32">
+    <main className="min-h-screen bg-background overflow-hidden py-20 sm:py-30 md:py-24 lg:py-32">
       {/* Background Elements */}
       <div className="fixed inset-0 pointer-events-none">
         <div className="absolute inset-0 opacity-[0.02] bg-[url('/islamic-pattern.svg')] bg-center bg-repeat" style={{ backgroundSize: "300px" }} />
