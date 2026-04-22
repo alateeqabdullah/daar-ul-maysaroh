@@ -1,650 +1,399 @@
 // components/sections/testimonials.tsx
 "use client";
 
-import { useState, useEffect, useRef } from "react";
-import {
-  motion,
-  AnimatePresence,
-  useScroll,
-  useTransform,
-} from "framer-motion";
+import { useState, useEffect } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Reveal } from "@/components/shared/section-animation";
 import {
   Star,
   Quote,
   ChevronLeft,
   ChevronRight,
+ 
   Users,
   Heart,
-  MessageCircle,
-  Sparkles,
-  Crown,
-  Shield,
   Award,
-  TrendingUp,
-  Play,
-  Pause,
- 
+  MessageCircle,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const TESTIMONIALS = [
   {
     id: 1,
-    name: "Ahmed Hassan",
-    role: "Hifz Graduate, UK",
-    content:
-      "Al-Maysaroh changed my relationship with the Quran. The Sanad-based approach gave me confidence that my recitation is authentic. The scholars are patient, knowledgeable, and truly care about your progress.",
+    name: "Zainab Bint Abdullah",
+    role: "Hifz Student",
+    location: "Nigeria",
+    initials: "ZB",
     rating: 5,
-    image: "أ",
-    program: "Hifz Program",
-    location: "United Kingdom",
-    achievement: "Completed 15 Juz",
-    journey: "6 months",
+    text: "Alhamdulillah, I completed my Hifz in just 2 years with Shaykh Abubakar. The structured revision system and constant encouragement made all the difference.",
+    program: "Hifz Al-Quran",
+    date: "March 2024",
+    featured: true,
   },
   {
     id: 2,
-    name: "Sarah Johnson",
-    role: "Parent, USA",
-    content:
-      "My daughter loves her classes! The teachers are patient, engaging, and truly care about her progress. I've seen remarkable improvement in her recitation in just a few months. Highly recommend!",
+    name: "Abdulmalik Adewale",
+    role: "Working Professional",
+    location: "Nigeria",
+    initials: "AA",
     rating: 5,
-    image: "س",
-    program: "Group Qiro'ah",
-    location: "United States",
-    achievement: "Daughter now reads fluently",
-    journey: "4 months",
+    text: "The flexibility of scheduling around my job was incredible. My Tajweed has improved dramatically, and I lead prayers at my local masjid. The 1-on-1 attention is worth every penny.",
+    program: "Tajweed Al-Itqan",
+    date: "February 2024",
+    featured: false,
   },
   {
     id: 3,
-    name: "Dr. Omar Farooq",
-    role: "Professional Student, Canada",
-    content:
-      "Balancing work and Hifz seemed impossible until I found Al-Maysaroh. The flexible schedule and quality instruction made it possible. I'm now in the final phase of my memorization journey.",
+    name: "Fatimah Isa",
+    role: "Mother of 3",
+    location: "Germany",
+    initials: "FA",
     rating: 5,
-    image: "ع",
-    program: "Hifz Program",
-    location: "Canada",
-    achievement: "Final phase of Hifz",
-    journey: "2 years",
+    text: "My children (ages 7, 9, and 12) are all in the Group Qiro'ah program. They've gone from zero Arabic to reading confidently. The teachers are patient and engaging.I Highly recommend!",
+    program: "Group Qiro'ah",
+    date: "January 2025",
+    featured: false,
   },
   {
     id: 4,
-    name: "Fatima Al-Mansouri",
-    role: "Tajweed Graduate, UAE",
-    content:
-      "The attention to detail in Tajweed is unmatched. Every letter, every rule is taught with precision. The audio analysis technology helped me correct mistakes I didn't even know I had.",
+    name: "Yusuf Ibrahim",
+    role: "University Professor",
+    location: "Canada",
+    initials: "YI",
     rating: 5,
-    image: "ف",
-    program: "Tajweed Mastery",
-    location: "UAE",
-    achievement: "Mastered Al-Jazariyyah",
-    journey: "8 months",
+    text: "The depth of Tafsir instruction is remarkable. Shaykh connects classical sources with modern application. I've gained a whole new appreciation for the Quran's timeless wisdom.",
+    program: "Tafsir Al-Mubin",
+    date: "December 2026",
+    featured: false,
   },
   {
     id: 5,
-    name: "Abdullah Rahman",
-    role: "Parent, Australia",
-    content:
-      "My son was struggling with Quran reading. After joining Al-Maysaroh, his confidence soared. The 1-on-1 attention and patient teaching style made all the difference. Jazakum Allah khair!",
+    name: "Mubarak Ali",
+    role: "Student",
+    location: "Nigeria",
+    initials: "MA",
     rating: 5,
-    image: "ع",
-    program: "Children's Program",
-    location: "Australia",
-    achievement: "Now reads with confidence",
-    journey: "3 months",
+    text: "The program has transformed my understanding of the Quran. The instructors are knowledgeable and approachable. I feel more connected to my faith and community.",
+    program: "Hifz Al-Quran",
+    date: "October 2025",
+    featured: false,
   },
-  {
-    id: 6,
-    name: "Mariam Al-Khalifa",
-    role: "Ijazah Candidate, Bahrain",
-    content:
-      "The journey from beginner to Ijazah has been transformative. The scholars don't just teach; they mentor and guide. I'm proud to soon be part of this unbroken chain.",
-    rating: 5,
-    image: "م",
-    program: "Ijazah Track",
-    location: "Bahrain",
-    achievement: "Ijazah candidate",
-    journey: "18 months",
-  },
-  {
-    id: 7,
-    name: "Ali Ahmed",
-    role: "Hifz Graduate, USA",
-    content:
-      "The personalized approach and dedicated instructors at Al-Maysaroh made my Hifz journey seamless. I'm now confident in my recitation and have a deeper appreciation for the Quran.",
-    rating: 5,
-    image: "ع",
-    program: "Hifz Program",
-    location: "United States",
-    achievement: "Completed 30 Juz",
-    journey: "1 year",
-  },
-  {
-    id: 8,
-    name: "Layla Hassan",
-    role: "Tajweed Student, UK",
-    content:
-      "The Tajweed classes are fantastic! The instructors are knowledgeable and patient, and the use of technology for feedback is a game-changer. I've seen significant improvement in my recitation.",
-    rating: 5,
-    image: "ل",
-    program: "Tajweed Mastery",
-    location: "United Kingdom",
-    achievement: "Improved recitation",
-    journey: "6 months",  
-  },
-  {
-    id: 9,
-    name: "Youssef Ali",
-    role: "Quran Memorization Student, Egypt",
-    content:
-      "The structured approach and comprehensive curriculum at Al-Maysaroh have been instrumental in my Quran memorization journey. The supportive community and expert instruction have made all the difference.",
-    rating: 5,
-    image: "ي",
-    program: "Hifz Program",
-    location: "Egypt",
-    achievement: "Memorized entire Quran",
-    journey: "2 years",
-  },
-  {
-    id: 10,
-    name: "Amina Mohammed",
-    role: "Tajweed Graduate, Sudan",
-    content:
-      "The Tajweed program at Al-Maysaroh has been a game-changer for my recitation. The instructors are highly qualified and the learning environment is supportive and motivating.",
-    rating: 5,
-    image: "أ",
-    program: "Tajweed Mastery",
-    location: "Sudan",
-    achievement: "Graduated with distinction",
-    journey: "1 year",
-  }
+  // {
+  //   id: 6,
+  //   name: "Aisha John",
+  //   role: "Revert",
+  //   location: "South Africa",
+  //   initials: "AB",
+  //   rating: 5,
+  //   text: "As a revert, I was nervous about learning to read the Quran. The teachers were so patient and supportive. Within 6 months, I was reciting fluently. Alhamdulillah for this blessed program!",
+  //   program: "Qiro'ah Program",
+  //   date: "November 2023",
+  //   featured: false,
+  // },
 ];
 
+// Check for reduced motion preference
+const prefersReducedMotion =
+  typeof window !== "undefined"
+    ? window.matchMedia("(prefers-reduced-motion: reduce)").matches
+    : false;
+
+function StarRating({ rating }: { rating: number }) {
+  return (
+    <div className="flex gap-0.5">
+      {[...Array(5)].map((_, i) => (
+        <Star
+          key={i}
+          className={cn(
+            "w-3 h-3 xs:w-3.5 xs:h-3.5",
+            i < rating
+              ? "fill-amber-500 text-amber-500"
+              : "fill-gray-200 text-gray-200 dark:fill-gray-700 dark:text-gray-700",
+          )}
+        />
+      ))}
+    </div>
+  );
+}
+
 export function Testimonials() {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [autoplay, setAutoplay] = useState(true);
-  const [visibleCount, setVisibleCount] = useState(3);
-  const [expandedId, setExpandedId] = useState<number | null>(null);
-  const [hoveredCard, setHoveredCard] = useState<number | null>(null);
-  const [activeDot, setActiveDot] = useState(0);
-  const sectionRef = useRef<HTMLElement>(null);
-
-  const { scrollYProgress } = useScroll({
-    target: sectionRef,
-    offset: ["start end", "end start"],
-  });
-
-  const parallaxY = useTransform(scrollYProgress, [0, 1], [0, -100]);
+  const [activeIndex, setActiveIndex] = useState(0);
+  const [isMobile, setIsMobile] = useState(false);
+  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth < 768) {
-        setVisibleCount(1);
-      } else if (window.innerWidth < 1024) {
-        setVisibleCount(2);
-      } else {
-        setVisibleCount(3);
-      }
+    setMounted(true);
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
     };
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+    checkMobile();
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
+  // Auto-play carousel
   useEffect(() => {
-    if (!autoplay) return;
+    if (!isAutoPlaying || isMobile || !mounted) return;
     const interval = setInterval(() => {
-      setCurrentIndex(
-        (prev) => (prev + 1) % (TESTIMONIALS.length - visibleCount + 1),
-      );
-      setActiveDot(Math.floor((currentIndex + 1) / visibleCount));
-    }, 6000);
+      setActiveIndex((prev) => (prev + 1) % TESTIMONIALS.length);
+    }, 5000);
     return () => clearInterval(interval);
-  }, [autoplay, visibleCount, currentIndex]);
+  }, [isAutoPlaying, isMobile, mounted]);
 
-  const nextSlide = () => {
-    setAutoplay(false);
-    setCurrentIndex((prev) =>
-      prev + visibleCount >= TESTIMONIALS.length ? 0 : prev + 1,
+  // Empty state
+  if (TESTIMONIALS.length === 0) {
+    return (
+      <div className="py-20 text-center">
+        <p className="text-muted-foreground">Testimonials coming soon...</p>
+      </div>
     );
-    setActiveDot(Math.floor((currentIndex + 1) / visibleCount));
+  }
+
+  const featuredTestimonials = TESTIMONIALS.filter((t) => t.featured);
+  const regularTestimonials = TESTIMONIALS.filter((t) => !t.featured);
+
+  const nextTestimonial = () => {
+    setIsAutoPlaying(false);
+    setActiveIndex((prev) => (prev + 1) % TESTIMONIALS.length);
   };
 
-  const prevSlide = () => {
-    setAutoplay(false);
-    setCurrentIndex((prev) =>
-      prev === 0 ? TESTIMONIALS.length - visibleCount : prev - 1,
+  const prevTestimonial = () => {
+    setIsAutoPlaying(false);
+    setActiveIndex(
+      (prev) => (prev - 1 + TESTIMONIALS.length) % TESTIMONIALS.length,
     );
-    setActiveDot(Math.floor((currentIndex - 1) / visibleCount));
   };
 
-  const toggleExpand = (id: number, e: React.MouseEvent) => {
-    e.stopPropagation();
-    setExpandedId(expandedId === id ? null : id);
-  };
-
-  const visibleTestimonials = TESTIMONIALS.slice(
-    currentIndex,
-    currentIndex + visibleCount,
-  );
-  const totalDots = Math.ceil(TESTIMONIALS.length / visibleCount);
+  const currentTestimonial = TESTIMONIALS[activeIndex];
 
   return (
-    <section
-      ref={sectionRef}
-      className="py-16 sm:py-24 lg:py-32 bg-linear-to-b from-background via-background to-primary-50/20 relative overflow-hidden"
-    >
-      {/* Animated Background Elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div
-          className="absolute inset-0 opacity-[0.02] bg-[url('/islamic-pattern.svg')] bg-center bg-repeat"
-          style={{ backgroundSize: "300px" }}
-        />
-
-        {/* Animated linear Orbs */}
-        <motion.div
-          animate={{
-            scale: [1, 1.2, 1],
-            x: [0, 50, 0],
-            y: [0, -30, 0],
-          }}
-          transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-          className="absolute top-20 right-20 w-[500px] h-[500px] bg-primary-700/10 rounded-full blur-[120px] -z-10"
-        />
-        <motion.div
-          animate={{
-            scale: [1.2, 1, 1.2],
-            x: [0, -50, 0],
-            y: [0, 30, 0],
-          }}
-          transition={{ duration: 25, repeat: Infinity, ease: "linear" }}
-          className="absolute bottom-20 left-20 w-[500px] h-[500px] bg-gold/5 rounded-full blur-[120px] -z-10"
-        />
-
-        {/* Floating Particles */}
-        {[...Array(12)].map((_, i) => (
-          <motion.div
-            key={i}
-            animate={{
-              y: [0, -100, 0],
-              x: [0, i % 2 === 0 ? 50 : -50, 0],
-              opacity: [0, 0.5, 0],
-            }}
-            transition={{
-              duration: 8 + i * 2,
-              repeat: Infinity,
-              delay: i * 0.5,
-              ease: "easeInOut",
-            }}
-            className="absolute w-1 h-1 bg-gold/30 rounded-full"
-            style={{
-              left: `${5 + i * 8}%`,
-              top: `${20 + i * 5}%`,
-            }}
-          />
-        ))}
+    <section className="py-12 xs:py-16 sm:py-20 md:py-24 lg:py-32 bg-linear-to-b from-background via-purple-50/5 to-amber-50/5 relative overflow-hidden">
+      {/* Background Decoration */}
+      <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute top-20 right-0 w-64 h-64 bg-purple-600/5 rounded-full blur-3xl" />
+        <div className="absolute bottom-20 left-0 w-64 h-64 bg-amber-500/5 rounded-full blur-3xl" />
       </div>
 
-      <div className="container mx-auto px-4 sm:px-6 relative z-10">
-        {/* SECTION HEADER - Enhanced with Parallax */}
-        <motion.div style={{ y: parallaxY }}>
-          <div className="text-center max-w-3xl mx-auto mb-12 sm:mb-16 lg:mb-20">
-            <Reveal>
-              <div className="flex justify-center mb-6">
-                <div className="w-20 h-px bg-linear-to-r from-transparent via-gold to-transparent" />
-              </div>
+      <div className="container mx-auto px-4 xs:px-5 sm:px-6">
+        {/* Section Header */}
+        <div className="text-center max-w-2xl mx-auto mb-8 xs:mb-10 sm:mb-12 md:mb-16">
+          <Reveal>
+            <div className="inline-flex items-center gap-1.5 xs:gap-2 px-2.5 xs:px-3 py-1 xs:py-1.5 rounded-full bg-purple-100 dark:bg-purple-900/30 border border-purple-200 dark:border-purple-800 mb-3 xs:mb-4">
+              <Users className="w-3 h-3 xs:w-3.5 xs:h-3.5 text-amber-500" />
+              <span className="text-[8px] xs:text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] text-purple-700 dark:text-purple-400">
+                Student Stories
+              </span>
+            </div>
+            <h2 className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl font-black tracking-tighter font-heading leading-[1.1] mb-3 xs:mb-4">
+              What Our{" "}
+              <span className="bg-linear-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent italic">
+                Students
+              </span>{" "}
+              Say
+            </h2>
+            <p className="text-sm xs:text-base text-muted-foreground max-w-md mx-auto">
+              Join thousands of satisfied learners who have transformed their
+              relationship with the Quran
+            </p>
+          </Reveal>
+        </div>
 
-              <div className="inline-flex items-center gap-2 text-gold font-black text-[10px] uppercase tracking-[0.3em] mb-6 bg-gold/5 px-5 py-2.5 rounded-full border border-gold/20 backdrop-blur-sm">
-                <Sparkles className="w-4 h-4" /> Voices of the Eternal Journey
-              </div>
+        {/* Featured Testimonial - Large Card */}
+        {featuredTestimonials.length > 0 && (
+          <Reveal delay={0.1}>
+            <div className="mb-10 xs:mb-12 sm:mb-16">
+              <div className="bg-linear-to-br from-purple-600/10 to-amber-500/10 rounded-xl xs:rounded-2xl border border-purple-200 dark:border-purple-800 p-6 xs:p-8 md:p-10 relative overflow-hidden">
+                {/* Decorative Quote Mark */}
+                <Quote className="absolute -top-4 -right-4 w-20 h-20 xs:w-24 xs:h-24 text-purple-600/10 dark:text-purple-400/5" />
 
-              <h2 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-black tracking-tighter font-heading leading-[0.9]">
-                Scholarly <br />
-                <span className="text-primary-700 italic relative inline-block">
-                  Success.
-                  <motion.div
-                    animate={{ width: ["0%", "100%", "0%"] }}
-                    transition={{
-                      duration: 3,
-                      repeat: Infinity,
-                      ease: "easeInOut",
-                    }}
-                    className="absolute -bottom-2 left-0 h-0.5 bg-linear-to-r from-primary-700 to-gold"
-                  />
-                </span>
-              </h2>
+                <div className="flex flex-col md:flex-row gap-6 md:gap-8 items-center md:items-start">
+                  {/* Avatar */}
+                  <div className="shrink-0">
+                    <div className="w-20 h-20 xs:w-24 xs:h-24 rounded-full bg-linear-to-br from-purple-600 to-amber-500 flex items-center justify-center text-white text-2xl xs:text-3xl font-black shadow-lg">
+                      {featuredTestimonials[0].initials}
+                    </div>
+                  </div>
 
-              <p className="text-lg sm:text-xl text-muted-foreground font-light max-w-xl border-l-4 border-primary-700 pl-6 mx-auto mt-6">
-                Hear from the noble students who have traversed the Al-Maysaroh
-                path, from foundational phonetics to verified Ijazah.
-              </p>
-            </Reveal>
-          </div>
-        </motion.div>
+                  {/* Content */}
+                  <div className="flex-1 text-center md:text-left">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 sm:gap-4 mb-3">
+                      <div>
+                        <h3 className="text-lg xs:text-xl font-black">
+                          {featuredTestimonials[0].name}
+                        </h3>
+                        <p className="text-xs text-purple-600 dark:text-purple-400 font-medium">
+                          {featuredTestimonials[0].role} •{" "}
+                          {featuredTestimonials[0].location}
+                        </p>
+                      </div>
+                      <StarRating rating={featuredTestimonials[0].rating} />
+                    </div>
 
-        {/* Stats Row - Glassmorphism Style */}
-        <div className="flex flex-wrap justify-center gap-4 sm:gap-6 mb-10 sm:mb-12">
-          {[
-            {
-              icon: Users,
-              label: "100+ Students",
-              desc: "Active learners",
-              color: "primary",
-            },
-            {
-              icon: MessageCircle,
-              label: "50+ Reviews",
-              desc: "5-star rated",
-              color: "primary",
-            },
-            {
-              icon: TrendingUp,
-              label: "98%",
-              desc: "Success rate",
-              color: "gold",
-            },
-          ].map((stat, idx) => (
-            <motion.div
-              key={idx}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 + idx * 0.1 }}
-              whileHover={{ y: -4, scale: 1.02 }}
-              className="flex items-center gap-3 px-4 sm:px-5 py-2 sm:py-2.5 rounded-full bg-white/5 dark:bg-black/20 backdrop-blur-md border border-white/10 shadow-lg"
-            >
-              <div className="w-8 h-8 rounded-full bg-primary-700/10 flex items-center justify-center">
-                <stat.icon className="w-4 h-4 text-primary-700" />
-              </div>
-              <div>
-                <div className="flex items-baseline gap-1">
-                  <span className="text-sm sm:text-base font-black">
-                    {stat.label}
-                  </span>
-                  <span className="text-[10px] text-muted-foreground">
-                    {stat.desc}
-                  </span>
+                    <p className="text-sm xs:text-base text-muted-foreground leading-relaxed italic mb-4">
+                     {` "${featuredTestimonials[0].text}"`}
+                    </p>
+
+                    <div className="flex flex-wrap items-center gap-3">
+                      <span className="text-[10px] xs:text-xs font-black uppercase tracking-wider text-amber-600 dark:text-amber-400">
+                        {featuredTestimonials[0].program}
+                      </span>
+                      <span className="text-[9px] xs:text-[10px] text-muted-foreground">
+                        • {featuredTestimonials[0].date}
+                      </span>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </motion.div>
+            </div>
+          </Reveal>
+        )}
+
+        {/* Desktop Grid View (4 columns) - Hidden on mobile */}
+        <div className="hidden lg:grid lg:grid-cols-2 xl:grid-cols-4 gap-5 sm:gap-6 md:gap-8">
+          {regularTestimonials.map((testimonial, index) => (
+            <Reveal key={testimonial.id} delay={0.2 + index * 0.1}>
+              <div className="bg-card rounded-xl xs:rounded-2xl border border-border hover:border-purple-300 transition-all p-5 xs:p-6 h-full flex flex-col shadow-sm hover:shadow-xl group">
+                {/* Quote Icon */}
+                <Quote className="w-8 h-8 text-purple-600/20 mb-3 group-hover:text-purple-600/30 transition" />
+
+                {/* Text */}
+                <p className="text-xs xs:text-sm text-muted-foreground leading-relaxed mb-4 flex-1 italic">
+                  {` "${testimonial.text.substring(0, 120)}..."`}
+                </p>
+
+                {/* Rating */}
+                <StarRating rating={testimonial.rating} />
+
+                {/* Divider */}
+                <div className="my-3 h-px bg-linear-to-r from-transparent via-purple-300/50 to-transparent" />
+
+                {/* Author */}
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-linear-to-br from-purple-600 to-amber-500 flex items-center justify-center text-white text-xs font-black">
+                    {testimonial.initials}
+                  </div>
+                  <div>
+                    <p className="text-sm font-black">{testimonial.name}</p>
+                    <p className="text-[9px] xs:text-[10px] text-muted-foreground">
+                      {testimonial.role}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </Reveal>
           ))}
         </div>
 
-        {/* Testimonials Carousel - PREMIUM DESIGN */}
-        <div className="relative">
-          {/* linear Overlays for carousel edges */}
-          <div className="absolute left-0 top-0 bottom-0 w-12 bg-linear-to-r from-background to-transparent z-10 pointer-events-none hidden lg:block" />
-          <div className="absolute right-0 top-0 bottom-0 w-12 bg-linear-to-l from-background to-transparent z-10 pointer-events-none hidden lg:block" />
+        {/* Mobile Carousel View */}
+        <div className="lg:hidden">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={activeIndex}
+              initial={{ opacity: 0, x: 50 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -50 }}
+              transition={{ duration: prefersReducedMotion ? 0 : 0.3 }}
+              className="bg-card rounded-xl xs:rounded-2xl border border-border p-6 xs:p-8"
+            >
+              {/* Quote Icon */}
+              <Quote className="w-10 h-10 text-purple-600/20 mb-4" />
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
-            <AnimatePresence mode="wait">
-              {visibleTestimonials.map((testimonial, idx) => {
-                const isExpanded = expandedId === testimonial.id;
-                const shouldTruncate = testimonial.content.length > 180;
-                const displayContent = isExpanded
-                  ? testimonial.content
-                  : testimonial.content.slice(0, 180);
-                const isHovered = hoveredCard === testimonial.id;
+              {/* Text */}
+              <p className="text-sm xs:text-base text-muted-foreground leading-relaxed mb-5 italic">
+                {` "${currentTestimonial.text}"`}
+              </p>
 
-                return (
-                  <motion.div
-                    key={testimonial.id}
-                    initial={{ opacity: 0, scale: 0.9, y: 30 }}
-                    animate={{ opacity: 1, scale: 1, y: 0 }}
-                    exit={{ opacity: 0, scale: 0.9, y: -30 }}
-                    transition={{
-                      duration: 0.5,
-                      delay: idx * 0.1,
-                      type: "spring",
-                      stiffness: 300,
-                    }}
-                    onMouseEnter={() => setHoveredCard(testimonial.id)}
-                    onMouseLeave={() => setHoveredCard(null)}
-                    className="relative"
-                  >
-                    {/* 3D Rotate Effect on Hover */}
-                    <motion.div
-                      animate={{
-                        rotateX: isHovered ? 5 : 0,
-                        rotateY: isHovered ? 5 : 0,
-                      }}
-                      transition={{ duration: 0.3 }}
-                      className="relative h-full"
-                    >
-                      {/* Animated Border Glow */}
-                      <motion.div
-                        animate={{
-                          opacity: isHovered ? 1 : 0,
-                          scale: isHovered ? 1.02 : 1,
-                        }}
-                        transition={{ duration: 0.3 }}
-                        className="absolute -inset-0.5 rounded-3xl blur-xl opacity-0"
-                      />
+              {/* Rating */}
+              <StarRating rating={currentTestimonial.rating} />
 
-                      {/* Card Content */}
-                      <div className="relative bg-linear-to-br from-background to-primary-50/10 dark:from-background dark:to-primary-950/20 rounded-3xl border border-primary-700/10 p-6 sm:p-7 md:p-8 h-full flex flex-col backdrop-blur-sm transition-all duration-500 hover:border-primary-700/30 shadow-lg hover:shadow-2xl ">
-                        {/* Decorative Corner Elements */}
-                        <div className="absolute top-0 left-0 w-20 h-20 border-l-2 border-t-2 border-primary-700/10 rounded-tl-3xl" />
-                        <div className="absolute top-0 right-0 w-20 h-20 border-r-2 border-t-2 border-primary-700/10 rounded-tr-3xl" />
+              {/* Divider */}
+              <div className="my-4 h-px bg-linear-to-r from-transparent via-purple-300/50 to-transparent" />
 
-                        {/* Floating Quote Background */}
-                        <motion.div
-                          animate={{
-                            scale: isHovered ? 1.1 : 1,
-                            rotate: isHovered ? 5 : 0,
-                          }}
-                          className="absolute bottom-4 right-4 opacity-5"
-                        >
-                          <Quote className="w-16 h-16 text-primary-700" />
-                        </motion.div>
+              {/* Author */}
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 rounded-full bg-linear-to-br from-purple-600 to-amber-500 flex items-center justify-center text-white text-sm font-black">
+                  {currentTestimonial.initials}
+                </div>
+                <div>
+                  <p className="text-base font-black">
+                    {currentTestimonial.name}
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    {currentTestimonial.role} • {currentTestimonial.location}
+                  </p>
+                  <p className="text-[9px] text-purple-600 dark:text-purple-400 font-medium mt-0.5">
+                    {currentTestimonial.program}
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+          </AnimatePresence>
 
-                        {/* Achievement Badge with Animation */}
-                        <motion.div
-                          animate={{
-                            scale: isHovered ? 1.05 : 1,
-                          }}
-                          className="mb-4"
-                        >
-                          <div className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-linear-to-r from-gold/20 to-gold/5 border border-gold/30 text-gold text-[9px] font-black uppercase tracking-wider backdrop-blur-sm">
-                            <Crown className="w-2.5 h-2.5" />
-                            {testimonial.achievement}
-                            <Sparkles className="w-2.5 h-2.5 ml-1" />
-                          </div>
-                        </motion.div>
+          {/* Carousel Navigation */}
+          <div className="flex items-center justify-between gap-3 mt-5">
+            <button
+              onClick={prevTestimonial}
+              className="w-10 h-10 rounded-full border border-purple-300 dark:border-purple-700 flex items-center justify-center hover:bg-purple-100 dark:hover:bg-purple-900/30 transition"
+              aria-label="Previous testimonial"
+            >
+              <ChevronLeft className="w-5 h-5 text-purple-600" />
+            </button>
 
-                        {/* Journey Timeline */}
-                        <div className="mb-3">
-                          <div className="flex items-center gap-1.5">
-                            <div className="w-8 h-px bg-gold/30" />
-                            <span className="text-[8px] font-black uppercase tracking-wider text-muted-foreground">
-                              Journey: {testimonial.journey}
-                            </span>
-                            <div className="flex-1 h-px bg-gold/30" />
-                          </div>
-                        </div>
-
-                        {/* Content with Read More */}
-                        <div className="mb-5 grow">
-                          <p className="text-sm sm:text-base text-muted-foreground leading-relaxed font-medium">
-                            {`"${displayContent}`}
-                            {shouldTruncate && !isExpanded && "..."}
-                            {shouldTruncate && (
-                              <motion.button
-                                whileHover={{ x: 2 }}
-                                onClick={(e) => toggleExpand(testimonial.id, e)}
-                                className="text-primary-700 font-black text-xs ml-1 hover:underline inline-block"
-                              >
-                                {isExpanded ? "Show less" : "Read more"}
-                              </motion.button>
-                            )}
-                            {` "`}
-                          </p>
-                        </div>
-
-                        {/* Rating with Animation */}
-                        <div className="flex gap-0.5 mb-4">
-                          {[...Array(testimonial.rating)].map((_, i) => (
-                            <motion.div
-                              key={i}
-                              initial={{ scale: 0 }}
-                              animate={{ scale: 1 }}
-                              transition={{ delay: i * 0.05 }}
-                            >
-                              <Star className="w-3.5 h-3.5 sm:w-4 sm:h-4 fill-gold text-gold" />
-                            </motion.div>
-                          ))}
-                        </div>
-
-                        {/* User Info Section - Enhanced */}
-                        <div className="flex items-center gap-3 pt-4 border-t border-primary-700/10">
-                          {/* Animated Avatar with Ring */}
-                          <motion.div
-                            animate={{
-                              scale: isHovered ? 1.05 : 1,
-                              rotate: isHovered ? 5 : 0,
-                            }}
-                            transition={{ duration: 0.3 }}
-                            className="relative"
-                          >
-                            <div className="absolute inset-0 rounded-full bg-linear-to-r from-gold to-primary-700 blur-md opacity-0 group-hover:opacity-30 transition-opacity" />
-                            <div className="relative w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-linear-to-br from-primary-700 to-primary-800 flex items-center justify-center text-white text-lg sm:text-xl font-black shadow-lg ring-2 ring-primary-700/20">
-                              {testimonial.image}
-                            </div>
-                          </motion.div>
-
-                          <div className="flex-1">
-                            <h4 className="font-black text-base sm:text-lg tracking-tight">
-                              {testimonial.name}
-                            </h4>
-                            <p className="text-[10px] text-muted-foreground font-medium flex items-center gap-1">
-                              <Award className="w-3 h-3 text-gold" />
-                              {testimonial.role}
-                            </p>
-                            <div className="flex items-center gap-1 mt-1">
-                              <Shield className="w-3 h-3 text-primary-700" />
-                              <span className="text-[9px] font-black text-primary-700 uppercase tracking-wider">
-                                {testimonial.program}
-                              </span>
-                            </div>
-                          </div>
-
-                          {/* Interactive Quote Icon */}
-                          <motion.div
-                            whileHover={{ scale: 1.1, rotate: 15 }}
-                            className="opacity-30 cursor-pointer"
-                          >
-                            <Quote className="w-6 h-6 text-primary-700" />
-                          </motion.div>
-                        </div>
-
-                        {/* Hover linear Overlay */}
-                        <motion.div
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: isHovered ? 0.08 : 0 }}
-                          transition={{ duration: 0.3 }}
-                          className="absolute inset-0 rounded-3xl bg-linear-to-br from-primary-700 to-primary-800 pointer-events-none"
-                        />
-                      </div>
-                    </motion.div>
-                  </motion.div>
-                );
-              })}
-            </AnimatePresence>
-          </div>
-
-          {/* Navigation Controls - Premium */}
-          {TESTIMONIALS.length > visibleCount && (
-            <div className="flex justify-center items-center gap-6 mt-10">
-              <motion.button
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={prevSlide}
-                className="w-12 h-12 rounded-full bg-linear-to-r from-primary-700/20 to-primary-800/20 border border-primary-700/30 flex items-center justify-center hover:bg-primary-700 hover:text-white transition-all duration-300 backdrop-blur-sm"
-                aria-label="Previous testimonials"
-              >
-                <ChevronLeft className="w-5 h-5" />
-              </motion.button>
-
-              {/* Animated Play/Pause Button */}
-              <motion.button
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={() => setAutoplay(!autoplay)}
-                className="w-10 h-10 rounded-full bg-primary-700/20 border border-primary-700/30 flex items-center justify-center hover:bg-primary-700 hover:text-white transition-all duration-300"
-              >
-                {autoplay ? (
-                  <Pause className="w-4 h-4" />
-                ) : (
-                  <Play className="w-4 h-4 ml-0.5" />
-                )}
-              </motion.button>
-
-              <motion.button
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.95 }}
-                onClick={nextSlide}
-                className="w-12 h-12 rounded-full bg-linear-to-r from-primary-700/20 to-primary-800/20 border border-primary-700/30 flex items-center justify-center hover:bg-primary-700 hover:text-white transition-all duration-300 backdrop-blur-sm"
-                aria-label="Next testimonials"
-              >
-                <ChevronRight className="w-5 h-5" />
-              </motion.button>
-            </div>
-          )}
-
-          {/* Premium Dots Indicator */}
-          <div className="flex justify-center gap-3 mt-8">
-            {Array.from({ length: totalDots }).map((_, idx) => (
-              <motion.button
-                key={idx}
-                whileHover={{ scale: 1.2 }}
-                onClick={() => {
-                  setAutoplay(false);
-                  setCurrentIndex(idx * visibleCount);
-                  setActiveDot(idx);
-                }}
-                className="relative group"
-                aria-label={`Go to slide ${idx + 1}`}
-              >
-                <div
+            <div className="flex gap-1.5">
+              {TESTIMONIALS.map((_, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => {
+                    setIsAutoPlaying(false);
+                    setActiveIndex(idx);
+                  }}
                   className={cn(
-                    "rounded-full transition-all duration-500",
-                    activeDot === idx
-                      ? "w-8 h-2 bg-primary-700"
-                      : "w-2 h-2 bg-primary-700/30 group-hover:bg-primary-700/50",
+                    "rounded-full transition-all",
+                    idx === activeIndex
+                      ? "w-4 h-1.5 bg-purple-600"
+                      : "w-1.5 h-1.5 bg-purple-600/30 hover:bg-purple-600/50",
                   )}
+                  aria-label={`Go to testimonial ${idx + 1}`}
                 />
-                {activeDot === idx && (
-                  <motion.div
-                    layoutId="activeDot"
-                    className="absolute -top-4 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-primary-700"
-                  />
-                )}
-              </motion.button>
-            ))}
+              ))}
+            </div>
+
+            <button
+              onClick={nextTestimonial}
+              className="w-10 h-10 rounded-full border border-purple-300 dark:border-purple-700 flex items-center justify-center hover:bg-purple-100 dark:hover:bg-purple-900/30 transition"
+              aria-label="Next testimonial"
+            >
+              <ChevronRight className="w-5 h-5 text-purple-600" />
+            </button>
           </div>
         </div>
 
-        {/* Trust Badge with Animation */}
-        <div className="text-center mt-10 lg:mt-12">
-          <motion.div
-            whileHover={{ scale: 1.02 }}
-            animate={{
-              boxShadow: [
-                "0 0 0 0 rgba(212, 175, 55, 0)",
-                "0 0 0 4px rgba(212, 175, 55, 0.1)",
-                "0 0 0 0 rgba(212, 175, 55, 0)",
-              ],
-            }}
-            transition={{ duration: 2, repeat: Infinity }}
-            className="inline-flex items-center gap-2 px-5 sm:px-6 py-2.5 sm:py-3 rounded-full bg-linear-to-r from-primary-700/5 to-primary-800/5 border border-primary-700/20 hover:border-gold/40 transition-all duration-300 backdrop-blur-sm"
-          >
-            <Heart className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary-700 animate-pulse" />
-            <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-wider text-muted-foreground">
-              Trusted by families across 6+ countries
-            </span>
-            <Sparkles className="w-3 h-3 text-gold" />
-          </motion.div>
-        </div>
+        {/* Bottom Stats */}
+        <Reveal delay={0.5}>
+          <div className="mt-10 xs:mt-12 sm:mt-16 pt-6 xs:pt-8 border-t border-border/50">
+            <div className="flex flex-wrap justify-center gap-6 xs:gap-8 sm:gap-12">
+              <div className="flex items-center gap-2">
+                <Heart className="w-4 h-4 text-amber-500" />
+                <span className="text-[10px] xs:text-xs font-black uppercase tracking-wider text-muted-foreground">
+                  98% Satisfaction Rate
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Award className="w-4 h-4 text-purple-600" />
+                <span className="text-[10px] xs:text-xs font-black uppercase tracking-wider text-muted-foreground">
+                  100+ Happy Students
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <MessageCircle className="w-4 h-4 text-amber-500" />
+                <span className="text-[10px] xs:text-xs font-black uppercase tracking-wider text-muted-foreground">
+                  Verified Reviews
+                </span>
+              </div>
+            </div>
+          </div>
+        </Reveal>
       </div>
     </section>
   );
