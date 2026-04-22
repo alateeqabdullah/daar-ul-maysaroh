@@ -32,7 +32,7 @@ export default function AdmissionsSuccessPage() {
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
-            className="w-20 h-20 sm:w-24 sm:h-24 mx-auto mb-5 sm:mb-6 rounded-full bg-gradient-to-br from-purple-100 to-amber-100 dark:from-purple-900/30 dark:to-amber-900/30 flex items-center justify-center"
+            className="w-20 h-20 sm:w-24 sm:h-24 mx-auto mb-5 sm:mb-6 rounded-full bg-linear-to-br from-purple-100 to-amber-100 dark:from-purple-900/30 dark:to-amber-900/30 flex items-center justify-center"
           >
             <CheckCircle2 className="w-10 h-10 sm:w-12 sm:h-12 text-purple-600" />
           </motion.div>
@@ -40,7 +40,7 @@ export default function AdmissionsSuccessPage() {
           {/* Title */}
           <h1 className="text-2xl xs:text-3xl sm:text-4xl font-black tracking-tighter mb-3 sm:mb-4 px-2">
             Application{" "}
-            <span className="bg-gradient-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent">
+            <span className="bg-linear-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent">
               Submitted!
             </span>{" "}
             🎉
@@ -57,11 +57,11 @@ export default function AdmissionsSuccessPage() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="p-5 sm:p-6 md:p-7 rounded-xl bg-gradient-to-br from-purple-50/50 to-amber-50/50 dark:from-purple-950/30 dark:to-amber-950/30 border border-purple-200 dark:border-purple-800 mb-6 sm:mb-8 text-left"
+            className="p-5 sm:p-6 md:p-7 rounded-xl bg-linear-to-br from-purple-50/50 to-amber-50/50 dark:from-purple-950/30 dark:to-amber-950/30 border border-purple-200 dark:border-purple-800 mb-6 sm:mb-8 text-left"
           >
             <h3 className="font-black text-sm sm:text-base mb-4 flex items-center gap-2">
               <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-amber-500" />
-              <span className="bg-gradient-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent">
+              <span className="bg-linear-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent">
                 What Happens Next?
               </span>
             </h3>
@@ -79,7 +79,7 @@ export default function AdmissionsSuccessPage() {
                 },
                 {
                   icon: Calendar,
-                  text: "You'll be invited for a free assessment session",
+                  text: "You'll be invited for a free assessment session if applicable",
                   color: "purple",
                 },
                 {
@@ -94,7 +94,7 @@ export default function AdmissionsSuccessPage() {
                     key={idx}
                     className="flex gap-3 sm:gap-4 items-start group"
                   >
-                    <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-gradient-to-r from-purple-600 to-purple-700 text-white flex items-center justify-center text-[10px] sm:text-xs font-black shrink-0 mt-0.5 shadow-md group-hover:scale-110 transition-transform">
+                    <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-linear-to-r from-purple-600 to-purple-700 text-white flex items-center justify-center text-[10px] sm:text-xs font-black shrink-0 mt-0.5 shadow-md group-hover:scale-110 transition-transform">
                       {idx + 1}
                     </div>
                     <div className="flex items-start gap-2 flex-1">
@@ -139,11 +139,11 @@ export default function AdmissionsSuccessPage() {
             </p>
             <div className="flex flex-col xs:flex-row gap-2 sm:gap-3 justify-center">
               <a
-                href="mailto:admissions@almaysaroh.org"
+                href="mailto:info.almaysaroh@gmail.com"
                 className="inline-flex items-center justify-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 rounded-full bg-purple-50 dark:bg-purple-950/30 text-purple-600 font-black text-xs sm:text-sm hover:bg-purple-100 dark:hover:bg-purple-950/50 transition-all duration-300"
               >
                 <Mail className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                admissions@almaysaroh.org
+                info.almaysaroh@gmail.com
               </a>
               <a
                 href="tel:+2349110163930"

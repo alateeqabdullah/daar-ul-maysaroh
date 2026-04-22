@@ -152,7 +152,7 @@
 //           animate={{ opacity: 1, scale: 1 }}
 //           className="bg-card rounded-xl sm:rounded-2xl border border-border hover:border-purple-300 transition-all p-6 sm:p-8 md:p-12 text-center max-w-xl w-full mx-auto shadow-xl"
 //         >
-//           <div className="w-20 h-20 sm:w-24 sm:h-24 mx-auto mb-5 sm:mb-6 rounded-full bg-gradient-to-br from-purple-100 to-amber-100 dark:from-purple-900/30 dark:to-amber-900/30 flex items-center justify-center">
+//           <div className="w-20 h-20 sm:w-24 sm:h-24 mx-auto mb-5 sm:mb-6 rounded-full bg-linear-to-br from-purple-100 to-amber-100 dark:from-purple-900/30 dark:to-amber-900/30 flex items-center justify-center">
 //             <CheckCircle2 className="w-10 h-10 sm:w-12 sm:h-12 text-purple-600" />
 //           </div>
 //           <h1 className="text-2xl xs:text-3xl sm:text-4xl font-black mb-3 sm:mb-4">
@@ -1064,25 +1064,25 @@ export default function AssessmentPage() {
           animate={{ opacity: 1, scale: 1 }}
           className="bg-card rounded-xl sm:rounded-2xl border border-border hover:border-purple-300 transition-all p-6 sm:p-8 md:p-12 text-center max-w-xl w-full mx-auto shadow-xl"
         >
-          <div className="w-20 h-20 sm:w-24 sm:h-24 mx-auto mb-5 sm:mb-6 rounded-full bg-gradient-to-br from-purple-100 to-amber-100 dark:from-purple-900/30 dark:to-amber-900/30 flex items-center justify-center">
+          <div className="w-20 h-20 sm:w-24 sm:h-24 mx-auto mb-5 sm:mb-6 rounded-full bg-linear-to-br from-purple-100 to-amber-100 dark:from-purple-900/30 dark:to-amber-900/30 flex items-center justify-center">
             <CheckCircle2 className="w-10 h-10 sm:w-12 sm:h-12 text-purple-600" />
           </div>
           <h1 className="text-2xl xs:text-3xl sm:text-4xl font-black mb-3 sm:mb-4">
             Assessment Request{" "}
-            <span className="bg-gradient-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent">
+            <span className="bg-linear-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent">
               Received!
             </span>
           </h1>
           <p className="text-muted-foreground text-sm sm:text-base mb-6">
-            Shaykh Abubakar's office will contact you within 24 hours to
-            schedule your personalized assessment session.
+            {`Shaykh Abubakar's office will contact you within 24 hours to
+            schedule your personalized assessment session.`}
           </p>
 
           {/* Confirmation Details */}
-          <div className="p-4 sm:p-5 rounded-xl bg-gradient-to-br from-purple-50/50 to-amber-50/50 dark:from-purple-950/30 dark:to-amber-950/30 border border-purple-200 dark:border-purple-800 mb-6 text-left">
+          <div className="p-4 sm:p-5 rounded-xl bg-linear-to-br from-purple-50/50 to-amber-50/50 dark:from-purple-950/30 dark:to-amber-950/30 border border-purple-200 dark:border-purple-800 mb-6 text-left">
             <h3 className="font-black text-sm mb-3 flex items-center gap-2">
               <Calendar className="w-4 h-4 text-amber-500" />
-              <span className="bg-gradient-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent">
+              <span className="bg-linear-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent">
                 Request Details
               </span>
             </h3>
@@ -1093,10 +1093,10 @@ export default function AssessmentPage() {
             </div>
           </div>
 
-          <div className="p-5 sm:p-6 rounded-xl bg-gradient-to-br from-purple-50/50 to-amber-50/50 dark:from-purple-950/30 dark:to-amber-950/30 border border-purple-200 dark:border-purple-800 mb-6 text-left">
+          <div className="p-5 sm:p-6 rounded-xl bg-linear-to-br from-purple-50/50 to-amber-50/50 dark:from-purple-950/30 dark:to-amber-950/30 border border-purple-200 dark:border-purple-800 mb-6 text-left">
             <h3 className="font-black text-sm mb-4 flex items-center gap-2">
               <Crown className="w-4 h-4 sm:w-5 sm:h-5 text-amber-500" />
-              <span className="bg-gradient-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent">
+              <span className="bg-linear-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent">
                 Your Journey Ahead
               </span>
             </h3>
@@ -1108,7 +1108,7 @@ export default function AssessmentPage() {
                 "Begin your sacred journey with the perfect guide",
               ].map((text, idx) => (
                 <div key={idx} className="flex gap-3 items-start group">
-                  <div className="w-6 h-6 rounded-full bg-gradient-to-r from-purple-600 to-purple-700 text-white flex items-center justify-center text-[10px] font-black shrink-0 mt-0.5 shadow-md group-hover:scale-110 transition-transform">
+                  <div className="w-6 h-6 rounded-full bg-linear-to-r from-purple-600 to-purple-700 text-white flex items-center justify-center text-[10px] font-black shrink-0 mt-0.5 shadow-md group-hover:scale-110 transition-transform">
                     {idx + 1}
                   </div>
                   <p className="text-xs sm:text-sm font-medium leading-relaxed">{text}</p>
@@ -1124,7 +1124,7 @@ export default function AssessmentPage() {
               </Button>
             </Link>
             <Link href="/courses" className="w-full xs:w-auto">
-              <Button className="w-full rounded-full px-6 py-2.5 bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white">
+              <Button className="w-full rounded-full px-6 py-2.5 bg-linear-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white">
                 Explore Programs
               </Button>
             </Link>
@@ -1153,7 +1153,7 @@ export default function AssessmentPage() {
             </div>
             <h1 className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tighter font-heading leading-[1.1] mb-3 sm:mb-4 px-2">
               Your{" "}
-              <span className="bg-gradient-to-r from-purple-600 via-purple-700 to-amber-600 bg-clip-text text-transparent">
+              <span className="bg-linear-to-r from-purple-600 via-purple-700 to-amber-600 bg-clip-text text-transparent">
                 Sacred Journey
               </span>
               <br className="hidden xs:block" />
@@ -1176,12 +1176,12 @@ export default function AssessmentPage() {
             className="max-w-4xl mx-auto mb-8 sm:mb-12 md:mb-16"
           >
             <div className="bg-card rounded-xl sm:rounded-2xl border-2 border-purple-600/20 hover:border-purple-600/30 transition-all p-5 sm:p-6 md:p-8 overflow-hidden shadow-xl">
-              <div className="h-1 bg-gradient-to-r from-amber-500 via-purple-600 to-amber-500 -mt-5 sm:-mt-6 md:-mt-8 mb-5 sm:mb-6 md:mb-8" />
+              <div className="h-1 bg-linear-to-r from-amber-500 via-purple-600 to-amber-500 -mt-5 sm:-mt-6 md:-mt-8 mb-5 sm:mb-6 md:mb-8" />
 
               <div className="flex flex-col md:flex-row gap-6 items-center md:items-start text-center md:text-left">
                 <div className="relative shrink-0">
-                  <div className="absolute -inset-1 bg-gradient-to-r from-amber-500 to-purple-600 rounded-full blur opacity-30" />
-                  <div className="relative w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-full bg-gradient-to-br from-purple-600 to-purple-700 flex items-center justify-center text-white text-3xl sm:text-4xl font-black shadow-2xl">
+                  <div className="absolute -inset-1 bg-linear-to-r from-amber-500 to-purple-600 rounded-full blur opacity-30" />
+                  <div className="relative w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 rounded-full bg-linear-to-br from-purple-600 to-purple-700 flex items-center justify-center text-white text-3xl sm:text-4xl font-black shadow-2xl">
                     {DEAN.image}
                   </div>
                   <div className="absolute -bottom-1 -right-1 bg-amber-500 rounded-full p-1 shadow-lg">
@@ -1228,7 +1228,7 @@ export default function AssessmentPage() {
                   <div className="relative pt-2">
                     <Quote className="absolute -top-1 -left-1 w-4 h-4 text-amber-500/20" />
                     <p className="text-xs italic text-muted-foreground/80 pl-4">
-                      "{DEAN.quote}"
+                     {` "${DEAN.quote}"`}
                     </p>
                   </div>
                 </div>
@@ -1251,7 +1251,7 @@ export default function AssessmentPage() {
                   className={cn(
                     "w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center font-black text-xs sm:text-sm transition-all",
                     step >= s.step
-                      ? "bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-md"
+                      ? "bg-linear-to-r from-purple-600 to-purple-700 text-white shadow-md"
                       : "bg-muted text-muted-foreground",
                   )}
                 >
@@ -1264,7 +1264,7 @@ export default function AssessmentPage() {
                   <div
                     className={cn(
                       "w-8 sm:w-12 md:w-16 h-0.5 mx-1 sm:mx-2",
-                      step > s.step ? "bg-gradient-to-r from-purple-600 to-amber-500" : "bg-muted",
+                      step > s.step ? "bg-linear-to-r from-purple-600 to-amber-500" : "bg-muted",
                     )}
                   />
                 )}
@@ -1289,11 +1289,11 @@ export default function AssessmentPage() {
                     className="space-y-4 sm:space-y-5"
                   >
                     <div className="text-center mb-4 sm:mb-6">
-                      <h2 className="text-xl sm:text-2xl font-black mb-1 bg-gradient-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent">
+                      <h2 className="text-xl sm:text-2xl font-black mb-1 bg-linear-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent">
                         Tell us about yourself
                       </h2>
                       <p className="text-xs sm:text-sm text-muted-foreground">
-                        We'll match you with the right scholar
+                       {` We'll match you with the right scholar`}
                       </p>
                     </div>
 
@@ -1497,7 +1497,7 @@ export default function AssessmentPage() {
                     className="space-y-4 sm:space-y-5"
                   >
                     <div className="text-center mb-4 sm:mb-6">
-                      <h2 className="text-xl sm:text-2xl font-black mb-1 bg-gradient-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent">
+                      <h2 className="text-xl sm:text-2xl font-black mb-1 bg-linear-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent">
                         Your Academic Background
                       </h2>
                       <p className="text-xs sm:text-sm text-muted-foreground">
@@ -1526,12 +1526,13 @@ export default function AssessmentPage() {
                         >
                           <option value="">Select a program</option>
                           <option value="hifz">Hifz Al-Quran (Full Memorization)</option>
-                          <option value="qiroah">Qiro'ah Al-Quran (Reading)</option>
+                          <option value="qiroah">{`Qiro'ah Al-Quran (Reading)`}</option>
                           <option value="tajweed">Tajweed Mastery</option>
+                          <option value="juz-amma">{`Muroja'ah`}</option>
                           <option value="arabic">Quranic Arabic</option>
                           <option value="tafsir">Tafsir Studies</option>
-                          <option value="group-qiroah">Group Qiro'ah (Children)</option>
-                          <option value="juz-amma">Juz Amma (Children)</option>
+                          <option value="group-qiroah">{`Group Qiro'ah`}</option>
+                          <option value="juz-amma">{`Group Tajweed`}</option>
                         </select>
                         {errors.programInterest && touched.programInterest && (
                           <p className="text-[10px] text-red-500 mt-1 flex items-center gap-1">
@@ -1704,7 +1705,7 @@ export default function AssessmentPage() {
                     className="space-y-4 sm:space-y-5"
                   >
                     <div className="text-center mb-4 sm:mb-6">
-                      <h2 className="text-xl sm:text-2xl font-black mb-1 bg-gradient-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent">
+                      <h2 className="text-xl sm:text-2xl font-black mb-1 bg-linear-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent">
                         Schedule Your Assessment
                       </h2>
                       <p className="text-xs sm:text-sm text-muted-foreground">
@@ -1849,7 +1850,7 @@ export default function AssessmentPage() {
 
                       {/* Selected Summary */}
                       {selectedDate && selectedTime && (
-                        <div className="p-3 rounded-lg bg-gradient-to-r from-purple-50 to-amber-50 dark:from-purple-950/30 dark:to-amber-950/30 border border-purple-200">
+                        <div className="p-3 rounded-lg bg-linear-to-r from-purple-50 to-amber-50 dark:from-purple-950/30 dark:to-amber-950/30 border border-purple-200">
                           <p className="text-xs text-center">
                             <span className="font-black">Selected:</span> {selectedDate} at {selectedTime} ({formData.timeZone})
                           </p>
@@ -1879,7 +1880,7 @@ export default function AssessmentPage() {
                     onClick={nextStep}
                     disabled={!canProceed()}
                     className={cn(
-                      "rounded-full px-5 sm:px-6 py-2 sm:py-2.5 font-black text-sm bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white order-1 xs:order-2",
+                      "rounded-full px-5 sm:px-6 py-2 sm:py-2.5 font-black text-sm bg-linear-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white order-1 xs:order-2",
                       !canProceed() && "opacity-50 cursor-not-allowed",
                       step === 1 && "ml-auto"
                     )}
@@ -1891,7 +1892,7 @@ export default function AssessmentPage() {
                   <Button
                     type="submit"
                     disabled={!canProceed() || isSubmitting || !formData.agreeTerms}
-                    className="rounded-full px-5 sm:px-6 py-2 sm:py-2.5 font-black text-sm bg-gradient-to-r from-purple-600 to-amber-600 hover:from-purple-700 hover:to-amber-700 text-white order-1 xs:order-2 ml-auto"
+                    className="rounded-full px-5 sm:px-6 py-2 sm:py-2.5 font-black text-sm bg-linear-to-r from-purple-600 to-amber-600 hover:from-purple-700 hover:to-amber-700 text-white order-1 xs:order-2 ml-auto"
                   >
                     {isSubmitting ? (
                       <Loader2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 animate-spin" />
