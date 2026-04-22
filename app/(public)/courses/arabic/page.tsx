@@ -546,31 +546,24 @@ import { Button } from "@/components/ui/button";
 import { motion, useScroll, useTransform } from "framer-motion";
 import {
   ArrowRight,
-  Award,
   BookOpen,
   Brain,
   Briefcase,
-  Calendar,
   CheckCircle2,
-  Clock,
   Compass,
   Crown,
+  Gem,
   Globe,
+  Languages,
+  MessageCircle,
+  PenTool,
   Quote,
   Rocket,
-  Shield,
   Sparkles,
   Target,
-  Trophy,
+  TrendingUp,
   User,
   Users,
-  Languages,
-  PenTool,
-  MessageCircle,
-  Gem,
-  GraduationCap,
-  TrendingUp,
-  Heart,
 } from "lucide-react";
 import Link from "next/link";
 import { useRef } from "react";
@@ -711,33 +704,42 @@ const JOURNEY_PATHS = [
 // Success Stories
 const SUCCESS_STORIES = [
   {
-    name: "Sarah, 32",
-    type: "Arabic Graduate",
-    story: "Understanding the Quran in Arabic has transformed my Salah. The structured approach made learning accessible and enjoyable.",
-    duration: "14 months",
+    name: "Abdullah, 35",
+    type: "Beginner",
+    story: "I started with no Arabic knowledge. Now I can read the Quran and understand its meanings. The structured approach made it easy to follow.",
+    duration: "18 months",
     icon: User,
   },
   {
-    name: "Omar, 28",
+    name: "Abdullah, 22",
+    type: "Intermediate",
+    story: "I had some basic Arabic but struggled with grammar. The program's focus on classical texts helped me gain confidence and fluency.",
+    duration: "14 months",
+    icon: TrendingUp,
+  },
+    {
+      name: "Mariam, 30",
+      type: "Advanced",
+      story: "I wanted to deepen my understanding of the Quran. The advanced phase challenged me but ultimately allowed me to read classical literature and tafsir in Arabic.",
+      duration: "12 months",
+      icon: Crown,
+    },
+
+  {
+    name: "Mubarak, 28",
     type: "Professional",
     story: "The flexible schedule and patient teachers helped me balance work and learning. I can now understand Quranic Arabic directly!",
     duration: "16 months",
     icon: Briefcase,
   },
-  {
-    name: "Fatima, 45",
-    type: "Mother",
-    story: "Learning Arabic alongside my children has been a beautiful family journey. The teachers are incredibly supportive.",
-    duration: "18 months",
-    icon: Heart,
-  },
-  {
-    name: "Yusuf, 19",
-    type: "University Student",
-    story: "The program gave me a strong foundation in Arabic grammar. I'm now able to read classical texts with confidence.",
-    duration: "12 months",
-    icon: GraduationCap,
-  },
+
+  // {
+  //   name: "Yusuf, 19",
+  //   type: "University Student",
+  //   story: "The program gave me a strong foundation in Arabic grammar. I'm now able to read classical texts with confidence.",
+  //   duration: "12 months",
+  //   icon: GraduationCap,
+  // },
 ];
 
 // FAQ
@@ -777,25 +779,25 @@ export default function ArabicProgramPage() {
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ duration: 0.5 }}
-              className="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-gradient-to-r from-amber-500/10 to-orange-500/10 border border-amber-500/20 text-amber-700 text-[9px] sm:text-[11px] font-black uppercase tracking-wider mb-4 sm:mb-6"
+              className="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-linear-to-r from-amber-500/10 to-orange-500/10 border border-amber-500/20 text-amber-700 text-[9px] sm:text-[11px] font-black uppercase tracking-wider mb-4 sm:mb-6"
             >
               <Sparkles className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5" /> 📖 Unlock the Language of the Quran 📖
             </motion.div>
 
             <h1 className="text-4xl xs:text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tighter font-heading leading-[1.1] mb-4 sm:mb-6 px-2">
               Al-Lughah{" "}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-700 via-orange-600 to-gold whitespace-nowrap">
+              <span className="text-transparent bg-clip-text bg-linear-to-r from-amber-700 via-orange-600 to-gold whitespace-nowrap">
                 Al-Arabiyyah
               </span>
             </h1>
 
             <p className="text-base sm:text-xl text-muted-foreground font-light max-w-2xl mx-auto mb-6 sm:mb-8 px-4">
-              Master the language of the Quran. Understand Allah's words directly, read classical texts, and connect deeply with Islamic heritage.
+              {`Master the language of the Quran. Understand Allah's words directly, read classical texts, and connect deeply with Islamic heritage.`}
             </p>
 
             <div className="flex flex-col xs:flex-row gap-3 sm:gap-4 justify-center px-4">
               <Link href="/assessment" className="w-full xs:w-auto">
-                <Button className="w-full rounded-full px-6 sm:px-8 py-3.5 sm:py-4 font-black bg-gradient-to-r from-amber-700 to-orange-700 hover:from-amber-800 hover:to-orange-800 text-white text-sm sm:text-base shadow-xl">
+                <Button className="w-full rounded-full px-6 sm:px-8 py-3.5 sm:py-4 font-black bg-linear-to-r from-amber-700 to-orange-700 hover:from-amber-800 hover:to-orange-800 text-white text-sm sm:text-base shadow-xl">
                   <span className="flex items-center justify-center gap-2">
                     BEGIN YOUR JOURNEY
                     <Rocket className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
@@ -815,9 +817,9 @@ export default function ArabicProgramPage() {
                 { label: "Quranic Words", value: "80%", icon: BookOpen },
                 { label: "Grammar Rules", value: "100+", icon: PenTool },
                 { label: "Success Rate", value: "94%", icon: Target },
-                { label: "Active Students", value: "300+", icon: Users },
+                { label: "Active Students", value: "100+", icon: Users },
               ].map((stat, i) => (
-                <motion.div key={i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }} className="p-2.5 sm:p-4 rounded-xl sm:rounded-2xl bg-gradient-to-br from-amber-50/50 to-orange-50/50 dark:from-amber-950/20 dark:to-orange-950/20 border border-amber-100 dark:border-amber-800">
+                <motion.div key={i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }} className="p-2.5 sm:p-4 rounded-xl sm:rounded-2xl bg-linear-to-br from-amber-50/50 to-orange-50/50 dark:from-amber-950/20 dark:to-orange-950/20 border border-amber-100 dark:border-amber-800">
                   <stat.icon className="w-4 h-4 sm:w-5 sm:h-5 text-amber-600 mx-auto mb-1.5 sm:mb-2" />
                   <div className="text-lg sm:text-2xl md:text-3xl font-black text-amber-600">{stat.value}</div>
                   <div className="text-[10px] sm:text-xs text-muted-foreground mt-0.5 sm:mt-1">{stat.label}</div>
@@ -829,7 +831,7 @@ export default function ArabicProgramPage() {
       </motion.div>
 
       {/* Core Pillars Section */}
-      <section className="py-12 sm:py-16 bg-gradient-to-b from-background via-amber-50/5 to-orange-50/5">
+      <section className="py-12 sm:py-16 bg-linear-to-b from-background via-amber-50/5 to-orange-50/5">
         <div className="container mx-auto px-4 sm:px-6">
           <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-12">
             <div className="inline-flex items-center gap-2 text-amber-600 font-black text-[8px] sm:text-[10px] uppercase tracking-[0.2em] sm:tracking-[0.3em] mb-3 sm:mb-4">
@@ -854,7 +856,7 @@ export default function ArabicProgramPage() {
                     </div>
                     <div className="min-w-0">
                       <h3 className="font-black text-sm sm:text-base mb-0.5 sm:mb-1">{pillar.title}</h3>
-                      <p className="text-xs sm:text-sm text-muted-foreground break-words">{pillar.description}</p>
+                      <p className="text-xs sm:text-sm text-muted-foreground wrap-break-word">{pillar.description}</p>
                       <p className="text-[10px] sm:text-xs text-amber-600 font-black mt-1">{pillar.audience}</p>
                     </div>
                   </div>
@@ -886,7 +888,7 @@ export default function ArabicProgramPage() {
               return (
                 <Reveal key={i} delay={i * 0.1}>
                   <div className="bg-card rounded-xl sm:rounded-2xl border border-border hover:border-amber-300 transition-all p-5 sm:p-6 text-center h-full group">
-                    <div className={`w-14 h-14 sm:w-16 sm:h-16 mx-auto mb-3 sm:mb-4 rounded-xl sm:rounded-2xl bg-gradient-to-br ${path.color} flex items-center justify-center group-hover:scale-110 transition-transform`}>
+                    <div className={`w-14 h-14 sm:w-16 sm:h-16 mx-auto mb-3 sm:mb-4 rounded-xl sm:rounded-2xl bg-linear-to-br ${path.color} flex items-center justify-center group-hover:scale-110 transition-transform`}>
                       <Icon className="w-7 h-7 sm:w-8 sm:h-8 text-white" />
                     </div>
                     <h3 className="font-black text-lg sm:text-xl mb-0.5 sm:mb-1">{path.audience}</h3>
@@ -901,7 +903,7 @@ export default function ArabicProgramPage() {
       </section>
 
       {/* Learning Journey Timeline */}
-      <section id="journey" className="py-12 sm:py-16 bg-gradient-to-b from-background via-amber-50/5 to-orange-50/5">
+      <section id="journey" className="py-12 sm:py-16 bg-linear-to-b from-background via-amber-50/5 to-orange-50/5">
         <div className="container mx-auto px-4 sm:px-6">
           <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-12">
             <div className="inline-flex items-center gap-2 text-amber-600 font-black text-[8px] sm:text-[10px] uppercase tracking-[0.2em] sm:tracking-[0.3em] mb-3 sm:mb-4">
@@ -917,14 +919,14 @@ export default function ArabicProgramPage() {
 
           <div className="max-w-4xl mx-auto">
             <div className="relative">
-              <div className="hidden md:block absolute left-6 top-0 bottom-0 w-0.5 bg-gradient-to-b from-amber-500 via-orange-500 to-gold" />
+              <div className="hidden md:block absolute left-6 top-0 bottom-0 w-0.5 bg-linear-to-b from-amber-500 via-orange-500 to-gold" />
               <div className="space-y-6 sm:space-y-8">
                 {LEARNING_JOURNEY.map((phase, idx) => {
                   const Icon = phase.icon;
                   return (
                     <Reveal key={idx} delay={idx * 0.1}>
                       <div className="relative md:pl-16">
-                        <div className="hidden md:flex absolute left-0 top-6 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-r from-amber-600 to-orange-600 items-center justify-center text-white font-black text-base sm:text-lg shadow-lg">
+                        <div className="hidden md:flex absolute left-0 top-6 w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-linear-to-r from-amber-600 to-orange-600 items-center justify-center text-white font-black text-base sm:text-lg shadow-lg">
                           {idx + 1}
                         </div>
                         <div className="bg-card rounded-xl sm:rounded-2xl border border-border hover:border-amber-300 transition-all p-5 sm:p-6 md:p-8">
@@ -944,7 +946,7 @@ export default function ArabicProgramPage() {
                             <div className="flex-1">
                               <div className="flex flex-wrap gap-2">
                                 {phase.topics.map((topic, i) => (
-                                  <div key={i} className="flex items-center gap-1.5 px-2 py-1 sm:px-3 sm:py-1.5 rounded-full bg-gradient-to-r from-amber-50 to-orange-50 dark:from-amber-950/30 dark:to-orange-950/30 text-amber-700 text-[10px] sm:text-xs font-black">
+                                  <div key={i} className="flex items-center gap-1.5 px-2 py-1 sm:px-3 sm:py-1.5 rounded-full bg-linear-to-r from-amber-50 to-orange-50 dark:from-amber-950/30 dark:to-orange-950/30 text-amber-700 text-[10px] sm:text-xs font-black">
                                     <CheckCircle2 className="w-3 h-3" />
                                     {topic}
                                   </div>
@@ -955,7 +957,7 @@ export default function ArabicProgramPage() {
                                   initial={{ width: 0 }}
                                   whileInView={{ width: `${(idx + 1) * 33}%` }}
                                   transition={{ duration: 1 }}
-                                  className="h-full bg-gradient-to-r from-amber-600 to-orange-600 rounded-full"
+                                  className="h-full bg-linear-to-r from-amber-600 to-orange-600 rounded-full"
                                 />
                               </div>
                             </div>
@@ -995,7 +997,7 @@ export default function ArabicProgramPage() {
       </section>
 
       {/* Success Stories */}
-      <section className="py-12 sm:py-16 bg-gradient-to-b from-background via-amber-50/5 to-orange-50/5">
+      <section className="py-12 sm:py-16 bg-linear-to-b from-background via-amber-50/5 to-orange-50/5">
         <div className="container mx-auto px-4 sm:px-6">
           <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-12">
             <div className="inline-flex items-center gap-2 text-amber-600 font-black text-[8px] sm:text-[10px] uppercase tracking-[0.2em] sm:tracking-[0.3em] mb-3 sm:mb-4">
@@ -1016,7 +1018,7 @@ export default function ArabicProgramPage() {
                 <Reveal key={i} delay={i * 0.1}>
                   <div className="bg-card rounded-xl sm:rounded-2xl border border-border hover:border-amber-300 transition-all p-5 sm:p-6 h-full flex flex-col">
                     <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
-                      <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-gradient-to-br from-amber-600 to-orange-600 flex items-center justify-center text-white font-black text-base sm:text-lg shrink-0">
+                      <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-linear-to-br from-amber-600 to-orange-600 flex items-center justify-center text-white font-black text-base sm:text-lg shrink-0">
                         {story.name.charAt(0)}
                       </div>
                       <div className="min-w-0">
@@ -1025,7 +1027,7 @@ export default function ArabicProgramPage() {
                       </div>
                     </div>
                     <Quote className="w-6 h-6 sm:w-8 sm:h-8 text-amber-200 dark:text-amber-800/30 mb-2 sm:mb-3" />
-                    <p className="text-xs sm:text-sm text-muted-foreground italic grow leading-relaxed break-words">"{story.story}"</p>
+                    <p className="text-xs sm:text-sm text-muted-foreground italic grow leading-relaxed wrap-break-word">{`"${story.story}"`}</p>
                     <p className="text-[10px] sm:text-xs text-amber-600 font-black mt-3">✓ Completed in {story.duration}</p>
                   </div>
                 </Reveal>
@@ -1070,8 +1072,8 @@ export default function ArabicProgramPage() {
       {/* Final CTA */}
       <section className="py-12 sm:py-20">
         <div className="container mx-auto px-4 sm:px-6">
-          <div className="bg-card rounded-xl sm:rounded-2xl border border-border hover:border-amber-300 transition-all p-6 sm:p-8 md:p-12 text-center max-w-4xl mx-auto bg-gradient-to-br from-amber-600/5 to-orange-600/5">
-            <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gradient-to-br from-amber-600 to-orange-600 mb-4 sm:mb-6 shadow-lg">
+          <div className="bg-card rounded-xl sm:rounded-2xl border border-border hover:border-amber-300 transition-all p-6 sm:p-8 md:p-12 text-center max-w-4xl mx-auto bg-linear-to-br from-amber-600/5 to-orange-600/5">
+            <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-linear-to-br from-amber-600 to-orange-600 mb-4 sm:mb-6 shadow-lg">
               <Languages className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
             </div>
             <h2 className="text-2xl sm:text-3xl md:text-4xl font-black mb-3 sm:mb-4 px-2">Unlock the Language of the Quran</h2>
@@ -1080,7 +1082,7 @@ export default function ArabicProgramPage() {
             </p>
             <div className="flex flex-col xs:flex-row gap-3 sm:gap-4 justify-center px-4">
               <Link href="/assessment" className="w-full xs:w-auto">
-                <Button className="w-full rounded-full px-6 sm:px-8 py-3 sm:py-4 font-black text-sm sm:text-base bg-gradient-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white">
+                <Button className="w-full rounded-full px-6 sm:px-8 py-3 sm:py-4 font-black text-sm sm:text-base bg-linear-to-r from-amber-600 to-orange-600 hover:from-amber-700 hover:to-orange-700 text-white">
                   BOOK FREE ASSESSMENT
                   <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 ml-1.5 sm:ml-2" />
                 </Button>

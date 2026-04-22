@@ -188,15 +188,14 @@ const JOURNEY_PATHS = [
 // Success Stories
 const SUCCESS_STORIES = [
   {
-    name: "Sarah, 28",
-    type: "Revert",
-    story:
-      "Learning Tajweed in a group setting made all the difference. The peer support and encouragement kept me motivated throughout.",
-    duration: "8 months",
-    icon: Heart,
+    name: "Fatimata, 28",
+    type: "Student",
+    story: "The group setting was a game-changer for me. I learned so much from my classmates and felt motivated to practice regularly. The teacher's feedback was spot on.",
+    duration: "7 months",
+    icon: User,
   },
   {
-    name: "Ahmed, 35",
+    name: "Yaseer, 35",
     type: "Professional",
     story:
       "The group format is perfect for my schedule and budget. I've learned so much from my classmates' questions and the teacher's corrections.",
@@ -204,7 +203,7 @@ const SUCCESS_STORIES = [
     icon: Briefcase,
   },
   {
-    name: "Amina, 19",
+    name: "Ameenat, 19",
     type: "Student",
     story:
       "I love the interactive nature of the classes. Practicing with peers helped me gain confidence in my recitation.",
@@ -212,7 +211,7 @@ const SUCCESS_STORIES = [
     icon: User,
   },
   {
-    name: "Yusuf, 42",
+    name: "Mr. Hasan, 42",
     type: "Parent",
     story:
       "Learning Tajweed alongside my daughter has been a beautiful bonding experience. The teacher is excellent with all ages.",
@@ -233,7 +232,7 @@ const FAQS = [
   },
   {
     q: "How many students per class?",
-    a: "We maintain small groups of 4-6 students to ensure each student receives individual attention.",
+    a: "We maintain small groups of 4-10 students to ensure each student receives individual attention.",
   },
   {
     q: "What if I miss a class?",
@@ -329,7 +328,7 @@ export default function GroupTajweedPage() {
                 { label: "Tajweed Rules", value: "40+", icon: BookOpen },
                 { label: "Class Size", value: "4-10", icon: Users },
                 { label: "Success Rate", value: "94%", icon: Target },
-                { label: "Happy Students", value: "200+", icon: Award },
+                { label: "Happy Students", value: "100+", icon: Award },
               ].map((stat, i) => (
                 <motion.div
                   key={i}
