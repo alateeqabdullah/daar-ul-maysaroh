@@ -773,610 +773,36 @@
 
 
 
-// // app/(public)/courses/page.tsx
-// "use client";
-
-// import { useState, useMemo } from "react";
-// import { motion } from "framer-motion";
-// import {
-//   Search,
-//   Filter,
-//   X,
-//   Sparkles,
-//   ArrowRight,
-//   Loader2,
-//   BookOpen,
-//   Mic,
-//   Globe,
-//   GraduationCap,
-//   Heart,
-//   Users,
-//   Star,
-//   Shield,
-// } from "lucide-react";
-// import { Button } from "@/components/ui/button";
-// import { Input } from "@/components/ui/input";
-// import { Reveal } from "@/components/shared/section-animation";
-// import Link from "next/link";
-// import { cn } from "@/lib/utils";
-// import { CourseCard } from "@/components/public/courses/course-card";
-
-// // Course Data - Updated to match the CourseCard props
-// const ALL_COURSES = [
-//   {
-//     id: "hifz",
-//     name: "Hifz Al-Quran",
-//     description: "Complete Quran memorization with Ijazah certification. Master the entire Quran with proper Tajweed.",
-//     category: "QURAN",
-//     subcategory: "Hifz",
-//     duration: "2-3 years",
-//     level: "All Levels",
-//     format: "1-on-1",
-//     basePrice: 2.25,
-//     price: "$2.25+",
-//     rating: 4.9,
-//     students: 156,
-//     features: ["Ijazah Certification", "Daily Revision", "Progress Tracking", "Sanad Chain"],
-//     popular: true,
-//     badge: "Most Popular",
-//     iconName: "BookOpen",
-//     color: "from-purple-600 to-indigo-700",
-//     href: "/courses/hifz",
-//     isMock: false,
-//   },
-//   {
-//     id: "tajweed",
-//     name: "Tajweed Al-Itqan",
-//     description: "Scientific mastery of Quranic recitation rules. Perfect your pronunciation with expert guidance.",
-//     category: "TAJWEED",
-//     subcategory: "Recitation",
-//     duration: "6 months",
-//     level: "Beginner to Advanced",
-//     format: "1-on-1",
-//     basePrice: 2,
-//     price: "$2+",
-//     rating: 4.8,
-//     students: 203,
-//     features: ["Audio Analysis", "Live Correction", "Mistake Tracking", "Certificate"],
-//     popular: false,
-//     iconName: "Mic",
-//     color: "from-blue-600 to-cyan-600",
-//     href: "/courses/tajweed",
-//     isMock: false,
-//   },
-//   {
-//     id: "group-tajweed",
-//     name: "Group Tajweed",
-//     description: "Master Tajweed rules in a supportive group environment. Learn with peers and share the journey.",
-//     category: "TAJWEED",
-//     subcategory: "Group",
-//     duration: "6-9 months",
-//     level: "Beginner to Intermediate",
-//     format: "Group (4-6)",
-//     basePrice: 6,
-//     price: "$6",
-//     rating: 4.7,
-//     students: 89,
-//     features: ["Peer Learning", "Group Practice", "Lower Cost", "Community Support"],
-//     popular: true,
-//     badge: "Best Value",
-//     iconName: "Users",
-//     color: "from-teal-600 to-cyan-600",
-//     href: "/courses/group-tajweed",
-//     isMock: false,
-//   },
-//   {
-//     id: "arabic",
-//     name: "Quranic Arabic",
-//     description: "Understand the Quran in its original language. Master classical Arabic grammar and vocabulary.",
-//     category: "ARABIC",
-//     subcategory: "Language",
-//     duration: "1 year",
-//     level: "Beginner",
-//     format: "Group Sessions",
-//     basePrice: 2,
-//     price: "$2+",
-//     rating: 4.7,
-//     students: 312,
-//     features: ["Quranic Vocabulary", "Grammar Foundation", "Tafsir Integration", "Certificate"],
-//     popular: false,
-//     iconName: "Globe",
-//     color: "from-amber-600 to-orange-600",
-//     href: "/courses/arabic",
-//     isMock: false,
-//   },
-//   {
-//     id: "tafsir",
-//     name: "Tafsir Al-Mubin",
-//     description: "Deep Quranic understanding through classical exegesis. Study Tafsir from primary sources.",
-//     category: "TAFSIR",
-//     subcategory: "Exegesis",
-//     duration: "1.5 years",
-//     level: "Advanced",
-//     format: "1-on-1",
-//     basePrice: 2,
-//     price: "$2+",
-//     rating: 4.9,
-//     students: 78,
-//     features: ["Classical Sources", "Thematic Studies", "Scholarly Mentorship", "Research Paper"],
-//     popular: false,
-//     iconName: "GraduationCap",
-//     color: "from-slate-600 to-gray-700",
-//     href: "/courses/tafsir",
-//     isMock: false,
-//   },
-//   {
-//     id: "qiroah",
-//     name: "Qiro'ah Program",
-//     description: "Learn to read the Quran with confidence. Perfect for beginners and those who want to improve.",
-//     category: "QURAN",
-//     subcategory: "Reading",
-//     duration: "6-12 months",
-//     level: "Beginner",
-//     format: "1-on-1",
-//     basePrice: 2,
-//     price: "$2+",
-//     rating: 4.8,
-//     students: 156,
-//     features: ["Letter Recognition", "Fluency Practice", "Patient Instruction", "Progress Tracking"],
-//     popular: true,
-//     badge: "Popular",
-//     iconName: "BookOpen",
-//     color: "from-teal-600 to-emerald-600",
-//     href: "/courses/qiroah",
-//     isMock: false,
-//   },
-//   {
-//     id: "group-qiroah",
-//     name: "Group Qiro'ah",
-//     description: "Fun, interactive Quran reading for children and beginners. Learn with peers in a supportive environment.",
-//     category: "CHILDREN",
-//     subcategory: "Reading",
-//     duration: "6-9 months",
-//     level: "Beginner",
-//     format: "Group (4-10)",
-//     basePrice: 6,
-//     price: "$6",
-//     rating: 4.8,
-//     students: 89,
-//     features: ["Interactive Games", "Reward System", "Parent Portal", "Weekly Updates"],
-//     popular: true,
-//     badge: "For Kids",
-//     iconName: "Users",
-//     color: "from-emerald-600 to-teal-600",
-//     href: "/courses/group-qiroah",
-//     isMock: false,
-//   },
-//   {
-//     id: "juz-amma",
-//     name: "Juz Amma",
-//     description: "Memorize the 30th Juz with proper Tajweed and understanding. Perfect for beginners starting their Hifz journey.",
-//     category: "QURAN",
-//     subcategory: "Memorization",
-//     duration: "6-12 months",
-//     level: "Beginner",
-//     format: "1-on-1",
-//     basePrice: 7,
-//     price: "$7+",
-//     rating: 4.9,
-//     students: 112,
-//     features: ["37 Surahs", "Meaning Explained", "Progress Badges", "Certificate"],
-//     popular: true,
-//     badge: "Popular",
-//     iconName: "Star",
-//     color: "from-amber-600 to-orange-600",
-//     href: "/courses/juz-amma",
-//     isMock: false,
-//   },
-//   {
-//     id: "juz-tabarak",
-//     name: "Juz Tabarak",
-//     description: "Continue your memorization journey with the 29th Juz. Build on Juz Amma with longer surahs.",
-//     category: "QURAN",
-//     subcategory: "Memorization",
-//     duration: "8-12 months",
-//     level: "Intermediate",
-//     format: "Group (4-10)",
-//     basePrice: 8,
-//     price: "$8",
-//     rating: 4.8,
-//     students: 67,
-//     features: ["14 Surahs", "Deep Meanings", "Group Support", "Certificate"],
-//     popular: false,
-//     iconName: "Moon",
-//     color: "from-purple-600 to-indigo-600",
-//     href: "/courses/juz-tabarak",
-//     isMock: false,
-//   },
-//   {
-//     id: "murojaah",
-//     name: "Muroja'ah",
-//     description: "Preserve and perfect your Quran memorization. Structured revision for Huffadh.",
-//     category: "QURAN",
-//     subcategory: "Revision",
-//     duration: "Ongoing",
-//     level: "Advanced",
-//     format: "1-on-1",
-//     basePrice: 9,
-//     price: "$9+",
-//     rating: 4.9,
-//     students: 89,
-//     features: ["Structured Revision", "Weakness Identification", "Ijazah Prep", "Lifelong Preservation"],
-//     popular: false,
-//     iconName: "RefreshCw",
-//     color: "from-rose-600 to-pink-600",
-//     href: "/courses/murojaah",
-//     isMock: false,
-//   },
-// ];
-
-// // Categories
-// const CATEGORIES = [
-//   { id: "all", name: "All Programs", icon: BookOpen, count: 0 },
-//   { id: "QURAN", name: "Quran", icon: BookOpen, count: 0 },
-//   { id: "TAJWEED", name: "Tajweed", icon: Mic, count: 0 },
-//   { id: "ARABIC", name: "Arabic", icon: Globe, count: 0 },
-//   { id: "TAFSIR", name: "Tafsir", icon: GraduationCap, count: 0 },
-//   { id: "CHILDREN", name: "Children", icon: Heart, count: 0 },
-// ];
-
-// // Sort Options
-// const SORT_OPTIONS = [
-//   { id: "popular", name: "Most Popular" },
-//   { id: "rating", name: "Highest Rated" },
-//   { id: "price-low", name: "Price: Low to High" },
-//   { id: "price-high", name: "Price: High to Low" },
-//   { id: "students", name: "Most Students" },
-// ];
-
-// export default function CoursesPage() {
-//   const [searchQuery, setSearchQuery] = useState("");
-//   const [selectedCategory, setSelectedCategory] = useState("all");
-//   const [sortBy, setSortBy] = useState("popular");
-//   const [visibleCount, setVisibleCount] = useState(6);
-//   const [isLoading, setIsLoading] = useState(false);
-//   const [viewType, setViewType] = useState<"grid" | "list">("grid");
-
-//   // Calculate category counts
-//   const categoriesWithCounts = CATEGORIES.map((cat) => ({
-//     ...cat,
-//     count: cat.id === "all" 
-//       ? ALL_COURSES.length 
-//       : ALL_COURSES.filter((c) => c.category === cat.id).length,
-//   }));
-
-//   // Filter and sort courses
-//   const filteredCourses = useMemo(() => {
-//     let filtered = ALL_COURSES.filter((course) => {
-//       const matchesCategory = selectedCategory === "all" || course.category === selectedCategory;
-//       const matchesSearch = searchQuery === "" || 
-//         course.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-//         course.description.toLowerCase().includes(searchQuery.toLowerCase());
-//       return matchesCategory && matchesSearch;
-//     });
-
-//     // Sort
-//     switch (sortBy) {
-//       case "popular":
-//         filtered.sort((a, b) => (b.popular ? 1 : 0) - (a.popular ? 1 : 0));
-//         break;
-//       case "rating":
-//         filtered.sort((a, b) => b.rating - a.rating);
-//         break;
-//       case "price-low":
-//         filtered.sort((a, b) => a.basePrice - b.basePrice);
-//         break;
-//       case "price-high":
-//         filtered.sort((a, b) => b.basePrice - a.basePrice);
-//         break;
-//       case "students":
-//         filtered.sort((a, b) => b.students - a.students);
-//         break;
-//     }
-//     return filtered;
-//   }, [selectedCategory, searchQuery, sortBy]);
-
-//   const visibleCourses = filteredCourses.slice(0, visibleCount);
-//   const hasMore = visibleCount < filteredCourses.length;
-
-//   const clearFilters = () => {
-//     setSearchQuery("");
-//     setSelectedCategory("all");
-//     setSortBy("popular");
-//   };
-
-//   const activeFilterCount = [
-//     selectedCategory !== "all" ? 1 : 0,
-//     searchQuery ? 1 : 0,
-//     sortBy !== "popular" ? 1 : 0,
-//   ].reduce((a, b) => a + b, 0);
-
-//   const loadMore = () => {
-//     setIsLoading(true);
-//     setTimeout(() => {
-//       setVisibleCount((prev) => prev + 6);
-//       setIsLoading(false);
-//     }, 500);
-//   };
-
-//   return (
-//     <main className="pt-30 pb-12 sm:pb-16 md:pb-20 bg-background relative overflow-hidden">
-//       {/* Background Elements - Hidden on mobile for performance */}
-//       <div className="hidden sm:block absolute inset-0 opacity-[0.02] bg-[url('/islamic-pattern.svg')] bg-center bg-repeat" style={{ backgroundSize: "300px" }} />
-//       <div className="absolute top-0 right-0 w-[300px] sm:w-[500px] h-[300px] sm:h-[500px] bg-primary-700/5 rounded-full blur-[80px] sm:blur-[120px] -z-10" />
-//       <div className="absolute bottom-0 left-0 w-[300px] sm:w-[500px] h-[300px] sm:h-[500px] bg-primary-700/5 rounded-full blur-[80px] sm:blur-[120px] -z-10" />
-
-//       <div className="container mx-auto px-4 sm:px-6">
-//         {/* Hero Section - Mobile Optimized */}
-//         <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-12 md:mb-16">
-//           <Reveal>
-//             <div className="inline-flex items-center gap-1.5 sm:gap-2 text-primary-700 font-black text-[8px] sm:text-[10px] uppercase tracking-[0.2em] sm:tracking-[0.3em] mb-4 sm:mb-6">
-//               <Sparkles className="w-3 h-3 sm:w-4 sm:h-4" /> Scholarly Curriculum {new Date().getFullYear()}
-//             </div>
-//             <h1 className="text-4xl xs:text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tighter font-heading leading-[1.1] mb-4 sm:mb-6 px-2">
-//               Sacred <span className="text-primary-700 italic">Pathways</span>
-//             </h1>
-//             <p className="text-base sm:text-lg md:text-xl text-muted-foreground font-light max-w-2xl mx-auto px-4">
-//               Al-Maysaroh offers a rigorous, Sanad-based curriculum designed for
-//               those seeking deep connection with the Divine Word through scholarly tradition.
-//             </p>
-//           </Reveal>
-//         </div>
-
-//         {/* Stats Bar - Mobile First Grid */}
-//         <div className="grid grid-cols-2 xs:grid-cols-4 gap-2 sm:gap-3 md:gap-4 mb-8 sm:mb-12">
-//           {[
-//             { label: "Sacred Programs", value: ALL_COURSES.length, icon: BookOpen },
-//             { label: "Sanad-Based", value: "100%", icon: Shield },
-//             { label: "Students Enrolled", value: "100+", icon: Users },
-//             { label: "Avg Rating", value: "4.8", icon: Star },
-//           ].map((stat, i) => (
-//             <motion.div key={i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }} className="p-2 sm:p-3 md:p-4 rounded-xl sm:rounded-2xl bg-linear-to-br from-primary-50/50 to-indigo-50/50 dark:from-primary-950/20 dark:to-indigo-950/20 border border-primary-100 dark:border-primary-800 text-center">
-//               <stat.icon className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 text-primary-600 mx-auto mb-1 sm:mb-1.5 md:mb-2" />
-//               <div className="text-base sm:text-xl md:text-2xl lg:text-3xl font-black text-primary-600">{stat.value}</div>
-//               <div className="text-[8px] sm:text-[10px] md:text-xs text-muted-foreground mt-0.5 sm:mt-1">{stat.label}</div>
-//             </motion.div>
-//           ))}
-//         </div>
-
-//         {/* Search & Filters - Mobile Optimized */}
-//         <div className="space-y-3 sm:space-y-4 mb-8 sm:mb-12">
-//           {/* Search Bar */}
-//           <div className="relative max-w-full sm:max-w-md">
-//             <Search className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 w-3.5 h-3.5 sm:w-4 sm:h-4 text-muted-foreground" />
-//             <Input
-//               type="text"
-//               placeholder="Search programs..."
-//               value={searchQuery}
-//               onChange={(e) => setSearchQuery(e.target.value)}
-//               className="pl-9 sm:pl-11 pr-8 sm:pr-12 py-3.5 sm:py-5 md:py-6 rounded-full border-2 border-primary-100/50 focus:border-primary-700 transition-all bg-background text-sm sm:text-base"
-//             />
-//             {searchQuery && (
-//               <button
-//                 onClick={() => setSearchQuery("")}
-//                 className="absolute right-3 sm:right-4 top-1/2 -translate-y-1/2 touch-target"
-//               >
-//                 <X className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-muted-foreground hover:text-primary-700 transition-colors" />
-//               </button>
-//             )}
-//           </div>
-
-//           {/* Category Pills - Horizontal Scroll on Mobile with better UX */}
-//           <div className="overflow-x-auto pb-2 scrollbar-hide -mx-4 px-4">
-//             <div className="flex items-center gap-1.5 sm:gap-2 min-w-max">
-//               <Filter className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary-600 mr-0.5 sm:mr-1 shrink-0" />
-//               {categoriesWithCounts.map((cat) => {
-//                 const Icon = cat.icon;
-//                 return (
-//                   <button
-//                     key={cat.id}
-//                     onClick={() => setSelectedCategory(cat.id)}
-//                     className={cn(
-//                       "inline-flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-full text-[9px] sm:text-xs font-black uppercase tracking-wider transition-all whitespace-nowrap touch-target",
-//                       selectedCategory === cat.id
-//                         ? "bg-primary-700 text-white shadow-md"
-//                         : "bg-primary-50 dark:bg-primary-950/40 text-primary-700 hover:bg-primary-100 dark:hover:bg-primary-900/60 border border-primary-100 dark:border-primary-800"
-//                     )}
-//                   >
-//                     <Icon className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
-//                     {cat.name}
-//                     <span className={cn(
-//                       "text-[8px] sm:text-[10px]",
-//                       selectedCategory === cat.id ? "text-white/70" : "text-primary-700/70"
-//                     )}>
-//                       ({cat.count})
-//                     </span>
-//                   </button>
-//                 );
-//               })}
-//             </div>
-//           </div>
-
-//           {/* Sort, View Toggle & Clear Filters - Stack on mobile */}
-//           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 pt-1 sm:pt-2">
-//             <div className="flex items-center gap-2 sm:gap-3">
-//               <span className="text-[10px] sm:text-xs font-black uppercase tracking-wider text-muted-foreground">Sort by:</span>
-//               <select
-//                 value={sortBy}
-//                 onChange={(e) => setSortBy(e.target.value)}
-//                 className="px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-full text-[10px] sm:text-xs font-black border border-border bg-background focus:border-primary-700 outline-none transition-all"
-//               >
-//                 {SORT_OPTIONS.map((opt) => (
-//                   <option key={opt.id} value={opt.id}>{opt.name}</option>
-//                 ))}
-//               </select>
-//             </div>
-
-//             {/* View Toggle - Better touch targets on mobile */}
-//             <div className="flex items-center gap-1 p-0.5 sm:p-1 rounded-full bg-muted/30 border border-border self-start sm:self-auto">
-//               <button
-//                 onClick={() => setViewType("grid")}
-//                 className={cn(
-//                   "px-3 sm:px-3 py-1.5 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-black transition-all touch-target",
-//                   viewType === "grid" ? "bg-primary-700 text-white" : "hover:bg-primary-100"
-//                 )}
-//               >
-//                 Grid
-//               </button>
-//               <button
-//                 onClick={() => setViewType("list")}
-//                 className={cn(
-//                   "px-3 sm:px-3 py-1.5 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-black transition-all touch-target",
-//                   viewType === "list" ? "bg-primary-700 text-white" : "hover:bg-primary-100"
-//                 )}
-//               >
-//                 List
-//               </button>
-//             </div>
-
-//             {activeFilterCount > 0 && (
-//               <Button
-//                 variant="ghost"
-//                 onClick={clearFilters}
-//                 className="text-[10px] sm:text-xs text-primary-700 hover:text-primary-800 gap-1 px-2 sm:px-3 py-1.5 h-auto self-start sm:self-auto"
-//               >
-//                 <X className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
-//                 Clear ({activeFilterCount})
-//               </Button>
-//             )}
-//           </div>
-//         </div>
-
-//         {/* Results Count */}
-//         <div className="flex items-center justify-between mb-4 sm:mb-6">
-//           <p className="text-[11px] sm:text-sm text-muted-foreground">
-//             Showing <span className="font-black text-primary-700">{visibleCourses.length}</span> of{" "}
-//             <span className="font-black text-primary-700">{filteredCourses.length}</span> programs
-//           </p>
-//         </div>
-
-//         {/* Course Grid/List */}
-//         {filteredCourses.length === 0 ? (
-//           <div className="text-center py-12 sm:py-16 md:py-20">
-//             <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto rounded-full bg-primary-50 dark:bg-primary-950/40 flex items-center justify-center mb-3 sm:mb-4">
-//               <Search className="w-8 h-8 sm:w-10 sm:h-10 text-primary-700/50" />
-//             </div>
-//             <h3 className="text-xl sm:text-2xl font-black tracking-tighter mb-2">No programs found</h3>
-//             <p className="text-xs sm:text-sm text-muted-foreground mb-4 sm:mb-6">Try adjusting your filters or search query</p>
-//             <Button onClick={clearFilters} variant="outline" className="rounded-full text-sm sm:text-base">Clear all filters</Button>
-//           </div>
-//         ) : (
-//           <>
-//             <div className={cn(
-//               "grid gap-3 sm:gap-4 md:gap-6 lg:gap-8",
-//               viewType === "grid" ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3" : "grid-cols-1"
-//             )}>
-//               {visibleCourses.map((course) => (
-//                 <CourseCard key={course.id} program={course} viewType={viewType} />
-//               ))}
-//             </div>
-
-//             {/* Load More */}
-//             {hasMore && (
-//               <div className="text-center mt-8 sm:mt-10 md:mt-12">
-//                 <Button
-//                   onClick={loadMore}
-//                   disabled={isLoading}
-//                   variant="outline"
-//                   className="rounded-full px-6 sm:px-8 py-3 sm:py-4 font-black text-sm sm:text-base group"
-//                 >
-//                   {isLoading ? (
-//                     <Loader2 className="w-4 h-4 animate-spin" />
-//                   ) : (
-//                     <>
-//                       Load More Programs
-//                       <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 ml-1.5 sm:ml-2 group-hover:translate-x-1 transition-transform" />
-//                     </>
-//                   )}
-//                 </Button>
-//               </div>
-//             )}
-//           </>
-//         )}
-
-//         {/* Bottom CTA - Mobile Optimized */}
-//         <div className="mt-12 sm:mt-16 md:mt-20 text-center">
-//           <div className="bg-card rounded-xl sm:rounded-2xl border border-border hover:border-primary-300 transition-all p-6 sm:p-8 md:p-10 max-w-2xl mx-auto">
-//             <h3 className="text-xl sm:text-2xl font-black mb-2 sm:mb-3">Not Sure Where to Begin?</h3>
-//             <p className="text-sm sm:text-base text-muted-foreground mb-4 sm:mb-6 px-2">
-//              {` Schedule a free assessment with our academic advisors. We'll help you find the perfect program for your journey.`}
-//             </p>
-//             <Link href="/assessment">
-//               <Button className="rounded-full px-6 sm:px-8 py-3 sm:py-4 font-black text-sm sm:text-base bg-primary-700 hover:bg-primary-800">
-//                 BOOK FREE ASSESSMENT
-//                 <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 ml-1.5 sm:ml-2" />
-//               </Button>
-//             </Link>
-//           </div>
-//         </div>
-//       </div>
-//     </main>
-//   );
-// }
-
-
-
-
-
-
-
-
-
-
-
-
-
 // app/(public)/courses/page.tsx
-import { prisma } from "@/lib/prisma";
-import { Reveal } from "@/components/shared/section-animation";
-import {
-  Landmark,
+"use client";
 
+import { useState, useMemo } from "react";
+import { motion } from "framer-motion";
+import {
+  Search,
+  Filter,
+  X,
+  Sparkles,
   ArrowRight,
   Loader2,
   BookOpen,
-  Shield,
+  Mic,
+  Globe,
+  GraduationCap,
+  Heart,
   Users,
   Star,
+  Shield,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Reveal } from "@/components/shared/section-animation";
 import Link from "next/link";
-import { Suspense } from "react";
-import type { Metadata } from "next";
-import { CoursesClient } from "./courses-client";
+import { cn } from "@/lib/utils";
+import { CourseCard } from "@/components/public/courses/course-card";
 
-// ==================== METADATA ====================
-export const metadata: Metadata = {
-  title: "Sacred Pathways | Quran, Tajweed & Arabic Courses | Al-Maysaroh",
-  description:
-    "Explore our Sanad-based Quranic programs: Hifz memorization, Tajweed mastery, Classical Arabic, and Ijazah certification. Learn 1-on-1 with certified scholars.",
-  keywords: [
-    "Quran courses",
-    "Hifz program",
-    "Tajweed classes",
-    "Arabic language",
-    "Ijazah certification",
-    "online Quran learning",
-    "Sanad",
-  ],
-  openGraph: {
-    title: "Sacred Pathways | Al-Maysaroh Course Catalog",
-    description:
-      "Sacred knowledge, made accessible. Browse our scholarly curriculum of Quran, Tajweed, Arabic, and Islamic Studies programs.",
-    url: "https://almaysaroh.com/courses",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Sacred Pathways | Al-Maysaroh",
-    description: "Browse our Sanad-based Quranic programs",
-  },
-};
-
-export const revalidate = 3600;
-
-// ==================== MOCK DATA (Fallback) ====================
-const MOCK_DATA = [
+// Course Data - Updated to match the CourseCard props
+const ALL_COURSES = [
   {
     id: "hifz",
     name: "Hifz Al-Quran",
@@ -1396,7 +822,7 @@ const MOCK_DATA = [
     iconName: "BookOpen",
     color: "from-purple-600 to-indigo-700",
     href: "/courses/hifz",
-    isMock: true,
+    isMock: false,
   },
   {
     id: "tajweed",
@@ -1416,7 +842,7 @@ const MOCK_DATA = [
     iconName: "Mic",
     color: "from-blue-600 to-cyan-600",
     href: "/courses/tajweed",
-    isMock: true,
+    isMock: false,
   },
   {
     id: "group-tajweed",
@@ -1437,7 +863,7 @@ const MOCK_DATA = [
     iconName: "Users",
     color: "from-teal-600 to-cyan-600",
     href: "/courses/group-tajweed",
-    isMock: true,
+    isMock: false,
   },
   {
     id: "arabic",
@@ -1457,7 +883,7 @@ const MOCK_DATA = [
     iconName: "Globe",
     color: "from-amber-600 to-orange-600",
     href: "/courses/arabic",
-    isMock: true,
+    isMock: false,
   },
   {
     id: "tafsir",
@@ -1477,7 +903,7 @@ const MOCK_DATA = [
     iconName: "GraduationCap",
     color: "from-slate-600 to-gray-700",
     href: "/courses/tafsir",
-    isMock: true,
+    isMock: false,
   },
   {
     id: "qiroah",
@@ -1498,7 +924,7 @@ const MOCK_DATA = [
     iconName: "BookOpen",
     color: "from-teal-600 to-emerald-600",
     href: "/courses/qiroah",
-    isMock: true,
+    isMock: false,
   },
   {
     id: "group-qiroah",
@@ -1519,7 +945,7 @@ const MOCK_DATA = [
     iconName: "Users",
     color: "from-emerald-600 to-teal-600",
     href: "/courses/group-qiroah",
-    isMock: true,
+    isMock: false,
   },
   {
     id: "juz-amma",
@@ -1540,7 +966,7 @@ const MOCK_DATA = [
     iconName: "Star",
     color: "from-amber-600 to-orange-600",
     href: "/courses/juz-amma",
-    isMock: true,
+    isMock: false,
   },
   {
     id: "juz-tabarak",
@@ -1560,7 +986,7 @@ const MOCK_DATA = [
     iconName: "Moon",
     color: "from-purple-600 to-indigo-600",
     href: "/courses/juz-tabarak",
-    isMock: true,
+    isMock: false,
   },
   {
     id: "murojaah",
@@ -1580,111 +1006,112 @@ const MOCK_DATA = [
     iconName: "RefreshCw",
     color: "from-rose-600 to-pink-600",
     href: "/courses/murojaah",
-    isMock: true,
+    isMock: false,
   },
 ];
 
-// ==================== HELPER FUNCTIONS ====================
-function getIconNameForCategory(category: string): string {
-  const map: Record<string, string> = {
-    QURAN: "BookOpen",
-    TAJWEED: "Mic",
-    ARABIC: "Globe",
-    TAFSIR: "GraduationCap",
-    CHILDREN: "Heart",
-  };
-  return map[category] || "BookOpen";
-}
+// Categories
+const CATEGORIES = [
+  { id: "all", name: "All Programs", icon: BookOpen, count: 0 },
+  { id: "QURAN", name: "Quran", icon: BookOpen, count: 0 },
+  { id: "TAJWEED", name: "Tajweed", icon: Mic, count: 0 },
+  { id: "ARABIC", name: "Arabic", icon: Globe, count: 0 },
+  { id: "TAFSIR", name: "Tafsir", icon: GraduationCap, count: 0 },
+  { id: "CHILDREN", name: "Children", icon: Heart, count: 0 },
+];
 
-function getColorForCategory(category: string): string {
-  const map: Record<string, string> = {
-    QURAN: "from-purple-600 to-indigo-700",
-    TAJWEED: "from-blue-600 to-cyan-600",
-    ARABIC: "from-amber-600 to-orange-600",
-    TAFSIR: "from-slate-600 to-gray-700",
-    CHILDREN: "from-emerald-600 to-teal-600",
-  };
-  return map[category] || "from-primary-600 to-primary-800";
-}
+// Sort Options
+const SORT_OPTIONS = [
+  { id: "popular", name: "Most Popular" },
+  { id: "rating", name: "Highest Rated" },
+  { id: "price-low", name: "Price: Low to High" },
+  { id: "price-high", name: "Price: High to Low" },
+  { id: "students", name: "Most Students" },
+];
 
-// ==================== TYPES ====================
-type Program = {
-  id: string;
-  name: string;
-  description: string;
-  category: string;
-  subcategory: string;
-  duration: string;
-  level: string;
-  format: string;
-  basePrice: number;
-  price: string;
-  rating: number;
-  students: number;
-  features: string[];
-  popular: boolean;
-  badge?: string;
-  iconName: string;
-  color: string;
-  href: string;
-  isMock: boolean;
-};
+export default function CoursesPage() {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [sortBy, setSortBy] = useState("popular");
+  const [visibleCount, setVisibleCount] = useState(6);
+  const [isLoading, setIsLoading] = useState(false);
+  const [viewType, setViewType] = useState<"grid" | "list">("grid");
 
-// ==================== MAIN PAGE COMPONENT ====================
-export default async function CoursesPage() {
-  let dbPrograms: Program[] = [];
+  // Calculate category counts
+  const categoriesWithCounts = CATEGORIES.map((cat) => ({
+    ...cat,
+    count: cat.id === "all" 
+      ? ALL_COURSES.length 
+      : ALL_COURSES.filter((c) => c.category === cat.id).length,
+  }));
 
-  try {
-    const fetched = await prisma.pricingPlan.findMany({
-      where: { isActive: true },
-      orderBy: { orderIndex: "asc" },
+  // Filter and sort courses
+  const filteredCourses = useMemo(() => {
+    let filtered = ALL_COURSES.filter((course) => {
+      const matchesCategory = selectedCategory === "all" || course.category === selectedCategory;
+      const matchesSearch = searchQuery === "" || 
+        course.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        course.description.toLowerCase().includes(searchQuery.toLowerCase());
+      return matchesCategory && matchesSearch;
     });
 
-    dbPrograms = fetched.map((p) => ({
-      id: p.id,
-      name: p.name,
-      description: p.description || "",
-      category: p.category as string,
-      subcategory: p.category || "",
-      duration: p.minDuration ? `${p.minDuration}-${p.maxDuration || ""} months` : "Flexible",
-      level: p.level || "All Levels",
-      format: (p as any).format || "1-on-1",
-      basePrice: Number(p.basePrice),
-      price: `$${Number(p.basePrice)}+`,
-      rating: (p as any).rating || 4.8,
-      students: (p as any).students || 0,
-      features: p.features || [],
-      popular: (p as any).popular || false,
-      badge: (p as any).badge || "",
-      iconName: getIconNameForCategory(p.category),
-      color: getColorForCategory(p.category),
-      href: `/courses/${p.id}`,
-      isMock: false,
-    }));
-  } catch (error) {
-    console.error("DB connection error - using mock data");
-  }
+    // Sort
+    switch (sortBy) {
+      case "popular":
+        filtered.sort((a, b) => (b.popular ? 1 : 0) - (a.popular ? 1 : 0));
+        break;
+      case "rating":
+        filtered.sort((a, b) => b.rating - a.rating);
+        break;
+      case "price-low":
+        filtered.sort((a, b) => a.basePrice - b.basePrice);
+        break;
+      case "price-high":
+        filtered.sort((a, b) => b.basePrice - a.basePrice);
+        break;
+      case "students":
+        filtered.sort((a, b) => b.students - a.students);
+        break;
+    }
+    return filtered;
+  }, [selectedCategory, searchQuery, sortBy]);
 
-  // Merge DB programs with mock data (DB takes precedence)
-  const dbIds = new Set(dbPrograms.map(p => p.id));
-  const additionalMock = MOCK_DATA.filter(m => !dbIds.has(m.id));
-  const allPrograms: Program[] = [...dbPrograms, ...additionalMock];
+  const visibleCourses = filteredCourses.slice(0, visibleCount);
+  const hasMore = visibleCount < filteredCourses.length;
+
+  const clearFilters = () => {
+    setSearchQuery("");
+    setSelectedCategory("all");
+    setSortBy("popular");
+  };
+
+  const activeFilterCount = [
+    selectedCategory !== "all" ? 1 : 0,
+    searchQuery ? 1 : 0,
+    sortBy !== "popular" ? 1 : 0,
+  ].reduce((a, b) => a + b, 0);
+
+  const loadMore = () => {
+    setIsLoading(true);
+    setTimeout(() => {
+      setVisibleCount((prev) => prev + 6);
+      setIsLoading(false);
+    }, 500);
+  };
 
   return (
-    <main className="pt-24 sm:pt-28 md:pt-32 pb-12 sm:pb-16 md:pb-20 bg-background relative overflow-hidden">
-      {/* Background Elements */}
-      <div className="absolute inset-0 opacity-[0.02] bg-[url('/islamic-pattern.svg')] bg-center bg-repeat" style={{ backgroundSize: "300px" }} />
+    <main className="pt-30 pb-12 sm:pb-16 md:pb-20 bg-background relative overflow-hidden">
+      {/* Background Elements - Hidden on mobile for performance */}
+      <div className="hidden sm:block absolute inset-0 opacity-[0.02] bg-[url('/islamic-pattern.svg')] bg-center bg-repeat" style={{ backgroundSize: "300px" }} />
       <div className="absolute top-0 right-0 w-[300px] sm:w-[500px] h-[300px] sm:h-[500px] bg-primary-700/5 rounded-full blur-[80px] sm:blur-[120px] -z-10" />
       <div className="absolute bottom-0 left-0 w-[300px] sm:w-[500px] h-[300px] sm:h-[500px] bg-primary-700/5 rounded-full blur-[80px] sm:blur-[120px] -z-10" />
 
       <div className="container mx-auto px-4 sm:px-6">
-      
-
-        {/* Hero Section */}
+        {/* Hero Section - Mobile Optimized */}
         <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-12 md:mb-16">
           <Reveal>
             <div className="inline-flex items-center gap-1.5 sm:gap-2 text-primary-700 font-black text-[8px] sm:text-[10px] uppercase tracking-[0.2em] sm:tracking-[0.3em] mb-4 sm:mb-6">
-              <Landmark className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> Scholarly Curriculum {new Date().getFullYear()}
+              <Sparkles className="w-3 h-3 sm:w-4 sm:h-4" /> Scholarly Curriculum {new Date().getFullYear()}
             </div>
             <h1 className="text-4xl xs:text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tighter font-heading leading-[1.1] mb-4 sm:mb-6 px-2">
               Sacred <span className="text-primary-700 italic">Pathways</span>
@@ -1696,38 +1123,182 @@ export default async function CoursesPage() {
           </Reveal>
         </div>
 
-        {/* Stats Bar */}
+        {/* Stats Bar - Mobile First Grid */}
         <div className="grid grid-cols-2 xs:grid-cols-4 gap-2 sm:gap-3 md:gap-4 mb-8 sm:mb-12">
           {[
-            { label: "Sacred Programs", value: allPrograms.length, icon: BookOpen },
+            { label: "Sacred Programs", value: ALL_COURSES.length, icon: BookOpen },
             { label: "Sanad-Based", value: "100%", icon: Shield },
             { label: "Students Enrolled", value: "100+", icon: Users },
             { label: "Avg Rating", value: "4.8", icon: Star },
           ].map((stat, i) => (
-            <div key={i} className="p-2 sm:p-3 md:p-4 rounded-xl sm:rounded-2xl bg-linear-to-br from-primary-50/50 to-indigo-50/50 dark:from-primary-950/20 dark:to-indigo-950/20 border border-primary-100 dark:border-primary-800 text-center">
+            <motion.div key={i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }} className="p-2 sm:p-3 md:p-4 rounded-xl sm:rounded-2xl bg-linear-to-br from-primary-50/50 to-indigo-50/50 dark:from-primary-950/20 dark:to-indigo-950/20 border border-primary-100 dark:border-primary-800 text-center">
               <stat.icon className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 text-primary-600 mx-auto mb-1 sm:mb-1.5 md:mb-2" />
               <div className="text-base sm:text-xl md:text-2xl lg:text-3xl font-black text-primary-600">{stat.value}</div>
               <div className="text-[8px] sm:text-[10px] md:text-xs text-muted-foreground mt-0.5 sm:mt-1">{stat.label}</div>
-            </div>
+            </motion.div>
           ))}
         </div>
 
-        {/* Client Component with all interactive features */}
-        <Suspense
-          fallback={
-            <div className="flex justify-center items-center py-20">
-              <Loader2 className="w-8 h-8 animate-spin text-primary-700" />
-            </div>
-          }
-        >
-          <CoursesClient  initialPrograms={allPrograms} />
-        </Suspense>
+        {/* Search & Filters - Mobile Optimized */}
+        <div className="space-y-3 sm:space-y-4 mb-8 sm:mb-12">
+          {/* Search Bar */}
+          <div className="relative max-w-full sm:max-w-md">
+            <Search className="absolute left-3 sm:left-4 top-1/2 -translate-y-1/2 w-3.5 h-3.5 sm:w-4 sm:h-4 text-muted-foreground" />
+            <Input
+              type="text"
+              placeholder="Search programs..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="pl-9 sm:pl-11 pr-8 sm:pr-12 py-3.5 sm:py-5 md:py-6 rounded-full border-2 border-primary-100/50 focus:border-primary-700 transition-all bg-background text-sm sm:text-base"
+            />
+            {searchQuery && (
+              <button
+                onClick={() => setSearchQuery("")}
+                className="absolute right-3 sm:right-4 top-1/2 -translate-y-1/2 touch-target"
+              >
+                <X className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-muted-foreground hover:text-primary-700 transition-colors" />
+              </button>
+            )}
+          </div>
 
-        {/* Bottom CTA */}
+          {/* Category Pills - Horizontal Scroll on Mobile with better UX */}
+          <div className="overflow-x-auto pb-2 scrollbar-hide -mx-4 px-4">
+            <div className="flex items-center gap-1.5 sm:gap-2 min-w-max">
+              <Filter className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary-600 mr-0.5 sm:mr-1 shrink-0" />
+              {categoriesWithCounts.map((cat) => {
+                const Icon = cat.icon;
+                return (
+                  <button
+                    key={cat.id}
+                    onClick={() => setSelectedCategory(cat.id)}
+                    className={cn(
+                      "inline-flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-full text-[9px] sm:text-xs font-black uppercase tracking-wider transition-all whitespace-nowrap touch-target",
+                      selectedCategory === cat.id
+                        ? "bg-primary-700 text-white shadow-md"
+                        : "bg-primary-50 dark:bg-primary-950/40 text-primary-700 hover:bg-primary-100 dark:hover:bg-primary-900/60 border border-primary-100 dark:border-primary-800"
+                    )}
+                  >
+                    <Icon className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+                    {cat.name}
+                    <span className={cn(
+                      "text-[8px] sm:text-[10px]",
+                      selectedCategory === cat.id ? "text-white/70" : "text-primary-700/70"
+                    )}>
+                      ({cat.count})
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Sort, View Toggle & Clear Filters - Stack on mobile */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 pt-1 sm:pt-2">
+            <div className="flex items-center gap-2 sm:gap-3">
+              <span className="text-[10px] sm:text-xs font-black uppercase tracking-wider text-muted-foreground">Sort by:</span>
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value)}
+                className="px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-full text-[10px] sm:text-xs font-black border border-border bg-background focus:border-primary-700 outline-none transition-all"
+              >
+                {SORT_OPTIONS.map((opt) => (
+                  <option key={opt.id} value={opt.id}>{opt.name}</option>
+                ))}
+              </select>
+            </div>
+
+            {/* View Toggle - Better touch targets on mobile */}
+            <div className="flex items-center gap-1 p-0.5 sm:p-1 rounded-full bg-muted/30 border border-border self-start sm:self-auto">
+              <button
+                onClick={() => setViewType("grid")}
+                className={cn(
+                  "px-3 sm:px-3 py-1.5 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-black transition-all touch-target",
+                  viewType === "grid" ? "bg-primary-700 text-white" : "hover:bg-primary-100"
+                )}
+              >
+                Grid
+              </button>
+              <button
+                onClick={() => setViewType("list")}
+                className={cn(
+                  "px-3 sm:px-3 py-1.5 sm:py-1.5 rounded-full text-[10px] sm:text-xs font-black transition-all touch-target",
+                  viewType === "list" ? "bg-primary-700 text-white" : "hover:bg-primary-100"
+                )}
+              >
+                List
+              </button>
+            </div>
+
+            {activeFilterCount > 0 && (
+              <Button
+                variant="ghost"
+                onClick={clearFilters}
+                className="text-[10px] sm:text-xs text-primary-700 hover:text-primary-800 gap-1 px-2 sm:px-3 py-1.5 h-auto self-start sm:self-auto"
+              >
+                <X className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+                Clear ({activeFilterCount})
+              </Button>
+            )}
+          </div>
+        </div>
+
+        {/* Results Count */}
+        <div className="flex items-center justify-between mb-4 sm:mb-6">
+          <p className="text-[11px] sm:text-sm text-muted-foreground">
+            Showing <span className="font-black text-primary-700">{visibleCourses.length}</span> of{" "}
+            <span className="font-black text-primary-700">{filteredCourses.length}</span> programs
+          </p>
+        </div>
+
+        {/* Course Grid/List */}
+        {filteredCourses.length === 0 ? (
+          <div className="text-center py-12 sm:py-16 md:py-20">
+            <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto rounded-full bg-primary-50 dark:bg-primary-950/40 flex items-center justify-center mb-3 sm:mb-4">
+              <Search className="w-8 h-8 sm:w-10 sm:h-10 text-primary-700/50" />
+            </div>
+            <h3 className="text-xl sm:text-2xl font-black tracking-tighter mb-2">No programs found</h3>
+            <p className="text-xs sm:text-sm text-muted-foreground mb-4 sm:mb-6">Try adjusting your filters or search query</p>
+            <Button onClick={clearFilters} variant="outline" className="rounded-full text-sm sm:text-base">Clear all filters</Button>
+          </div>
+        ) : (
+          <>
+            <div className={cn(
+              "grid gap-3 sm:gap-4 md:gap-6 lg:gap-8",
+              viewType === "grid" ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3" : "grid-cols-1"
+            )}>
+              {visibleCourses.map((course) => (
+                <CourseCard key={course.id} program={course} viewType={viewType} />
+              ))}
+            </div>
+
+            {/* Load More */}
+            {hasMore && (
+              <div className="text-center mt-8 sm:mt-10 md:mt-12">
+                <Button
+                  onClick={loadMore}
+                  disabled={isLoading}
+                  variant="outline"
+                  className="rounded-full px-6 sm:px-8 py-3 sm:py-4 font-black text-sm sm:text-base group"
+                >
+                  {isLoading ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <>
+                      Load More Programs
+                      <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 ml-1.5 sm:ml-2 group-hover:translate-x-1 transition-transform" />
+                    </>
+                  )}
+                </Button>
+              </div>
+            )}
+          </>
+        )}
+
+        {/* Bottom CTA - Mobile Optimized */}
         <div className="mt-12 sm:mt-16 md:mt-20 text-center">
-          <div className="institutional-card p-6 sm:p-8 md:p-10 max-w-2xl mx-auto">
+          <div className="bg-card rounded-xl sm:rounded-2xl border border-border hover:border-primary-300 transition-all p-6 sm:p-8 md:p-10 max-w-2xl mx-auto">
             <h3 className="text-xl sm:text-2xl font-black mb-2 sm:mb-3">Not Sure Where to Begin?</h3>
-            <p className="text-sm sm:text-base text-muted-foreground mb-4 sm:mb-6">
+            <p className="text-sm sm:text-base text-muted-foreground mb-4 sm:mb-6 px-2">
              {` Schedule a free assessment with our academic advisors. We'll help you find the perfect program for your journey.`}
             </p>
             <Link href="/assessment">
@@ -1742,3 +1313,437 @@ export default async function CoursesPage() {
     </main>
   );
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// // app/(public)/courses/page.tsx
+// import { prisma } from "@/lib/prisma";
+// import { Reveal } from "@/components/shared/section-animation";
+// import {
+//   Landmark,
+
+//   ArrowRight,
+//   Loader2,
+//   BookOpen,
+//   Shield,
+//   Users,
+//   Star,
+// } from "lucide-react";
+// import { Button } from "@/components/ui/button";
+// import Link from "next/link";
+// import { Suspense } from "react";
+// import type { Metadata } from "next";
+// import { CoursesClient } from "./courses-client";
+
+// // ==================== METADATA ====================
+// export const metadata: Metadata = {
+//   title: "Sacred Pathways | Quran, Tajweed & Arabic Courses | Al-Maysaroh",
+//   description:
+//     "Explore our Sanad-based Quranic programs: Hifz memorization, Tajweed mastery, Classical Arabic, and Ijazah certification. Learn 1-on-1 with certified scholars.",
+//   keywords: [
+//     "Quran courses",
+//     "Hifz program",
+//     "Tajweed classes",
+//     "Arabic language",
+//     "Ijazah certification",
+//     "online Quran learning",
+//     "Sanad",
+//   ],
+//   openGraph: {
+//     title: "Sacred Pathways | Al-Maysaroh Course Catalog",
+//     description:
+//       "Sacred knowledge, made accessible. Browse our scholarly curriculum of Quran, Tajweed, Arabic, and Islamic Studies programs.",
+//     url: "https://almaysaroh.com/courses",
+//     type: "website",
+//   },
+//   twitter: {
+//     card: "summary_large_image",
+//     title: "Sacred Pathways | Al-Maysaroh",
+//     description: "Browse our Sanad-based Quranic programs",
+//   },
+// };
+
+// export const revalidate = 3600;
+
+// // ==================== MOCK DATA (Fallback) ====================
+// const MOCK_DATA = [
+//   {
+//     id: "hifz",
+//     name: "Hifz Al-Quran",
+//     description: "Complete Quran memorization with Ijazah certification. Master the entire Quran with proper Tajweed.",
+//     category: "QURAN",
+//     subcategory: "Hifz",
+//     duration: "2-3 years",
+//     level: "All Levels",
+//     format: "1-on-1",
+//     basePrice: 2.25,
+//     price: "$2.25+",
+//     rating: 4.9,
+//     students: 156,
+//     features: ["Ijazah Certification", "Daily Revision", "Progress Tracking", "Sanad Chain"],
+//     popular: true,
+//     badge: "Most Popular",
+//     iconName: "BookOpen",
+//     color: "from-purple-600 to-indigo-700",
+//     href: "/courses/hifz",
+//     isMock: true,
+//   },
+//   {
+//     id: "tajweed",
+//     name: "Tajweed Al-Itqan",
+//     description: "Scientific mastery of Quranic recitation rules. Perfect your pronunciation with expert guidance.",
+//     category: "TAJWEED",
+//     subcategory: "Recitation",
+//     duration: "6 months",
+//     level: "Beginner to Advanced",
+//     format: "1-on-1",
+//     basePrice: 2,
+//     price: "$2+",
+//     rating: 4.8,
+//     students: 203,
+//     features: ["Audio Analysis", "Live Correction", "Mistake Tracking", "Certificate"],
+//     popular: false,
+//     iconName: "Mic",
+//     color: "from-blue-600 to-cyan-600",
+//     href: "/courses/tajweed",
+//     isMock: true,
+//   },
+//   {
+//     id: "group-tajweed",
+//     name: "Group Tajweed",
+//     description: "Master Tajweed rules in a supportive group environment. Learn with peers and share the journey.",
+//     category: "TAJWEED",
+//     subcategory: "Group",
+//     duration: "6-9 months",
+//     level: "Beginner to Intermediate",
+//     format: "Group (4-6)",
+//     basePrice: 6,
+//     price: "$6",
+//     rating: 4.7,
+//     students: 89,
+//     features: ["Peer Learning", "Group Practice", "Lower Cost", "Community Support"],
+//     popular: true,
+//     badge: "Best Value",
+//     iconName: "Users",
+//     color: "from-teal-600 to-cyan-600",
+//     href: "/courses/group-tajweed",
+//     isMock: true,
+//   },
+//   {
+//     id: "arabic",
+//     name: "Quranic Arabic",
+//     description: "Understand the Quran in its original language. Master classical Arabic grammar and vocabulary.",
+//     category: "ARABIC",
+//     subcategory: "Language",
+//     duration: "1 year",
+//     level: "Beginner",
+//     format: "Group Sessions",
+//     basePrice: 2,
+//     price: "$2+",
+//     rating: 4.7,
+//     students: 312,
+//     features: ["Quranic Vocabulary", "Grammar Foundation", "Tafsir Integration", "Certificate"],
+//     popular: false,
+//     iconName: "Globe",
+//     color: "from-amber-600 to-orange-600",
+//     href: "/courses/arabic",
+//     isMock: true,
+//   },
+//   {
+//     id: "tafsir",
+//     name: "Tafsir Al-Mubin",
+//     description: "Deep Quranic understanding through classical exegesis. Study Tafsir from primary sources.",
+//     category: "TAFSIR",
+//     subcategory: "Exegesis",
+//     duration: "1.5 years",
+//     level: "Advanced",
+//     format: "1-on-1",
+//     basePrice: 2,
+//     price: "$2+",
+//     rating: 4.9,
+//     students: 78,
+//     features: ["Classical Sources", "Thematic Studies", "Scholarly Mentorship", "Research Paper"],
+//     popular: false,
+//     iconName: "GraduationCap",
+//     color: "from-slate-600 to-gray-700",
+//     href: "/courses/tafsir",
+//     isMock: true,
+//   },
+//   {
+//     id: "qiroah",
+//     name: "Qiro'ah Program",
+//     description: "Learn to read the Quran with confidence. Perfect for beginners and those who want to improve.",
+//     category: "QURAN",
+//     subcategory: "Reading",
+//     duration: "6-12 months",
+//     level: "Beginner",
+//     format: "1-on-1",
+//     basePrice: 2,
+//     price: "$2+",
+//     rating: 4.8,
+//     students: 156,
+//     features: ["Letter Recognition", "Fluency Practice", "Patient Instruction", "Progress Tracking"],
+//     popular: true,
+//     badge: "Popular",
+//     iconName: "BookOpen",
+//     color: "from-teal-600 to-emerald-600",
+//     href: "/courses/qiroah",
+//     isMock: true,
+//   },
+//   {
+//     id: "group-qiroah",
+//     name: "Group Qiro'ah",
+//     description: "Fun, interactive Quran reading for children and beginners. Learn with peers in a supportive environment.",
+//     category: "CHILDREN",
+//     subcategory: "Reading",
+//     duration: "6-9 months",
+//     level: "Beginner",
+//     format: "Group (4-10)",
+//     basePrice: 6,
+//     price: "$6",
+//     rating: 4.8,
+//     students: 89,
+//     features: ["Interactive Games", "Reward System", "Parent Portal", "Weekly Updates"],
+//     popular: true,
+//     badge: "For Kids",
+//     iconName: "Users",
+//     color: "from-emerald-600 to-teal-600",
+//     href: "/courses/group-qiroah",
+//     isMock: true,
+//   },
+//   {
+//     id: "juz-amma",
+//     name: "Juz Amma",
+//     description: "Memorize the 30th Juz with proper Tajweed and understanding. Perfect for beginners starting their Hifz journey.",
+//     category: "QURAN",
+//     subcategory: "Memorization",
+//     duration: "6-12 months",
+//     level: "Beginner",
+//     format: "1-on-1",
+//     basePrice: 7,
+//     price: "$7+",
+//     rating: 4.9,
+//     students: 112,
+//     features: ["37 Surahs", "Meaning Explained", "Progress Badges", "Certificate"],
+//     popular: true,
+//     badge: "Popular",
+//     iconName: "Star",
+//     color: "from-amber-600 to-orange-600",
+//     href: "/courses/juz-amma",
+//     isMock: true,
+//   },
+//   {
+//     id: "juz-tabarak",
+//     name: "Juz Tabarak",
+//     description: "Continue your memorization journey with the 29th Juz. Build on Juz Amma with longer surahs.",
+//     category: "QURAN",
+//     subcategory: "Memorization",
+//     duration: "8-12 months",
+//     level: "Intermediate",
+//     format: "Group (4-10)",
+//     basePrice: 8,
+//     price: "$8",
+//     rating: 4.8,
+//     students: 67,
+//     features: ["14 Surahs", "Deep Meanings", "Group Support", "Certificate"],
+//     popular: false,
+//     iconName: "Moon",
+//     color: "from-purple-600 to-indigo-600",
+//     href: "/courses/juz-tabarak",
+//     isMock: true,
+//   },
+//   {
+//     id: "murojaah",
+//     name: "Muroja'ah",
+//     description: "Preserve and perfect your Quran memorization. Structured revision for Huffadh.",
+//     category: "QURAN",
+//     subcategory: "Revision",
+//     duration: "Ongoing",
+//     level: "Advanced",
+//     format: "1-on-1",
+//     basePrice: 9,
+//     price: "$9+",
+//     rating: 4.9,
+//     students: 89,
+//     features: ["Structured Revision", "Weakness Identification", "Ijazah Prep", "Lifelong Preservation"],
+//     popular: false,
+//     iconName: "RefreshCw",
+//     color: "from-rose-600 to-pink-600",
+//     href: "/courses/murojaah",
+//     isMock: true,
+//   },
+// ];
+
+// // ==================== HELPER FUNCTIONS ====================
+// function getIconNameForCategory(category: string): string {
+//   const map: Record<string, string> = {
+//     QURAN: "BookOpen",
+//     TAJWEED: "Mic",
+//     ARABIC: "Globe",
+//     TAFSIR: "GraduationCap",
+//     CHILDREN: "Heart",
+//   };
+//   return map[category] || "BookOpen";
+// }
+
+// function getColorForCategory(category: string): string {
+//   const map: Record<string, string> = {
+//     QURAN: "from-purple-600 to-indigo-700",
+//     TAJWEED: "from-blue-600 to-cyan-600",
+//     ARABIC: "from-amber-600 to-orange-600",
+//     TAFSIR: "from-slate-600 to-gray-700",
+//     CHILDREN: "from-emerald-600 to-teal-600",
+//   };
+//   return map[category] || "from-primary-600 to-primary-800";
+// }
+
+// // ==================== TYPES ====================
+// type Program = {
+//   id: string;
+//   name: string;
+//   description: string;
+//   category: string;
+//   subcategory: string;
+//   duration: string;
+//   level: string;
+//   format: string;
+//   basePrice: number;
+//   price: string;
+//   rating: number;
+//   students: number;
+//   features: string[];
+//   popular: boolean;
+//   badge?: string;
+//   iconName: string;
+//   color: string;
+//   href: string;
+//   isMock: boolean;
+// };
+
+// // ==================== MAIN PAGE COMPONENT ====================
+// export default async function CoursesPage() {
+//   let dbPrograms: Program[] = [];
+
+//   try {
+//     const fetched = await prisma.pricingPlan.findMany({
+//       where: { isActive: true },
+//       orderBy: { orderIndex: "asc" },
+//     });
+
+//     dbPrograms = fetched.map((p) => ({
+//       id: p.id,
+//       name: p.name,
+//       description: p.description || "",
+//       category: p.category as string,
+//       subcategory: p.category || "",
+//       duration: p.minDuration ? `${p.minDuration}-${p.maxDuration || ""} months` : "Flexible",
+//       level: p.level || "All Levels",
+//       format: (p as any).format || "1-on-1",
+//       basePrice: Number(p.basePrice),
+//       price: `$${Number(p.basePrice)}+`,
+//       rating: (p as any).rating || 4.8,
+//       students: (p as any).students || 0,
+//       features: p.features || [],
+//       popular: (p as any).popular || false,
+//       badge: (p as any).badge || "",
+//       iconName: getIconNameForCategory(p.category),
+//       color: getColorForCategory(p.category),
+//       href: `/courses/${p.id}`,
+//       isMock: false,
+//     }));
+//   } catch (error) {
+//     console.error("DB connection error - using mock data");
+//   }
+
+//   // Merge DB programs with mock data (DB takes precedence)
+//   const dbIds = new Set(dbPrograms.map(p => p.id));
+//   const additionalMock = MOCK_DATA.filter(m => !dbIds.has(m.id));
+//   const allPrograms: Program[] = [...dbPrograms, ...additionalMock];
+
+//   return (
+//     <main className="pt-24 sm:pt-28 md:pt-32 pb-12 sm:pb-16 md:pb-20 bg-background relative overflow-hidden">
+//       {/* Background Elements */}
+//       <div className="absolute inset-0 opacity-[0.02] bg-[url('/islamic-pattern.svg')] bg-center bg-repeat" style={{ backgroundSize: "300px" }} />
+//       <div className="absolute top-0 right-0 w-[300px] sm:w-[500px] h-[300px] sm:h-[500px] bg-primary-700/5 rounded-full blur-[80px] sm:blur-[120px] -z-10" />
+//       <div className="absolute bottom-0 left-0 w-[300px] sm:w-[500px] h-[300px] sm:h-[500px] bg-primary-700/5 rounded-full blur-[80px] sm:blur-[120px] -z-10" />
+
+//       <div className="container mx-auto px-4 sm:px-6">
+      
+
+//         {/* Hero Section */}
+//         <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-12 md:mb-16">
+//           <Reveal>
+//             <div className="inline-flex items-center gap-1.5 sm:gap-2 text-primary-700 font-black text-[8px] sm:text-[10px] uppercase tracking-[0.2em] sm:tracking-[0.3em] mb-4 sm:mb-6">
+//               <Landmark className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> Scholarly Curriculum {new Date().getFullYear()}
+//             </div>
+//             <h1 className="text-4xl xs:text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tighter font-heading leading-[1.1] mb-4 sm:mb-6 px-2">
+//               Sacred <span className="text-primary-700 italic">Pathways</span>
+//             </h1>
+//             <p className="text-base sm:text-lg md:text-xl text-muted-foreground font-light max-w-2xl mx-auto px-4">
+//               Al-Maysaroh offers a rigorous, Sanad-based curriculum designed for
+//               those seeking deep connection with the Divine Word through scholarly tradition.
+//             </p>
+//           </Reveal>
+//         </div>
+
+//         {/* Stats Bar */}
+//         <div className="grid grid-cols-2 xs:grid-cols-4 gap-2 sm:gap-3 md:gap-4 mb-8 sm:mb-12">
+//           {[
+//             { label: "Sacred Programs", value: allPrograms.length, icon: BookOpen },
+//             { label: "Sanad-Based", value: "100%", icon: Shield },
+//             { label: "Students Enrolled", value: "100+", icon: Users },
+//             { label: "Avg Rating", value: "4.8", icon: Star },
+//           ].map((stat, i) => (
+//             <div key={i} className="p-2 sm:p-3 md:p-4 rounded-xl sm:rounded-2xl bg-linear-to-br from-primary-50/50 to-indigo-50/50 dark:from-primary-950/20 dark:to-indigo-950/20 border border-primary-100 dark:border-primary-800 text-center">
+//               <stat.icon className="w-3.5 h-3.5 sm:w-4 sm:h-4 md:w-5 md:h-5 text-primary-600 mx-auto mb-1 sm:mb-1.5 md:mb-2" />
+//               <div className="text-base sm:text-xl md:text-2xl lg:text-3xl font-black text-primary-600">{stat.value}</div>
+//               <div className="text-[8px] sm:text-[10px] md:text-xs text-muted-foreground mt-0.5 sm:mt-1">{stat.label}</div>
+//             </div>
+//           ))}
+//         </div>
+
+//         {/* Client Component with all interactive features */}
+//         <Suspense
+//           fallback={
+//             <div className="flex justify-center items-center py-20">
+//               <Loader2 className="w-8 h-8 animate-spin text-primary-700" />
+//             </div>
+//           }
+//         >
+//           <CoursesClient  initialPrograms={allPrograms} />
+//         </Suspense>
+
+//         {/* Bottom CTA */}
+//         <div className="mt-12 sm:mt-16 md:mt-20 text-center">
+//           <div className="institutional-card p-6 sm:p-8 md:p-10 max-w-2xl mx-auto">
+//             <h3 className="text-xl sm:text-2xl font-black mb-2 sm:mb-3">Not Sure Where to Begin?</h3>
+//             <p className="text-sm sm:text-base text-muted-foreground mb-4 sm:mb-6">
+//              {` Schedule a free assessment with our academic advisors. We'll help you find the perfect program for your journey.`}
+//             </p>
+//             <Link href="/assessment">
+//               <Button className="rounded-full px-6 sm:px-8 py-3 sm:py-4 font-black text-sm sm:text-base bg-primary-700 hover:bg-primary-800">
+//                 BOOK FREE ASSESSMENT
+//                 <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 ml-1.5 sm:ml-2" />
+//               </Button>
+//             </Link>
+//           </div>
+//         </div>
+//       </div>
+//     </main>
+//   );
+// }

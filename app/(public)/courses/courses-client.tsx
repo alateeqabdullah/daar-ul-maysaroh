@@ -5,18 +5,29 @@ import { CourseCard } from "@/components/public/courses/course-card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
-import { ArrowRight, BookOpen, Filter, Globe, GraduationCap, Heart, Loader2, Mic, Search, X } from "lucide-react";
-import { useMemo, useState } from "react";
+import {
+  ArrowRight,
+  BookOpen,
+  Filter,
+  Globe,
+  GraduationCap,
+  Heart,
+  Loader2,
+  Mic,
+  Search,
+  X,
+} from "lucide-react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 
- // Categories
- const CATEGORIES = [
-   { id: "all", name: "All Programs", icon: BookOpen, count: 0 },
-   { id: "QURAN", name: "Quran", icon: BookOpen, count: 0 },
-   { id: "TAJWEED", name: "Tajweed", icon: Mic, count: 0 },
-   { id: "ARABIC", name: "Arabic", icon: Globe, count: 0 },
-   { id: "TAFSIR", name: "Tafsir", icon: GraduationCap, count: 0 },
-   { id: "CHILDREN", name: "Children", icon: Heart, count: 0 },
- ];
+// Categories - Fixed IDs to match program categories
+const CATEGORIES = [
+  { id: "all", name: "All Programs", icon: BookOpen },
+  { id: "QURAN", name: "Quran", icon: BookOpen },
+  { id: "TAJWEED", name: "Tajweed", icon: Mic },
+  { id: "ARABIC", name: "Arabic", icon: Globe },
+  { id: "TAFSIR", name: "Tafsir", icon: GraduationCap },
+  { id: "CHILDREN", name: "Children", icon: Heart },
+];
 
 // Sort Options
 const SORT_OPTIONS = [
@@ -61,56 +72,77 @@ export function CoursesClient({ initialPrograms }: CoursesClientProps) {
   const [isLoading, setIsLoading] = useState(false);
   const [viewType, setViewType] = useState<"grid" | "list">("grid");
 
+  // FIX 1: Use useMemo for filtering and sorting (more efficient than useEffect)
+  let filteredPrograms = useMemo(() => {
+    let result = [...initialPrograms];
 
+    // Apply category filter
+    if (selectedCategory !== "all") {
+      result = result.filter(
+        (program) => program.category === selectedCategory,
+      );
+    }
 
-    // Calculate category counts
-  const categoriesWithCounts = CATEGORIES.map((cat) => ({
-    ...cat,
-    count: cat.id === "all" 
-      ? initialPrograms.length 
-      : initialPrograms.filter((c) => c.category === cat.id).length,
-  }));
+    // Apply search filter
+    if (searchQuery.trim() !== "") {
+      const query = searchQuery.toLowerCase();
+      result = result.filter(
+        (program) =>
+          program.name.toLowerCase().includes(query) ||
+          program.description.toLowerCase().includes(query) ||
+          (program.category && program.category.toLowerCase().includes(query)),
+      );
+    }
 
-  // Filter and sort courses
-  const filteredCourses = useMemo(() => {
-    const filtered = initialPrograms.filter((course) => {
-      const matchesCategory =
-        selectedCategory === "all" || course.category === selectedCategory;
-      const matchesSearch =
-        searchQuery === "" ||
-        course.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        course.description.toLowerCase().includes(searchQuery.toLowerCase());
-      return matchesCategory && matchesSearch;
-    });
-
+    // Apply sorting
+    const sorted = [...result];
     switch (sortBy) {
       case "popular":
-        filtered.sort((a, b) => (b.popular ? 1 : 0) - (a.popular ? 1 : 0));
+        sorted.sort((a, b) => (b.popular ? 1 : 0) - (a.popular ? 1 : 0));
         break;
       case "rating":
-        filtered.sort((a, b) => b.rating - a.rating);
+        sorted.sort((a, b) => (b.rating || 0) - (a.rating || 0));
         break;
       case "price-low":
-        filtered.sort((a, b) => a.basePrice - b.basePrice);
+        sorted.sort((a, b) => (a.basePrice || 0) - (b.basePrice || 0));
         break;
       case "price-high":
-        filtered.sort((a, b) => b.basePrice - a.basePrice);
+        sorted.sort((a, b) => (b.basePrice || 0) - (a.basePrice || 0));
         break;
       case "students":
-        filtered.sort((a, b) => b.students - a.students);
+        sorted.sort((a, b) => (b.students || 0) - (a.students || 0));
         break;
+      default:
+        sorted.sort((a, b) => (b.popular ? 1 : 0) - (a.popular ? 1 : 0));
     }
-    return filtered;
+
+    return sorted;
   }, [initialPrograms, selectedCategory, searchQuery, sortBy]);
 
-  const visibleCourses = filteredCourses.slice(0, visibleCount);
-  const hasMore = visibleCount < filteredCourses.length;
+  // FIX 2: Get visible programs based on filtered results
+  const visiblePrograms = useMemo(() => {
+    return filteredPrograms.slice(0, visibleCount);
+  }, [filteredPrograms, visibleCount]);
 
-  const clearFilters = () => {
+  // FIX 3: Calculate category counts properly
+  const categoriesWithCounts = useMemo(() => {
+    return CATEGORIES.map((cat) => ({
+      ...cat,
+      count:
+        cat.id === "all"
+          ? initialPrograms.length
+          : initialPrograms.filter((c) => c.category === cat.id).length,
+    }));
+  }, [initialPrograms]);
+
+  const hasMore = visibleCount < filteredPrograms.length;
+
+  const clearFilters = useCallback(() => {
     setSearchQuery("");
     setSelectedCategory("all");
     setSortBy("popular");
-  };
+    setVisibleCount(6);
+  }, []);
 
   const activeFilterCount = [
     selectedCategory !== "all" ? 1 : 0,
@@ -118,13 +150,24 @@ export function CoursesClient({ initialPrograms }: CoursesClientProps) {
     sortBy !== "popular" ? 1 : 0,
   ].reduce((a, b) => a + b, 0);
 
-  const loadMore = () => {
+  const loadMore = useCallback(() => {
     setIsLoading(true);
+    // Simulate loading delay
     setTimeout(() => {
       setVisibleCount((prev) => prev + 6);
       setIsLoading(false);
     }, 500);
-  };
+  }, []);
+
+  // Debug: Log when filters change (remove in production)
+  useEffect(() => {
+    console.log("Filters changed:", {
+      selectedCategory,
+      searchQuery,
+      sortBy,
+      filteredCount: filteredPrograms.length,
+    });
+  }, [selectedCategory, searchQuery, sortBy, filteredPrograms.length]);
 
   return (
     <div className="space-y-4 sm:space-y-6">
@@ -142,44 +185,47 @@ export function CoursesClient({ initialPrograms }: CoursesClientProps) {
           <button
             onClick={() => setSearchQuery("")}
             className="absolute right-3 sm:right-4 top-1/2 -translate-y-1/2"
+            aria-label="Clear search"
           >
             <X className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-muted-foreground hover:text-primary-700 transition-colors" />
           </button>
         )}
       </div>
 
-   
-      {/* Category Pills - Horizontal Scroll on Mobile with better UX */}
-          <div className="overflow-x-auto pb-2 scrollbar-hide -mx-4 px-4">
-            <div className="flex items-center gap-1.5 sm:gap-2 min-w-max">
-              <Filter className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary-600 mr-0.5 sm:mr-1 shrink-0" />
-              {categoriesWithCounts.map((cat) => {
-                const Icon = cat.icon;
-                return (
-                  <button
-                    key={cat.id}
-                    onClick={() => setSelectedCategory(cat.id)}
-                    className={cn(
-                      "inline-flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-full text-[9px] sm:text-xs font-black uppercase tracking-wider transition-all whitespace-nowrap touch-target",
-                      selectedCategory === cat.id
-                        ? "bg-primary-700 text-white shadow-md"
-                        : "bg-primary-50 dark:bg-primary-950/40 text-primary-700 hover:bg-primary-100 dark:hover:bg-primary-900/60 border border-primary-100 dark:border-primary-800"
-                    )}
-                  >
-                    <Icon className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
-                    {cat.name}
-                    <span className={cn(
-                      "text-[8px] sm:text-[10px]",
-                      selectedCategory === cat.id ? "text-white/70" : "text-primary-700/70"
-                    )}>
-                      ({cat.count})
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
+      {/* Category Pills */}
+      <div className="overflow-x-auto pb-2 scrollbar-hide -mx-4 px-4">
+        <div className="flex items-center gap-1.5 sm:gap-2 min-w-max">
+          <Filter className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary-600 mr-0.5 sm:mr-1 shrink-0" />
+          {categoriesWithCounts.map((cat) => {
+            const Icon = cat.icon;
+            const isActive = selectedCategory === cat.id;
+            return (
+              <button
+                key={cat.id}
+                onClick={() => setSelectedCategory(cat.id)}
+                className={cn(
+                  "inline-flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-4 py-1.5 sm:py-2 rounded-full text-[9px] sm:text-xs font-black uppercase tracking-wider transition-all whitespace-nowrap",
+                  isActive
+                    ? "bg-primary-700 text-white shadow-md"
+                    : "bg-primary-50 dark:bg-primary-950/40 text-primary-700 hover:bg-primary-100 dark:hover:bg-primary-900/60 border border-primary-100 dark:border-primary-800",
+                )}
+                aria-pressed={isActive}
+              >
+                <Icon className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
+                {cat.name}
+                <span
+                  className={cn(
+                    "text-[8px] sm:text-[10px]",
+                    isActive ? "text-white/70" : "text-primary-700/70",
+                  )}
+                >
+                  ({cat.count})
+                </span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
 
       {/* Sort, View Toggle & Clear Filters */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 pt-1 sm:pt-2">
@@ -190,7 +236,8 @@ export function CoursesClient({ initialPrograms }: CoursesClientProps) {
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value)}
-            className="px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-full text-[10px] sm:text-xs font-black border border-border bg-background focus:border-primary-700 outline-none transition-all"
+            className="px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-full text-[10px] sm:text-xs font-black border border-border bg-background focus:border-primary-700 outline-none transition-all cursor-pointer"
+            aria-label="Sort programs"
           >
             {SORT_OPTIONS.map((opt) => (
               <option key={opt.id} value={opt.id}>
@@ -210,6 +257,7 @@ export function CoursesClient({ initialPrograms }: CoursesClientProps) {
                 ? "bg-primary-700 text-white"
                 : "hover:bg-primary-100",
             )}
+            aria-label="Grid view"
           >
             Grid
           </button>
@@ -221,6 +269,7 @@ export function CoursesClient({ initialPrograms }: CoursesClientProps) {
                 ? "bg-primary-700 text-white"
                 : "hover:bg-primary-100",
             )}
+            aria-label="List view"
           >
             List
           </button>
@@ -231,6 +280,7 @@ export function CoursesClient({ initialPrograms }: CoursesClientProps) {
             variant="ghost"
             onClick={clearFilters}
             className="text-[10px] sm:text-xs text-primary-700 hover:text-primary-800 gap-1 px-2 sm:px-3 py-1.5 h-auto self-start sm:self-auto"
+            aria-label="Clear all filters"
           >
             <X className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
             Clear ({activeFilterCount})
@@ -243,18 +293,18 @@ export function CoursesClient({ initialPrograms }: CoursesClientProps) {
         <p className="text-[11px] sm:text-sm text-muted-foreground">
           Showing{" "}
           <span className="font-black text-primary-700">
-            {visibleCourses.length}
+            {visiblePrograms.length}
           </span>{" "}
           of{" "}
           <span className="font-black text-primary-700">
-            {filteredCourses.length}
+            {filteredPrograms.length}
           </span>{" "}
           programs
         </p>
       </div>
 
       {/* Course Grid/List */}
-      {filteredCourses.length === 0 ? (
+      {filteredPrograms.length === 0 ? (
         <div className="text-center py-12 sm:py-16 md:py-20">
           <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto rounded-full bg-primary-50 dark:bg-primary-950/40 flex items-center justify-center mb-3 sm:mb-4">
             <Search className="w-8 h-8 sm:w-10 sm:h-10 text-primary-700/50" />
@@ -277,13 +327,13 @@ export function CoursesClient({ initialPrograms }: CoursesClientProps) {
         <>
           <div
             className={cn(
-              "grid gap-3 sm:gap-4 md:gap-6 lg:gap-8",
+              "gap-3 sm:gap-4 md:gap-6 lg:gap-8",
               viewType === "grid"
-                ? "grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
-                : "grid-cols-1",
+                ? "grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3"
+                : "flex flex-col gap-4",
             )}
           >
-            {visibleCourses.map((course) => (
+            {visiblePrograms.map((course) => (
               <CourseCard
                 key={course.id}
                 program={course}
@@ -300,9 +350,13 @@ export function CoursesClient({ initialPrograms }: CoursesClientProps) {
                 disabled={isLoading}
                 variant="outline"
                 className="rounded-full px-6 sm:px-8 py-3 sm:py-4 font-black text-sm sm:text-base group"
+                aria-label="Load more programs"
               >
                 {isLoading ? (
-                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                    Loading...
+                  </>
                 ) : (
                   <>
                     Load More Programs
