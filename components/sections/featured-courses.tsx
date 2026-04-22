@@ -223,22 +223,21 @@
 
 
 
-
-// components/shared/featured-courses.tsx
+// components/sections/featured-courses.tsx
 "use client";
 
+import { useState, useEffect } from "react";
 import { Reveal } from "@/components/shared/section-animation";
 import {
   BookOpen,
   Star,
   Users,
-  Clock,
   ArrowRight,
   Sparkles,
   Crown,
   Shield,
-  Award,
-  GraduationCap,
+  Globe,
+  Mic,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -249,57 +248,97 @@ const FEATURED_COURSES = [
     id: "qiroah",
     title: "Qiro'ah Program",
     subtitle: "Quran Reading",
-    description: "Complete Quran reading and recitation with certification. Learn proper pronunciation and fluency.",
+    description: "Complete Quran reading and recitation with certification. Learn proper pronunciation and fluency with patient, expert guidance.",
     icon: BookOpen,
     duration: "6-12 Months",
     format: "1-on-1",
     level: "Beginner+",
     students: "150+",
+    rating: 4.9,
     href: "/courses/qiroah",
-    features: ["Certificate", "24/7 Portal", "Analytics"],
+    features: ["Certificate", "24/7 Portal", "Analytics", "Live Correction"],
     color: "purple",
+    popular: true,
   },
   {
     id: "hifz",
     title: "Hifz Program",
     subtitle: "Quran Memorization",
-    description: "Complete Quran memorization with Ijazah certification. Structured revision system for long-term retention.",
+    description: "Complete Quran memorization with Ijazah certification. Structured revision system for long-term retention and mastery.",
     icon: Crown,
     duration: "2-3 Years",
     format: "1-on-1",
     level: "All Levels",
     students: "200+",
+    rating: 4.9,
     href: "/courses/hifz",
-    features: ["Ijazah", "24/7 Portal", "Analytics"],
+    features: ["Ijazah", "24/7 Portal", "Analytics", "Revision System"],
     color: "amber",
+    popular: true,
   },
   {
     id: "tajweed",
     title: "Tajweed Mastery",
     subtitle: "Scientific Recitation",
-    description: "Perfect your Quranic pronunciation with rules-based methodology. Master Makharij and Sifaat.",
-    icon: Star,
+    description: "Perfect your Quranic pronunciation with rules-based methodology. Master Makharij and Sifaat with expert feedback.",
+    icon: Mic,
     duration: "6-12 Months",
     format: "1-on-1",
     level: "Intermediate+",
     students: "300+",
+    rating: 4.8,
     href: "/courses/tajweed",
-    features: ["Live Correction", "Audio Analysis", "Certificate"],
+    features: ["Live Correction", "Audio Analysis", "Certificate", "Progress Tracking"],
     color: "teal",
+    popular: true,
+  },
+  {
+    id: "arabic",
+    title: "Arabic Fluency",
+    subtitle: "Quranic Language",
+    description: "Understand the Quran in its original language. Master classical Arabic grammar, vocabulary, and comprehension.",
+    icon: Globe,
+    duration: "12-18 Months",
+    format: "1-on-1",
+    level: "Beginner",
+    students: "120+",
+    rating: 4.7,
+    href: "/courses/arabic",
+    features: ["Grammar Focus", "Vocabulary Builder", "Tafsir Integration", "Certificate"],
+    color: "green",
+    popular: false,
   },
   {
     id: "tafsir",
     title: "Tafsir Studies",
     subtitle: "Quranic Exegesis",
-    description: "Deep dive into Quranic meanings with classical methodology. Understand context and interpretation.",
+    description: "Deep dive into Quranic meanings with classical methodology. Understand context, interpretation, and scholarly insights.",
     icon: BookOpen,
     duration: "12-18 Months",
     format: "1-on-1",
     level: "Advanced",
     students: "80+",
+    rating: 4.9,
     href: "/courses/tafsir",
-    features: ["Classical Sources", "Scholar Mentorship", "Certificate"],
-    color: "purple",
+    features: ["Classical Sources", "Scholar Mentorship", "Research", "Certificate"],
+    color: "slate",
+    popular: false,
+  },
+  {
+    id: "group-qiroah",
+    title: "Group Qiro'ah",
+    subtitle: "Children's Reading",
+    description: "Fun, interactive Quran reading for children ages 7-12. Learn with peers in a supportive, engaging environment.",
+    icon: Users,
+    duration: "6-9 Months",
+    format: "Group (4-6)",
+    level: "Beginner",
+    students: "100+",
+    rating: 4.9,
+    href: "/courses/group-qiroah",
+    features: ["Interactive Games", "Reward System", "Parent Portal", "Certificate"],
+    color: "emerald",
+    popular: true,
   },
 ];
 
@@ -312,6 +351,7 @@ const getColorStyles = (color: string) => {
       border: "border-purple-200 dark:border-purple-800",
       hover: "hover:border-purple-300",
       icon: "text-purple-600",
+      gradient: "from-purple-600 to-purple-700",
     },
     amber: {
       badge: "from-amber-500 to-amber-600",
@@ -320,6 +360,7 @@ const getColorStyles = (color: string) => {
       border: "border-amber-200 dark:border-amber-800",
       hover: "hover:border-amber-300",
       icon: "text-amber-600",
+      gradient: "from-amber-600 to-amber-700",
     },
     teal: {
       badge: "from-teal-500 to-teal-600",
@@ -328,18 +369,82 @@ const getColorStyles = (color: string) => {
       border: "border-teal-200 dark:border-teal-800",
       hover: "hover:border-teal-300",
       icon: "text-teal-600",
+      gradient: "from-teal-600 to-teal-700",
+    },
+    green: {
+      badge: "from-green-500 to-green-600",
+      text: "text-green-600",
+      bg: "bg-green-100 dark:bg-green-950/30",
+      border: "border-green-200 dark:border-green-800",
+      hover: "hover:border-green-300",
+      icon: "text-green-600",
+      gradient: "from-green-600 to-green-700",
+    },
+    slate: {
+      badge: "from-slate-500 to-slate-600",
+      text: "text-slate-600",
+      bg: "bg-slate-100 dark:bg-slate-950/30",
+      border: "border-slate-200 dark:border-slate-800",
+      hover: "hover:border-slate-300",
+      icon: "text-slate-600",
+      gradient: "from-slate-600 to-slate-700",
+    },
+    emerald: {
+      badge: "from-emerald-500 to-emerald-600",
+      text: "text-emerald-600",
+      bg: "bg-emerald-100 dark:bg-emerald-950/30",
+      border: "border-emerald-200 dark:border-emerald-800",
+      hover: "hover:border-emerald-300",
+      icon: "text-emerald-600",
+      gradient: "from-emerald-600 to-emerald-700",
     },
   };
   return styles[color as keyof typeof styles] || styles.purple;
 };
 
 export function FeaturedCourses() {
+  const [visibleCount, setVisibleCount] = useState(4);
+  const [isLoading, setIsLoading] = useState(false);
+
+  // Handle responsive visible count
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth < 768) {
+        setVisibleCount(2);
+      } else if (window.innerWidth < 1024) {
+        setVisibleCount(4);
+      } else {
+        setVisibleCount(6);
+      }
+    };
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const visibleCourses = FEATURED_COURSES.slice(0, visibleCount);
+
+  if (isLoading) {
+    return (
+      <section className="py-16 sm:py-24 lg:py-32 bg-linear-to-b from-background via-purple-50/5 to-amber-50/5">
+        <div className="container mx-auto px-4 sm:px-6">
+          <div className="grid lg:grid-cols-2 gap-8">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="institutional-card p-10 h-96 animate-pulse bg-muted/20 rounded-xl" />
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   return (
-    <section className="py-12 xs:py-16 sm:py-20 md:py-24 lg:py-32 bg-gradient-to-b from-background via-purple-50/5 to-amber-50/5 relative overflow-hidden">
+    <section className="py-12 xs:py-16 sm:py-20 md:py-24 lg:py-32 bg-linear-to-b from-background via-purple-50/5 to-amber-50/5 relative overflow-hidden">
       {/* Background Decoration */}
       <div className="hidden sm:block absolute inset-0 pointer-events-none">
         <div className="absolute top-0 right-0 w-96 h-96 bg-purple-600/5 rounded-full blur-3xl" />
         <div className="absolute bottom-0 left-0 w-96 h-96 bg-amber-500/5 rounded-full blur-3xl" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-purple-500/3 rounded-full blur-[100px]" />
       </div>
 
       <div className="container mx-auto px-4 xs:px-5 sm:px-6">
@@ -352,7 +457,7 @@ export function FeaturedCourses() {
             </div>
             <h2 className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tighter font-heading leading-[1.1]">
               Sacred{" "}
-              <span className="bg-gradient-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent italic">
+              <span className="bg-linear-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent italic">
                 Knowledge
               </span>
               <br className="hidden xs:block" />
@@ -366,8 +471,8 @@ export function FeaturedCourses() {
         </div>
 
         {/* Courses Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 xs:gap-5 sm:gap-6 md:gap-8">
-          {FEATURED_COURSES.map((course, index) => {
+        <div className="grid lg:grid-cols-2 gap-4 xs:gap-5 sm:gap-6 md:gap-8">
+          {visibleCourses.map((course, index) => {
             const Icon = course.icon;
             const colors = getColorStyles(course.color);
             
@@ -378,93 +483,116 @@ export function FeaturedCourses() {
                   transition={{ type: "spring", stiffness: 300 }}
                   className="group h-full"
                 >
-                  <div className={`bg-card rounded-xl xs:rounded-2xl border border-border ${colors.hover} transition-all duration-300 p-5 xs:p-6 sm:p-7 md:p-8 lg:p-10 h-full flex flex-col shadow-sm hover:shadow-xl relative`}>
-                    
-                    {/* Course Header */}
-                    <div className="flex flex-col xs:flex-row xs:items-start justify-between gap-3 xs:gap-4 mb-5 xs:mb-6 sm:mb-8">
-                      <div className="flex items-center gap-3 xs:gap-4 sm:gap-6">
-                        <div className={`w-10 h-10 xs:w-12 xs:h-12 sm:w-14 sm:h-14 rounded-xl xs:rounded-2xl ${colors.bg} flex items-center justify-center shadow-inner group-hover:scale-105 transition-transform`}>
-                          <Icon className={`w-5 h-5 xs:w-6 xs:h-6 sm:w-7 sm:h-7 ${colors.icon}`} />
-                        </div>
-
-                        <div>
-                          <div className={`text-[8px] xs:text-[9px] sm:text-[10px] font-black ${colors.text} uppercase tracking-wider mb-0.5 xs:mb-1`}>
-                            {course.subtitle}
-                          </div>
-                          <h3 className="text-base xs:text-lg sm:text-xl md:text-2xl lg:text-3xl font-black uppercase tracking-tight">
-                            {course.title}
-                          </h3>
-                        </div>
-                      </div>
-
-                      {/* Duration Badge */}
-                      <div className={`px-2 py-0.5 xs:px-3 xs:py-1 rounded-full ${colors.bg} border ${colors.border} self-start`}>
-                        <span className={`text-[8px] xs:text-[9px] sm:text-[10px] font-black ${colors.text}`}>
-                          {course.duration}
-                        </span>
-                      </div>
-                    </div>
-
-                    {/* Description */}
-                    <p className="text-xs xs:text-sm sm:text-base text-muted-foreground font-light leading-relaxed mb-5 xs:mb-6 sm:mb-8 flex-grow">
-                      {course.description}
-                    </p>
-
-                    {/* Features */}
-                    <div className="mb-5 xs:mb-6 sm:mb-8">
-                      <div className={`text-[8px] xs:text-[9px] sm:text-[10px] font-black ${colors.text} uppercase tracking-wider mb-2 xs:mb-3 sm:mb-4`}>
-                        PROGRAM FEATURES
-                      </div>
-                      <div className="flex flex-wrap gap-1.5 xs:gap-2 sm:gap-3">
-                        {course.features.map((feature, idx) => (
-                          <div
-                            key={idx}
-                            className={`px-2 py-0.5 xs:px-3 xs:py-1 rounded-full ${colors.bg} border ${colors.border}`}
-                          >
-                            <span className={`text-[8px] xs:text-[9px] sm:text-[10px] font-medium ${colors.text}`}>
-                              {feature}
-                            </span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Footer */}
-                    <div className="flex flex-col xs:flex-row items-start xs:items-center justify-between gap-3 xs:gap-4 pt-4 xs:pt-5 sm:pt-6 border-t border-border/50">
-                      <div className="flex items-center gap-3 xs:gap-4 sm:gap-6 w-full xs:w-auto">
-                        <div className="space-y-0.5 xs:space-y-1">
-                          <div className="text-[8px] xs:text-[9px] font-black text-muted-foreground uppercase tracking-wider">
-                            LEVEL
-                          </div>
-                          <div className="text-xs xs:text-sm sm:text-base font-black">
-                            {course.level}
+                  <Link href={course.href}>
+                    <div className={`bg-card rounded-xl xs:rounded-2xl border border-border ${colors.hover} transition-all duration-300 p-5 xs:p-6 sm:p-7 md:p-8 lg:p-10 h-full flex flex-col shadow-sm hover:shadow-xl relative overflow-hidden cursor-pointer`}>
+                      
+                      {/* Popular Badge */}
+                      {course.popular && (
+                        <div className="absolute top-4 right-4 z-10">
+                          <div className={`px-2 py-0.5 rounded-full bg-linear-to-r ${colors.badge} text-white text-[8px] xs:text-[9px] font-black uppercase tracking-wider shadow-md`}>
+                            Most Popular
                           </div>
                         </div>
-                        <div className="space-y-0.5 xs:space-y-1">
-                          <div className="text-[8px] xs:text-[9px] font-black text-muted-foreground uppercase tracking-wider">
-                            STUDENTS
+                      )}
+
+                      {/* Course Header */}
+                      <div className="flex flex-col xs:flex-row xs:items-start justify-between gap-3 xs:gap-4 mb-5 xs:mb-6 sm:mb-8">
+                        <div className="flex items-center gap-3 xs:gap-4 sm:gap-6">
+                          <div className={`w-10 h-10 xs:w-12 xs:h-12 sm:w-14 sm:h-14 rounded-xl xs:rounded-2xl ${colors.bg} flex items-center justify-center shadow-inner group-hover:scale-105 transition-transform`}>
+                            <Icon className={`w-5 h-5 xs:w-6 xs:h-6 sm:w-7 sm:h-7 ${colors.icon}`} />
                           </div>
-                          <div className="text-xs xs:text-sm sm:text-base font-black">
-                            {course.students}
+
+                          <div>
+                            <div className={`text-[8px] xs:text-[9px] sm:text-[10px] font-black ${colors.text} uppercase tracking-wider mb-0.5 xs:mb-1`}>
+                              {course.subtitle}
+                            </div>
+                            <h3 className="text-base xs:text-lg sm:text-xl md:text-2xl lg:text-3xl font-black uppercase tracking-tight">
+                              {course.title}
+                            </h3>
                           </div>
                         </div>
-                      </div>
 
-                      <Link href={course.href} className="w-full xs:w-auto">
-                        <Button 
-                          className={`w-full xs:w-auto rounded-full px-4 xs:px-5 sm:px-6 py-2 xs:py-2.5 sm:py-3 font-black text-[10px] xs:text-xs sm:text-sm bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white shadow-md hover:shadow-lg transition-all duration-300 group/btn`}
-                        >
-                          <span className="flex items-center justify-center gap-1.5 xs:gap-2">
-                            EXPLORE
-                            <ArrowRight className="w-3 h-3 xs:w-3.5 xs:h-3.5 transition-transform group-hover/btn:translate-x-1" />
+                        {/* Duration Badge */}
+                        <div className={`px-2 py-0.5 xs:px-3 xs:py-1 rounded-full ${colors.bg} border ${colors.border} self-start`}>
+                          <span className={`text-[8px] xs:text-[9px] sm:text-[10px] font-black ${colors.text}`}>
+                            {course.duration}
                           </span>
-                        </Button>
-                      </Link>
-                    </div>
+                        </div>
+                      </div>
 
-                    {/* Decorative Line */}
-                    <div className={`absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-purple-600 to-transparent scale-x-0 group-hover:scale-x-100 transition-transform duration-500`} />
-                  </div>
+                      {/* Description */}
+                      <p className="text-xs xs:text-sm sm:text-base text-muted-foreground font-light leading-relaxed mb-5 xs:mb-6 sm:mb-8 flex-grow">
+                        {course.description}
+                      </p>
+
+                      {/* Rating */}
+                      <div className="flex items-center gap-2 mb-3 xs:mb-4">
+                        <div className="flex gap-0.5">
+                          {[1, 2, 3, 4, 5].map((i) => (
+                            <Star key={i} className={`w-3 h-3 xs:w-3.5 xs:h-3.5 ${i <= course.rating ? 'fill-amber-500 text-amber-500' : 'text-muted-foreground/30'}`} />
+                          ))}
+                        </div>
+                        <span className="text-xs font-medium text-muted-foreground">({course.rating})</span>
+                      </div>
+
+                      {/* Features */}
+                      <div className="mb-5 xs:mb-6 sm:mb-8">
+                        <div className={`text-[8px] xs:text-[9px] sm:text-[10px] font-black ${colors.text} uppercase tracking-wider mb-2 xs:mb-3 sm:mb-4`}>
+                          PROGRAM FEATURES
+                        </div>
+                        <div className="flex flex-wrap gap-1.5 xs:gap-2 sm:gap-3">
+                          {course.features.map((feature, idx) => (
+                            <div
+                              key={idx}
+                              className={`px-2 py-0.5 xs:px-3 xs:py-1 rounded-full ${colors.bg} border ${colors.border}`}
+                            >
+                              <span className={`text-[8px] xs:text-[9px] sm:text-[10px] font-medium ${colors.text}`}>
+                                {feature}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Footer */}
+                      <div className="flex flex-col xs:flex-row items-start xs:items-center justify-between gap-3 xs:gap-4 pt-4 xs:pt-5 sm:pt-6 border-t border-border/50">
+                        <div className="flex items-center gap-3 xs:gap-4 sm:gap-6 w-full xs:w-auto">
+                          <div className="space-y-0.5 xs:space-y-1">
+                            <div className="text-[8px] xs:text-[9px] font-black text-muted-foreground uppercase tracking-wider">
+                              LEVEL
+                            </div>
+                            <div className="text-xs xs:text-sm sm:text-base font-black">
+                              {course.level}
+                            </div>
+                          </div>
+                          <div className="space-y-0.5 xs:space-y-1">
+                            <div className="text-[8px] xs:text-[9px] font-black text-muted-foreground uppercase tracking-wider">
+                              FORMAT
+                            </div>
+                            <div className="text-xs xs:text-sm sm:text-base font-black">
+                              {course.format}
+                            </div>
+                          </div>
+                          <div className="space-y-0.5 xs:space-y-1">
+                            <div className="text-[8px] xs:text-[9px] font-black text-muted-foreground uppercase tracking-wider">
+                              STUDENTS
+                            </div>
+                            <div className="text-xs xs:text-sm sm:text-base font-black">
+                              {course.students}
+                            </div>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center gap-1 text-primary-700 font-black text-[10px] xs:text-xs uppercase tracking-wider group-hover:gap-2 transition-all">
+                          Learn More
+                          <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
+                        </div>
+                      </div>
+
+                      {/* Decorative Line */}
+                      <div className={`absolute bottom-0 left-0 right-0 h-0.5 bg-linear-to-r from-transparent via-purple-600 to-transparent scale-x-0 group-hover:scale-x-100 transition-transform duration-500`} />
+                    </div>
+                  </Link>
                 </motion.div>
               </Reveal>
             );
@@ -475,12 +603,12 @@ export function FeaturedCourses() {
         <Reveal>
           <div className="text-center mt-10 xs:mt-12 sm:mt-16 md:mt-20">
             <div className="inline-flex flex-col items-center gap-4 xs:gap-5 sm:gap-6">
-              {/* <div className="text-xs xs:text-sm sm:text-base opacity-70 text-muted-foreground font-semibold max-w-md px-4">
-                Each program includes Ijazah / certification and scholarly mentorship with authentic Sanad.
+              {/* <div className="text-xs xs:text-sm sm:text-base text-muted-foreground font-medium max-w-md px-4">
+                ✨ Each program includes Ijazah / certification and scholarly mentorship with authentic Sanad.
               </div> */}
 
               <Link href="/courses">
-                <Button className="rounded-full px-6 xs:px-7 sm:px-8 py-2.5 xs:py-3 sm:py-3.5 md:py-4 text-[10px] xs:text-xs sm:text-sm font-black bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white shadow-lg hover:shadow-xl transition-all duration-300 group">
+                <Button className="rounded-full px-6 xs:px-7 sm:px-8 md:px-10 py-2.5 xs:py-3 sm:py-3.5 md:py-4 text-[10px] xs:text-xs sm:text-sm font-black bg-linear-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white shadow-lg hover:shadow-xl hover:shadow-purple-500/25 transition-all duration-300 group">
                   <span className="flex items-center gap-2 xs:gap-3">
                     VIEW ALL PROGRAMS
                     <ArrowRight className="w-3.5 h-3.5 xs:w-4 xs:h-4 transition-transform duration-300 group-hover:translate-x-1" />
@@ -497,7 +625,7 @@ export function FeaturedCourses() {
             <div className="inline-flex items-center gap-1.5 xs:gap-2 px-3 xs:px-4 py-1.5 xs:py-2 rounded-full bg-purple-50 dark:bg-purple-950/30 border border-purple-200 dark:border-purple-800">
               <Shield className="w-3 h-3 xs:w-3.5 xs:h-3.5 text-purple-600" />
               <span className="text-[8px] xs:text-[9px] sm:text-[10px] font-black uppercase tracking-wider text-muted-foreground">
-                All programs include Ijazah certification and authentic Sanad
+                All programs include Ijazah/certification and authentic Sanad
               </span>
             </div>
           </div>

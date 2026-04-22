@@ -193,7 +193,7 @@ export function CoursesClient({ initialPrograms }: CoursesClientProps) {
       </div>
 
       {/* Category Pills */}
-      <div className="overflow-x-auto pb-2 scrollbar-hide -mx-4 px-4">
+      {/* <div className="overflow-x-auto pb-2 scrollbar-hide -mx-4 px-4">
         <div className="flex items-center gap-1.5 sm:gap-2 min-w-max">
           <Filter className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary-600 mr-0.5 sm:mr-1 shrink-0" />
           {categoriesWithCounts.map((cat) => {
@@ -225,11 +225,11 @@ export function CoursesClient({ initialPrograms }: CoursesClientProps) {
             );
           })}
         </div>
-      </div>
+      </div> */}
 
       {/* Sort, View Toggle & Clear Filters */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 pt-1 sm:pt-2">
-        <div className="flex items-center gap-2 sm:gap-3">
+      {/* <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 pt-1 sm:pt-2"> */}
+        {/* <div className="flex items-center gap-2 sm:gap-3">
           <span className="text-[10px] sm:text-xs font-black uppercase tracking-wider text-muted-foreground">
             Sort by:
           </span>
@@ -245,10 +245,10 @@ export function CoursesClient({ initialPrograms }: CoursesClientProps) {
               </option>
             ))}
           </select>
-        </div>
+        </div> */}
 
         {/* View Toggle */}
-        <div className="flex items-center gap-1 p-0.5 sm:p-1 rounded-full bg-muted/30 border border-border self-start sm:self-auto">
+        {/* <div className="flex items-center gap-1 p-0.5 sm:p-1 rounded-full bg-muted/30 border border-border self-start sm:self-auto">
           <button
             onClick={() => setViewType("grid")}
             className={cn(
@@ -273,9 +273,9 @@ export function CoursesClient({ initialPrograms }: CoursesClientProps) {
           >
             List
           </button>
-        </div>
+        </div> */}
 
-        {activeFilterCount > 0 && (
+        {/* {activeFilterCount > 0 && (
           <Button
             variant="ghost"
             onClick={clearFilters}
@@ -286,7 +286,7 @@ export function CoursesClient({ initialPrograms }: CoursesClientProps) {
             Clear ({activeFilterCount})
           </Button>
         )}
-      </div>
+      </div> */}
 
       {/* Results Count */}
       <div className="flex items-center justify-between">
