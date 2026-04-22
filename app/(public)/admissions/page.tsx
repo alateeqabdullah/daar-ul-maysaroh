@@ -980,7 +980,6 @@
 
 
 
-
 // app/admissions/page.tsx
 "use client";
 
@@ -1009,18 +1008,48 @@ import {
   Globe,
 } from "lucide-react";
 
+// ============= UNIFIED COLOR SYSTEM =============
+// Royal Purple + Gold Theme
+const COLORS = {
+  // Primary Purple
+  primary: {
+    light: "purple-50",
+    DEFAULT: "purple-600",
+    dark: "purple-700",
+    darker: "purple-800",
+    gradient: "from-purple-600 to-purple-700",
+    gradientHover: "from-purple-700 to-purple-800",
+    soft: "purple-100",
+    text: "purple-600",
+    border: "purple-200",
+    ring: "purple-500",
+  },
+  // Secondary Gold/Amber
+  secondary: {
+    light: "amber-50",
+    DEFAULT: "amber-500",
+    dark: "amber-600",
+    darker: "amber-700",
+    gradient: "from-amber-500 to-amber-600",
+    gradientHover: "from-amber-600 to-amber-700",
+    soft: "amber-100",
+    text: "amber-600",
+    border: "amber-200",
+  },
+};
+
 // Program data for pre-selection
 const PROGRAMS = {
   hifz: { name: "Hifz Al-Quran", color: "purple", path: "/courses/hifz" },
-  tajweed: { name: "Tajweed Al-Itqan", color: "blue", path: "/courses/tajweed" },
-  "group-tajweed": { name: "Group Tajweed", color: "teal", path: "/courses/group-tajweed" },
-  arabic: { name: "Al-Lughah Al-Arabiyyah", color: "amber", path: "/courses/arabic" },
-  tafsir: { name: "Tafsir Al-Mubin", color: "slate", path: "/courses/tafsir" },
-  qiroah: { name: "Qiro'ah Program", color: "teal", path: "/courses/qiroah" },
-  "group-qiroah": { name: "Group Qiro'ah", color: "green", path: "/courses/group-qiroah" },
-  "juz-amma": { name: "Juz Amma", color: "amber", path: "/courses/juz-amma" },
+  tajweed: { name: "Tajweed Al-Itqan", color: "purple", path: "/courses/tajweed" },
+  "group-tajweed": { name: "Group Tajweed", color: "purple", path: "/courses/group-tajweed" },
+  arabic: { name: "Al-Lughah Al-Arabiyyah", color: "purple", path: "/courses/arabic" },
+  tafsir: { name: "Tafsir Al-Mubin", color: "purple", path: "/courses/tafsir" },
+  qiroah: { name: "Qiro'ah Program", color: "purple", path: "/courses/qiroah" },
+  "group-qiroah": { name: "Group Qiro'ah", color: "purple", path: "/courses/group-qiroah" },
+  "juz-amma": { name: "Juz Amma", color: "purple", path: "/courses/juz-amma" },
   "juz-tabarak": { name: "Juz Tabarak", color: "purple", path: "/courses/juz-tabarak" },
-  murojaah: { name: "Muroja'ah Program", color: "rose", path: "/courses/murojaah" },
+  murojaah: { name: "Muroja'ah Program", color: "purple", path: "/courses/murojaah" },
 };
 
 export default function AdmissionsPage() {
@@ -1037,30 +1066,30 @@ export default function AdmissionsPage() {
   const preSelectedProgramInfo = preSelectedProgram ? PROGRAMS[preSelectedProgram as keyof typeof PROGRAMS] : null;
 
   return (
-    <main ref={containerRef} className="relative pt-12 sm:pt-10 bg-background overflow-hidden">
-      {/* Background */}
+    <main ref={containerRef} className="relative pt-0 sm:pt-10 bg-background overflow-hidden">
+      {/* Background - Hidden on mobile */}
       <div className="hidden sm:block fixed inset-0 pointer-events-none">
         <div className="absolute inset-0 opacity-[0.02] bg-[url('/islamic-pattern.svg')] bg-center bg-repeat" style={{ backgroundSize: "300px" }} />
-        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-primary-700/5 rounded-full blur-[150px]" />
-        <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-primary-700/5 rounded-full blur-[150px]" />
+        <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-purple-600/5 rounded-full blur-[150px]" />
+        <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-amber-500/5 rounded-full blur-[150px]" />
       </div>
 
       {/* Hero Section */}
       <motion.div style={{ y: heroY, opacity: heroOpacity }} className="relative pt-16 sm:pt-24 md:pt-28 lg:pt-32 pb-12 sm:pb-16">
-        <div className="container mx-auto px-4 sm:px-6">
+        <div className="container mx-auto px-3 xs:px-4 sm:px-6">
           <div className="max-w-4xl mx-auto text-center">
             <motion.div
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ duration: 0.5 }}
-              className="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-linear-to-r from-primary-500/10 to-primary-600/10 border border-primary-500/20 text-primary-700 text-[9px] sm:text-[11px] font-black uppercase tracking-wider mb-4 sm:mb-6"
+              className="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-gradient-to-r from-purple-500/10 to-purple-600/10 border border-purple-500/20 text-purple-700 text-[9px] sm:text-[11px] font-black uppercase tracking-wider mb-4 sm:mb-6"
             >
-              <Sparkles className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5" /> 🎓 Begin Your Sacred Journey 🎓
+              <Sparkles className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 text-amber-500" /> 🎓 Begin Your Sacred Journey 🎓
             </motion.div>
 
             <h1 className="text-4xl xs:text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tighter font-heading leading-[1.1] mb-4 sm:mb-6 px-2">
               Al-Maysaroh{" "}
-              <span className="text-transparent bg-clip-text bg-linear-to-r from-primary-700 via-primary-600 to-primary-800 whitespace-nowrap">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 via-purple-700 to-amber-600 whitespace-normal">
                 Admissions
               </span>
             </h1>
@@ -1074,11 +1103,11 @@ export default function AdmissionsPage() {
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="mb-6 p-4 rounded-xl bg-primary-50/50 dark:bg-primary-950/30 border border-primary-200 dark:border-primary-800"
+                className="mb-6 p-4 rounded-xl bg-purple-50/50 dark:bg-purple-950/30 border border-purple-200 dark:border-purple-800"
               >
-                <p className="text-sm">
-                  <span className="font-black">{`You're applying for:`}</span>{" "}
-                  <Link href={preSelectedProgramInfo.path} className="text-primary-700 font-black hover:underline">
+                <p className="text-xs sm:text-sm">
+                  <span className="font-black text-purple-600">You're applying for:</span>{" "}
+                  <Link href={preSelectedProgramInfo.path} className="text-amber-600 font-black hover:underline">
                     {preSelectedProgramInfo.name}
                   </Link>
                 </p>
@@ -1087,7 +1116,7 @@ export default function AdmissionsPage() {
 
             <div className="flex flex-col xs:flex-row gap-3 sm:gap-4 justify-center px-4">
               <Link href="/admissions/apply" className="w-full xs:w-auto">
-                <Button className="w-full rounded-full px-6 sm:px-8 py-3.5 sm:py-4 font-black bg-linear-to-r from-primary-700 to-primary-800 hover:from-primary-800 hover:to-primary-900 text-white text-sm sm:text-base shadow-xl">
+                <Button className="w-full rounded-full px-6 sm:px-8 py-3.5 sm:py-4 font-black bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white text-sm sm:text-base shadow-xl transition-all duration-300">
                   <span className="flex items-center justify-center gap-2">
                     START YOUR APPLICATION
                     <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
@@ -1095,7 +1124,7 @@ export default function AdmissionsPage() {
                 </Button>
               </Link>
               <Link href="/assessment" className="w-full xs:w-auto">
-                <Button variant="outline" className="w-full rounded-full px-6 sm:px-8 py-3.5 sm:py-4 font-black text-sm sm:text-base border-primary-600 text-primary-600">
+                <Button variant="outline" className="w-full rounded-full px-6 sm:px-8 py-3.5 sm:py-4 font-black text-sm sm:text-base border-amber-500 text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-950/20 transition-all duration-300">
                   FREE ASSESSMENT
                 </Button>
               </Link>
@@ -1109,9 +1138,9 @@ export default function AdmissionsPage() {
                 { label: "Countries", value: "15+", icon: Globe },
                 { label: "Success Rate", value: "94%", icon: Target },
               ].map((stat, i) => (
-                <motion.div key={i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }} className="p-2.5 sm:p-4 rounded-xl sm:rounded-2xl bg-linear-to-br from-primary-50/50 to-primary-100/30 dark:from-primary-950/20 dark:to-primary-900/20 border border-primary-100 dark:border-primary-800">
-                  <stat.icon className="w-4 h-4 sm:w-5 sm:h-5 text-primary-600 mx-auto mb-1.5 sm:mb-2" />
-                  <div className="text-lg sm:text-2xl md:text-3xl font-black text-primary-600">{stat.value}</div>
+                <motion.div key={i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }} className="p-2.5 sm:p-4 rounded-xl sm:rounded-2xl bg-gradient-to-br from-purple-50/50 to-purple-100/30 dark:from-purple-950/20 dark:to-purple-900/20 border border-purple-100 dark:border-purple-800">
+                  <stat.icon className="w-4 h-4 sm:w-5 sm:h-5 text-purple-600 mx-auto mb-1.5 sm:mb-2" />
+                  <div className="text-lg sm:text-2xl md:text-3xl font-black text-purple-600">{stat.value}</div>
                   <div className="text-[10px] sm:text-xs text-muted-foreground mt-0.5 sm:mt-1">{stat.label}</div>
                 </motion.div>
               ))}
@@ -1121,14 +1150,14 @@ export default function AdmissionsPage() {
       </motion.div>
 
       {/* Admissions Process - 4 Steps */}
-      <section className="py-12 sm:py-16 bg-linear-to-b from-background via-primary-50/5 to-primary-100/5">
-        <div className="container mx-auto px-4 sm:px-6">
+      <section className="py-12 sm:py-16 bg-gradient-to-b from-background via-purple-50/5 to-amber-50/5">
+        <div className="container mx-auto px-3 xs:px-4 sm:px-6">
           <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-12">
-            <div className="inline-flex items-center gap-2 text-primary-600 font-black text-[8px] sm:text-[10px] uppercase tracking-[0.2em] sm:tracking-[0.3em] mb-3 sm:mb-4">
+            <div className="inline-flex items-center gap-2 text-amber-600 font-black text-[8px] sm:text-[10px] uppercase tracking-[0.2em] sm:tracking-[0.3em] mb-3 sm:mb-4">
               <Compass className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> Your Journey
             </div>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black tracking-tighter font-heading mb-3 sm:mb-4 px-2">
-              Four-Step <span className="text-primary-600 italic">Admissions</span> Protocol
+            <h2 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter font-heading mb-3 sm:mb-4 px-2">
+              Four-Step <span className="bg-gradient-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent italic">Admissions</span> Protocol
             </h2>
             <p className="text-sm sm:text-base text-muted-foreground px-4">
               A clear path from application to your first class
@@ -1137,18 +1166,18 @@ export default function AdmissionsPage() {
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
             {[
-              { step: "01", icon: FileText, title: "Application", desc: "Complete online form with your educational background and goals", color: "from-primary-500 to-primary-600" },
-              { step: "02", icon: UserCheck, title: "Assessment", desc: "Meet with our scholars for level evaluation", color: "from-primary-600 to-primary-700" },
-              { step: "03", icon: CreditCard, title: "Enrollment", desc: "Choose payment method and complete registration", color: "from-primary-700 to-primary-800" },
-              { step: "04", icon: Users, title: "Scholar Match", desc: "Get assigned to your perfect teacher", color: "from-primary-800 to-primary-900" },
+              { step: "01", icon: FileText, title: "Application", desc: "Complete online form with your educational background and goals", color: "from-purple-500 to-purple-600" },
+              { step: "02", icon: UserCheck, title: "Assessment", desc: "Meet with our scholars for level evaluation", color: "from-purple-600 to-purple-700" },
+              { step: "03", icon: CreditCard, title: "Enrollment", desc: "Choose payment method and complete registration", color: "from-amber-500 to-amber-600" },
+              { step: "04", icon: Users, title: "Scholar Match", desc: "Get assigned to your perfect teacher", color: "from-purple-700 to-purple-800" },
             ].map((step, i) => (
               <Reveal key={i} delay={i * 0.1}>
-                <div className="bg-card rounded-xl sm:rounded-2xl border border-border hover:border-primary-300 transition-all p-5 sm:p-6 text-center h-full group">
-                  <div className={`w-14 h-14 sm:w-16 sm:h-16 mx-auto mb-3 sm:mb-4 rounded-xl sm:rounded-2xl bg-linear-to-br ${step.color} flex items-center justify-center group-hover:scale-110 transition-transform`}>
+                <div className="bg-card rounded-xl sm:rounded-2xl border border-border hover:border-purple-300 transition-all p-5 sm:p-6 text-center h-full group">
+                  <div className={`w-14 h-14 sm:w-16 sm:h-16 mx-auto mb-3 sm:mb-4 rounded-xl sm:rounded-2xl bg-gradient-to-br ${step.color} flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg`}>
                     <step.icon className="w-7 h-7 sm:w-8 sm:h-8 text-white" />
                   </div>
-                  <div className="text-xs text-primary-600 font-black mb-1">{step.step}</div>
-                  <h3 className="font-black text-lg sm:text-xl mb-1.5 sm:mb-2">{step.title}</h3>
+                  <div className="text-[10px] sm:text-xs text-amber-600 font-black mb-1">{step.step}</div>
+                  <h3 className="font-black text-base sm:text-lg md:text-xl mb-1.5 sm:mb-2">{step.title}</h3>
                   <p className="text-xs sm:text-sm text-muted-foreground">{step.desc}</p>
                 </div>
               </Reveal>
@@ -1159,13 +1188,13 @@ export default function AdmissionsPage() {
 
       {/* Financial Channels */}
       <section className="py-12 sm:py-16">
-        <div className="container mx-auto px-4 sm:px-6">
+        <div className="container mx-auto px-3 xs:px-4 sm:px-6">
           <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-12">
-            <div className="inline-flex items-center gap-2 text-primary-600 font-black text-[8px] sm:text-[10px] uppercase tracking-[0.2em] sm:tracking-[0.3em] mb-3 sm:mb-4">
+            <div className="inline-flex items-center gap-2 text-amber-600 font-black text-[8px] sm:text-[10px] uppercase tracking-[0.2em] sm:tracking-[0.3em] mb-3 sm:mb-4">
               <CreditCard className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> Financial Channels
             </div>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black tracking-tighter font-heading mb-3 sm:mb-4 px-2">
-              Flexible <span className="text-primary-600 italic">Payment</span> Options
+            <h2 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter font-heading mb-3 sm:mb-4 px-2">
+              Flexible <span className="bg-gradient-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent italic">Payment</span> Options
             </h2>
             <p className="text-sm sm:text-base text-muted-foreground px-4">
               Choose the payment method that works best for you
@@ -1173,56 +1202,56 @@ export default function AdmissionsPage() {
           </div>
 
           <div className="grid lg:grid-cols-2 gap-6 sm:gap-8">
-            {/* Instant Digital */}
-            <div className="institutional-card p-6 sm:p-8 border-2 border-primary-700/10 hover:border-primary-700/30 transition-all">
+            {/* Instant Digital - Purple Theme */}
+            <div className="bg-card rounded-xl sm:rounded-2xl border-2 border-purple-600/10 hover:border-purple-600/30 transition-all p-6 sm:p-8">
               <div className="flex items-start justify-between mb-6">
-                <div className="w-14 h-14 rounded-xl bg-primary-700 flex items-center justify-center">
-                  <CreditCard className="w-7 h-7 text-white" />
+                <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-gradient-to-br from-purple-600 to-purple-700 flex items-center justify-center shadow-lg">
+                  <CreditCard className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
                 </div>
-                <div className="px-3 py-1 rounded-full bg-primary-700/10 text-primary-700 text-[10px] font-black uppercase tracking-wider">
+                <div className="px-2 sm:px-3 py-0.5 sm:py-1 rounded-full bg-purple-600/10 text-purple-600 text-[8px] sm:text-[10px] font-black uppercase tracking-wider">
                   Instant
                 </div>
               </div>
-              <h3 className="text-xl font-black mb-2">Digital Settlement</h3>
-              <p className="text-muted-foreground text-sm mb-6">
+              <h3 className="text-lg sm:text-xl font-black mb-2 bg-gradient-to-r from-purple-600 to-purple-700 bg-clip-text text-transparent">Digital Settlement</h3>
+              <p className="text-muted-foreground text-xs sm:text-sm mb-6">
                 Secure card processing via Stripe. Use any international Credit/Debit card for immediate portal access.
               </p>
               <ul className="space-y-2 mb-6">
                 {["Immediate portal activation", "Secure Stripe processing", "Multi-currency support", "Auto-ledgering"].map((feature, i) => (
-                  <li key={i} className="flex items-center gap-2 text-sm">
-                    <CheckCircle2 className="w-4 h-4 text-primary-600 shrink-0" />
+                  <li key={i} className="flex items-center gap-2 text-xs sm:text-sm">
+                    <CheckCircle2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-purple-600 shrink-0" />
                     <span>{feature}</span>
                   </li>
                 ))}
               </ul>
-              <Button className="w-full rounded-full py-3 bg-primary-700 hover:bg-primary-800 text-white font-black">
+              <Button className="w-full rounded-full py-2.5 sm:py-3 bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white font-black text-xs sm:text-sm transition-all duration-300">
                 PAY WITH CARD
               </Button>
             </div>
 
-            {/* Manual Payment */}
-            <div className="institutional-card p-6 sm:p-8 border-2 border-accent/10 hover:border-accent/30 transition-all">
+            {/* Manual Payment - Gold/Amber Theme */}
+            <div className="bg-card rounded-xl sm:rounded-2xl border-2 border-amber-500/10 hover:border-amber-500/30 transition-all p-6 sm:p-8">
               <div className="flex items-start justify-between mb-6">
-                <div className="w-14 h-14 rounded-xl bg-accent flex items-center justify-center">
-                  <Banknote className="w-7 h-7 text-white" />
+                <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-gradient-to-br from-amber-500 to-amber-600 flex items-center justify-center shadow-lg">
+                  <Banknote className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
                 </div>
-                <div className="px-3 py-1 rounded-full bg-accent/10 text-accent text-[10px] font-black uppercase tracking-wider">
+                <div className="px-2 sm:px-3 py-0.5 sm:py-1 rounded-full bg-amber-500/10 text-amber-600 text-[8px] sm:text-[10px] font-black uppercase tracking-wider">
                   Manual
                 </div>
               </div>
-              <h3 className="text-xl font-black mb-2">Bank Remittance</h3>
-              <p className="text-muted-foreground text-sm mb-6">
+              <h3 className="text-lg sm:text-xl font-black mb-2 bg-gradient-to-r from-amber-500 to-amber-600 bg-clip-text text-transparent">Bank Remittance</h3>
+              <p className="text-muted-foreground text-xs sm:text-sm mb-6">
                 Bank Transfer, Mobile Money, or Western Union. Submit receipt for manual portal activation.
               </p>
               <ul className="space-y-2 mb-6">
                 {["Bank details on application", "Upload receipt for verification", "Portal active in 12-24 hours", "Local remittance support"].map((feature, i) => (
-                  <li key={i} className="flex items-center gap-2 text-sm">
-                    <CheckCircle2 className="w-4 h-4 text-accent shrink-0" />
+                  <li key={i} className="flex items-center gap-2 text-xs sm:text-sm">
+                    <CheckCircle2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-600 shrink-0" />
                     <span>{feature}</span>
                   </li>
                 ))}
               </ul>
-              <Button variant="outline" className="w-full rounded-full py-3 border-accent text-accent font-black hover:bg-accent/10">
+              <Button variant="outline" className="w-full rounded-full py-2.5 sm:py-3 border-amber-500 text-amber-600 font-black hover:bg-amber-50 dark:hover:bg-amber-950/20 text-xs sm:text-sm transition-all duration-300">
                 CHOOSE BANK TRANSFER
               </Button>
             </div>
@@ -1231,14 +1260,14 @@ export default function AdmissionsPage() {
       </section>
 
       {/* Tuition & Aid */}
-      <section className="py-12 sm:py-16 bg-linear-to-b from-background via-primary-50/5 to-primary-100/5">
-        <div className="container mx-auto px-4 sm:px-6">
-          <div className="grid lg:grid-cols-3 gap-6 sm:gap-8">
-            {/* Standard Tuition */}
-            <div className="institutional-card p-6 sm:p-8">
-              <BookOpen className="w-10 h-10 text-primary-600 mb-4" />
-              <h3 className="text-xl font-black mb-2">Standard Tuition</h3>
-              <p className="text-muted-foreground text-sm mb-6">Monthly tuition includes all digital materials and portal access.</p>
+      <section className="py-12 sm:py-16 bg-gradient-to-b from-background via-purple-50/5 to-amber-50/5">
+        <div className="container mx-auto px-3 xs:px-4 sm:px-6">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
+            {/* Standard Tuition - Purple */}
+            <div className="bg-card rounded-xl sm:rounded-2xl border border-border hover:border-purple-300 transition-all p-6 sm:p-8">
+              <BookOpen className="w-8 h-8 sm:w-10 sm:h-10 text-purple-600 mb-4" />
+              <h3 className="text-lg sm:text-xl font-black mb-2">Standard Tuition</h3>
+              <p className="text-muted-foreground text-xs sm:text-sm mb-6">Monthly tuition includes all digital materials and portal access.</p>
               <div className="space-y-3">
                 {[
                   { program: "Hifz Program", price: "$200-300" },
@@ -1247,41 +1276,41 @@ export default function AdmissionsPage() {
                   { program: "Group Programs", price: "$79-89" },
                 ].map((item, i) => (
                   <div key={i} className="flex justify-between items-center py-2 border-b border-border/50">
-                    <span className="text-sm font-black">{item.program}</span>
-                    <span className="text-primary-600 font-black">{item.price}</span>
+                    <span className="text-xs sm:text-sm font-black">{item.program}</span>
+                    <span className="text-purple-600 font-black text-xs sm:text-sm">{item.price}</span>
                   </div>
                 ))}
               </div>
             </div>
 
-            {/* Zakat Grants */}
-            <div className="institutional-card p-6 sm:p-8 border-2 border-accent/20 bg-accent/5">
-              <Shield className="w-10 h-10 text-accent mb-4" />
-              <h3 className="text-xl font-black mb-2 text-accent">Zakat Grants</h3>
-              <p className="text-muted-foreground text-sm mb-6">For dedicated students facing financial hardship. Applications reviewed quarterly.</p>
+            {/* Zakat Grants - Gold/Amber */}
+            <div className="bg-card rounded-xl sm:rounded-2xl border-2 border-amber-500/20 bg-amber-500/5 p-6 sm:p-8">
+              <Shield className="w-8 h-8 sm:w-10 sm:h-10 text-amber-500 mb-4" />
+              <h3 className="text-lg sm:text-xl font-black mb-2 text-amber-600">Zakat Grants</h3>
+              <p className="text-muted-foreground text-xs sm:text-sm mb-6">For dedicated students facing financial hardship. Applications reviewed quarterly.</p>
               <ul className="space-y-2 mb-6">
                 {["Council Review", "Proof of Dedication", "Limited Slots"].map((item, i) => (
-                  <li key={i} className="flex items-center gap-2 text-sm">
-                    <CheckCircle2 className="w-4 h-4 text-accent shrink-0" />
+                  <li key={i} className="flex items-center gap-2 text-xs sm:text-sm">
+                    <CheckCircle2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-500 shrink-0" />
                     <span>{item}</span>
                   </li>
                 ))}
               </ul>
-              <Button className="w-full rounded-full py-3 bg-accent hover:bg-accent/90 text-white font-black">
+              <Button className="w-full rounded-full py-2.5 sm:py-3 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-black text-xs sm:text-sm transition-all duration-300">
                 APPLY FOR AID
               </Button>
             </div>
 
-            {/* Family Rates */}
-            <div className="institutional-card p-6 sm:p-8 border-2 border-gold/20 bg-gold/5">
-              <Heart className="w-10 h-10 text-gold mb-4" />
-              <h3 className="text-xl font-black mb-2 text-gold">Family Rates</h3>
-              <p className="text-muted-foreground text-sm mb-6">Special rates for families learning together within one household.</p>
-              <div className="p-4 rounded-xl bg-white dark:bg-black/20 border border-gold/20 mb-6 text-center">
-                <div className="text-2xl font-black text-gold">15% Discount</div>
-                <div className="text-xs text-muted-foreground">For 3+ Household Members</div>
+            {/* Family Rates - Purple + Gold Mix */}
+            <div className="bg-card rounded-xl sm:rounded-2xl border-2 border-purple-500/20 bg-purple-500/5 p-6 sm:p-8">
+              <Heart className="w-8 h-8 sm:w-10 sm:h-10 text-purple-600 mb-4" />
+              <h3 className="text-lg sm:text-xl font-black mb-2 bg-gradient-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent">Family Rates</h3>
+              <p className="text-muted-foreground text-xs sm:text-sm mb-6">Special rates for families learning together within one household.</p>
+              <div className="p-4 rounded-xl bg-white dark:bg-black/20 border border-purple-500/20 mb-6 text-center">
+                <div className="text-xl sm:text-2xl font-black bg-gradient-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent">15% Discount</div>
+                <div className="text-[10px] sm:text-xs text-muted-foreground">For 3+ Household Members</div>
               </div>
-              <Button variant="outline" className="w-full rounded-full py-3 border-gold text-gold font-black hover:bg-gold/10">
+              <Button variant="outline" className="w-full rounded-full py-2.5 sm:py-3 border-purple-500 text-purple-600 font-black hover:bg-purple-50 dark:hover:bg-purple-950/20 text-xs sm:text-sm transition-all duration-300">
                 INQUIRE RATES
               </Button>
             </div>
@@ -1291,13 +1320,13 @@ export default function AdmissionsPage() {
 
       {/* FAQ Section */}
       <section className="py-12 sm:py-16">
-        <div className="container mx-auto px-4 sm:px-6">
+        <div className="container mx-auto px-3 xs:px-4 sm:px-6">
           <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-12">
-            <div className="inline-flex items-center gap-2 text-primary-600 font-black text-[8px] sm:text-[10px] uppercase tracking-[0.2em] sm:tracking-[0.3em] mb-3 sm:mb-4">
+            <div className="inline-flex items-center gap-2 text-amber-600 font-black text-[8px] sm:text-[10px] uppercase tracking-[0.2em] sm:tracking-[0.3em] mb-3 sm:mb-4">
               <MessageCircle className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> Common Questions
             </div>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black tracking-tighter font-heading mb-3 sm:mb-4 px-2">
-              Frequently Asked <span className="text-primary-600 italic">Questions</span>
+            <h2 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter font-heading mb-3 sm:mb-4 px-2">
+              Frequently Asked <span className="bg-gradient-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent italic">Questions</span>
             </h2>
           </div>
 
@@ -1311,10 +1340,10 @@ export default function AdmissionsPage() {
               { q: "Can I get a refund if I'm not satisfied?", a: "We offer a free assessment session before enrollment to ensure program fit." },
             ].map((faq, i) => (
               <Reveal key={i} delay={i * 0.05}>
-                <div className="bg-card rounded-xl sm:rounded-2xl border border-border hover:border-primary-300 transition-all p-5 sm:p-6">
+                <div className="bg-card rounded-xl sm:rounded-2xl border border-border hover:border-purple-300 transition-all p-5 sm:p-6">
                   <div className="flex items-start gap-2 sm:gap-3">
-                    <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-primary-100 dark:bg-primary-900/30 flex items-center justify-center shrink-0 mt-0.5">
-                      <Sparkles className="w-3 h-3 sm:w-4 sm:h-4 text-primary-600" />
+                    <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center shrink-0 mt-0.5">
+                      <Sparkles className="w-3 h-3 sm:w-4 sm:h-4 text-purple-600" />
                     </div>
                     <div>
                       <h3 className="font-black text-sm sm:text-base mb-1 sm:mb-2">{faq.q}</h3>
@@ -1328,26 +1357,26 @@ export default function AdmissionsPage() {
         </div>
       </section>
 
-      {/* Final CTA */}
+      {/* Final CTA - Purple + Gold Gradient */}
       <section className="py-12 sm:py-20">
-        <div className="container mx-auto px-4 sm:px-6">
-          <div className="bg-card rounded-xl sm:rounded-2xl border border-border hover:border-primary-300 transition-all p-6 sm:p-8 md:p-12 text-center max-w-4xl mx-auto bg-linear-to-br from-primary-600/5 to-primary-800/5">
-            <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-linear-to-br from-primary-700 to-primary-800 mb-4 sm:mb-6 shadow-lg">
+        <div className="container mx-auto px-3 xs:px-4 sm:px-6">
+          <div className="bg-card rounded-xl sm:rounded-2xl border border-border hover:border-purple-300 transition-all p-6 sm:p-8 md:p-12 text-center max-w-4xl mx-auto bg-gradient-to-br from-purple-600/5 via-purple-500/5 to-amber-500/5">
+            <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gradient-to-br from-purple-600 to-amber-500 mb-4 sm:mb-6 shadow-lg">
               <GraduationCap className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
             </div>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-black mb-3 sm:mb-4 px-2">Ready to Begin Your Journey?</h2>
+            <h2 className="text-xl xs:text-2xl sm:text-3xl md:text-4xl font-black mb-3 sm:mb-4 px-2 bg-gradient-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent">Ready to Begin Your Journey?</h2>
             <p className="text-sm sm:text-base text-muted-foreground mb-6 sm:mb-8 max-w-md mx-auto px-4">
               Join hundreds of students who have chosen Al-Maysaroh for their Quranic education.
             </p>
             <div className="flex flex-col xs:flex-row gap-3 sm:gap-4 justify-center px-4">
               <Link href="/admissions/apply" className="w-full xs:w-auto">
-                <Button className="w-full rounded-full px-6 sm:px-8 py-3 sm:py-4 font-black bg-linear-to-r from-primary-700 to-primary-800 hover:from-primary-800 hover:to-primary-900 text-white">
+                <Button className="w-full rounded-full px-6 sm:px-8 py-3 sm:py-4 font-black bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white text-sm sm:text-base transition-all duration-300 shadow-lg hover:shadow-xl">
                   APPLY NOW
                   <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 ml-1.5 sm:ml-2" />
                 </Button>
               </Link>
               <Link href="/contact" className="w-full xs:w-auto">
-                <Button variant="outline" className="w-full rounded-full px-6 sm:px-8 py-3 sm:py-4 font-black text-sm sm:text-base border-primary-600 text-primary-600">
+                <Button variant="outline" className="w-full rounded-full px-6 sm:px-8 py-3 sm:py-4 font-black text-sm sm:text-base border-purple-500 text-purple-600 hover:bg-purple-50 dark:hover:bg-purple-950/20 transition-all duration-300">
                   CONTACT ADMISSIONS
                 </Button>
               </Link>
