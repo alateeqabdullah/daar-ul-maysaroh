@@ -1066,7 +1066,7 @@ export default function AdmissionsPage() {
   const preSelectedProgramInfo = preSelectedProgram ? PROGRAMS[preSelectedProgram as keyof typeof PROGRAMS] : null;
 
   return (
-    <main ref={containerRef} className="relative pt-0 sm:pt-10 bg-background overflow-hidden">
+    <main ref={containerRef} className="relative pt-30 bg-background overflow-hidden">
       {/* Background - Hidden on mobile */}
       <div className="hidden sm:block fixed inset-0 pointer-events-none">
         <div className="absolute inset-0 opacity-[0.02] bg-[url('/islamic-pattern.svg')] bg-center bg-repeat" style={{ backgroundSize: "300px" }} />
