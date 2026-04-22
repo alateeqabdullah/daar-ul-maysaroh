@@ -245,7 +245,7 @@ export function Teachers() {
               </div>
               <h2 className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black tracking-tighter font-heading leading-[1.1]">
                 Carriers of <br className="hidden xs:block" />
-                <span className="bg-gradient-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent italic">
+                <span className="bg-linear-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent italic">
                   The Sanad.
                 </span>
               </h2>
@@ -284,7 +284,7 @@ export function Teachers() {
                   <div className="absolute top-3 left-3 xs:top-4 xs:left-4 sm:top-5 sm:left-5 md:top-6 md:left-6">
                     <div className="flex items-center gap-1 bg-purple-600/90 backdrop-blur-sm text-white px-1.5 py-0.5 xs:px-2 xs:py-0.5 sm:px-2.5 sm:py-1 rounded-full text-[6px] xs:text-[7px] sm:text-[8px] font-black uppercase tracking-wider shadow-md">
                       <Scroll className="w-2 h-2 xs:w-2.5 xs:h-2.5" />
-                      <span className="truncate max-w-[80px] xs:max-w-none">
+                      <span className="truncate max-w-20 xs:max-w-none">
                         {teacher.sanad}
                       </span>
                     </div>
@@ -293,7 +293,7 @@ export function Teachers() {
                   {/* Content - Column on mobile, Row on desktop */}
                   <div className="flex flex-col sm:flex-row lg:flex-col xl:flex-row gap-4 xs:gap-5 sm:gap-6 lg:gap-5 xl:gap-8 items-start mt-8 xs:mt-10 sm:mt-12">
                     {/* Portrait - Full width on mobile, fixed on desktop */}
-                    <div className="w-full sm:w-36 md:w-40 lg:w-full xl:w-44 h-40 xs:h-44 sm:h-44 md:h-48 lg:h-52 xl:h-56 bg-gradient-to-br from-purple-100 to-amber-100 dark:from-purple-950/30 dark:to-amber-950/30 rounded-xl xs:rounded-2xl overflow-hidden relative border border-border group-hover:border-purple-300 transition-all shrink-0">
+                    <div className="w-full sm:w-36 md:w-40 lg:w-full xl:w-44 h-40 xs:h-44 sm:h-44 md:h-48 lg:h-52 xl:h-56 bg-linear-to-br from-purple-100 to-amber-100 dark:from-purple-950/30 dark:to-amber-950/30 rounded-xl xs:rounded-2xl overflow-hidden relative border border-border group-hover:border-purple-300 transition-all shrink-0">
                       <div className="absolute inset-0 flex items-center justify-center opacity-20 group-hover:opacity-30 transition-opacity">
                         <GraduationCap className="w-10 h-10 xs:w-12 xs:h-12 sm:w-12 sm:h-12 text-purple-600" />
                       </div>
@@ -325,7 +325,7 @@ export function Teachers() {
                       </div>
 
                       <p className="text-[10px] xs:text-xs sm:text-xs italic font-medium text-muted-foreground/80 leading-relaxed border-l-2 border-purple-300 pl-2 xs:pl-2.5 sm:pl-3">
-                        "{teacher.philosophy}"
+                        {`"${teacher.philosophy}"`}
                       </p>
 
                       {/* Metadata - Wrap on mobile */}
@@ -370,7 +370,7 @@ export function Teachers() {
         {/* Trust Message - Mobile First */}
         <Reveal delay={0.3}>
           <div className="mt-10 xs:mt-12 sm:mt-16 md:mt-20 lg:mt-24 text-center max-w-3xl mx-auto">
-            <div className="bg-gradient-to-r from-purple-50 to-amber-50 dark:from-purple-950/20 dark:to-amber-950/20 rounded-lg xs:rounded-xl p-4 xs:p-5 sm:p-6 border border-purple-100 dark:border-purple-800">
+            <div className="bg-linear-to-r from-purple-50 to-amber-50 dark:from-purple-950/20 dark:to-amber-950/20 rounded-lg xs:rounded-xl p-4 xs:p-5 sm:p-6 border border-purple-100 dark:border-purple-800">
               <p className="text-[10px] xs:text-xs sm:text-sm text-muted-foreground font-medium leading-relaxed px-2 xs:px-3">
                 Our Dean personally matches each student with the perfect
                 teacher after their assessment based on their learning style,
