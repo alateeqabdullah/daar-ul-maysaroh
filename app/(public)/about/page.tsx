@@ -483,14 +483,10 @@
 
 import { Reveal } from "@/components/shared/section-animation";
 import { Button } from "@/components/ui/button";
-import { motion } from "framer-motion";
 import {
   ArrowRight,
   Award,
-  BookOpen,
   Brain,
-  Calendar,
-  CheckCircle2,
   Crown,
   Globe,
   GraduationCap,
@@ -648,21 +644,25 @@ export default function AboutPage() {
     <main className="relative bg-background overflow-hidden">
       {/* Premium Background Effects */}
       <div className="hidden sm:block fixed inset-0 pointer-events-none">
-        <div className="absolute inset-0 opacity-[0.02] bg-[url('/islamic-pattern.svg')] bg-center bg-repeat" style={{ backgroundSize: "300px" }} />
+        <div
+          className="absolute inset-0 opacity-[0.02] bg-[url('/islamic-pattern.svg')] bg-center bg-repeat"
+          style={{ backgroundSize: "300px" }}
+        />
         <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-primary-700/5 rounded-full blur-[150px]" />
         <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-gold/5 rounded-full blur-[150px]" />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-primary-500/3 rounded-full blur-[200px]" />
       </div>
 
       {/* Breadcrumb */}
-      <div className="container mx-auto px-4 sm:px-6 pt-20 sm:pt-24 md:pt-28 lg:pt-32">
-        <div className="text-xs sm:text-sm text-muted-foreground mb-6 sm:mb-8">
+      <div className="container font-semibold mx-auto px-4 sm:px-6 pt-20 sm:pt-24 md:pt-28 lg:pt-32">
+        {/* Breadcrumb - Your pattern */}
+        <nav className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground flex items-center gap-2 mb-8">
           <Link href="/" className="hover:text-primary-700 transition-colors">
             Home
           </Link>
-          <span className="mx-2">/</span>
-          <span className="text-primary-700 font-medium">About</span>
-        </div>
+          <span className="opacity-30">/</span>
+          <span className="text-primary-700">About Us</span>
+        </nav>
       </div>
 
       {/* Hero Section - Mobile-First (From V2 with V1 enhancements) */}
@@ -673,7 +673,8 @@ export default function AboutPage() {
               <Reveal>
                 <div className="space-y-6 sm:space-y-8">
                   <div className="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-5 py-1.5 sm:py-2.5 rounded-full bg-gradient-to-r from-primary-500/10 to-gold/10 border border-primary-500/20 text-primary-700 text-[9px] sm:text-[11px] font-black uppercase tracking-wider">
-                    <Sparkles className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5" /> Established 2018 • Preserving the Sanad
+                    <Sparkles className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5" />{" "}
+                    Established 2018 • Preserving the Sanad
                   </div>
 
                   <h1 className="text-4xl xs:text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tighter font-heading leading-[1.1]">
@@ -681,13 +682,15 @@ export default function AboutPage() {
                     <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-700 via-gold to-primary-700">
                       Word
                     </span>
-                    <br />of Allah
+                    <br />
+                    of Allah
                   </h1>
 
                   <p className="text-base sm:text-lg md:text-xl text-muted-foreground font-light leading-relaxed">
                     Al-Maysaroh International Institute is a sanctuary of sacred
-                    knowledge, dedicated to preserving the authentic transmission of
-                    the Quran through an unbroken chain of scholarship.
+                    knowledge, dedicated to preserving the authentic
+                    transmission of the Quran through an unbroken chain of
+                    scholarship.
                   </p>
 
                   {/* Mission & Legacy Cards - From V1 */}
@@ -697,8 +700,8 @@ export default function AboutPage() {
                         Our Mission
                       </h4>
                       <p className="text-sm text-muted-foreground font-bold leading-relaxed">
-                        To produce Huffadh who embody the Quranic character in every
-                        facet of life.
+                        To produce Huffadh who embody the Quranic character in
+                        every facet of life.
                       </p>
                     </div>
                     <div className="group p-5 sm:p-6 rounded-2xl sm:rounded-3xl bg-card border border-primary-700/10 hover:border-primary-700/30 transition-all">
@@ -706,8 +709,8 @@ export default function AboutPage() {
                         Our Legacy
                       </h4>
                       <p className="text-sm text-muted-foreground font-bold leading-relaxed">
-                        Preserving a Sanad (Chain) that has remained unbroken for
-                        1,400 years.
+                        Preserving a Sanad (Chain) that has remained unbroken
+                        for 1,400 years.
                       </p>
                     </div>
                   </div>
@@ -747,7 +750,10 @@ export default function AboutPage() {
                 </Button>
               </Link>
               <Link href="/assessment" className="w-full xs:w-auto">
-                <Button variant="outline" className="w-full rounded-full px-6 sm:px-8 md:px-10 py-3.5 sm:py-4 md:py-5 font-black text-sm sm:text-base md:text-lg border-primary-600 text-primary-600">
+                <Button
+                  variant="outline"
+                  className="w-full rounded-full px-6 sm:px-8 md:px-10 py-3.5 sm:py-4 md:py-5 font-black text-sm sm:text-base md:text-lg border-primary-600 text-primary-600"
+                >
                   FREE ASSESSMENT
                 </Button>
               </Link>
@@ -764,11 +770,15 @@ export default function AboutPage() {
               <Reveal key={i} delay={i * 0.1}>
                 <div className="space-y-1 sm:space-y-2">
                   <stat.icon className="w-4 h-4 sm:w-5 sm:h-6 text-gold mx-auto opacity-40" />
-                  <div className="text-2xl sm:text-3xl md:text-4xl font-black text-primary-700">{stat.value}</div>
+                  <div className="text-2xl sm:text-3xl md:text-4xl font-black text-primary-700">
+                    {stat.value}
+                  </div>
                   <div className="text-[9px] sm:text-[10px] font-black uppercase tracking-[0.2em] text-muted-foreground">
                     {stat.label}
                   </div>
-                  <div className="text-[8px] text-muted-foreground/50">{stat.desc}</div>
+                  <div className="text-[8px] text-muted-foreground/50">
+                    {stat.desc}
+                  </div>
                 </div>
               </Reveal>
             ))}
@@ -794,17 +804,31 @@ export default function AboutPage() {
                     أ
                   </div>
                   <div>
-                    <h3 className="font-black text-base sm:text-lg md:text-xl">Shaykh Abubakar Al-Maysariy</h3>
-                    <p className="text-primary-700 font-black text-xs sm:text-sm">Founder & Chief Scholar</p>
+                    <h3 className="font-black text-base sm:text-lg md:text-xl">
+                      Shaykh Abubakar Al-Maysariy
+                    </h3>
+                    <p className="text-primary-700 font-black text-xs sm:text-sm">
+                      Founder & Chief Scholar
+                    </p>
                   </div>
                 </div>
                 <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
-                  Born in Makkah and raised in the sacred precincts of Islamic scholarship, Shaykh Abubakar dedicated his life to preserving the authentic transmission of the Quran. He studied under senior scholars from Al-Azhar, Umm Al-Qura, and the Moroccan Qira'at schools.
+                  Born in Makkah and raised in the sacred precincts of Islamic
+                  scholarship, Shaykh Abubakar dedicated his life to preserving
+                  the authentic transmission of the Quran. He studied under
+                  senior scholars from Al-Azhar, Umm Al-Qura, and the Moroccan
+                  Qira'at schools.
                 </p>
                 <div className="p-4 sm:p-6 rounded-xl sm:rounded-2xl bg-primary-50/30 dark:bg-primary-950/20 border border-primary-700/10 italic">
                   <Quote className="w-6 h-6 sm:w-8 sm:h-8 text-gold/30 mb-2 sm:mb-3" />
-                  <p className="text-base sm:text-lg font-medium">"The Quran is not just a book to be read; it is a living tradition to be transmitted, heart to heart, generation to generation."</p>
-                  <p className="text-xs sm:text-sm text-primary-700 font-black mt-2 sm:mt-3">— Shaykh Abubakar Al-Maysariy</p>
+                  <p className="text-base sm:text-lg font-medium">
+                    "The Quran is not just a book to be read; it is a living
+                    tradition to be transmitted, heart to heart, generation to
+                    generation."
+                  </p>
+                  <p className="text-xs sm:text-sm text-primary-700 font-black mt-2 sm:mt-3">
+                    — Shaykh Abubakar Al-Maysariy
+                  </p>
                 </div>
               </div>
             </Reveal>
@@ -813,7 +837,9 @@ export default function AboutPage() {
               <div className="bg-card rounded-xl sm:rounded-2xl border border-border hover:border-primary-300 transition-all p-5 sm:p-6 md:p-8 space-y-4 sm:space-y-6 bg-gradient-to-br from-primary-50/10 to-gold/5">
                 <div className="flex items-center gap-2 sm:gap-3">
                   <Target className="w-5 h-5 sm:w-6 sm:h-6 text-primary-700" />
-                  <h3 className="font-black text-base sm:text-lg">Our Mission</h3>
+                  <h3 className="font-black text-base sm:text-lg">
+                    Our Mission
+                  </h3>
                 </div>
                 <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
                   {INSTITUTE.mission}
@@ -821,7 +847,9 @@ export default function AboutPage() {
                 <div className="h-px bg-border/50" />
                 <div className="flex items-center gap-2 sm:gap-3">
                   <Eye className="w-5 h-5 sm:w-6 sm:h-6 text-primary-700" />
-                  <h3 className="font-black text-base sm:text-lg">Our Vision</h3>
+                  <h3 className="font-black text-base sm:text-lg">
+                    Our Vision
+                  </h3>
                 </div>
                 <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
                   {INSTITUTE.vision}
@@ -853,12 +881,20 @@ export default function AboutPage() {
               return (
                 <Reveal key={i} delay={i * 0.1}>
                   <div className="text-center p-5 sm:p-6 md:p-8 rounded-xl sm:rounded-2xl bg-gradient-to-br from-background to-primary-50/10 border border-primary-700/10 hover:border-primary-700/30 transition-all group">
-                    <div className={`w-14 h-14 sm:w-16 sm:h-16 mx-auto mb-3 sm:mb-4 rounded-xl sm:rounded-2xl bg-gradient-to-br ${value.color} flex items-center justify-center shadow-lg`}>
+                    <div
+                      className={`w-14 h-14 sm:w-16 sm:h-16 mx-auto mb-3 sm:mb-4 rounded-xl sm:rounded-2xl bg-gradient-to-br ${value.color} flex items-center justify-center shadow-lg`}
+                    >
                       <Icon className="w-7 h-7 sm:w-8 sm:h-8 text-white" />
                     </div>
-                    <h3 className="font-black text-lg sm:text-xl mb-0.5 sm:mb-1">{value.title}</h3>
-                    <p className="text-xs sm:text-sm text-primary-700 font-black mb-1 sm:mb-2">{value.arabic}</p>
-                    <p className="text-xs sm:text-sm text-muted-foreground">{value.description}</p>
+                    <h3 className="font-black text-lg sm:text-xl mb-0.5 sm:mb-1">
+                      {value.title}
+                    </h3>
+                    <p className="text-xs sm:text-sm text-primary-700 font-black mb-1 sm:mb-2">
+                      {value.arabic}
+                    </p>
+                    <p className="text-xs sm:text-sm text-muted-foreground">
+                      {value.description}
+                    </p>
                   </div>
                 </Reveal>
               );
@@ -875,7 +911,8 @@ export default function AboutPage() {
               <Compass className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> Our Approach
             </div>
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter font-heading mb-3 sm:mb-4 px-2">
-              The <span className="text-primary-700 italic">Al-Maysaroh</span> Method
+              The <span className="text-primary-700 italic">Al-Maysaroh</span>{" "}
+              Method
             </h2>
             <p className="text-sm sm:text-base md:text-lg text-muted-foreground px-4">
               A unique blend of traditional scholarship and modern pedagogy
@@ -884,20 +921,46 @@ export default function AboutPage() {
 
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5 sm:gap-6 max-w-5xl mx-auto">
             {[
-              { icon: ScrollText, title: "Authentic Sanad", desc: "Unbroken chain to Prophet Muhammad (ﷺ)", color: "from-primary-600 to-primary-700" },
-              { icon: Users, title: "1-on-1 Instruction", desc: "Personalized attention from certified scholars", color: "from-primary-600 to-primary-700" },
-              { icon: Brain, title: "Proven Methodology", desc: "Structured approach for lasting retention", color: "from-primary-600 to-primary-700" },
-              { icon: Globe, title: "Global Accessibility", desc: "Learn from anywhere, at your pace", color: "from-primary-600 to-primary-700" },
+              {
+                icon: ScrollText,
+                title: "Authentic Sanad",
+                desc: "Unbroken chain to Prophet Muhammad (ﷺ)",
+                color: "from-primary-600 to-primary-700",
+              },
+              {
+                icon: Users,
+                title: "1-on-1 Instruction",
+                desc: "Personalized attention from certified scholars",
+                color: "from-primary-600 to-primary-700",
+              },
+              {
+                icon: Brain,
+                title: "Proven Methodology",
+                desc: "Structured approach for lasting retention",
+                color: "from-primary-600 to-primary-700",
+              },
+              {
+                icon: Globe,
+                title: "Global Accessibility",
+                desc: "Learn from anywhere, at your pace",
+                color: "from-primary-600 to-primary-700",
+              },
             ].map((item, i) => {
               const Icon = item.icon;
               return (
                 <Reveal key={i} delay={i * 0.1}>
                   <div className="text-center p-5 sm:p-6 rounded-lg sm:rounded-xl bg-background border border-border hover:border-primary-300 transition-all group h-full">
-                    <div className={`w-12 h-12 sm:w-14 sm:h-14 mx-auto mb-3 sm:mb-4 rounded-lg sm:rounded-xl bg-gradient-to-br ${item.color} flex items-center justify-center shadow-lg`}>
+                    <div
+                      className={`w-12 h-12 sm:w-14 sm:h-14 mx-auto mb-3 sm:mb-4 rounded-lg sm:rounded-xl bg-gradient-to-br ${item.color} flex items-center justify-center shadow-lg`}
+                    >
                       <Icon className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
                     </div>
-                    <h3 className="font-black text-sm sm:text-base mb-1 sm:mb-2">{item.title}</h3>
-                    <p className="text-xs sm:text-sm text-muted-foreground">{item.desc}</p>
+                    <h3 className="font-black text-sm sm:text-base mb-1 sm:mb-2">
+                      {item.title}
+                    </h3>
+                    <p className="text-xs sm:text-sm text-muted-foreground">
+                      {item.desc}
+                    </p>
                   </div>
                 </Reveal>
               );
@@ -914,11 +977,12 @@ export default function AboutPage() {
               <ScrollText className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> Our Heritage
             </div>
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter font-heading mb-3 sm:mb-4 px-2">
-              The Unbroken <span className="text-primary-700 italic">Sanad</span>
+              The Unbroken{" "}
+              <span className="text-primary-700 italic">Sanad</span>
             </h2>
             <p className="text-sm sm:text-base md:text-lg text-muted-foreground px-4">
-              Our chain of transmission connects directly to Prophet Muhammad (ﷺ) through
-              14 generations of verified scholars
+              Our chain of transmission connects directly to Prophet Muhammad
+              (ﷺ) through 14 generations of verified scholars
             </p>
           </div>
 
@@ -927,14 +991,24 @@ export default function AboutPage() {
             <div className="space-y-4 sm:space-y-6 md:space-y-8">
               {SANAD_CHAIN.map((scholar, idx) => (
                 <Reveal key={idx} delay={Math.min(idx * 0.02, 0.3)}>
-                  <div className={`flex flex-col md:flex-row items-center gap-3 sm:gap-4 md:gap-6 ${idx % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'}`}>
+                  <div
+                    className={`flex flex-col md:flex-row items-center gap-3 sm:gap-4 md:gap-6 ${idx % 2 === 0 ? "md:flex-row" : "md:flex-row-reverse"}`}
+                  >
                     <div className="flex-1 text-center md:text-left mb-2 md:mb-0">
-                      <p className="text-[10px] sm:text-xs text-primary-700 font-black">{scholar.era}</p>
-                      <p className="font-black text-sm sm:text-base md:text-lg break-words">{scholar.name}</p>
-                      <p className="text-xs sm:text-sm text-muted-foreground">{scholar.location}</p>
+                      <p className="text-[10px] sm:text-xs text-primary-700 font-black">
+                        {scholar.era}
+                      </p>
+                      <p className="font-black text-sm sm:text-base md:text-lg break-words">
+                        {scholar.name}
+                      </p>
+                      <p className="text-xs sm:text-sm text-muted-foreground">
+                        {scholar.location}
+                      </p>
                     </div>
                     <div className="relative z-10 shrink-0">
-                      <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center font-black shadow-lg text-sm sm:text-base ${scholar.current ? 'bg-primary-700 text-white ring-4 ring-primary-700/20' : scholar.isProphet ? 'bg-gold text-white' : 'bg-muted text-muted-foreground'}`}>
+                      <div
+                        className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center font-black shadow-lg text-sm sm:text-base ${scholar.current ? "bg-primary-700 text-white ring-4 ring-primary-700/20" : scholar.isProphet ? "bg-gold text-white" : "bg-muted text-muted-foreground"}`}
+                      >
                         {scholar.generation}
                       </div>
                     </div>
@@ -948,7 +1022,9 @@ export default function AboutPage() {
           <div className="text-center mt-8 sm:mt-10 md:mt-12">
             <div className="inline-flex items-center gap-1.5 sm:gap-2 px-4 sm:px-6 py-2 sm:py-3 rounded-full bg-gold/10 border border-gold/20">
               <Shield className="w-3 h-3 sm:w-4 sm:h-4 text-gold" />
-              <span className="text-[9px] sm:text-xs font-black uppercase tracking-wider">Verified by International Scholarly Council</span>
+              <span className="text-[9px] sm:text-xs font-black uppercase tracking-wider">
+                Verified by International Scholarly Council
+              </span>
             </div>
           </div>
         </div>
@@ -966,7 +1042,8 @@ export default function AboutPage() {
                 <span className="text-primary-700 italic">to Ijazah</span>
               </h2>
               <p className="text-base sm:text-lg text-muted-foreground font-medium">
-                A structured path from beginner to verified carrier of the Quran.
+                A structured path from beginner to verified carrier of the
+                Quran.
               </p>
             </div>
 
@@ -983,7 +1060,10 @@ export default function AboutPage() {
                       </h4>
                       <ul className="space-y-2 sm:space-y-3">
                         {phase.items.map((item) => (
-                          <li key={item} className="flex items-center gap-2 text-xs sm:text-sm font-bold text-muted-foreground">
+                          <li
+                            key={item}
+                            className="flex items-center gap-2 text-xs sm:text-sm font-bold text-muted-foreground"
+                          >
                             <ChevronRight className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-gold shrink-0" />
                             {item}
                           </li>
@@ -1003,10 +1083,12 @@ export default function AboutPage() {
         <div className="container mx-auto px-4 sm:px-6">
           <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-12">
             <div className="inline-flex items-center gap-2 text-primary-700 font-black text-[9px] sm:text-[10px] uppercase tracking-[0.2em] sm:tracking-[0.3em] mb-3 sm:mb-4">
-              <Award className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> Scholarly Recognition
+              <Award className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> Scholarly
+              Recognition
             </div>
             <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter font-heading mb-3 sm:mb-4 px-2">
-              Endorsed by <span className="text-primary-700 italic">Leading</span> Scholars
+              Endorsed by{" "}
+              <span className="text-primary-700 italic">Leading</span> Scholars
             </h2>
             <p className="text-sm sm:text-base md:text-lg text-muted-foreground px-4">
               Recognized by prestigious Islamic institutions worldwide
@@ -1018,14 +1100,20 @@ export default function AboutPage() {
               <Reveal key={i} delay={i * 0.1}>
                 <div className="bg-card rounded-lg sm:rounded-xl border border-border hover:border-primary-300 transition-all p-4 sm:p-6 h-full flex flex-col">
                   <Quote className="w-6 h-6 sm:w-8 sm:h-8 text-primary-200 dark:text-primary-800/30 mb-2 sm:mb-3" />
-                  <p className="text-xs sm:text-sm text-muted-foreground italic mb-3 sm:mb-4 flex-1">"{testimonial.content}"</p>
+                  <p className="text-xs sm:text-sm text-muted-foreground italic mb-3 sm:mb-4 flex-1">
+                    "{testimonial.content}"
+                  </p>
                   <div className="flex items-center gap-2 sm:gap-3 pt-2 sm:pt-3 border-t border-border">
                     <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-gradient-to-br from-primary-600 to-primary-700 flex items-center justify-center text-white font-black text-sm sm:text-base">
                       {testimonial.image}
                     </div>
                     <div className="min-w-0">
-                      <h4 className="font-black text-xs sm:text-sm truncate">{testimonial.name}</h4>
-                      <p className="text-[10px] sm:text-xs text-primary-600 font-black truncate">{testimonial.role}</p>
+                      <h4 className="font-black text-xs sm:text-sm truncate">
+                        {testimonial.name}
+                      </h4>
+                      <p className="text-[10px] sm:text-xs text-primary-600 font-black truncate">
+                        {testimonial.role}
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -1042,10 +1130,13 @@ export default function AboutPage() {
             <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gradient-to-br from-primary-700 to-gold mb-4 sm:mb-6 shadow-xl">
               <Rocket className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
             </div>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-black mb-3 sm:mb-4 px-2">Become Part of Our Legacy</h2>
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-black mb-3 sm:mb-4 px-2">
+              Become Part of Our Legacy
+            </h2>
             <p className="text-sm sm:text-base text-muted-foreground mb-6 sm:mb-8 max-w-md mx-auto px-4">
-              Join a community dedicated to preserving and transmitting the Word of Allah.
-              Begin your journey with a free, no-obligation assessment.
+              Join a community dedicated to preserving and transmitting the Word
+              of Allah. Begin your journey with a free, no-obligation
+              assessment.
             </p>
             <div className="flex flex-col xs:flex-row gap-3 sm:gap-4 justify-center px-4">
               <Link href="/admissions" className="w-full xs:w-auto">
@@ -1055,12 +1146,17 @@ export default function AboutPage() {
                 </Button>
               </Link>
               <Link href="/contact" className="w-full xs:w-auto">
-                <Button variant="outline" className="w-full rounded-full px-6 sm:px-8 py-3.5 sm:py-4 font-black text-sm sm:text-base border-primary-600 text-primary-600">
+                <Button
+                  variant="outline"
+                  className="w-full rounded-full px-6 sm:px-8 py-3.5 sm:py-4 font-black text-sm sm:text-base border-primary-600 text-primary-600"
+                >
                   CONTACT US
                 </Button>
               </Link>
             </div>
-            <p className="text-[10px] sm:text-xs text-muted-foreground mt-4 sm:mt-6">Free 20-minute assessment • No commitment • All ages welcome</p>
+            <p className="text-[10px] sm:text-xs text-muted-foreground mt-4 sm:mt-6">
+              Free 20-minute assessment • No commitment • All ages welcome
+            </p>
           </div>
         </div>
       </section>
