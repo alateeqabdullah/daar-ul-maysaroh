@@ -1106,7 +1106,7 @@ export default function AdmissionsPage() {
                 className="mb-6 p-4 rounded-xl bg-purple-50/50 dark:bg-purple-950/30 border border-purple-200 dark:border-purple-800"
               >
                 <p className="text-xs sm:text-sm">
-                  <span className="font-black text-purple-600">You're applying for:</span>{" "}
+                  <span className="font-black text-purple-600">{`You're applying for:`}</span>{" "}
                   <Link href={preSelectedProgramInfo.path} className="text-amber-600 font-black hover:underline">
                     {preSelectedProgramInfo.name}
                   </Link>
@@ -1133,7 +1133,7 @@ export default function AdmissionsPage() {
             {/* Stats Cards */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mt-10 sm:mt-12 pt-6 sm:pt-8 border-t border-border/50 px-2">
               {[
-                { label: "Active Students", value: "500+", icon: Users },
+                { label: "Active Students", value: "100+", icon: Users },
                 { label: "Certified Scholars", value: "15+", icon: GraduationCap },
                 { label: "Countries", value: "15+", icon: Globe },
                 { label: "Success Rate", value: "94%", icon: Target },

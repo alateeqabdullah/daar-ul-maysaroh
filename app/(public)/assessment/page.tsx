@@ -761,7 +761,7 @@ const DEAN = {
   title: "Dean of Academic Affairs & Chief Scholar",
   credentials: "Ijazah in Qira'at",
   experience: "15+ years",
-  students: "500+",
+  students: "100+",
   sanad: "Unbroken chain to Prophet Muhammad (ﷺ)",
   image: "أ",
   bio: "Shaykh Abubakar personally oversees every student's assessment, ensuring each receives a tailored learning path with proper teacher matching.",
