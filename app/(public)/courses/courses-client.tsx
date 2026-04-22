@@ -73,7 +73,7 @@ export function CoursesClient({ initialPrograms }: CoursesClientProps) {
   const [viewType, setViewType] = useState<"grid" | "list">("grid");
 
   // FIX 1: Use useMemo for filtering and sorting (more efficient than useEffect)
-  let filteredPrograms = useMemo(() => {
+  const filteredPrograms = useMemo(() => {
     let result = [...initialPrograms];
 
     // Apply category filter

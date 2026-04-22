@@ -193,7 +193,7 @@ export function QuranicVerse({
 
       {/* Fallback pattern while loading or error */}
       {(!patternLoaded || patternError) && (
-        <div className="absolute inset-0 opacity-[0.02] bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900" />
+        <div className="absolute inset-0 opacity-[0.02] bg-linear-to-br from-slate-900 via-slate-800 to-slate-900" />
       )}
 
       <div className="container mx-auto px-4 sm:px-6 relative z-10 text-center space-y-8 sm:space-y-12">
@@ -205,10 +205,10 @@ export function QuranicVerse({
             lang="ar"
             aria-label={`Surah Al-Hijr, Verse ${ayah} - ${verseData.translation}`}
           >
-            <span className="text-3xl sm:text-6xl md:text-8xl lg:text-9xl tracking-wider leading-relaxed block break-words px-2">
+            <span className="text-3xl sm:text-6xl md:text-8xl lg:text-9xl tracking-wider leading-relaxed block wrap-break-word px-2">
               {verseData.arabic.split(' ').slice(0, 5).join(' ')}
             </span>
-            <span className="text-3xl sm:text-6xl md:text-8xl lg:text-9xl tracking-wider leading-relaxed block mt-1 sm:mt-2 break-words px-2">
+            <span className="text-3xl sm:text-6xl md:text-8xl lg:text-9xl tracking-wider leading-relaxed block mt-1 sm:mt-2 wrap-break-word px-2">
               {verseData.arabic.split(' ').slice(5).join(' ')}
             </span>
             <span className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl text-amber-400/70 block mt-3 sm:mt-4">
@@ -282,7 +282,7 @@ export function QuranicVerse({
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="px-6 sm:px-8 py-2.5 sm:py-3 rounded-full bg-gradient-to-r from-amber-900/20 to-amber-800/10 border border-amber-700/30 text-amber-300 hover:text-amber-200 hover:border-amber-500/50 transition-all duration-300 group w-full sm:w-auto"
+                  className="px-6 sm:px-8 py-2.5 sm:py-3 rounded-full bg-linear-to-r from-amber-900/20 to-amber-800/10 border border-amber-700/30 text-amber-300 hover:text-amber-200 hover:border-amber-500/50 transition-all duration-300 group w-full sm:w-auto"
                   aria-label="Read Tafsir explanation"
                   onClick={() => window.open(verseData.url, "_blank")}
                 >
@@ -311,7 +311,7 @@ export function QuranicVerse({
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
-                  className="px-6 sm:px-8 py-2.5 sm:py-3 rounded-full bg-gradient-to-r from-amber-900/20 to-amber-800/10 border border-amber-700/30 text-amber-300 hover:text-amber-200 hover:border-amber-500/50 transition-all duration-300 group w-full sm:w-auto"
+                  className="px-6 sm:px-8 py-2.5 sm:py-3 rounded-full bg-linear-to-r from-amber-900/20 to-amber-800/10 border border-amber-700/30 text-amber-300 hover:text-amber-200 hover:border-amber-500/50 transition-all duration-300 group w-full sm:w-auto"
                   aria-label="Copy verse to clipboard"
                   onClick={copyVerse}
                 >
@@ -327,7 +327,7 @@ export function QuranicVerse({
         </motion.div>
 
         {/* Ambient Glow - optimized for performance */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-[600px] h-[300px] bg-gradient-to-br from-amber-900/10 via-primary-700/10 to-transparent blur-[100px] -z-10 rounded-full opacity-60 pointer-events-none" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-[600px] h-[300px] bg-linear-to-br from-amber-900/10 via-primary-700/10 to-transparent blur-[100px] -z-10 rounded-full opacity-60 pointer-events-none" />
 
         {/* Performance-optimized floating particles - hidden on mobile */}
         <div className="hidden sm:block absolute inset-0 overflow-hidden -z-10 pointer-events-none">
@@ -534,7 +534,7 @@ export function QuranicVerse({
 //       ref={ref}
 //       aria-label="Quranic Verse about Knowledge"
 //       role="region"
-//       className="relative py-20 sm:py-28 md:py-36 lg:py-48 overflow-hidden bg-gradient-to-b from-slate-950 via-slate-950 to-slate-900 isolate"
+//       className="relative py-20 sm:py-28 md:py-36 lg:py-48 overflow-hidden bg-linear-to-b from-slate-950 via-slate-950 to-slate-900 isolate"
 //     >
 //       {/* Background Islamic Geometry Overlay */}
 //       <div
