@@ -1135,7 +1135,7 @@ export default function AssessmentPage() {
   }
 
   return (
-    <main className="min-h-screen bg-background overflow-hidden py-20 sm:py-30 md:py-24 lg:py-32">
+    <main className="min-h-screen bg-background overflow-hidden py-30 sm:py-30 md:py-24 lg:py-32">
       {/* Background Elements */}
       <div className="fixed inset-0 pointer-events-none">
         <div className="absolute inset-0 opacity-[0.02] bg-[url('/islamic-pattern.svg')] bg-center bg-repeat" style={{ backgroundSize: "300px" }} />

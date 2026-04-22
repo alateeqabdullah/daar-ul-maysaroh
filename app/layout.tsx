@@ -234,7 +234,7 @@ export default function RootLayout({
         >
           <AuthProvider>
             <GlobalScrollProgress />
-            {/* <OfflineProvider> */}
+            <OfflineProvider>
               {children}
               {/* WhatsApp Floating Button - Appears on all pages */}
            
@@ -255,7 +255,7 @@ export default function RootLayout({
                 //   timezone: "America/New_York",
                 // }}
               />
-            {/* </OfflineProvider> */}
+            </OfflineProvider>
             <Toaster position="top-center" richColors />
           </AuthProvider>
         </ThemeProvider>

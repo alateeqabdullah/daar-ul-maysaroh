@@ -305,7 +305,7 @@
 //       initial={{ opacity: 0, y: 20 }}
 //       whileInView={{ opacity: 1, y: 0 }}
 //       transition={{ duration: 0.5 }}
-//       className="p-4 rounded-2xl bg-gradient-to-br from-amber-50/50 to-orange-50/50 dark:from-amber-950/20 dark:to-orange-950/20 border border-amber-100 dark:border-amber-800 text-center"
+//       className="p-4 rounded-2xl bg-linear-to-br from-amber-50/50 to-orange-50/50 dark:from-amber-950/20 dark:to-orange-950/20 border border-amber-100 dark:border-amber-800 text-center"
 //     >
 //       <Icon className="w-5 h-5 text-amber-600 mx-auto mb-2" />
 //       <div className="text-2xl sm:text-3xl font-black text-amber-600">
@@ -1082,14 +1082,14 @@ export default function AdmissionsPage() {
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ duration: 0.5 }}
-              className="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-gradient-to-r from-purple-500/10 to-purple-600/10 border border-purple-500/20 text-purple-700 text-[9px] sm:text-[11px] font-black uppercase tracking-wider mb-4 sm:mb-6"
+              className="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full bg-linear-to-r from-purple-500/10 to-purple-600/10 border border-purple-500/20 text-purple-700 text-[9px] sm:text-[11px] font-black uppercase tracking-wider mb-4 sm:mb-6"
             >
               <Sparkles className="w-2.5 h-2.5 sm:w-3.5 sm:h-3.5 text-amber-500" /> 🎓 Begin Your Sacred Journey 🎓
             </motion.div>
 
             <h1 className="text-4xl xs:text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tighter font-heading leading-[1.1] mb-4 sm:mb-6 px-2">
               Al-Maysaroh{" "}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 via-purple-700 to-amber-600 whitespace-normal">
+              <span className="text-transparent bg-clip-text bg-linear-to-r from-purple-600 via-purple-700 to-amber-600 whitespace-normal">
                 Admissions
               </span>
             </h1>
@@ -1116,7 +1116,7 @@ export default function AdmissionsPage() {
 
             <div className="flex flex-col xs:flex-row gap-3 sm:gap-4 justify-center px-4">
               <Link href="/admissions/apply" className="w-full xs:w-auto">
-                <Button className="w-full rounded-full px-6 sm:px-8 py-3.5 sm:py-4 font-black bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white text-sm sm:text-base shadow-xl transition-all duration-300">
+                <Button className="w-full rounded-full px-6 sm:px-8 py-3.5 sm:py-4 font-black bg-linear-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white text-sm sm:text-base shadow-xl transition-all duration-300">
                   <span className="flex items-center justify-center gap-2">
                     START YOUR APPLICATION
                     <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
@@ -1138,7 +1138,7 @@ export default function AdmissionsPage() {
                 { label: "Countries", value: "15+", icon: Globe },
                 { label: "Success Rate", value: "94%", icon: Target },
               ].map((stat, i) => (
-                <motion.div key={i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }} className="p-2.5 sm:p-4 rounded-xl sm:rounded-2xl bg-gradient-to-br from-purple-50/50 to-purple-100/30 dark:from-purple-950/20 dark:to-purple-900/20 border border-purple-100 dark:border-purple-800">
+                <motion.div key={i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.1 }} className="p-2.5 sm:p-4 rounded-xl sm:rounded-2xl bg-linear-to-br from-purple-50/50 to-purple-100/30 dark:from-purple-950/20 dark:to-purple-900/20 border border-purple-100 dark:border-purple-800">
                   <stat.icon className="w-4 h-4 sm:w-5 sm:h-5 text-purple-600 mx-auto mb-1.5 sm:mb-2" />
                   <div className="text-lg sm:text-2xl md:text-3xl font-black text-purple-600">{stat.value}</div>
                   <div className="text-[10px] sm:text-xs text-muted-foreground mt-0.5 sm:mt-1">{stat.label}</div>
@@ -1150,14 +1150,14 @@ export default function AdmissionsPage() {
       </motion.div>
 
       {/* Admissions Process - 4 Steps */}
-      <section className="py-12 sm:py-16 bg-gradient-to-b from-background via-purple-50/5 to-amber-50/5">
+      <section className="py-12 sm:py-16 bg-linear-to-b from-background via-purple-50/5 to-amber-50/5">
         <div className="container mx-auto px-3 xs:px-4 sm:px-6">
           <div className="text-center max-w-2xl mx-auto mb-8 sm:mb-12">
             <div className="inline-flex items-center gap-2 text-amber-600 font-black text-[8px] sm:text-[10px] uppercase tracking-[0.2em] sm:tracking-[0.3em] mb-3 sm:mb-4">
               <Compass className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> Your Journey
             </div>
             <h2 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter font-heading mb-3 sm:mb-4 px-2">
-              Four-Step <span className="bg-gradient-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent italic">Admissions</span> Protocol
+              Four-Step <span className="bg-linear-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent italic">Admissions</span> Protocol
             </h2>
             <p className="text-sm sm:text-base text-muted-foreground px-4">
               A clear path from application to your first class
@@ -1173,7 +1173,7 @@ export default function AdmissionsPage() {
             ].map((step, i) => (
               <Reveal key={i} delay={i * 0.1}>
                 <div className="bg-card rounded-xl sm:rounded-2xl border border-border hover:border-purple-300 transition-all p-5 sm:p-6 text-center h-full group">
-                  <div className={`w-14 h-14 sm:w-16 sm:h-16 mx-auto mb-3 sm:mb-4 rounded-xl sm:rounded-2xl bg-gradient-to-br ${step.color} flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg`}>
+                  <div className={`w-14 h-14 sm:w-16 sm:h-16 mx-auto mb-3 sm:mb-4 rounded-xl sm:rounded-2xl bg-linear-to-br ${step.color} flex items-center justify-center group-hover:scale-110 transition-transform shadow-lg`}>
                     <step.icon className="w-7 h-7 sm:w-8 sm:h-8 text-white" />
                   </div>
                   <div className="text-[10px] sm:text-xs text-amber-600 font-black mb-1">{step.step}</div>
@@ -1194,7 +1194,7 @@ export default function AdmissionsPage() {
               <CreditCard className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> Financial Channels
             </div>
             <h2 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter font-heading mb-3 sm:mb-4 px-2">
-              Flexible <span className="bg-gradient-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent italic">Payment</span> Options
+              Flexible <span className="bg-linear-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent italic">Payment</span> Options
             </h2>
             <p className="text-sm sm:text-base text-muted-foreground px-4">
               Choose the payment method that works best for you
@@ -1205,14 +1205,14 @@ export default function AdmissionsPage() {
             {/* Instant Digital - Purple Theme */}
             <div className="bg-card rounded-xl sm:rounded-2xl border-2 border-purple-600/10 hover:border-purple-600/30 transition-all p-6 sm:p-8">
               <div className="flex items-start justify-between mb-6">
-                <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-gradient-to-br from-purple-600 to-purple-700 flex items-center justify-center shadow-lg">
+                <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-linear-to-br from-purple-600 to-purple-700 flex items-center justify-center shadow-lg">
                   <CreditCard className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
                 </div>
                 <div className="px-2 sm:px-3 py-0.5 sm:py-1 rounded-full bg-purple-600/10 text-purple-600 text-[8px] sm:text-[10px] font-black uppercase tracking-wider">
                   Instant
                 </div>
               </div>
-              <h3 className="text-lg sm:text-xl font-black mb-2 bg-gradient-to-r from-purple-600 to-purple-700 bg-clip-text text-transparent">Digital Settlement</h3>
+              <h3 className="text-lg sm:text-xl font-black mb-2 bg-linear-to-r from-purple-600 to-purple-700 bg-clip-text text-transparent">Digital Settlement</h3>
               <p className="text-muted-foreground text-xs sm:text-sm mb-6">
                 Secure card processing via Stripe. Use any international Credit/Debit card for immediate portal access.
               </p>
@@ -1224,7 +1224,7 @@ export default function AdmissionsPage() {
                   </li>
                 ))}
               </ul>
-              <Button className="w-full rounded-full py-2.5 sm:py-3 bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white font-black text-xs sm:text-sm transition-all duration-300">
+              <Button className="w-full rounded-full py-2.5 sm:py-3 bg-linear-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white font-black text-xs sm:text-sm transition-all duration-300">
                 PAY WITH CARD
               </Button>
             </div>
@@ -1232,14 +1232,14 @@ export default function AdmissionsPage() {
             {/* Manual Payment - Gold/Amber Theme */}
             <div className="bg-card rounded-xl sm:rounded-2xl border-2 border-amber-500/10 hover:border-amber-500/30 transition-all p-6 sm:p-8">
               <div className="flex items-start justify-between mb-6">
-                <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-gradient-to-br from-amber-500 to-amber-600 flex items-center justify-center shadow-lg">
+                <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-linear-to-br from-amber-500 to-amber-600 flex items-center justify-center shadow-lg">
                   <Banknote className="w-6 h-6 sm:w-7 sm:h-7 text-white" />
                 </div>
                 <div className="px-2 sm:px-3 py-0.5 sm:py-1 rounded-full bg-amber-500/10 text-amber-600 text-[8px] sm:text-[10px] font-black uppercase tracking-wider">
                   Manual
                 </div>
               </div>
-              <h3 className="text-lg sm:text-xl font-black mb-2 bg-gradient-to-r from-amber-500 to-amber-600 bg-clip-text text-transparent">Bank Remittance</h3>
+              <h3 className="text-lg sm:text-xl font-black mb-2 bg-linear-to-r from-amber-500 to-amber-600 bg-clip-text text-transparent">Bank Remittance</h3>
               <p className="text-muted-foreground text-xs sm:text-sm mb-6">
                 Bank Transfer, Mobile Money, or Western Union. Submit receipt for manual portal activation.
               </p>
@@ -1260,7 +1260,7 @@ export default function AdmissionsPage() {
       </section>
 
       {/* Tuition & Aid */}
-      <section className="py-12 sm:py-16 bg-gradient-to-b from-background via-purple-50/5 to-amber-50/5">
+      <section className="py-12 sm:py-16 bg-linear-to-b from-background via-purple-50/5 to-amber-50/5">
         <div className="container mx-auto px-3 xs:px-4 sm:px-6">
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
             {/* Standard Tuition - Purple */}
@@ -1270,10 +1270,10 @@ export default function AdmissionsPage() {
               <p className="text-muted-foreground text-xs sm:text-sm mb-6">Monthly tuition includes all digital materials and portal access.</p>
               <div className="space-y-3">
                 {[
-                  { program: "Hifz Program", price: "$200-300" },
-                  { program: "Tajweed Mastery", price: "$150-200" },
-                  { program: "Arabic Fluency", price: "$100-150" },
-                  { program: "Group Programs", price: "$79-89" },
+                  { program: "Hifz Program", price: "From $2.25+" },
+                  { program: "Tajweed Mastery", price: "From $2+" },
+                  { program: "Arabic Fluency", price: "From $2+" },
+                  { program: "Group Programs", price: "$6" },
                 ].map((item, i) => (
                   <div key={i} className="flex justify-between items-center py-2 border-b border-border/50">
                     <span className="text-xs sm:text-sm font-black">{item.program}</span>
@@ -1296,7 +1296,7 @@ export default function AdmissionsPage() {
                   </li>
                 ))}
               </ul>
-              <Button className="w-full rounded-full py-2.5 sm:py-3 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-black text-xs sm:text-sm transition-all duration-300">
+              <Button className="w-full rounded-full py-2.5 sm:py-3 bg-linear-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-black text-xs sm:text-sm transition-all duration-300">
                 APPLY FOR AID
               </Button>
             </div>
@@ -1304,10 +1304,10 @@ export default function AdmissionsPage() {
             {/* Family Rates - Purple + Gold Mix */}
             <div className="bg-card rounded-xl sm:rounded-2xl border-2 border-purple-500/20 bg-purple-500/5 p-6 sm:p-8">
               <Heart className="w-8 h-8 sm:w-10 sm:h-10 text-purple-600 mb-4" />
-              <h3 className="text-lg sm:text-xl font-black mb-2 bg-gradient-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent">Family Rates</h3>
+              <h3 className="text-lg sm:text-xl font-black mb-2 bg-linear-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent">Family Rates(1-on-1)</h3>
               <p className="text-muted-foreground text-xs sm:text-sm mb-6">Special rates for families learning together within one household.</p>
               <div className="p-4 rounded-xl bg-white dark:bg-black/20 border border-purple-500/20 mb-6 text-center">
-                <div className="text-xl sm:text-2xl font-black bg-gradient-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent">15% Discount</div>
+                <div className="text-xl sm:text-2xl font-black bg-linear-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent">15% Discount</div>
                 <div className="text-[10px] sm:text-xs text-muted-foreground">For 3+ Household Members</div>
               </div>
               <Button variant="outline" className="w-full rounded-full py-2.5 sm:py-3 border-purple-500 text-purple-600 font-black hover:bg-purple-50 dark:hover:bg-purple-950/20 text-xs sm:text-sm transition-all duration-300">
@@ -1326,7 +1326,7 @@ export default function AdmissionsPage() {
               <MessageCircle className="w-3 h-3 sm:w-3.5 sm:h-3.5" /> Common Questions
             </div>
             <h2 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter font-heading mb-3 sm:mb-4 px-2">
-              Frequently Asked <span className="bg-gradient-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent italic">Questions</span>
+              Frequently Asked <span className="bg-linear-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent italic">Questions</span>
             </h2>
           </div>
 
@@ -1357,20 +1357,20 @@ export default function AdmissionsPage() {
         </div>
       </section>
 
-      {/* Final CTA - Purple + Gold Gradient */}
+      {/* Final CTA - Purple + Gold linear */}
       <section className="py-12 sm:py-20">
         <div className="container mx-auto px-3 xs:px-4 sm:px-6">
-          <div className="bg-card rounded-xl sm:rounded-2xl border border-border hover:border-purple-300 transition-all p-6 sm:p-8 md:p-12 text-center max-w-4xl mx-auto bg-gradient-to-br from-purple-600/5 via-purple-500/5 to-amber-500/5">
-            <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gradient-to-br from-purple-600 to-amber-500 mb-4 sm:mb-6 shadow-lg">
+          <div className="bg-card rounded-xl sm:rounded-2xl border border-border hover:border-purple-300 transition-all p-6 sm:p-8 md:p-12 text-center max-w-4xl mx-auto bg-linear-to-br from-purple-600/5 via-purple-500/5 to-amber-500/5">
+            <div className="inline-flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-linear-to-br from-purple-600 to-amber-500 mb-4 sm:mb-6 shadow-lg">
               <GraduationCap className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
             </div>
-            <h2 className="text-xl xs:text-2xl sm:text-3xl md:text-4xl font-black mb-3 sm:mb-4 px-2 bg-gradient-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent">Ready to Begin Your Journey?</h2>
+            <h2 className="text-xl xs:text-2xl sm:text-3xl md:text-4xl font-black mb-3 sm:mb-4 px-2 bg-linear-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent">Ready to Begin Your Journey?</h2>
             <p className="text-sm sm:text-base text-muted-foreground mb-6 sm:mb-8 max-w-md mx-auto px-4">
               Join hundreds of students who have chosen Al-Maysaroh for their Quranic education.
             </p>
             <div className="flex flex-col xs:flex-row gap-3 sm:gap-4 justify-center px-4">
               <Link href="/admissions/apply" className="w-full xs:w-auto">
-                <Button className="w-full rounded-full px-6 sm:px-8 py-3 sm:py-4 font-black bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white text-sm sm:text-base transition-all duration-300 shadow-lg hover:shadow-xl">
+                <Button className="w-full rounded-full px-6 sm:px-8 py-3 sm:py-4 font-black bg-linear-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white text-sm sm:text-base transition-all duration-300 shadow-lg hover:shadow-xl">
                   APPLY NOW
                   <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 ml-1.5 sm:ml-2" />
                 </Button>
