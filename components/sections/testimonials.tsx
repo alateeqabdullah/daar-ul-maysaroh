@@ -193,7 +193,7 @@ export function Testimonials() {
               Say
             </h2>
             <p className="text-sm xs:text-base text-muted-foreground max-w-md mx-auto">
-              Join thousands of satisfied learners who have transformed their
+              Join hundreds of satisfied learners who have transformed their
               relationship with the Quran
             </p>
           </Reveal>
