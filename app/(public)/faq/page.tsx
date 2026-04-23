@@ -24,7 +24,6 @@ import {
   Zap,
   Heart,
   Headphones,
-  Calendar,
   Loader2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -204,7 +203,7 @@ function CategoryCard({
       className={cn(
         "p-3 xs:p-4 rounded-xl xs:rounded-2xl text-center transition-all duration-300",
         isActive
-          ? "bg-gradient-to-r from-purple-600 to-purple-700 shadow-lg"
+          ? "bg-linear-to-r from-purple-600 to-purple-700 shadow-lg"
           : "bg-card border border-border hover:border-purple-300",
       )}
     >
@@ -396,7 +395,7 @@ export default function FAQPage() {
         <div className="container mx-auto px-4 xs:px-5 sm:px-6">
           <div className="max-w-3xl mx-auto text-center">
             <Reveal>
-              <div className="inline-flex items-center gap-1.5 xs:gap-2 px-2.5 xs:px-3 py-1 xs:py-1.5 rounded-full bg-gradient-to-r from-purple-100 to-amber-100 dark:from-purple-900/30 dark:to-amber-900/30 border border-purple-200 dark:border-purple-800 mb-3 xs:mb-4">
+              <div className="inline-flex items-center gap-1.5 xs:gap-2 px-2.5 xs:px-3 py-1 xs:py-1.5 rounded-full bg-linear-to-r from-purple-100 to-amber-100 dark:from-purple-900/30 dark:to-amber-900/30 border border-purple-200 dark:border-purple-800 mb-3 xs:mb-4">
                 <Sparkles className="w-3 h-3 xs:w-3.5 xs:h-3.5 text-amber-500" />
                 <span className="text-[8px] xs:text-[9px] sm:text-[10px] font-black uppercase tracking-wider text-purple-700 dark:text-purple-400">
                   Knowledge Base
@@ -404,7 +403,7 @@ export default function FAQPage() {
               </div>
               <h1 className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl font-black tracking-tighter font-heading leading-[1.1] mb-3 xs:mb-4">
                 Frequently Asked{" "}
-                <span className="bg-gradient-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent italic">
+                <span className="bg-linear-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent italic">
                   Questions
                 </span>
               </h1>
@@ -582,7 +581,7 @@ export default function FAQPage() {
         <div className="container mx-auto px-4 xs:px-5 sm:px-6">
           <div className="max-w-4xl mx-auto">
             <Reveal>
-              <div className="relative overflow-hidden rounded-2xl xs:rounded-3xl bg-gradient-to-br from-purple-600/10 to-amber-500/10 border border-purple-200 dark:border-purple-800 p-6 xs:p-8 sm:p-12 text-center">
+              <div className="relative overflow-hidden rounded-2xl xs:rounded-3xl bg-linear-to-br from-purple-600/10 to-amber-500/10 border border-purple-200 dark:border-purple-800 p-6 xs:p-8 sm:p-12 text-center">
                 <div className="absolute top-0 right-0 w-32 xs:w-40 h-32 xs:h-40 bg-purple-600/5 rounded-full blur-3xl" />
                 <div className="absolute bottom-0 left-0 w-32 xs:w-40 h-32 xs:h-40 bg-amber-500/5 rounded-full blur-3xl" />
 
@@ -595,7 +594,7 @@ export default function FAQPage() {
                   </div>
 
                   <h2 className="text-xl xs:text-2xl sm:text-3xl font-black mb-2 xs:mb-3">
-                    We're Here to Help
+                    {`We're Here to Help`}
                   </h2>
 
                   <p className="text-xs xs:text-sm text-muted-foreground mb-6 xs:mb-8 max-w-md mx-auto px-4">
@@ -605,7 +604,7 @@ export default function FAQPage() {
 
                   <div className="flex flex-col xs:flex-row gap-3 xs:gap-4 justify-center">
                     <Link href="/contact">
-                      <Button className="rounded-full px-6 xs:px-8 py-2.5 xs:py-3.5 font-black bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white shadow-lg transition-all duration-300 group">
+                      <Button className="rounded-full px-6 xs:px-8 py-2.5 xs:py-3.5 font-black bg-linear-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white shadow-lg transition-all duration-300 group">
                         <span className="flex items-center gap-2 text-[10px] xs:text-xs">
                           Contact Support
                           <ArrowRight className="w-3.5 h-3.5 xs:w-4 xs:h-4 group-hover:translate-x-1 transition-transform" />

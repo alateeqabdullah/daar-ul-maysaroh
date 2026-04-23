@@ -5,8 +5,7 @@ import { useState, useEffect } from "react";
 import { Reveal } from "@/components/shared/section-animation";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { ArrowRight, Sparkles, Crown } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { ArrowRight, Sparkles } from "lucide-react";
 
 // Check for reduced motion preference
 const prefersReducedMotion =
@@ -27,7 +26,7 @@ export function CTA() {
   return (
     <section className="py-16 xs:py-20 sm:py-24 md:py-28 lg:py-32 relative overflow-hidden">
       {/* Background - Clean gradient without heavy patterns */}
-      <div className="absolute inset-0 bg-gradient-to-br from-purple-600 via-purple-700 to-amber-600" />
+      <div className="absolute inset-0 bg-linear-to-br from-purple-600 via-purple-700 to-amber-600" />
 
       {/* Subtle Background Glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-white/5 rounded-full blur-3xl" />
@@ -54,7 +53,7 @@ export function CTA() {
           <Reveal delay={0.1}>
             <h2 className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl font-black tracking-tighter font-heading leading-[1.2] text-white mb-4">
               Ready to Start Your{" "}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-300 to-amber-200">
+              <span className="text-transparent bg-clip-text bg-linear-to-r from-amber-300 to-amber-200">
                 Quranic Journey?
               </span>
             </h2>
