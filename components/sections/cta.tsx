@@ -111,7 +111,7 @@ export function CTA() {
               </div>
               <div className="w-px h-8 bg-white/20 my-auto" />
               <div className="px-3 py-1.5">
-                <p className="text-2xl font-black text-white">15+</p>
+                <p className="text-2xl font-black text-white">6+</p>
                 <p className="text-[9px] font-black uppercase tracking-wider text-white/60">
                   Countries
                 </p>
