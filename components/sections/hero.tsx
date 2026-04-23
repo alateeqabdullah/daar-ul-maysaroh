@@ -476,8 +476,8 @@ export function Hero({ className }: HeroProps) {
         />
 
         {/* Edge Fade Gradients */}
-        <div className="absolute top-0 left-0 right-0 h-24 sm:h-32 bg-gradient-to-b from-background to-transparent" />
-        <div className="absolute bottom-0 left-0 right-0 h-24 sm:h-32 bg-gradient-to-t from-background to-transparent" />
+        <div className="absolute top-0 left-0 right-0 h-24 sm:h-32 bg-linear-to-b from-background to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 h-24 sm:h-32 bg-linear-to-t from-background to-transparent" />
       </motion.div>
 
       <div className="container mx-auto px-4 xs:px-5 sm:px-6 lg:grid lg:grid-cols-2 gap-6 sm:gap-8 md:gap-12 lg:gap-16 xl:gap-24 items-center relative z-10">
@@ -505,7 +505,7 @@ export function Hero({ className }: HeroProps) {
           <div className="space-y-3 xs:space-y-4 sm:space-y-4 md:space-y-5">
             <h1 className="text-3xl xs:text-4xl sm:text-5xl md:text-5xl lg:text-6xl xl:text-7xl font-black tracking-tighter leading-[1.1] font-heading">
               Not Just Quran Classes. <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-amber-600 via-purple-600 to-purple-800">
+              <span className="text-transparent bg-clip-text bg-linear-to-r from-amber-600 via-purple-600 to-purple-800">
                 A Personal Connection to the Quran...
               </span>
             </h1>
@@ -531,7 +531,7 @@ export function Hero({ className }: HeroProps) {
                 {[...Array(4)].map((_, i) => (
                   <div
                     key={i}
-                    className="w-7 h-7 xs:w-8 xs:h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 rounded-full bg-gradient-to-br from-purple-600 to-purple-800 border-2 border-background shadow-lg"
+                    className="w-7 h-7 xs:w-8 xs:h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 rounded-full bg-linear-to-br from-purple-600 to-purple-800 border-2 border-background shadow-lg"
                   />
                 ))}
               </div>
@@ -555,7 +555,7 @@ export function Hero({ className }: HeroProps) {
             <Link href="/courses" className="w-full xs:w-auto">
               <Button
                 size={isMobile ? "default" : "lg"}
-                className="h-12 xs:h-13 sm:h-14 md:h-15 lg:h-16 w-full xs:w-auto px-5 xs:px-6 sm:px-7 md:px-10 lg:px-12 rounded-xl xs:rounded-2xl sm:rounded-2xl md:rounded-3xl text-xs xs:text-sm sm:text-sm md:text-base font-black bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white shadow-lg transition-all group overflow-hidden"
+                className="h-12 xs:h-13 sm:h-14 md:h-15 lg:h-16 w-full xs:w-auto px-5 xs:px-6 sm:px-7 md:px-10 lg:px-12 rounded-xl xs:rounded-2xl sm:rounded-2xl md:rounded-3xl text-xs xs:text-sm sm:text-sm md:text-base font-black bg-linear-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white shadow-lg transition-all group overflow-hidden"
               >
                 <span className="relative z-10 flex items-center justify-center gap-1.5 xs:gap-2">
                   SCHEDULE ASSESSMENT{" "}
@@ -563,7 +563,7 @@ export function Hero({ className }: HeroProps) {
                 </span>
                 {shouldAnimate && (
                   <motion.div
-                    className="absolute inset-0 bg-gradient-to-r from-transparent via-white/15 to-transparent -skew-x-12"
+                    className="absolute inset-0 bg-linear-to-r from-transparent via-white/15 to-transparent -skew-x-12"
                     animate={{ x: ["-150%", "250%"] }}
                     transition={{
                       duration: 3,
@@ -628,7 +628,7 @@ export function Hero({ className }: HeroProps) {
             />
           )}
 
-          <div className="institutional-card w-full max-w-[90vw] sm:max-w-[500px] md:max-w-[600px] rounded-3xl md:rounded-[5rem] border border-purple-200 dark:border-purple-800 p-6 sm:p-8 md:p-12 lg:p-20 shadow-xl md:shadow-2xl text-center relative overflow-hidden group bg-gradient-to-br from-background to-purple-50/10">
+          <div className="institutional-card w-full max-w-[90vw] sm:max-w-[500px] md:max-w-[600px] rounded-3xl md:rounded-[5rem] border border-purple-200 dark:border-purple-800 p-6 sm:p-8 md:p-12 lg:p-20 shadow-xl md:shadow-2xl text-center relative overflow-hidden group bg-linear-to-br from-background to-purple-50/10">
             {/* Inner glow */}
             <div className="absolute -top-10 -left-10 md:-top-20 md:-left-20 w-32 h-32 md:w-64 md:h-64 bg-purple-600/5 md:bg-purple-600/10 blur-2xl md:blur-[100px] rounded-full group-hover:bg-purple-600/10 md:group-hover:bg-purple-600/20 transition-all duration-1000" />
 
@@ -653,14 +653,14 @@ export function Hero({ className }: HeroProps) {
                 </p>
 
                 <div className="flex items-center justify-center gap-4 md:gap-8">
-                  <div className="h-px md:h-0.5 flex-1 bg-gradient-to-r from-transparent via-amber-500/30 md:via-amber-500/50 to-amber-500" />
+                  <div className="h-px md:h-0.5 flex-1 bg-linear-to-r from-transparent via-amber-500/30 md:via-amber-500/50 to-amber-500" />
                   <div className="flex flex-col items-center min-w-[100px]">
                     <BookMarked className="w-4 h-4 md:w-5 md:h-5 text-amber-500 mb-1 md:mb-2" />
                     <p className="text-[10px] md:text-[12px] font-bold md:font-black text-amber-500 uppercase tracking-[0.3em] md:tracking-[0.6em] whitespace-nowrap">
                       Surah Al-Qamar
                     </p>
                   </div>
-                  <div className="h-px md:h-0.5 flex-1 bg-gradient-to-l from-transparent via-amber-500/30 md:via-amber-500/50 to-amber-500" />
+                  <div className="h-px md:h-0.5 flex-1 bg-linear-to-l from-transparent via-amber-500/30 md:via-amber-500/50 to-amber-500" />
                 </div>
               </div>
             </motion.div>
@@ -707,7 +707,7 @@ export function Hero({ className }: HeroProps) {
           <p className="text-[8px] xs:text-[9px] sm:text-[9px] md:text-[10px] font-black tracking-widest uppercase opacity-40">
             Discover Your Path
           </p>
-          <div className="w-px h-6 xs:h-7 sm:h-8 md:h-10 lg:h-12 bg-gradient-to-b from-purple-700 to-transparent" />
+          <div className="w-px h-6 xs:h-7 sm:h-8 md:h-10 lg:h-12 bg-linear-to-b from-purple-700 to-transparent" />
         </motion.div>
       )}
     </section>
