@@ -1,3 +1,4 @@
+// components/sections/learning-process.tsx
 "use client";
 
 import { Reveal } from "@/components/shared/section-animation";
@@ -9,6 +10,7 @@ import {
   ArrowRight,
   Sparkles,
 } from "lucide-react";
+import Link from "next/link";
 import { cn } from "@/lib/utils";
 
 const STEPS = [
@@ -43,7 +45,7 @@ const STEPS = [
 ];
 
 const getColorClasses = (color: string) => {
-  return {
+  const colors = {
     purple: {
       text: "text-purple-600 dark:text-purple-400",
       border: "border-purple-200 dark:border-purple-800",
@@ -60,7 +62,8 @@ const getColorClasses = (color: string) => {
       light: "bg-amber-500/5",
       icon: "text-amber-500",
     },
-  }[color];
+  };
+  return colors[color as keyof typeof colors];
 };
 
 export function LearningProcess() {
@@ -174,18 +177,20 @@ export function LearningProcess() {
           })}
         </div>
 
-        {/* Bottom CTA */}
+        {/* Bottom CTA - Fixed with Link */}
         <Reveal delay={0.4}>
           <div className="text-center mt-10 xs:mt-12 sm:mt-16 md:mt-20 lg:mt-24">
             <div className="inline-flex flex-col sm:flex-row items-center gap-4 sm:gap-6 p-4 xs:p-5 rounded-xl bg-gradient-to-r from-purple-50/30 to-amber-50/30 dark:from-purple-950/20 dark:to-amber-950/20 border border-purple-200 dark:border-purple-800">
               <p className="text-xs xs:text-sm text-muted-foreground font-medium">
                 Ready to begin your scholarly journey?
               </p>
-              
-              <button className="inline-flex items-center gap-2 px-4 xs:px-5 py-2 xs:py-2.5 rounded-full bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white font-black text-[10px] xs:text-xs transition-all group">
-                Start Your Assessment
-                <ArrowRight className="w-3 h-3 xs:w-3.5 xs:h-3.5 group-hover:translate-x-1 transition-transform" />
-              </button>
+
+              <Link href="/assessment">
+                <button className="inline-flex items-center gap-2 px-4 xs:px-5 py-2 xs:py-2.5 rounded-full bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white font-black text-[10px] xs:text-xs transition-all group">
+                  Start Your Assessment
+                  <ArrowRight className="w-3 h-3 xs:w-3.5 xs:h-3.5 group-hover:translate-x-1 transition-transform" />
+                </button>
+              </Link>
             </div>
           </div>
         </Reveal>
