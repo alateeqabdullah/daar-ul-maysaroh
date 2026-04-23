@@ -668,7 +668,7 @@ export function Hero({ className }: HeroProps) {
             {/* STATS */}
             <div className="mt-8 md:mt-16 grid grid-cols-2 gap-4 md:gap-8 border-t border-border/30 md:border-border/40 pt-6 md:pt-12">
               <div className="space-y-1">
-                <div className="text-3xl sm:text-4xl md:text-5xl font-black text-purple-600 tracking-tighter tabular-nums">
+                <div className="text-3xl font-black text-purple-600 tracking-tighter tabular-nums">
                   1400+
                 </div>
                 <div className="text-[10px] md:text-[10px] font-bold md:font-black uppercase tracking-[0.2em] md:tracking-[0.3em] text-muted-foreground">
@@ -676,7 +676,7 @@ export function Hero({ className }: HeroProps) {
                 </div>
               </div>
               <div className="space-y-1">
-                <div className="text-3xl sm:text-4xl md:text-5xl font-black text-purple-600 tracking-tighter tabular-nums">
+                <div className="text-3xl font-black text-purple-600 tracking-tighter tabular-nums">
                   Global
                 </div>
                 <div className="text-[10px] md:text-[10px] font-bold md:font-black uppercase tracking-[0.2em] md:tracking-[0.3em] text-muted-foreground">
