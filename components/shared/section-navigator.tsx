@@ -2,110 +2,129 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { Menu, X, ChevronUp } from "lucide-react";
 
 const SECTIONS = [
-  { id: "hero", label: "Home", icon: "🏠" },
-  { id: "trust-indicators", label: "Trust", icon: "🛡️" },
-  { id: "quranic-verse", label: "Verse", icon: "📖" },
-  { id: "features", label: "Features", icon: "✨" },
-  { id: "featured-courses", label: "Courses", icon: "📚" },
-  { id: "learning-process", label: "Path", icon: "🗺️" },
+  { id: "hero", label: "Welcome", icon: "🏠" },
+  { id: "trust", label: "Why Us", icon: "✓" },
+  { id: "verse", label: "Quran", icon: "📖" },
+  { id: "features", label: "Features", icon: "⭐" },
+  { id: "courses", label: "Courses", icon: "📚" },
+  { id: "process", label: "Process", icon: "🔄" },
   { id: "teachers", label: "Teachers", icon: "👨‍🏫" },
   { id: "stats", label: "Stats", icon: "📊" },
-  { id: "testimonials", label: "Reviews", icon: "⭐" },
+  { id: "testimonials", label: "Reviews", icon: "💬" },
   { id: "faq", label: "FAQ", icon: "❓" },
   { id: "cta", label: "Enroll", icon: "🎯" },
-  { id: "contact", label: "Contact", icon: "📧" },
+  { id: "contact", label: "Contact", icon: "📞" },
 ];
 
 export function SectionNavigator() {
   const [activeSection, setActiveSection] = useState("");
+  const [isOpen, setIsOpen] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
       // Show navigator after scrolling past hero
-      const heroHeight = window.innerHeight;
-      setIsVisible(window.scrollY > heroHeight * 0.5);
+      setIsVisible(window.scrollY > 400);
 
       // Find active section
+      const sections = SECTIONS.map((s) => document.getElementById(s.id));
       const scrollPosition = window.scrollY + 200;
-      for (const section of SECTIONS) {
-        const element = document.getElementById(section.id);
-        if (element) {
-          const { offsetTop, offsetHeight } = element;
-          if (
-            scrollPosition >= offsetTop &&
-            scrollPosition < offsetTop + offsetHeight
-          ) {
-            setActiveSection(section.id);
-            break;
-          }
+
+      for (let i = sections.length - 1; i >= 0; i--) {
+        const section = sections[i];
+        if (section && section.offsetTop <= scrollPosition) {
+          setActiveSection(SECTIONS[i].id);
+          break;
         }
       }
     };
 
-    handleScroll();
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const scrollToSection = (id: string) => {
-    const element = document.getElementById(id);
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
     if (element) {
-      const offset = 80; // Account for fixed header
-      const elementPosition = element.offsetTop - offset;
-      window.scrollTo({ top: elementPosition, behavior: "smooth" });
+      element.scrollIntoView({ behavior: "smooth" });
+      setIsOpen(false);
     }
   };
 
+  if (!isVisible) return null;
+
   return (
-    <AnimatePresence>
-      {isVisible && (
-        <motion.div
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: 20 }}
-          onMouseEnter={() => setIsHovered(true)}
-          onMouseLeave={() => setIsHovered(false)}
-          className="fixed right-4 top-1/2 -translate-y-1/2 z-50 hidden lg:block"
+    <>
+      {/* Floating Button */}
+      <button
+        onClick={() => setIsOpen(!isOpen)}
+        className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 flex items-center justify-center lg:hidden"
+        aria-label="Quick navigation"
+      >
+        {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+      </button>
+
+      {/* Navigation Menu */}
+      {isOpen && (
+        <div
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 lg:hidden"
+          onClick={() => setIsOpen(false)}
         >
-          <div className="bg-background/80 backdrop-blur-md rounded-full border border-purple-200 dark:border-purple-800 shadow-lg p-2">
-            <div className="flex flex-col gap-2">
+          <div
+            className="absolute bottom-24 right-6 w-64 bg-card rounded-2xl border border-border shadow-2xl overflow-hidden"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="p-3 border-b border-border bg-gradient-to-r from-purple-600/10 to-amber-500/10">
+              <p className="text-xs font-black uppercase tracking-wider">
+                Jump to Section
+              </p>
+            </div>
+            <div className="max-h-96 overflow-y-auto">
               {SECTIONS.map((section) => (
                 <button
                   key={section.id}
                   onClick={() => scrollToSection(section.id)}
                   className={cn(
-                    "relative group w-8 h-8 rounded-full transition-all duration-300 flex items-center justify-center",
-                    activeSection === section.id
-                      ? "bg-gradient-to-r from-purple-600 to-amber-500 text-white"
-                      : "bg-purple-100 dark:bg-purple-900/30 text-purple-600 hover:bg-purple-200 dark:hover:bg-purple-800/50",
+                    "w-full px-4 py-3 text-left flex items-center gap-3 hover:bg-muted/30 transition-colors",
+                    activeSection === section.id &&
+                      "bg-purple-600/10 border-l-2 border-purple-600",
                   )}
-                  aria-label={`Go to ${section.label}`}
                 >
-                  <span className="text-sm">{section.icon}</span>
-
-                  {/* Tooltip */}
-                  <span
-                    className={cn(
-                      "absolute right-full mr-2 px-2 py-1 rounded-md bg-gray-900 text-white text-xs font-medium whitespace-nowrap transition-all duration-200 pointer-events-none",
-                      isHovered
-                        ? "opacity-100 translate-x-0"
-                        : "opacity-0 translate-x-2",
-                    )}
-                  >
-                    {section.label}
-                  </span>
+                  <span className="text-lg">{section.icon}</span>
+                  <span className="text-sm font-medium">{section.label}</span>
                 </button>
               ))}
             </div>
           </div>
-        </motion.div>
+        </div>
       )}
-    </AnimatePresence>
+
+      {/* Desktop Sidebar Navigator */}
+      <div className="hidden lg:block fixed right-6 top-1/2 -translate-y-1/2 z-40">
+        <div className="bg-card/80 backdrop-blur-sm rounded-2xl border border-border p-2 shadow-lg">
+          {SECTIONS.map((section) => (
+            <button
+              key={section.id}
+              onClick={() => scrollToSection(section.id)}
+              className={cn(
+                "w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-300 relative group",
+                activeSection === section.id
+                  ? "bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-md"
+                  : "hover:bg-muted/50",
+              )}
+            >
+              <span className="text-sm">{section.icon}</span>
+              <span className="absolute right-full mr-3 px-2 py-1 rounded-lg bg-card text-xs font-black whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity shadow-lg">
+                {section.label}
+              </span>
+            </button>
+          ))}
+        </div>
+      </div>
+    </>
   );
 }
