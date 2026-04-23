@@ -2,16 +2,16 @@
 "use client";
 
 import { Reveal } from "@/components/shared/section-animation";
+import { cn } from "@/lib/utils";
 import {
-  UserCheck,
+  ArrowRight,
+  Award,
   BookOpen,
   GraduationCap,
-  Award,
-  ArrowRight,
   Sparkles,
+  UserCheck,
 } from "lucide-react";
 import Link from "next/link";
-import { cn } from "@/lib/utils";
 
 const STEPS = [
   {
@@ -50,7 +50,7 @@ const getColorClasses = (color: string) => {
       text: "text-purple-600 dark:text-purple-400",
       border: "border-purple-200 dark:border-purple-800",
       bg: "bg-purple-100 dark:bg-purple-950/40",
-      gradient: "from-purple-600 to-purple-700",
+      linear: "from-purple-600 to-purple-700",
       light: "bg-purple-600/5",
       icon: "text-purple-600",
     },
@@ -58,7 +58,7 @@ const getColorClasses = (color: string) => {
       text: "text-amber-600 dark:text-amber-400",
       border: "border-amber-200 dark:border-amber-800",
       bg: "bg-amber-100 dark:bg-amber-950/40",
-      gradient: "from-amber-500 to-amber-600",
+      linear: "from-amber-500 to-amber-600",
       light: "bg-amber-500/5",
       icon: "text-amber-500",
     },
@@ -68,7 +68,7 @@ const getColorClasses = (color: string) => {
 
 export function LearningProcess() {
   return (
-    <section className="py-12 xs:py-16 sm:py-20 md:py-24 lg:py-32 relative overflow-hidden bg-gradient-to-b from-background via-purple-50/5 to-amber-50/5">
+    <section className="py-12 xs:py-16 sm:py-20 md:py-24 lg:py-32 relative overflow-hidden bg-linear-to-b from-background via-purple-50/5 to-amber-50/5">
       {/* Background Decoration */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-1/4 left-0 w-64 h-64 bg-purple-600/5 rounded-full blur-3xl" />
@@ -87,13 +87,13 @@ export function LearningProcess() {
             </div>
             <h2 className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tighter font-heading leading-[1.1] mb-3 xs:mb-4">
               The Scholarly <br />
-              <span className="bg-gradient-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent italic">
+              <span className="bg-linear-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent italic">
                 Path.
               </span>
             </h2>
             <p className="text-sm xs:text-base sm:text-lg md:text-xl text-muted-foreground font-medium max-w-xl">
-              Our standardized curriculum ensures a disciplined progression from
-              the basics of phonetics to the mastery of the Ten Qira'at.
+              {  `Our standardized curriculum ensures a disciplined progression from
+                the basics of phonetics to the mastery of the Ten Qira'at.`}
             </p>
           </Reveal>
         </div>
@@ -101,7 +101,7 @@ export function LearningProcess() {
         {/* Steps Grid - Responsive */}
         <div className="relative grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-4 gap-6 xs:gap-8 sm:gap-10 md:gap-12">
           {/* Connector Line - Hidden on mobile, visible on desktop */}
-          <div className="hidden lg:block absolute top-10 left-0 right-0 h-px bg-gradient-to-r from-transparent via-purple-600/20 to-transparent -z-10" />
+          <div className="hidden lg:block absolute top-10 left-0 right-0 h-px bg-linear-to-r from-transparent via-purple-600/20 to-transparent -z-10" />
 
           {STEPS.map((step, index) => {
             const Icon = step.icon;
@@ -140,7 +140,7 @@ export function LearningProcess() {
                         <div
                           className={cn(
                             "w-5 h-5 xs:w-6 xs:h-6 rounded-full flex items-center justify-center text-white text-[8px] xs:text-[9px] font-black",
-                            `bg-gradient-to-r ${colors.gradient}`,
+                            `bg-linear-to-r ${colors.linear}`,
                           )}
                         >
                           {index + 1}
@@ -167,7 +167,7 @@ export function LearningProcess() {
                     <div
                       className={cn(
                         "w-12 h-0.5 rounded-full transition-all duration-300 group-hover:w-full",
-                        `bg-gradient-to-r ${colors.gradient}`,
+                        `bg-linear-to-r ${colors.linear}`,
                       )}
                     />
                   </div>
@@ -180,13 +180,13 @@ export function LearningProcess() {
         {/* Bottom CTA - Fixed with Link */}
         <Reveal delay={0.4}>
           <div className="text-center mt-10 xs:mt-12 sm:mt-16 md:mt-20 lg:mt-24">
-            <div className="inline-flex flex-col sm:flex-row items-center gap-4 sm:gap-6 p-4 xs:p-5 rounded-xl bg-gradient-to-r from-purple-50/30 to-amber-50/30 dark:from-purple-950/20 dark:to-amber-950/20 border border-purple-200 dark:border-purple-800">
+            <div className="inline-flex flex-col sm:flex-row items-center gap-4 sm:gap-6 p-4 xs:p-5 rounded-xl bg-linear-to-r from-purple-50/30 to-amber-50/30 dark:from-purple-950/20 dark:to-amber-950/20 border border-purple-200 dark:border-purple-800">
               <p className="text-xs xs:text-sm text-muted-foreground font-medium">
                 Ready to begin your scholarly journey?
               </p>
 
               <Link href="/assessment">
-                <button className="inline-flex items-center gap-2 px-4 xs:px-5 py-2 xs:py-2.5 rounded-full bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white font-black text-[10px] xs:text-xs transition-all group">
+                <button className="inline-flex items-center gap-2 px-4 xs:px-5 py-2 xs:py-2.5 rounded-full bg-linear-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white font-black text-[10px] xs:text-xs transition-all group">
                   Start Your Assessment
                   <ArrowRight className="w-3 h-3 xs:w-3.5 xs:h-3.5 group-hover:translate-x-1 transition-transform" />
                 </button>
