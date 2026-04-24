@@ -184,7 +184,7 @@ export default function TeachersClient() {
 
    
   
-    <main className="relative bg-background overflow-hidden">
+    <main className="relative pb-20 bg-background overflow-hidden">
       {/* Premium Background Effects */}
       <div className="hidden sm:block fixed inset-0 pointer-events-none">
         <div
@@ -616,31 +616,103 @@ export default function TeachersClient() {
           </div>
         </Reveal>
 
-        {/* Final CTA */}
-        <div className="mt-12 xs:mt-16 sm:mt-20">
-          <div className="relative overflow-hidden rounded-xl sm:rounded-2xl bg-gradient-to-r from-purple-600/10 to-amber-500/10 p-6 sm:p-8 text-center">
-            <div className="absolute inset-0 opacity-10">
-              <div className="absolute top-0 right-0 w-32 h-32 bg-purple-600 rounded-full blur-3xl" />
-              <div className="absolute bottom-0 left-0 w-32 h-32 bg-amber-500 rounded-full blur-3xl" />
-            </div>
-            <h3 className="text-lg sm:text-xl font-black mb-2">Find Your Perfect Guide</h3>
-            <p className="text-xs sm:text-sm text-muted-foreground mb-4 max-w-md mx-auto">
-              Our Dean personally matches each student with the ideal teacher based on your learning style, goals, and schedule.
-            </p>
-            <div className="flex flex-col xs:flex-row gap-3 justify-center">
-              <Link href="/assessment">
-                <Button className="rounded-full px-5 xs:px-6 py-2 xs:py-2.5 font-black text-xs bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white">
-                  Start Free Assessment
-                </Button>
-              </Link>
-              <Link href="/contact">
-                <Button variant="outline" className="rounded-full px-5 xs:px-6 py-2 xs:py-2.5 font-black text-xs border-purple-300 text-purple-600">
-                  Contact Admissions
-                </Button>
-              </Link>
-            </div>
+      {/* Final CTA - Premium Version */}
+<div className="mt-12 xs:mt-16 sm:mt-20">
+  <div className="relative overflow-hidden rounded-2xl sm:rounded-3xl bg-gradient-to-br from-purple-600 via-purple-700 to-amber-600 p-8 sm:p-10 md:p-12 text-center shadow-2xl">
+    
+    {/* Animated Background Elements */}
+    <div className="absolute inset-0 overflow-hidden">
+      <div className="absolute -top-40 -right-40 w-80 h-80 bg-white/10 rounded-full blur-3xl animate-pulse" />
+      <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-white/10 rounded-full blur-3xl animate-pulse delay-1000" />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-white/5 rounded-full blur-3xl" />
+    </div>
+
+    {/* Floating Islamic Pattern */}
+    <div className="absolute inset-0 opacity-5 pointer-events-none">
+      <div className="absolute top-0 right-0 w-64 h-64 bg-[url('/islamic-pattern.svg')] bg-repeat opacity-30" />
+      <div className="absolute bottom-0 left-0 w-64 h-64 bg-[url('/islamic-pattern.svg')] bg-repeat opacity-30" />
+    </div>
+
+    <div className="relative z-10">
+      {/* Decorative Top Icon */}
+      <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-white/20 backdrop-blur-sm mb-5 shadow-lg">
+        <Sparkles className="w-8 h-8 text-white" />
+      </div>
+
+      {/* Main Heading */}
+      <h3 className="text-2xl xs:text-3xl sm:text-4xl font-black text-white mb-3">
+        Ready to Begin Your{" "}
+        <span className="relative inline-block">
+          Quranic Journey?
+          <svg className="absolute -bottom-2 left-0 w-full" height="8" viewBox="0 0 200 8" fill="none">
+            <path d="M0 4C50 8 150 0 200 4" stroke="#FBBF24" strokeWidth="2" fill="none"/>
+          </svg>
+        </span>
+      </h3>
+
+      {/* Subtitle */}
+      <p className="text-amber-100 text-sm sm:text-base max-w-md mx-auto mb-6">
+        Join hundreds of students who found their perfect teacher match through our personalized assessment.
+      </p>
+
+      {/* CTA Buttons */}
+      <div className="flex flex-col xs:flex-row gap-4 justify-center mb-8">
+        <Link href="/assessment">
+          <Button className="group rounded-full px-8 py-4 font-black text-sm bg-white text-purple-700 hover:bg-amber-50 hover:scale-105 transition-all duration-300 shadow-xl">
+            <span className="flex items-center gap-2">
+              Start Free Assessment
+              <Sparkles className="w-4 h-4 group-hover:rotate-12 transition-transform" />
+            </span>
+          </Button>
+        </Link>
+        <Link href="/contact">
+          <Button className="group rounded-full px-8 py-4 font-black text-sm bg-transparent border-2 border-white text-white hover:bg-white/10 hover:scale-105 transition-all duration-300">
+            <span className="flex items-center gap-2">
+              Talk to Advisor
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+            </span>
+          </Button>
+        </Link>
+      </div>
+
+      {/* Trust Indicators Row */}
+      <div className="flex flex-wrap justify-center gap-4 sm:gap-6 pt-4 border-t border-white/20">
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
+            <Clock className="w-4 h-4 text-white" />
+          </div>
+          <div className="text-left">
+            <p className="text-white font-black text-xs">20-Minute Session</p>
+            <p className="text-amber-200 text-[9px]">Free consultation</p>
           </div>
         </div>
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
+            <Heart className="w-4 h-4 text-white" />
+          </div>
+          <div className="text-left">
+            <p className="text-white font-black text-xs">No Commitment</p>
+            <p className="text-amber-200 text-[9px]">Try risk-free</p>
+          </div>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
+            <Users className="w-4 h-4 text-white" />
+          </div>
+          <div className="text-left">
+            <p className="text-white font-black text-xs">Expert Matching</p>
+            <p className="text-amber-200 text-[9px]">Personalized placement</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Small Print */}
+      <p className="text-amber-200/60 text-[9px] xs:text-[10px] mt-6">
+        Limited slots available for 2026 • Apply before August 15th
+      </p>
+    </div>
+  </div>
+</div>
       </div>
   
       </main>
