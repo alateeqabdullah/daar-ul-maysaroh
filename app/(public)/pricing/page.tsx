@@ -496,7 +496,7 @@ export default function AdmissionsPricingPage() {
   const dbPlans: PricingPlan[] = [];
 
   return (
-    <main className="pt-20 xs:pt-24 sm:pt-28 md:pt-32 lg:pt-36 pb-12 xs:pb-16 sm:pb-20 md:pb-24 bg-gradient-to-b from-background via-purple-50/5 to-amber-50/5">
+    <main className="pt-30 xs:pt-24 sm:pt-28 md:pt-32 lg:pt-36 pb-12 xs:pb-16 sm:pb-20 md:pb-24 bg-gradient-to-b from-background via-purple-50/5 to-amber-50/5">
       <div className="container mx-auto px-4 xs:px-5 sm:px-6">
         {/* ==================== HERO SECTION ==================== */}
         <div className="max-w-5xl mx-auto text-center mb-12 xs:mb-16 sm:mb-20 md:mb-24 lg:mb-28">
