@@ -2,28 +2,28 @@
 "use client";
 
 import { Reveal } from "@/components/shared/section-animation";
+import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import { AnimatePresence, motion } from "framer-motion";
 import {
-  GraduationCap,
-  Verified,
-  ShieldCheck,
   ArrowRight,
   ChevronRight,
-  Crown,
-  Scroll,
-  Users,
-  Globe,
-  Star,
-  Sparkles,
-  Search,
-  X,
   Clock,
+  Crown,
+  Globe,
+  GraduationCap,
   Heart,
+  Scroll,
+  Search,
+  ShieldCheck,
+  Sparkles,
+  Star,
+  Users,
+  Verified,
+  X,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { motion, AnimatePresence } from "framer-motion";
 import { useState } from "react";
-import { cn } from "@/lib/utils";
 
 // Teacher Data
 const TEACHERS = [
@@ -209,10 +209,15 @@ export default function TeachersClient() {
                 </div>
                 <h1 className="text-4xl xs:text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tighter font-heading leading-[1.1]">
                   Carriers of <br />
-                  <span className="bg-gradient-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent italic">
+                  <span className="bg-linear-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent italic">
                     The Sanad.
                   </span>
                 </h1>
+                <p className="text-lg sm:text-xl md:text-2xl text-muted-foreground font-medium leading-relaxed border-l-4 border-primary-700 pl-4 sm:pl-6 md:pl-8 max-w-2xl">
+                  {`Our faculty are the direct carriers of the Quranic tradition through an unbroken chain of transmission, known as the `}
+              <span className="text-foreground font-bold">Divine Sanad</span>{`,
+              ensuring the preservation of the Quran's authentic recitation.`}
+            </p>
               </Reveal>
             </div>
 
@@ -250,9 +255,9 @@ export default function TeachersClient() {
             <div className="flex items-center gap-2 mb-5 xs:mb-6">
               <Sparkles className="w-4 h-4 text-amber-500" />
               <h2 className="text-sm xs:text-base font-black uppercase tracking-wider text-purple-600">
-                Dean's Council
+               {` Dean's Council`}
               </h2>
-              <div className="h-px flex-1 bg-gradient-to-r from-purple-600/20 to-transparent" />
+              <div className="h-px flex-1 bg-linear-to-r from-purple-600/20 to-transparent" />
             </div>
             <div className="grid md:grid-cols-2 gap-6 sm:gap-8 md:gap-10 lg:gap-12">
               {featuredTeachers.map((teacher, index) => (
@@ -286,7 +291,7 @@ export default function TeachersClient() {
 
                       <div className="flex flex-col lg:flex-row gap-5 sm:gap-6 md:gap-8 items-start mt-6 sm:mt-8">
                         {/* Portrait */}
-                        <div className="w-full lg:w-40 h-44 sm:h-48 md:h-52 lg:h-56 bg-gradient-to-br from-purple-100 to-amber-100 dark:from-purple-950/30 dark:to-amber-950/30 rounded-xl sm:rounded-2xl overflow-hidden relative border border-border group-hover:border-purple-300 transition-all shrink-0">
+                        <div className="w-full lg:w-40 h-44 sm:h-48 md:h-52 lg:h-56 bg-linear-to-br from-purple-100 to-amber-100 dark:from-purple-950/30 dark:to-amber-950/30 rounded-xl sm:rounded-2xl overflow-hidden relative border border-border group-hover:border-purple-300 transition-all shrink-0">
                           <div className="absolute inset-0 flex items-center justify-center opacity-20 group-hover:opacity-30 transition-opacity">
                             <GraduationCap className="w-10 h-10 sm:w-12 sm:h-12 text-purple-600" />
                           </div>
@@ -334,7 +339,7 @@ export default function TeachersClient() {
                           </div>
 
                           <p className="text-xs sm:text-sm italic font-medium text-muted-foreground/80 leading-relaxed border-l-2 border-purple-300 pl-3">
-                            "{teacher.philosophy}"
+                            {`"${teacher.philosophy}"`}
                           </p>
 
                           <div className="flex flex-wrap gap-3 sm:gap-4 pt-2">
@@ -420,7 +425,7 @@ export default function TeachersClient() {
                     className={cn(
                       "px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-[9px] xs:text-[10px] font-black uppercase tracking-wider transition-all",
                       activeCategory === cat
-                        ? "bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-md"
+                        ? "bg-linear-to-r from-purple-600 to-purple-700 text-white shadow-md"
                         : "bg-muted/30 hover:bg-purple-100 dark:hover:bg-purple-950/40 border border-purple-200 dark:border-purple-800",
                     )}
                   >
@@ -565,8 +570,8 @@ export default function TeachersClient() {
                       <div className="flex flex-col items-center text-center pt-4 sm:pt-6">
                         {/* Avatar with Ring */}
                         <div className="relative">
-                          <div className="absolute inset-0 rounded-full bg-gradient-to-r from-purple-600 to-amber-500 blur-md opacity-30 group-hover:opacity-50 transition-opacity" />
-                          <div className="relative w-20 h-20 rounded-full bg-gradient-to-br from-purple-100 to-amber-100 dark:from-purple-950/30 dark:to-amber-950/30 flex items-center justify-center mb-3 border-2 border-purple-200 group-hover:border-purple-400 transition-all">
+                          <div className="absolute inset-0 rounded-full bg-linear-to-r from-purple-600 to-amber-500 blur-md opacity-30 group-hover:opacity-50 transition-opacity" />
+                          <div className="relative w-20 h-20 rounded-full bg-linear-to-br from-purple-100 to-amber-100 dark:from-purple-950/30 dark:to-amber-950/30 flex items-center justify-center mb-3 border-2 border-purple-200 group-hover:border-purple-400 transition-all">
                             <span className="text-2xl font-black text-purple-600/40">
                               {teacher.name.charAt(0)}
                             </span>
@@ -635,7 +640,7 @@ export default function TeachersClient() {
                     className="block group"
                   >
                     <div className="bg-card rounded-xl border border-border hover:border-purple-300 transition-all p-5 flex flex-col sm:flex-row gap-4 items-center">
-                      <div className="w-16 h-16 rounded-full bg-gradient-to-br from-purple-100 to-amber-100 flex items-center justify-center shrink-0">
+                      <div className="w-16 h-16 rounded-full bg-linear-to-br from-purple-100 to-amber-100 flex items-center justify-center shrink-0">
                         <span className="text-xl font-black text-purple-600/40">
                           {teacher.name.charAt(0)}
                         </span>
@@ -669,7 +674,7 @@ export default function TeachersClient() {
           {/* Enhanced Trust Message */}
           <Reveal delay={0.3}>
             <div className="mt-12 xs:mt-16 sm:mt-20 text-center">
-              <div className="inline-flex flex-wrap items-center justify-center gap-3 xs:gap-4 p-4 rounded-xl bg-gradient-to-r from-purple-50/30 to-amber-50/30 dark:from-purple-950/20 dark:to-amber-950/20 border border-purple-200 dark:border-purple-800">
+              <div className="inline-flex flex-wrap items-center justify-center gap-3 xs:gap-4 p-4 rounded-xl bg-linear-to-r from-purple-50/30 to-amber-50/30 dark:from-purple-950/20 dark:to-amber-950/20 border border-purple-200 dark:border-purple-800">
                 <div className="flex items-center gap-2">
                   <Scroll className="w-4 h-4 text-amber-500" />
                   <span className="text-[9px] xs:text-[10px] font-black uppercase tracking-wider">
@@ -704,7 +709,7 @@ export default function TeachersClient() {
           {/* Final CTA - Premium Version */}
           {/* Final CTA - Mobile optimized */}
           <div className="mt-10 xs:mt-12 sm:mt-16 md:mt-20">
-            <div className="relative overflow-hidden rounded-2xl sm:rounded-3xl bg-gradient-to-br from-purple-600 via-purple-700 to-amber-600 p-6 xs:p-8 sm:p-10 md:p-12 text-center shadow-2xl">
+            <div className="relative overflow-hidden rounded-2xl sm:rounded-3xl bg-linear-to-br from-purple-600 via-purple-700 to-amber-600 p-6 xs:p-8 sm:p-10 md:p-12 text-center shadow-2xl">
               {/* Animated Background Elements */}
               <div className="absolute inset-0 overflow-hidden">
                 <div className="absolute -top-40 -right-40 w-60 h-60 xs:w-80 xs:h-80 bg-white/10 rounded-full blur-3xl animate-pulse" />
