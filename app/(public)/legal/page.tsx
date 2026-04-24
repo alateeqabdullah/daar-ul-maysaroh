@@ -826,6 +826,18 @@
 //   );
 // }
 
+
+
+
+
+
+
+
+
+
+
+
+
 "use client";
 
 import { useEffect, useState, useRef } from "react";
@@ -871,10 +883,9 @@ import {
   ShieldCheck,
   Fingerprint,
   QrCode,
-  Link2,
+  Phone,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import Link from "next/link";
 
 const LEGAL_SECTIONS = [
   {
@@ -891,7 +902,9 @@ Al-Maysaroh International Institute is established upon the principles of sacred
 
 1.2 All programs are designed to preserve the authentic chain of transmission (Sanad) reaching back to Prophet Muhammad (ﷺ).
 
-1.3 The Arabic term "Al-Maysaroh" signifies ease and facilitation, reflecting our commitment to making Quranic education accessible while maintaining scholarly rigor.`,
+1.3 The Arabic term "Al-Maysaroh" signifies ease and facilitation, reflecting our commitment to making Quranic education accessible while maintaining scholarly rigor.
+
+1.4 EFFECTIVE DATE: This document is effective as of January 1, 2026 and supersedes all previous versions.`,
   },
   {
     id: "academic",
@@ -935,13 +948,13 @@ Al-Maysaroh International Institute is established upon the principles of sacred
 
 3.2 Payment Methods:
     3.2.1 Automated: Credit/debit card processing via Stripe (instant activation)
-    3.2.2 Manual: Bank transfer, mobile money, or Western Union (activation upon receipt verification)
-    3.2.3 Cryptocurrency: Bitcoin and Ethereum accepted through third-party processors
+    3.2.2 Manual: Bank transfer (Lead Bank, Account: 219056090769), mobile money, or Western Union
+    3.2.3 Activation upon receipt verification within 12 business hours
 
 3.3 Manual Payment Verification:
     3.3.1 Students must upload proof of payment via the Bursar Portal
     3.3.2 Verification typically completed within 12 business hours
-    3.3.3 Delayed verification may result in temporary portal access suspension
+    3.3.3 Send inquiries to info.almaysaroh@gmail.com
 
 3.4 Refund Policy:
     3.4.1 New Student Guarantee: Full refund within 14 days of first session
@@ -989,13 +1002,13 @@ Al-Maysaroh International Institute is established upon the principles of sacred
     4.4.3 Substitute teacher provided for urgent coverage if needed
 
 4.5 Time Zone Considerations:
-    4.5.1 All session times referenced in Eastern Time (ET)
+    4.5.1 All session times referenced in West African Time (WAT)
     4.5.2 Students responsible for accurate time conversion
-    4.5.3 Daylight saving time adjustments communicated via email`,
+    4.5.3 International time zone support available upon request`,
   },
   {
     id: "privacy",
-    title: "Privacy",
+    title: "Privacy & Data",
     icon: Eye,
     color: "purple",
     content: `5.0 DATA PRIVACY & RECORDING POLICY
@@ -1014,7 +1027,7 @@ Al-Maysaroh International Institute is established upon the principles of sacred
 5.3 Data Protection:
     5.3.1 Al-Maysaroh adheres to GDPR and applicable data protection laws
     5.3.2 All data encrypted in transit and at rest
-    5.3.3 Regular security audits conducted by independent firms
+    5.3.3 Regular security audits conducted
     5.3.4 Data never sold or shared with third parties for marketing
 
 5.4 Special Provisions for Minors:
@@ -1026,7 +1039,7 @@ Al-Maysaroh International Institute is established upon the principles of sacred
     5.5.1 Right to access personal data
     5.5.2 Right to rectification of inaccurate data
     5.5.3 Right to erasure (subject to legal obligations)
-    5.5.4 Requests submitted to privacy@almaysaroh.org
+    5.5.4 Requests submitted to info.almaysaroh@gmail.com
 
 5.6 Cookies & Tracking:
     5.6.1 Essential cookies required for portal functionality
@@ -1062,9 +1075,8 @@ Al-Maysaroh International Institute is established upon the principles of sacred
     6.4.4 Commercial resale of any Institute materials
 
 6.5 Copyright Infringement:
-    6.5.1 Reports of infringement submitted to legal@almaysaroh.org
-    6.5.2 DMCA compliance for US-based copyright claims
-    6.5.3 Repeat infringers subject to account termination`,
+    6.5.1 Reports of infringement submitted to info.almaysaroh@gmail.com
+    6.5.2 Repeat infringers subject to account termination`,
   },
   {
     id: "child-protection",
@@ -1075,7 +1087,7 @@ Al-Maysaroh International Institute is established upon the principles of sacred
 
 7.1 Our Commitment:
     7.1.1 Al-Maysaroh maintains zero tolerance for abuse or exploitation
-    7.1.2 All staff undergo enhanced background checks (DBS/ equivalent)
+    7.1.2 All staff undergo enhanced background checks
     7.1.3 Regular safeguarding training mandatory for all scholars
 
 7.2 Scholar Requirements:
@@ -1092,9 +1104,9 @@ Al-Maysaroh International Institute is established upon the principles of sacred
 
 7.4 Reporting Procedures:
     7.4.1 Immediate reporting required for any concerns
-    7.4.2 Designated Safeguarding Lead: safeguarding@almaysaroh.org
-    7.4.3 24-hour confidential hotline: +1 (555) 123-4567
-    7.4.4 External reporting: Local authorities as required by law
+    7.4.2 Contact: info.almaysaroh@gmail.com
+    7.4.3 For urgent concerns, contact +234 911 016 3930
+    7.4.4 For immediate danger, contact local authorities first
 
 7.5 Prohibited Conduct:
     7.5.1 Inappropriate communication or relationships
@@ -1123,19 +1135,19 @@ Al-Maysaroh International Institute is established upon the principles of sacred
 
 8.2 Mediation:
     8.2.1 If internal resolution fails, parties agree to mediation
-    8.2.2 Mediation conducted by recognized Islamic arbitration service
+    8.2.2 Mediation conducted through mutually agreed Islamic arbitration service
     8.2.3 Mediation costs shared equally between parties
     8.2.4 Mediation completed within 60 days
 
 8.3 Governing Law:
-    8.3.1 This agreement governed by laws of [State/Country]
-    8.3.2 Venue for legal proceedings in [Jurisdiction]
-    8.3.3 Parties submit to exclusive jurisdiction of specified courts
+    8.3.1 This agreement governed by the laws of the Federal Republic of Nigeria
+    8.3.2 Primary jurisdiction: Lagos State, Nigeria
+    8.3.3 For international students, Nigerian law applies
 
 8.4 Arbitration:
     8.4.1 Any unresolved disputes submitted to binding arbitration
-    8.4.2 Arbitration under rules of [Arbitration Association]
-    8.4.3 Decision final and enforceable in any court
+    8.4.2 Arbitration administered by recognized arbitration body
+    8.4.3 Decision final and enforceable
 
 8.5 Class Action Waiver:
     8.5.1 All disputes resolved on individual basis only
@@ -1203,7 +1215,7 @@ Al-Maysaroh International Institute is established upon the principles of sacred
      10.2.4 Account sharing strictly prohibited
 
 10.3 Technical Support:
-     10.3.1 Support available via portal ticketing system
+     10.3.1 Support available via email: info.almaysaroh@gmail.com
      10.3.2 Response within 24 business hours
      10.3.3 Emergency technical support during sessions
      10.3.4 Knowledge base available in student portal
@@ -1227,7 +1239,7 @@ Al-Maysaroh International Institute is established upon the principles of sacred
     content: `11.0 TERMINATION & SUSPENSION POLICIES
 
 11.1 Voluntary Withdrawal:
-     11.1.1 Students may withdraw at any time via portal
+     11.1.1 Students may withdraw at any time via email
      11.1.2 Refund eligibility determined by financial policy
      11.1.3 Access maintained until end of paid period
      11.1.4 Re-enrollment subject to availability
@@ -1276,15 +1288,14 @@ Al-Maysaroh International Institute is established upon the principles of sacred
      12.2.5 Minimum residency period as determined by program
 
 12.3 Certificate Validity:
-     12.3.1 Certificates verifiable through Institute portal
-     12.3.2 QR code authentication for third-party verification
-     12.3.3 Digital and physical copies provided
-     12.3.4 Replacement certificates available for fee
+     12.3.1 Certificates verifiable through Institute
+     12.3.2 Digital copies provided upon completion
+     12.3.3 Replacement certificates available upon request
 
 12.4 Transcripts & Records:
      12.4.1 Official transcripts available upon request
      12.4.2 Academic records maintained indefinitely
-     12.4.3 Transfer of credit to other institutions at their discretion
+     12.4.3 Transfer of credit at discretion of receiving institution
      12.4.4 Grade appeals processed through dispute resolution
 
 12.5 Revocation of Certification:
@@ -1292,6 +1303,70 @@ Al-Maysaroh International Institute is established upon the principles of sacred
      12.5.2 Posthumous revocation in cases of discovered fraud
      12.5.3 Public notice of revocation as appropriate
      12.5.4 Legal remedies pursued for fraudulent credentials`,
+  },
+  {
+    id: "amendments",
+    title: "Policy Amendments",
+    icon: FileCheck,
+    color: "purple",
+    content: `13.0 POLICY AMENDMENTS & MODIFICATIONS
+
+13.1 Right to Amend:
+     13.1.1 The Institute reserves the right to modify these policies as needed
+     13.1.2 Material changes communicated via email to all active students
+     13.1.3 Amendments effective 30 days after notice
+     13.1.4 Continued enrollment constitutes acceptance of updated policies
+
+13.2 Notification Process:
+     13.2.1 Students notified via registered email address
+     13.2.2 Major amendments highlighted in communication
+     13.2.3 Full updated document available upon request
+     13.2.4 Students may request physical copies
+
+13.3 Student Rights:
+     13.3.1 Students may terminate enrollment if amendments are unacceptable
+     13.3.2 Pro-rated refund available for terminations due to material changes
+     13.3.3 Objections must be submitted in writing within 15 days
+
+13.4 Version Control:
+     13.4.1 Current version: 2.1.0
+     13.4.2 Previous versions archived and available upon request
+     13.4.3 Version history maintained for compliance purposes`,
+  },
+  {
+    id: "accessibility",
+    title: "Accessibility",
+    icon: Heart,
+    color: "amber",
+    content: `14.0 ACCESSIBILITY & STUDENT ACCOMMODATIONS
+
+14.1 Our Commitment:
+     14.1.1 Al-Maysaroh is committed to inclusive education for all students
+     14.1.2 Reasonable accommodations provided for documented needs
+     14.1.3 No discrimination based on disability or special needs
+
+14.2 Types of Accommodations:
+     14.2.1 Extended session times for students with processing needs
+     14.2.2 Text-based alternatives for audio/video content
+     14.2.3 Flexible scheduling for medical appointments
+     14.2.4 Specialized teaching approaches for different learning styles
+
+14.3 Request Process:
+     14.3.1 Accommodation requests submitted via email
+     14.3.2 Supporting documentation may be required
+     14.3.3 Review completed within 10 business days
+     14.3.4 Appeals process available for denied requests
+
+14.4 Confidentiality:
+     14.4.1 All accommodation requests kept strictly confidential
+     14.4.2 Information shared only with relevant instructors on need-to-know basis
+     14.4.3 No discrimination for requesting accommodations
+
+14.5 Technical Accessibility:
+     14.5.1 Platform works with standard assistive technologies
+     14.5.2 Captioning available for recorded sessions upon request
+     14.5.3 Transcripts provided upon request
+     14.5.4 Accessibility improvements ongoing`,
   },
 ];
 
@@ -1351,7 +1426,7 @@ function formatLegalContent(content: string) {
 export default function LegalHub() {
   const [activeTab, setActiveTab] = useState("preamble");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [lastUpdated] = useState("March 15, 2026");
+  const [lastUpdated] = useState("April 1, 2026");
   const [version] = useState("2.1.0");
   const [searchTerm, setSearchTerm] = useState("");
   const [showPrintDialog, setShowPrintDialog] = useState(false);
@@ -1451,7 +1526,7 @@ export default function LegalHub() {
                 {copied ? (
                   <CopyCheck className="h-4 w-4 text-green-500" />
                 ) : (
-                  <Link2 className="h-4 w-4 text-purple-600" />
+                  <Copy className="h-4 w-4 text-purple-600" />
                 )}
                 <span className="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
                   Copy link to section
@@ -1575,13 +1650,13 @@ export default function LegalHub() {
                     <p className="text-[9px] text-muted-foreground font-black uppercase tracking-wider">
                       Sections
                     </p>
-                    <p className="text-lg font-black text-purple-600">12</p>
+                    <p className="text-lg font-black text-purple-600">14</p>
                   </div>
                   <div className="p-3 rounded-lg bg-amber-50/30 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800">
                     <p className="text-[9px] text-muted-foreground font-black uppercase tracking-wider">
                       Pages
                     </p>
-                    <p className="text-lg font-black text-amber-600">42</p>
+                    <p className="text-lg font-black text-amber-600">48</p>
                   </div>
                 </div>
               </div>
@@ -1595,12 +1670,15 @@ export default function LegalHub() {
                   </span>
                 </div>
                 <p className="text-[9px] text-muted-foreground mb-2">
-                  Our compliance team is available to answer questions about
-                  these policies.
+                  Our team is available to answer questions about these
+                  policies.
                 </p>
-                <button className="w-full text-center text-[9px] font-black text-purple-600 hover:underline">
-                  Contact Legal Team →
-                </button>
+                <a
+                  href="mailto:info.almaysaroh@gmail.com"
+                  className="block w-full text-center text-[9px] font-black text-purple-600 hover:underline"
+                >
+                  Contact Support →
+                </a>
               </div>
             </div>
           </aside>
@@ -1738,7 +1816,7 @@ export default function LegalHub() {
                         </span>
                       </div>
                       <div className="flex items-center gap-2">
-                        <QrCode className="h-3.5 w-3.5 xs:h-4 xs:w-4 text-amber-500" />
+                        <ShieldCheck className="h-3.5 w-3.5 text-amber-500" />
                         <span className="text-[8px] xs:text-[9px] text-muted-foreground">
                           Digitally Verified
                         </span>
@@ -1748,11 +1826,22 @@ export default function LegalHub() {
 
                   {/* Email Contact */}
                   <div className="flex flex-col xs:flex-row items-start xs:items-center justify-between gap-2 p-3 xs:p-4 bg-background rounded-lg border border-purple-200 dark:border-purple-800">
-                    <div className="flex items-center gap-2 xs:gap-3">
-                      <Mail className="h-3.5 w-3.5 xs:h-4 xs:w-4 text-purple-600" />
-                      <span className="text-[10px] xs:text-xs font-mono">
-                        info.almaysaroh@gmail.com
+                    <div className="flex flex-wrap items-center gap-3">
+                      <div className="flex items-center gap-2">
+                        <Mail className="h-3.5 w-3.5 xs:h-4 xs:w-4 text-purple-600" />
+                        <span className="text-[10px] xs:text-xs font-mono">
+                          info.almaysaroh@gmail.com
+                        </span>
+                      </div>
+                      <span className="text-muted-foreground hidden xs:inline">
+                        •
                       </span>
+                      <div className="flex items-center gap-2">
+                        <Phone className="h-3.5 w-3.5 text-amber-500" />
+                        <span className="text-[10px] xs:text-xs font-mono">
+                          +234 911 016 3930
+                        </span>
+                      </div>
                     </div>
                     <span className="text-[8px] xs:text-[9px] px-2 py-0.5 bg-purple-100 dark:bg-purple-950/40 text-purple-600 rounded-full font-black uppercase tracking-wider">
                       All inquiries
