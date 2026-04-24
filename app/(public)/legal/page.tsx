@@ -843,27 +843,19 @@
 import { useEffect, useState, useRef } from "react";
 import {
   Scale,
-  Lock,
   FileText,
   CheckCircle2,
-  Landmark,
   Clock,
-  Globe,
   Users,
   Heart,
-  Award,
   Mail,
   Download,
   Printer,
-  AlertTriangle,
   Gavel,
   Shield,
-  Calendar,
-  Baby,
   Scroll,
   MessageSquare,
   ChevronRight,
-  Menu,
   X,
   Search,
   BookOpen,
@@ -874,15 +866,10 @@ import {
   Trash2,
   Copy,
   Settings,
-  Sparkles,
-  BookMarked,
   FileCheck,
-  ExternalLink,
   CopyCheck,
-  Bell,
   ShieldCheck,
   Fingerprint,
-  QrCode,
   Phone,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -1481,7 +1468,7 @@ export default function LegalHub() {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background via-purple-50/5 to-amber-50/5">
+    <div className="min-h-screen bg-linear-to-b from-background via-purple-50/5 to-amber-50/5">
       {/* Print Dialog */}
       {showPrintDialog && (
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center">
@@ -1662,7 +1649,7 @@ export default function LegalHub() {
               </div>
 
               {/* Help Card */}
-              <div className="p-4 rounded-lg bg-gradient-to-r from-purple-50/50 to-amber-50/50 dark:from-purple-950/20 dark:to-amber-950/20 border border-purple-200 dark:border-purple-800">
+              <div className="p-4 rounded-lg bg-linear-to-r from-purple-50/50 to-amber-50/50 dark:from-purple-950/20 dark:to-amber-950/20 border border-purple-200 dark:border-purple-800">
                 <div className="flex items-center gap-2 mb-2">
                   <MessageSquare className="h-3.5 w-3.5 text-amber-500" />
                   <span className="text-[9px] font-black uppercase tracking-wider text-purple-600">
