@@ -532,9 +532,25 @@ import TeachersClient from "./teachers-client";
 
 // Generate metadata for SEO
 export const metadata: Metadata = {
-  title: "Our Scholars | Al-Maysaroh International Institute",
+  title: "Our Scholars | Al-Maysaroh Institute",
   description: "Meet our distinguished faculty of Ijazah-certified scholars who carry an unbroken chain of transmission to Prophet Muhammad (ﷺ). Learn from masters of Qira'at, Hifz, Tajweed, and Quranic Arabic.",
-  keywords: "Quran scholars, Ijazah certified teachers, Sanad, Quran teachers online, Hifz teachers, Tajweed instructors, Islamic scholars",
+  keywords:[ "Quran scholars, Ijazah certified teachers, Sanad, Quran teachers online, Hifz teachers, Tajweed instructors, Islamic scholars", 
+        "Quran teachers",
+        "Quran scholars",
+        "Quran professors",
+        "Ijazah scholars",
+        "Quran instructors",
+        "Tajweed experts",
+        "Hifz experts",
+        "Tahfiz teachers",
+        "Sanad holders",
+        "Tajweed teachers",
+        "Hifz instructors",
+        "Islamic scholars",
+        "Quranic education",
+        "Online Quran classes",
+        "Certified Quran teachers",
+        "Authentic Quran teachers",],
   authors: [{ name: "Al-Maysaroh International Institute" }],
   openGraph: {
     title: "Our Scholars - Carriers of The Sanad | Al-Maysaroh",
@@ -571,6 +587,8 @@ export const metadata: Metadata = {
     canonical: "https://almaysaroh.com/teachers",
   },
 };
+
+export const revalidate = 3600;
 
 export default function TeachersPage() {
   return <TeachersClient />;
