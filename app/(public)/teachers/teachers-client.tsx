@@ -233,7 +233,7 @@ export default function TeachersClient() {
               <p className="text-[8px] font-black uppercase tracking-wider text-muted-foreground">Scholars</p>
             </div>
             <div className="text-center p-3 sm:p-4 rounded-xl bg-purple-50/30 dark:bg-purple-950/20 border border-purple-200 dark:border-purple-800">
-              <p className="text-2xl sm:text-3xl font-black text-purple-600">200+</p>
+              <p className="text-2xl sm:text-3xl font-black text-purple-600">100+</p>
               <p className="text-[8px] font-black uppercase tracking-wider text-muted-foreground">Graduates</p>
             </div>
           </div>
