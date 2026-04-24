@@ -58,6 +58,8 @@ import { FeaturedCourses } from "@/components/sections/featured-courses";
 import { CTA } from "@/components/sections/cta";
 import { FAQ } from "@/components/sections/faq";
 import { SectionNavigator } from "@/components/shared/section-navigator";
+import { BackToTop } from "@/components/shared/back-to-top";
+import { QuickActions } from "@/components/shared/quick-actions";
 
 export default async function HomePage() {
   return (
@@ -66,53 +68,56 @@ export default async function HomePage() {
       <section id="hero">
         <Hero />
       </section>
-      
-      <section id="trust-indicators">
+
+      <section id="trust">
         <TrustIndicators />
       </section>
-      
-      <section id="quranic-verse">
+
+      <section id="verse">
         <QuranicVerse />
       </section>
-      
+
       <section id="features">
         <Features />
       </section>
-      
-      <section id="featured-courses">
+
+      <section id="courses">
         <FeaturedCourses />
       </section>
-      
-      <section id="learning-process">
+
+      <section id="process">
         <LearningProcess />
       </section>
-      
+
       <section id="teachers">
         <Teachers />
       </section>
-      
+
       <section id="stats">
         <Stats />
       </section>
-      
+
       <section id="testimonials">
         <Testimonials />
       </section>
-      
+
       <section id="faq">
         <FAQ />
       </section>
-      
+
       <section id="cta">
         <CTA />
       </section>
-      
+
       <section id="contact">
         <Contact />
       </section>
-      
-      {/* Floating Navigation Helper */}
-      <SectionNavigator />
+
+   
+      {/* Navigation Components */}
+      {/* <SectionNavigator /> */}
+      <BackToTop />
+      <QuickActions />
     </main>
   );
 }
