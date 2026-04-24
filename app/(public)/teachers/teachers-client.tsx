@@ -12,21 +12,12 @@ import {
   Scroll,
   Users,
   Globe,
-  Award,
   Star,
-  Mail,
-  MessageCircle,
-  Calendar,
-  BookOpen,
   Sparkles,
-  Filter,
   Search,
   X,
-  Quote,
   Clock,
-  MapPin,
   Heart,
-  TrendingUp,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -184,7 +175,7 @@ export default function TeachersClient() {
 
    
   
-    <main className="relative pb-20 bg-background overflow-hidden">
+    <main className="relative md:pt-0 sm:pt-5 pb-20 bg-background overflow-hidden">
       {/* Premium Background Effects */}
       <div className="hidden sm:block fixed inset-0 pointer-events-none">
         <div
