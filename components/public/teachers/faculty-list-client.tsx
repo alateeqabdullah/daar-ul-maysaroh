@@ -70,6 +70,20 @@ const MOCK_FACULTY = [
     department: "General Studies",
     isMock: true,
   },
+  {
+    id: "scholar-hifzi",
+    name: "Ustadh Shu'ayb Al-Hifzi",
+    image: null,
+    rank: "Hifz Specialist",
+    credentials: ["Ijazah in Hifz", "7+ Years Experience"],
+    philosophy: "Preserving the chain of transmission for future generations.",
+    availability: "FULL_TIME",
+    isMock: true,
+    yearsOfExperience: 7,
+    teacherId: "scholar-hifzi",
+    department: "Hifz",
+
+  },
 ];
 
 interface TeacherDisplayData {

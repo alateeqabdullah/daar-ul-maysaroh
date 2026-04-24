@@ -435,7 +435,7 @@ import {
   Upload,
   Zap,
   Globe,
-  Users,
+
 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
@@ -496,7 +496,7 @@ export default function AdmissionsPricingPage() {
   const dbPlans: PricingPlan[] = [];
 
   return (
-    <main className="pt-30 xs:pt-24 sm:pt-28 md:pt-32 lg:pt-36 pb-12 xs:pb-16 sm:pb-20 md:pb-24 bg-gradient-to-b from-background via-purple-50/5 to-amber-50/5">
+    <main className="pt-30 xs:pt-24 sm:pt-28 md:pt-32 lg:pt-36 pb-12 xs:pb-16 sm:pb-20 md:pb-24 bg-linear-to-b from-background via-purple-50/5 to-amber-50/5">
       <div className="container mx-auto px-4 xs:px-5 sm:px-6">
         {/* ==================== HERO SECTION ==================== */}
         <div className="max-w-5xl mx-auto text-center mb-12 xs:mb-16 sm:mb-20 md:mb-24 lg:mb-28">
@@ -506,7 +506,7 @@ export default function AdmissionsPricingPage() {
           </div>
           <h1 className="text-4xl xs:text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tighter font-heading leading-[1.1] mb-4 xs:mb-5 sm:mb-6">
             Admission <br />
-            <span className="bg-gradient-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent italic">
+            <span className="bg-linear-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent italic">
               Framework.
             </span>
           </h1>
@@ -543,7 +543,7 @@ export default function AdmissionsPricingPage() {
             <div>
               <h2 className="text-3xl xs:text-4xl sm:text-5xl font-black tracking-tighter mb-3 xs:mb-4">
                 Financial{" "}
-                <span className="bg-gradient-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent italic">
+                <span className="bg-linear-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent italic">
                   Channels
                 </span>
               </h2>
@@ -557,7 +557,7 @@ export default function AdmissionsPricingPage() {
               {/* Instant Card - Purple */}
               <div className="group relative p-5 xs:p-6 rounded-xl xs:rounded-2xl bg-card border-2 border-purple-200 dark:border-purple-800 hover:border-purple-300 transition-all duration-300 hover:shadow-xl">
                 <div className="flex items-start gap-4 xs:gap-5">
-                  <div className="w-12 h-12 xs:w-14 xs:h-14 rounded-xl bg-gradient-to-r from-purple-600 to-purple-700 flex items-center justify-center shrink-0 shadow-lg">
+                  <div className="w-12 h-12 xs:w-14 xs:h-14 rounded-xl bg-linear-to-r from-purple-600 to-purple-700 flex items-center justify-center shrink-0 shadow-lg">
                     <CreditCard className="w-6 h-6 xs:w-7 xs:h-7 text-white" />
                   </div>
                   <div className="flex-1">
@@ -582,7 +582,7 @@ export default function AdmissionsPricingPage() {
               {/* Manual Card - Amber */}
               <div className="group relative p-5 xs:p-6 rounded-xl xs:rounded-2xl bg-card border-2 border-amber-200 dark:border-amber-800 hover:border-amber-300 transition-all duration-300 hover:shadow-xl">
                 <div className="flex items-start gap-4 xs:gap-5">
-                  <div className="w-12 h-12 xs:w-14 xs:h-14 rounded-xl bg-gradient-to-r from-amber-500 to-amber-600 flex items-center justify-center shrink-0 shadow-lg">
+                  <div className="w-12 h-12 xs:w-14 xs:h-14 rounded-xl bg-linear-to-r from-amber-500 to-amber-600 flex items-center justify-center shrink-0 shadow-lg">
                     <Banknote className="w-6 h-6 xs:w-7 xs:h-7 text-white" />
                   </div>
                   <div className="flex-1">
@@ -661,8 +661,8 @@ export default function AdmissionsPricingPage() {
                 ].map((item, idx) => {
                   const colors =
                     item.color === "purple"
-                      ? "bg-gradient-to-r from-purple-600 to-purple-700"
-                      : "bg-gradient-to-r from-amber-500 to-amber-600";
+                      ? "bg-linear-to-r from-purple-600 to-purple-700"
+                      : "bg-linear-to-r from-amber-500 to-amber-600";
                   const textColor =
                     item.color === "purple"
                       ? "text-purple-600"
@@ -701,7 +701,7 @@ export default function AdmissionsPricingPage() {
           <div className="max-w-4xl mx-auto text-center mb-8 xs:mb-10 sm:mb-12">
             <h2 className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl font-black tracking-tighter font-heading mb-3 xs:mb-4">
               Calculated{" "}
-              <span className="bg-gradient-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent italic">
+              <span className="bg-linear-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent italic">
                 Tuition
               </span>
             </h2>
@@ -756,7 +756,7 @@ export default function AdmissionsPricingPage() {
             </div>
 
             {/* Free Assessment Card - Amber */}
-            <div className="p-5 xs:p-6 sm:p-7 md:p-8 rounded-xl xs:rounded-2xl bg-gradient-to-br from-amber-50/30 to-amber-50/10 dark:from-amber-950/20 dark:to-amber-950/10 border-2 border-amber-200 dark:border-amber-800 text-center">
+            <div className="p-5 xs:p-6 sm:p-7 md:p-8 rounded-xl xs:rounded-2xl bg-linear-to-br from-amber-50/30 to-amber-50/10 dark:from-amber-950/20 dark:to-amber-950/10 border-2 border-amber-200 dark:border-amber-800 text-center">
               <div className="inline-flex items-center justify-center w-14 h-14 xs:w-16 xs:h-16 rounded-full bg-amber-100 dark:bg-amber-950/40 mb-3 xs:mb-4">
                 <Sparkles className="w-7 h-7 xs:w-8 xs:h-8 text-amber-500" />
               </div>
@@ -769,7 +769,7 @@ export default function AdmissionsPricingPage() {
                 path.
               </p>
               <Link href="/contact">
-                <Button className="w-full rounded-full bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-black text-xs sm:text-sm shadow-md group">
+                <Button className="w-full rounded-full bg-linear-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-white font-black text-xs sm:text-sm shadow-md group">
                   BOOK FREE ASSESSMENT
                   <ArrowRight className="w-3.5 h-3.5 ml-1.5 group-hover:translate-x-1 transition-transform" />
                 </Button>
@@ -882,7 +882,7 @@ export default function AdmissionsPricingPage() {
         <div className="text-center mb-8 xs:mb-10 sm:mb-12">
           <h2 className="text-3xl xs:text-4xl sm:text-5xl font-black tracking-tighter mb-3 xs:mb-4">
             Admissions{" "}
-            <span className="bg-gradient-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent italic">
+            <span className="bg-linear-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent italic">
               FAQ
             </span>
           </h2>
