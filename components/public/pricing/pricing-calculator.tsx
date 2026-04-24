@@ -347,6 +347,10 @@
 //     </div>
 //   );
 // }
+
+
+
+
 "use client";
 
 import { useState, useEffect } from "react";
@@ -369,6 +373,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
+import { PricingPlan } from "@/app/generated/prisma/client";
 
 // Individual Programs Data (Calculator-based)
 const INDIVIDUAL_PROGRAMS = [
@@ -411,7 +416,7 @@ const FIXED_PRICE_PROGRAMS = [
   {
     id: "group-tajweed",
     name: "Group Tajweed",
-    price: 79,
+    price: 6,
     icon: Users,
     description:
       "Learn Tajweed in a supportive group environment (4-6 students)",
@@ -421,7 +426,7 @@ const FIXED_PRICE_PROGRAMS = [
   {
     id: "group-qiroah",
     name: "Group Qiro'ah",
-    price: 69,
+    price: 6,
     icon: Users,
     description: "Quran reading fundamentals in small groups",
     color: "purple",
@@ -429,8 +434,8 @@ const FIXED_PRICE_PROGRAMS = [
   },
   {
     id: "juz-amma",
-    name: "Juz Amma (Children)",
-    price: 89,
+    name: "Juz Amma",
+    price: 7,
     icon: Heart,
     description: "Memorize the 30th Juz with fun, engaging methods",
     color: "amber",
@@ -438,8 +443,8 @@ const FIXED_PRICE_PROGRAMS = [
   },
   {
     id: "juz-tabarak",
-    name: "Juz Tabarak (Children)",
-    price: 89,
+    name: "Juz Tabarak",
+    price: 8,
     icon: Heart,
     description: "Continue your child's memorization journey",
     color: "purple",
@@ -451,7 +456,7 @@ const DURATIONS = [30, 45, 60, 90];
 const FREQUENCIES = [1, 2, 3, 4, 5];
 const BASE_PRICE_PER_MINUTE = 0.25;
 
-export function PricingCalculator({ dbPlans }: { dbPlans?: any[] }) {
+export function PricingCalculator({ dbPlans }: { dbPlans?: PricingPlan[] }) {
   const [programType, setProgramType] = useState<"individual" | "group">(
     "individual",
   );
@@ -914,7 +919,7 @@ export function PricingCalculator({ dbPlans }: { dbPlans?: any[] }) {
             <div className="mt-8 space-y-3">
               <Link href="/admissions" className="block">
                 <Button
-                  className="w-full h-14 sm:h-16 rounded-xl font-black text-sm tracking-widest uppercase shadow-xl group relative overflow-hidden bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800"
+                  className="w-full h-14 sm:h-16 rounded-xl font-black text-sm tracking-widest uppercase shadow-xl group relative overflow-hidden bg-linear-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800"
                   onMouseEnter={() => setIsHovered(true)}
                   onMouseLeave={() => setIsHovered(false)}
                 >
