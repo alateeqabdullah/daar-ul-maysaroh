@@ -117,7 +117,7 @@ export default async function HomePage() {
       {/* Navigation Components */}
       {/* <SectionNavigator /> */}
       <BackToTop />
-      <QuickActions />
+      {/* <QuickActions /> */}
     </main>
   );
 }
