@@ -119,7 +119,8 @@ const TEACHERS = [
 
         },
         {
-          
+          id: " "
+          name: "Ustadh Aliyy Abdurrozzaaq",
         }
   
 ];
