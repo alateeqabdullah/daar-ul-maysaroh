@@ -22,9 +22,7 @@ import {
   CheckCircle2,
   ChevronRight,
   Scroll,
-  TrendingUp,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
 
 const COURSES = [
   {
@@ -187,7 +185,7 @@ export default function CoursesClient() {
                 </div>
                 <h1 className="text-4xl xs:text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tighter font-heading leading-[1.1]">
                   Choose Your{" "}
-                  <span className="bg-gradient-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent italic">
+                  <span className="bg-linear-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent italic">
                     Path.
                   </span>
                 </h1>
@@ -309,7 +307,7 @@ export default function CoursesClient() {
 
                       <div className="flex flex-col lg:flex-row gap-5 sm:gap-6 md:gap-8 items-start mt-6 sm:mt-8">
                         {/* Icon Container */}
-                        <div className="w-full lg:w-40 h-44 sm:h-48 md:h-52 lg:h-56 bg-gradient-to-br from-purple-100 to-amber-100 dark:from-purple-950/30 dark:to-amber-950/30 rounded-xl sm:rounded-2xl overflow-hidden relative border border-border group-hover:border-purple-300 transition-all shrink-0 flex items-center justify-center">
+                        <div className="w-full lg:w-40 h-44 sm:h-48 md:h-52 lg:h-56 bg-linear-to-br from-purple-100 to-amber-100 dark:from-purple-950/30 dark:to-amber-950/30 rounded-xl sm:rounded-2xl overflow-hidden relative border border-border group-hover:border-purple-300 transition-all shrink-0 flex items-center justify-center">
                           <div className="absolute inset-0 flex items-center justify-center opacity-20 group-hover:opacity-30 transition-opacity">
                             <Icon
                               className={`w-10 h-10 sm:w-12 sm:h-12 ${isPurple ? "text-purple-600" : "text-amber-500"}`}
@@ -372,7 +370,7 @@ export default function CoursesClient() {
 
                       {/* Decorative Bottom Line */}
                       <div
-                        className={`absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-${isPurple ? "purple-600" : "amber-500"} to-transparent scale-x-0 group-hover:scale-x-100 transition-transform duration-500`}
+                        className={`absolute bottom-0 left-0 right-0 h-0.5 bg-linear-to-r from-transparent via-${isPurple ? "purple-600" : "amber-500"} to-transparent scale-x-0 group-hover:scale-x-100 transition-transform duration-500`}
                       />
                     </div>
                   </Link>
@@ -384,7 +382,7 @@ export default function CoursesClient() {
           {/* Trust Message */}
           <Reveal delay={0.3}>
             <div className="mt-12 xs:mt-16 sm:mt-20 lg:mt-24 text-center max-w-2xl mx-auto">
-              <div className="inline-flex flex-wrap items-center justify-center gap-3 xs:gap-4 p-3 xs:p-4 rounded-xl bg-gradient-to-r from-purple-50/30 to-amber-50/30 dark:from-purple-950/20 dark:to-amber-950/20 border border-purple-200 dark:border-purple-800">
+              <div className="inline-flex flex-wrap items-center justify-center gap-3 xs:gap-4 p-3 xs:p-4 rounded-xl bg-linear-to-r from-purple-50/30 to-amber-50/30 dark:from-purple-950/20 dark:to-amber-950/20 border border-purple-200 dark:border-purple-800">
                 <div className="flex items-center gap-2">
                   <Shield className="w-4 h-4 text-purple-600" />
                   <span className="text-[8px] xs:text-[9px] sm:text-[10px] font-black uppercase tracking-wider">
@@ -411,7 +409,7 @@ export default function CoursesClient() {
 
           {/* Final CTA */}
           <div className="mt-12 xs:mt-16 sm:mt-20 lg:mt-24 mb-12 xs:mb-16 sm:mb-20">
-            <div className="bg-gradient-to-br from-purple-600/5 to-amber-500/5 rounded-xl sm:rounded-2xl p-6 sm:p-8 text-center max-w-3xl mx-auto border border-purple-200 dark:border-purple-800">
+            <div className="bg-linear-to-br from-purple-600/5 to-amber-500/5 rounded-xl sm:rounded-2xl p-6 sm:p-8 text-center max-w-3xl mx-auto border border-purple-200 dark:border-purple-800">
               <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-purple-100 dark:bg-purple-950/40 mb-4">
                 <Sparkles className="w-7 h-7 text-amber-500" />
               </div>
@@ -424,7 +422,7 @@ export default function CoursesClient() {
               </p>
               <div className="flex flex-col sm:flex-row gap-3 justify-center">
                 <Link href="/assessment">
-                  <Button className="rounded-full px-6 sm:px-8 py-2.5 sm:py-3 font-black text-sm bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white shadow-md hover:shadow-lg transition-all duration-300">
+                  <Button className="rounded-full px-6 sm:px-8 py-2.5 sm:py-3 font-black text-sm bg-linear-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white shadow-md hover:shadow-lg transition-all duration-300">
                     Start Free Assessment
                     <ArrowRight className="w-4 h-4 ml-2" />
                   </Button>
