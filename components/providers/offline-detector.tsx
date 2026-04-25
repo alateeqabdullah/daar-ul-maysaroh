@@ -261,16 +261,13 @@ export function OfflineProvider({
 
   // Get battery info
   useEffect(() => {
-    if ("getBattery" in navigator) {
-      (navigator as any)
-        .getBattery()
-        .then((battery: any) => {
+    if ('getBattery' in navigator) {
+      (navigator as any).getBattery().then((battery: any) => {
+        setBatteryLevel(battery.level * 100);
+        battery.addEventListener('levelchange', () => {
           setBatteryLevel(battery.level * 100);
-          battery.addEventListener("levelchange", () => {
-            setBatteryLevel(battery.level * 100);
-          });
-        })
-        .catch(() => {});
+        });
+      }).catch(() => {});
     }
   }, []);
 
@@ -279,7 +276,7 @@ export function OfflineProvider({
   }, []);
 
   const handleRetry = useCallback(() => {
-    setRetryCount((prev) => prev + 1);
+    setRetryCount(prev => prev + 1);
     if (navigator.onLine) {
       window.location.reload();
     } else {
@@ -287,8 +284,7 @@ export function OfflineProvider({
       setHasBeenOffline(true);
       setShowBanner(true);
       toast.error("Still offline", {
-        description:
-          "Please check your connection. Retry count: " + (retryCount + 1),
+        description: "Please check your connection. Retry count: " + (retryCount + 1),
         duration: 3000,
       });
     }
@@ -381,14 +377,11 @@ export function OfflineProvider({
                     <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
                       {batteryLevel && batteryLevel < 20 && (
                         <span className="block text-amber-600 text-[10px] mb-1">
-                          ⚡ Low battery ({Math.round(batteryLevel)}%) - Connect
-                          to charger
+                          ⚡ Low battery ({Math.round(batteryLevel)}%) - Connect to charger
                         </span>
                       )}
                       Some features are unavailable.
-                      {hasBeenOffline &&
-                        autoRefresh &&
-                        " Will reconnect automatically."}
+                      {hasBeenOffline && autoRefresh && " Will reconnect automatically."}
                     </p>
 
                     <div className="flex items-center gap-2 sm:gap-3 mt-3 sm:mt-4">
@@ -397,12 +390,7 @@ export function OfflineProvider({
                         size="sm"
                         className="h-9 sm:h-10 px-4 sm:px-5 rounded-full text-xs sm:text-sm font-black gap-1.5 bg-amber-500 hover:bg-amber-600 text-white"
                       >
-                        <RefreshCw
-                          className={cn(
-                            "w-3.5 h-3.5",
-                            retryCount > 0 && "animate-spin",
-                          )}
-                        />
+                        <RefreshCw className={cn("w-3.5 h-3.5", retryCount > 0 && "animate-spin")} />
                         Retry {retryCount > 0 && `(${retryCount})`}
                       </Button>
                       <Button
