@@ -74,7 +74,7 @@ const COURSES = [
     description:
       "Fun, interactive Quran reading for children ages 7-12. Learn to read with confidence and joy in a supportive group environment.",
     duration: "6-9 months",
-    format: "Group (4-6)",
+    format: "Group (4-10)",
     students: "100+",
     icon: Heart,
     color: "amber",
@@ -128,7 +128,7 @@ const structuredData = {
       description: course.description,
       provider: {
         "@type": "Organization",
-        name: "Al-Maysaroh International Institute",
+        name: "Al-Maysaroh Institute",
       },
       hasCourseInstance: {
         "@type": "CourseInstance",
@@ -162,7 +162,7 @@ export default function CoursesClient() {
 
         <div className="container mx-auto px-4 xs:px-5 sm:px-6">
           {/* Breadcrumb */}
-          <div className="pt-20 xs:pt-24 sm:pt-28 md:pt-32 lg:pt-36">
+          <div className="pt-30 xs:pt-24 sm:pt-28 md:pt-32 lg:pt-36">
             <nav className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground flex items-center gap-2 mb-6 xs:mb-8 flex-wrap">
               <Link
                 href="/"
@@ -217,14 +217,14 @@ export default function CoursesClient() {
                 },
                 {
                   label: "Active Students",
-                  value: "900+",
+                  value: "100+",
                   icon: Users,
                   color: "amber",
                   suffix: "",
                 },
                 {
                   label: "Certified Scholars",
-                  value: "15+",
+                  value: "8+",
                   icon: GraduationCap,
                   color: "purple",
                   suffix: "",

@@ -62,7 +62,7 @@
 // //             className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter font-heading mb-4"
 // //           >
 // //             Page Not{" "}
-// //             <span className="bg-gradient-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent italic">
+// //             <span className="bg-linear-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent italic">
 // //               Found
 // //             </span>
 // //           </motion.h1>
@@ -498,16 +498,9 @@ import {
   Search,
   BookOpen,
   Crown,
-  Shield,
   Sparkles,
   Compass,
   MessageCircle,
-  GraduationCap,
-  TrendingUp,
-  Heart,
-  Zap,
-  Coffee,
-  Moon,
   Star,
   Diamond,
   Gem,
@@ -591,7 +584,7 @@ export default function NotFound() {
   };
 
   return (
-    <main className="relative bg-gradient-to-b from-background via-purple-50/5 to-amber-50/5 overflow-hidden min-h-screen flex items-center justify-center">
+    <main className="relative bg-linear-to-b from-background via-purple-50/5 to-amber-50/5 overflow-hidden min-h-screen flex items-center justify-center">
       {/* Premium Background Effects */}
       <div className="fixed inset-0 pointer-events-none">
         <div className="absolute inset-0 opacity-[0.02] bg-[url('/islamic-pattern.svg')] bg-center bg-repeat" style={{ backgroundSize: "300px" }} />
@@ -636,11 +629,11 @@ export default function NotFound() {
           >
             <div className="relative inline-block">
               {/* Glow Effect */}
-              <div className="absolute inset-0 bg-gradient-to-r from-purple-600 via-amber-500 to-purple-600 blur-3xl opacity-30 rounded-full" />
+              <div className="absolute inset-0 bg-linear-to-r from-purple-600 via-amber-500 to-purple-600 blur-3xl opacity-30 rounded-full" />
               
               {/* 404 Number */}
               <div className="relative flex items-center justify-center gap-2 sm:gap-4">
-                <span className="text-7xl xs:text-8xl sm:text-9xl md:text-[12rem] font-black tracking-tighter bg-gradient-to-r from-purple-600 via-purple-700 to-amber-600 bg-clip-text text-transparent drop-shadow-2xl">
+                <span className="text-7xl xs:text-8xl sm:text-9xl md:text-[12rem] font-black tracking-tighter bg-linear-to-r from-purple-600 via-purple-700 to-amber-600 bg-clip-text text-transparent drop-shadow-2xl">
                   4
                 </span>
                 <motion.div
@@ -648,14 +641,14 @@ export default function NotFound() {
                   transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
                   className="relative"
                 >
-                  <div className="w-16 h-16 xs:w-20 xs:h-20 sm:w-24 sm:h-24 md:w-32 md:h-32 rounded-full bg-gradient-to-r from-amber-500 to-purple-600 flex items-center justify-center shadow-2xl">
+                  <div className="w-16 h-16 xs:w-20 xs:h-20 sm:w-24 sm:h-24 md:w-32 md:h-32 rounded-full bg-linear-to-r from-amber-500 to-purple-600 flex items-center justify-center shadow-2xl">
                     <span className="text-4xl xs:text-5xl sm:text-6xl md:text-7xl font-black text-white">0</span>
                   </div>
                   <div className="absolute -top-2 -right-2">
                     <Sparkles className="w-4 h-4 xs:w-5 xs:h-5 text-amber-400 fill-amber-400" />
                   </div>
                 </motion.div>
-                <span className="text-7xl xs:text-8xl sm:text-9xl md:text-[12rem] font-black tracking-tighter bg-gradient-to-r from-amber-600 to-purple-600 bg-clip-text text-transparent drop-shadow-2xl">
+                <span className="text-7xl xs:text-8xl sm:text-9xl md:text-[12rem] font-black tracking-tighter bg-linear-to-r from-amber-600 to-purple-600 bg-clip-text text-transparent drop-shadow-2xl">
                   4
                 </span>
               </div>
@@ -677,7 +670,7 @@ export default function NotFound() {
             transition={{ delay: 0.1 }}
             className="text-center mb-2"
           >
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-gradient-to-r from-purple-100/20 to-amber-100/20 backdrop-blur-sm border border-purple-200/50">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-linear-to-r from-purple-100/20 to-amber-100/20 backdrop-blur-sm border border-purple-200/50">
               <span className="text-sm">{currentTime.emoji}</span>
               <span className="text-[9px] font-black uppercase tracking-wider text-purple-600">{currentTime.greeting}</span>
               <span className="text-[9px] font-arabic text-amber-600">{currentTime.arabic}</span>
@@ -715,9 +708,9 @@ export default function NotFound() {
             className="mb-8"
           >
             <div className="flex items-center justify-center gap-2 mb-4">
-              <div className="h-px w-8 bg-gradient-to-r from-transparent to-purple-600/40" />
+              <div className="h-px w-8 bg-linear-to-r from-transparent to-purple-600/40" />
               <span className="text-[9px] font-black uppercase tracking-wider text-purple-600">Concierge Services</span>
-              <div className="h-px w-8 bg-gradient-to-l from-transparent to-purple-600/40" />
+              <div className="h-px w-8 bg-linear-to-l from-transparent to-purple-600/40" />
             </div>
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
               {premiumServices.map((item, idx) => {
@@ -730,8 +723,8 @@ export default function NotFound() {
                     className="group"
                   >
                     <Link href={item.href} className="block">
-                      <div className="relative p-4 rounded-xl bg-gradient-to-br from-card to-background border-2 border-purple-200/30 hover:border-purple-400/50 transition-all duration-500 overflow-hidden">
-                        <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-to-br from-purple-600/5 to-amber-500/5 rounded-full blur-2xl group-hover:opacity-100 transition-opacity" />
+                      <div className="relative p-4 rounded-xl bg-linear-to-br from-card to-background border-2 border-purple-200/30 hover:border-purple-400/50 transition-all duration-500 overflow-hidden">
+                        <div className="absolute top-0 right-0 w-20 h-20 bg-linear-to-br from-purple-600/5 to-amber-500/5 rounded-full blur-2xl group-hover:opacity-100 transition-opacity" />
                         <div className="relative z-10">
                           <div className={`w-10 h-10 rounded-lg ${isPurple ? 'bg-purple-100 dark:bg-purple-950/40' : 'bg-amber-100 dark:bg-amber-950/40'} flex items-center justify-center mb-3 group-hover:scale-110 transition-transform`}>
                             <Icon className={`w-5 h-5 ${isPurple ? 'text-purple-600' : 'text-amber-500'}`} />
@@ -740,7 +733,7 @@ export default function NotFound() {
                           <p className="text-[9px] text-muted-foreground">{item.description}</p>
                           {item.premium && (
                             <div className="absolute top-3 right-3">
-                              <div className="w-5 h-5 rounded-full bg-gradient-to-r from-amber-400 to-amber-500 flex items-center justify-center">
+                              <div className="w-5 h-5 rounded-full bg-linear-to-r from-amber-400 to-amber-500 flex items-center justify-center">
                                 <span className="text-[8px] font-black text-white">VIP</span>
                               </div>
                             </div>
@@ -762,7 +755,7 @@ export default function NotFound() {
             className="mb-8"
           >
             <div className="relative max-w-lg mx-auto">
-              <div className="absolute inset-0 bg-gradient-to-r from-purple-600/20 to-amber-500/20 rounded-full blur-md opacity-0 group-hover:opacity-100 transition-opacity" />
+              <div className="absolute inset-0 bg-linear-to-r from-purple-600/20 to-amber-500/20 rounded-full blur-md opacity-0 group-hover:opacity-100 transition-opacity" />
               <div className="relative group">
                 <Search className="absolute left-5 top-1/2 -translate-y-1/2 w-4 h-4 text-purple-400" />
                 <input
@@ -775,7 +768,7 @@ export default function NotFound() {
                 />
                 <button
                   onClick={() => searchQuery.trim() && (window.location.href = `/search?q=${encodeURIComponent(searchQuery)}`)}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 px-4 py-1.5 rounded-full bg-gradient-to-r from-purple-600 to-purple-700 text-white text-[10px] font-black hover:from-purple-700 hover:to-purple-800 transition-all duration-300 shadow-md"
+                  className="absolute right-2 top-1/2 -translate-y-1/2 px-4 py-1.5 rounded-full bg-linear-to-r from-purple-600 to-purple-700 text-white text-[10px] font-black hover:from-purple-700 hover:to-purple-800 transition-all duration-300 shadow-md"
                 >
                   Explore
                 </button>
@@ -814,7 +807,7 @@ export default function NotFound() {
           >
             <Link href="/">
               <Button 
-                className="rounded-full px-8 py-4 font-black text-sm bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white shadow-xl hover:shadow-2xl transition-all duration-300 group w-full sm:w-auto"
+                className="rounded-full px-8 py-4 font-black text-sm bg-linear-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white shadow-xl hover:shadow-2xl transition-all duration-300 group w-full sm:w-auto"
                 onMouseEnter={() => setIsHovering(true)}
                 onMouseLeave={() => setIsHovering(false)}
               >
@@ -842,7 +835,7 @@ export default function NotFound() {
             transition={{ delay: 0.5 }}
             className="mt-10 text-center"
           >
-            <div className="inline-flex items-center gap-3 px-5 py-2 rounded-full bg-gradient-to-r from-purple-600/5 to-amber-500/5 backdrop-blur-sm border border-purple-200/30">
+            <div className="inline-flex items-center gap-3 px-5 py-2 rounded-full bg-linear-to-r from-purple-600/5 to-amber-500/5 backdrop-blur-sm border border-purple-200/30">
               <Sun className="w-3 h-3 text-amber-500" />
               <span className="text-[8px] font-black uppercase tracking-wider text-muted-foreground">
                 Trusted by over 500 students worldwide | Ijazah-certified scholars
