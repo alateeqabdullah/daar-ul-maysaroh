@@ -135,8 +135,8 @@ const TEACHERS = [
           languages: ["Arabic", "English", "Hausa", "Yoruba"],
           availability: "Accepting",  
 
-        }
-  
+        },
+        
 ];
 
 const CATEGORIES = [
@@ -634,13 +634,12 @@ export default function TeachersClient() {
 
                         <div className="flex items-center gap-1 mt-2">
                           <Crown className="w-3 h-3 text-amber-500" />
-                          <p className="text-[8px] font-bold truncate max-w-[150px]">
-                            {teacher.credentials
-                              .split(" ")
-                              .slice(0, 3)
-                              .join(" ")}
+                          <div className="text-[8px] font-bold truncate max-w-[150px]">
+                            {Array.isArray(teacher.credentials)
+                              ? teacher.credentials[0]
+                              : teacher.credentials.split(" ").slice(0, 3).join(" ")}
                             ...
-                          </p>
+                          </div>
                         </div>
 
                         <div className="flex flex-wrap justify-center gap-2 mt-3">
