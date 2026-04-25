@@ -3,38 +3,47 @@
 
 import { useParams } from "next/navigation";
 import Link from "next/link";
-import { motion } from "framer-motion";
-import { Reveal } from "@/components/shared/section-animation";
 import { Button } from "@/components/ui/button";
 import {
   GraduationCap,
   Verified,
-  ShieldCheck,
-  ArrowRight,
-  ChevronRight,
   Crown,
   Scroll,
-  Users,
   Globe,
-  Award,
-  Star,
   BookOpen,
-  Sparkles,
   Quote,
   Clock,
   Heart,
   CheckCircle2,
   Calendar,
 } from "lucide-react";
-import { cn } from "@/lib/utils";
+
+interface Teacher {
+  name: string;
+  rank: string;
+  shortRank: string;
+  credentials: string;
+  philosophy: string;
+  fullBio: string;
+  students: string;
+  experience: string;
+  sanad: string;
+  specialties: string[];
+  rating: number;
+  languages: string[];
+  availability: string;
+  education: string[];
+  schedule: string;
+  publications?: string[];
+}
 
 // Teacher Data - Same structure as homepage
-const TEACHERS_DATA: Record<string, any> = {
+const TEACHERS_DATA: Record<string, Teacher> = {
   "abubakar-abdurrozzaaq-al-maysari": {
     name: "Shaykh Abubakar Abdurrozzaaq Al-Maysari",
     rank: "Dean of Academic Affairs & Chief Scholar",
     shortRank: "Dean of Faculty",
-    credentials: "Ijazah in 10 Qira'at",
+    credentials: "Ijazah in Qira'at",
     philosophy: "Preserving the trust of the Divine Word.",
     fullBio:
       "With over 13 years of teaching experience, Shaykh Abubakar holds ijazah in Qira'at with an unbroken chain reaching back to Prophet Muhammad (ﷺ). He has trained over 100 certified Qurra worldwide and serves on multiple international scholarly councils.",

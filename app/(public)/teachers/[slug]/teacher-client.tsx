@@ -128,8 +128,8 @@ export default function TeacherClient({ teacher }: TeacherClientProps) {
                     transition={{ duration: 0.5 }}
                     className="relative"
                   >
-                    <div className="absolute -inset-2 bg-gradient-to-r from-purple-600 to-amber-500 rounded-full blur-xl opacity-30" />
-                    <div className="relative w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 rounded-full bg-gradient-to-br from-purple-100 to-amber-100 dark:from-purple-950/30 dark:to-amber-950/30 flex items-center justify-center border-4 border-purple-200 group-hover:border-purple-400 transition-all shadow-2xl">
+                    <div className="absolute -inset-2 bg-linear-to-r from-purple-600 to-amber-500 rounded-full blur-xl opacity-30" />
+                    <div className="relative w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 rounded-full bg-linear-to-br from-purple-100 to-amber-100 dark:from-purple-950/30 dark:to-amber-950/30 flex items-center justify-center border-4 border-purple-200 group-hover:border-purple-400 transition-all shadow-2xl">
                       <span className="text-5xl sm:text-6xl md:text-7xl font-black text-purple-600/30">
                         {teacher.name.charAt(0)}
                       </span>
@@ -202,7 +202,7 @@ export default function TeacherClient({ teacher }: TeacherClientProps) {
 
                   <div className="italic border-l-2 border-amber-500 pl-4 mb-6">
                     <p className="text-xs sm:text-sm text-muted-foreground">
-                      "{teacher.philosophy}"
+                     {` "${teacher.philosophy}"`}
                     </p>
                   </div>
                 </div>
@@ -227,7 +227,7 @@ export default function TeacherClient({ teacher }: TeacherClientProps) {
                 return (
                   <button
                     key={tab.id}
-                    onClick={() => setActiveTab(tab.id as any)}
+                    onClick={() => setActiveTab(tab.id as typeof activeTab)}
                     className={cn(
                       "flex items-center gap-2 px-4 py-2 text-sm font-black uppercase tracking-wider transition-all",
                       isActive
@@ -260,7 +260,7 @@ export default function TeacherClient({ teacher }: TeacherClientProps) {
                   <div className="pt-4 border-t border-border">
                     <blockquote className="italic text-muted-foreground border-l-2 border-amber-500 pl-4">
                       <Quote className="w-4 h-4 text-amber-500 mb-2" />
-                      <p className="text-sm">"{teacher.philosophy}"</p>
+                      <p className="text-sm">{`"${teacher.philosophy}"`}</p>
                       <p className="text-xs font-black text-purple-600 mt-2">
                         — {teacher.name}
                       </p>
@@ -351,7 +351,7 @@ export default function TeacherClient({ teacher }: TeacherClientProps) {
             </div>
 
             {/* Book Session Card */}
-            <div className="bg-card rounded-xl border border-purple-200 dark:border-purple-800 p-6 bg-gradient-to-br from-purple-50/30 to-amber-50/30">
+            <div className="bg-card rounded-xl border border-purple-200 dark:border-purple-800 p-6 bg-linear-to-br from-purple-50/30 to-amber-50/30">
               <h3 className="text-base font-black mb-4 flex items-center gap-2">
                 <Heart className="w-4 h-4 text-amber-500" />
                 Book a Session
@@ -362,7 +362,7 @@ export default function TeacherClient({ teacher }: TeacherClientProps) {
               </p>
               <div className="space-y-3">
                 <Link href="/assessment">
-                  <Button className="w-full rounded-lg py-2.5 font-black text-xs bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white">
+                  <Button className="w-full rounded-lg py-2.5 font-black text-xs bg-linear-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white">
                     Book Free Assessment
                   </Button>
                 </Link>
