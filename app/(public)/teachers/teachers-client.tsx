@@ -119,8 +119,22 @@ const TEACHERS = [
 
         },
         {
-          id: " "
+          id: "ustadh-aliyy-abdurrozzaaq",
           name: "Ustadh Aliyy Abdurrozzaaq",
+          rank: "Memorization and Tajweed Specialist",
+          credentials: ["Ijazah in Hifz", "5+ Years Experience"],
+          philosophy: "Guiding students to achieve excellence in Quranic recitation and memorization.",
+          slug: "aliyy-abdurrazzaq",
+          fullBio: "Ustadh Aliyy is a specialist in Quranic memorization and Tajweed. He is dedicated to helping students achieve excellence in their recitation and understanding of the Quran.",
+          students: "50+ graduates",
+          experience: "5+ years",
+          sanad: "Active Sanad to Prophet (ﷺ)",
+          featured: false,
+          specialties: ["Memorization", "Tajweed"],
+          rating: 5,
+          languages: ["Arabic", "English", "Hausa", "Yoruba"],
+          availability: "Accepting",  
+
         }
   
 ];
