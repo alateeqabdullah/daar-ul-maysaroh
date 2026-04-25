@@ -81,7 +81,7 @@ export default function TeacherClient({ teacher }: TeacherClientProps) {
 
       <div className="container mx-auto px-4 xs:px-5 sm:px-6">
         {/* Breadcrumb */}
-        <div className="pt-20 xs:pt-24 sm:pt-28 md:pt-32 lg:pt-36">
+        <div className="pt-30 xs:pt-24 sm:pt-28 md:pt-32 lg:pt-36">
           <nav className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground flex items-center gap-2 mb-6 xs:mb-8 flex-wrap">
             <Link href="/" className="hover:text-purple-600 transition-colors">
               Home
