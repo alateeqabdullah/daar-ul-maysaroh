@@ -40,7 +40,7 @@ const TEACHERS = [
     experience: "10+ years",
     sanad: "Active Sanad to Prophet (ﷺ)",
     featured: true,
-    specialties: ["Qira'at", "Hifz", "Sanad"],
+    specialties: ["Qira'at", "Hifz", "Arabic", "Tafsir", "Tajweed", "Sanad"],
     rating: 5,
     languages: ["Arabic", "English"],
     availability: "Limited Slots",
@@ -58,7 +58,7 @@ const TEACHERS = [
     experience: "10+ years",
     sanad: "Active Sanad to Prophet (ﷺ)",
     featured: true,
-    specialties: ["Hifz", "Tajweed", "Women's Education"],
+    specialties: ["Hifz", "Tajweed", "Women", "Women's Education"],
     rating: 5,
     languages: ["Arabic", "English", "Yoruba"],
     availability: "Accepting",
@@ -94,7 +94,7 @@ const TEACHERS = [
           experience: "20+ years",
           sanad: "Active Sanad to Prophet (ﷺ)",
           featured: false,
-          specialties: ["Women's Education", "Hifz", "Tajweed"],
+          specialties: ["Women's Education", "Women", "Tafsir", "Arabic", "Hifz", "Qira'at", "Tajweed"],
           rating: 5,
           languages: ["Arabic", "English", "Hausa"],
           availability: "Accepting",
@@ -112,7 +112,7 @@ const TEACHERS = [
           experience: "10+ years",
           sanad: "Active Sanad to Prophet (ﷺ)",
           featured: false,
-          specialties: ["Children's Education", "Hifz", "Tajweed"],
+          specialties: ["Children's Education", "Women", "Hifz", "Tajweed"],
           rating: 5,
           languages: ["Arabic", "English", "Hausa", "Yoruba"],
           availability: "Accepting",  
@@ -130,7 +130,7 @@ const TEACHERS = [
           experience: "5+ years",
           sanad: "Active Sanad to Prophet (ﷺ)",
           featured: false,
-          specialties: ["Memorization", "Tajweed"],
+          specialties: ["Memorization", "Hifz", "Tajweed"],
           rating: 5,
           languages: ["Arabic", "English", "Hausa", "Yoruba"],
           availability: "Accepting",  
@@ -270,7 +270,7 @@ export default function TeachersClient() {
               </div>
               <div className="text-center p-3 sm:p-4 rounded-xl bg-amber-50/30 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800">
                 <p className="text-2xl sm:text-3xl font-black text-amber-600">
-                  6
+                  8
                 </p>
                 <p className="text-[8px] font-black uppercase tracking-wider text-muted-foreground">
                   Scholars
