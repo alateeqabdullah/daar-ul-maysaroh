@@ -83,51 +83,104 @@ const TEACHERS_DATA: Record<string, Teacher> = {
     ],
     schedule: "Saturday - Thursday, 8 AM - 8 PM (WAT)",
   },
-  "umar-al-hasan": {
-    name: "Shaykh Umar Al-Hasan",
-    rank: "Senior Tajweed Instructor",
-    shortRank: "Tajweed Master",
-    credentials: "Ijazah in Hafs & Shu'bah",
-    philosophy: "Each letter carries a light that illuminates the heart.",
-    fullBio:
-      "Shaykh Umar is a master of Tajweed sciences with special focus on makharij and sifaat. He has authored several works on Quranic phonetics and has trained over 80 teachers.",
-    students: "80+ certified",
-    experience: "20+ years",
+
+  "shuayb-al-hifzi": {
+    
+  name: "Ustadh Shu'ayb Al-Hifzi",
+  
+    rank: "Hifz Specialist",
+    shortRank: "Hifz Specialist",
+    credentials: "Ijazah in Hifz",
+    philosophy: "Preserving the chain of transmission for future generations.",
+
+    fullBio: "Ustadh Shu'ayb is a dedicated Hifz specialist with over 7 years of experience in preserving and transmitting the Quranic text with utmost accuracy.",
+    students: "30+ certified Hafiz",
+    experience: "7+ years",
     sanad: "Active Sanad to Prophet (ﷺ)",
-    specialties: ["Tajweed", "Phonetics", "Qira'at"],
+    specialties: ["Hifz", "Memorization Techniques"],
     rating: 5,
-    languages: ["Arabic", "English"],
-    availability: "Waitlist",
-    education: [
-      "Ijazah in Hafs & Shu'bah",
-      "PhD in Quranic Sciences",
-      "Advanced Tajweed Certification",
-    ],
-    schedule: "Sunday - Thursday, 2 PM - 10 PM (WAT)",
-  },
-  "maryam-bint-yusuf": {
-    name: "Ustadha Maryam Bint Yusuf",
-    rank: "Arabic & Quranic Studies",
-    shortRank: "Arabic Scholar",
-    credentials: "MA in Arabic Linguistics, Ijazah",
-    philosophy:
-      "Understanding the Quran transforms your relationship with Allah.",
-    fullBio:
-      "Ustadha Maryam combines classical Arabic instruction with deep Quranic understanding. Her students develop not just language skills but a profound connection to the divine message.",
-    students: "60+ graduates",
-    experience: "12+ years",
-    sanad: "Ijazah in Recitation",
-    specialties: ["Arabic", "Tafsir", "Linguistics"],
-    rating: 5,
-    languages: ["Arabic", "English", "French"],
+    languages: ["Arabic", "English", "Hausa"],
     availability: "Accepting",
     education: [
-      "MA in Arabic Linguistics",
-      "Ijazah in Quranic Recitation",
-      "BA in Islamic Studies",
+      "Ijazah in Hifz from Shaykh",
+      "Advanced Hifz Methodologies",
     ],
     schedule: "Monday - Friday, 10 AM - 6 PM (WAT)",
+  
   },
+  "ustadhah-zainab-abdulah": {
+    shortRank: "Women's Education Specialist",
+    name: "Ustadhah Zainab Abdullah",
+    rank: "Women's Education Specialist",
+    credentials: "Ijazah in Qiro'aat",
+    philosophy: "Empowering women through the knowledge of the Quran.",
+
+    fullBio: "Ustadhah Zainab is a dedicated educator focusing on women's Islamic studies and Quranic recitation. She has trained hundreds of students in various aspects of Islamic knowledge.",
+    students: "100+ graduates",
+    experience: "20+ years",
+    sanad: "Active Sanad to Prophet (ﷺ)",
+   
+    specialties: ["Women's Education", "Hifz", "Tajweed"],
+    rating: 5,
+    languages: ["Arabic", "English", "Hausa"],
+    availability: "Accepting",
+    education: [
+      "Ijazah in Qiro'aat",
+      "Bachelor's in Education",
+      "Certificate in  Education"],
+    schedule: "Monday - Saturday, 9 AM - 7 PM (WAT)",
+
+  },
+  "ustadhah-robeeah-abdurrazzaq": {
+  
+    name: "Ustadhah Robee'ah Abdurrazzaq",
+    rank: "memorization and children's education specialist",
+    shortRank: "Children's Education Specialist",
+    credentials: "Ijazah in Hifz",
+    philosophy: "Instilling a love for the Quran in young hearts.",
+
+    fullBio: "Ustadhah Robee'ah is a specialist in children's education and Quranic memorization. She has a passion for nurturing young minds and instilling a love for the Quran from an early age.",
+    students: "100+ graduates",
+    experience: "10+ years",
+    sanad: "Active Sanad to Prophet (ﷺ)",
+ 
+    specialties: ["Children's Education", "Hifz", "Tajweed"],
+    rating: 5,
+    languages: ["Arabic", "English", "Hausa", "Yoruba"],
+    availability: "Accepting",  
+    education: [
+      "Certificate in Hifz from Shaykh",
+      "Certificate in Child Education",
+    ],
+    schedule: "Monday - Saturday, 8 AM - 6 PM (WAT)",
+
+  },
+
+  "ustadh-aliyy-abdurrozzaaq": {
+
+    name: "Ustadh Aliyy Abdurrozzaaq",
+    rank: "Memorization and Tajweed Specialist",
+    shortRank: "Memorization Specialist",
+    credentials: "Ijazah in Hifz",
+    philosophy: "Guiding students to achieve excellence in Quranic recitation and memorization.",
+
+    fullBio: "Ustadh Aliyy is a specialist in Quranic memorization and Tajweed. He is dedicated to helping students achieve excellence in their recitation and understanding of the Quran.",
+    students: "50+ graduates",
+    experience: "5+ years",
+    sanad: "Active Sanad to Prophet (ﷺ)",
+  
+    specialties: ["Memorization", "Tajweed"],
+    rating: 5,
+    languages: ["Arabic", "English", "Hausa", "Yoruba"],
+    availability: "Accepting",  
+    education: [
+      "Ijazah in Hifz from Shaykh",
+      "Advanced Tajweed Studies",
+    ],
+    schedule: "Sat - Sun",
+
+  },
+  
 };
 
 const getAvailabilityStyles = (availability: string) => {
@@ -154,7 +207,7 @@ export default function TeacherPage() {
         <div className="text-center">
           <h1 className="text-4xl font-black mb-4">Scholar Not Found</h1>
           <p className="text-muted-foreground mb-6">
-            The scholar you're looking for doesn't exist.
+           {` The scholar you're looking for doesn't exist.`}
           </p>
           <Link href="/teachers">
             <Button className="rounded-full px-6 py-3 font-black bg-purple-600 hover:bg-purple-700">
@@ -221,7 +274,7 @@ export default function TeacherPage() {
             <div className="flex flex-col md:flex-row gap-8 items-center md:items-start mt-8 sm:mt-10">
               {/* Avatar */}
               <div className="shrink-0">
-                <div className="relative w-28 h-28 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-full bg-gradient-to-br from-purple-100 to-amber-100 dark:from-purple-950/30 dark:to-amber-950/30 flex items-center justify-center border-4 border-purple-200 shadow-xl">
+                <div className="relative w-28 h-28 sm:w-32 sm:h-32 md:w-40 md:h-40 rounded-full bg-linear-to-br from-purple-100 to-amber-100 dark:from-purple-950/30 dark:to-amber-950/30 flex items-center justify-center border-4 border-purple-200 shadow-xl">
                   <span className="text-4xl sm:text-5xl md:text-6xl font-black text-purple-600/30">
                     {teacher.name.charAt(0)}
                   </span>
@@ -300,7 +353,7 @@ export default function TeacherPage() {
               <div className="italic border-l-2 border-amber-500 pl-4">
                 <Quote className="w-4 h-4 text-amber-500 mb-1" />
                 <p className="text-sm text-muted-foreground">
-                  "{teacher.philosophy}"
+                 {` "${teacher.philosophy}"`}
                 </p>
               </div>
             </div>
@@ -334,7 +387,7 @@ export default function TeacherPage() {
               </div>
             </div>
 
-            <div className="bg-card rounded-xl border border-purple-200 dark:border-purple-800 p-6 bg-gradient-to-br from-purple-50/30 to-amber-50/30">
+            <div className="bg-card rounded-xl border border-purple-200 dark:border-purple-800 p-6 bg-linear-to-br from-purple-50/30 to-amber-50/30">
               <h3 className="text-base font-black mb-4 flex items-center gap-2">
                 <Heart className="w-4 h-4 text-amber-500" />
                 Book a Session
