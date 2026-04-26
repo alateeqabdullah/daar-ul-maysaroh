@@ -192,6 +192,60 @@ export default function CoursesClient() {
               </Reveal>
             </div>
             <Reveal delay={0.2}>
+              <div className="flex py-6 gap-3 sm:gap-4">
+                <div className="text-center p-3 sm:p-4 rounded-xl bg-purple-50/30 dark:bg-purple-950/20 border border-purple-200 dark:border-purple-800">
+                  <p className="text-2xl sm:text-3xl font-black text-purple-600">
+                  {/* {
+                  label: "Total Programs",
+                  value: COURSES.length,
+                  icon: BookOpen,
+                  color: "purple",
+                  suffix: "",
+                },
+                {
+                  label: "Active Students",
+                  value: "100+",
+                  icon: Users,
+                  color: "amber",
+                  suffix: "",
+                },
+                {
+                  label: "Certified Scholars",
+                  value: "8+",
+                  icon: GraduationCap,
+                  color: "purple",
+                  suffix: "",
+                },
+                {
+                  label: "Student Rating",
+                  value: "4.9",
+                  icon: Star,
+                  color: "amber",
+                  suffix: "/5",
+                }, */}
+                    {COURSES.length}
+                  </p>
+                  <p className="text-[8px] font-black uppercase tracking-wider text-muted-foreground">
+                    Total Programs
+                  </p>
+                </div>
+                <div className="text-center p-3 sm:p-4 rounded-xl bg-amber-50/30 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-800">
+                  <p className="text-2xl sm:text-3xl font-black text-amber-600">
+                    4.9
+                  </p>
+                  <p className="text-[8px] font-black uppercase tracking-wider text-muted-foreground">
+                    Student Rating
+                  </p>
+                </div>
+                <div className="text-center p-3 sm:p-4 rounded-xl bg-purple-50/30 dark:bg-purple-950/20 border border-purple-200 dark:border-purple-800">
+                  <p className="text-2xl sm:text-3xl font-black text-purple-600">
+                    100+
+                  </p>
+                  <p className="text-[8px] font-black uppercase tracking-wider text-muted-foreground">
+                    Certificates Awarded
+                  </p>
+                </div>
+              </div>
               <Link href="/assessment">
                 <Button
                   variant="outline"
@@ -205,7 +259,7 @@ export default function CoursesClient() {
           </div>
 
           {/* Stats Bar */}
-          <div className="mb-10 xs:mb-12 sm:mb-16">
+          {/* <div className="mb-10 xs:mb-12 sm:mb-16">
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 xs:gap-4 sm:gap-5">
               {[
                 {
@@ -267,7 +321,7 @@ export default function CoursesClient() {
                 );
               })}
             </div>
-          </div>
+          </div> */}
 
           {/* Course Cards - Same as before */}
           <div className="grid md:grid-cols-2 gap-6 sm:gap-8 md:gap-10 lg:gap-12">
