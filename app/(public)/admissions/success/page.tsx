@@ -187,7 +187,7 @@ Thank you for choosing Al-Maysaroh!
             initial={{ scale: 0 }}
             animate={{ scale: 1 }}
             transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
-            className="w-20 h-20 sm:w-24 sm:h-24 mx-auto mb-5 sm:mb-6 rounded-full bg-gradient-to-br from-purple-100 to-amber-100 dark:from-purple-900/30 dark:to-amber-900/30 flex items-center justify-center"
+            className="w-20 h-20 sm:w-24 sm:h-24 mx-auto mb-5 sm:mb-6 rounded-full bg-linear-to-br from-purple-100 to-amber-100 dark:from-purple-900/30 dark:to-amber-900/30 flex items-center justify-center"
           >
             <CheckCircle2 className="w-10 h-10 sm:w-12 sm:h-12 text-purple-600" />
           </motion.div>
@@ -195,7 +195,7 @@ Thank you for choosing Al-Maysaroh!
           {/* Title */}
           <h1 className="text-2xl xs:text-3xl sm:text-4xl font-black tracking-tighter mb-3 sm:mb-4 px-2">
             Application{" "}
-            <span className="bg-gradient-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent">
+            <span className="bg-linear-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent">
               Submitted!
             </span>{" "}
             🎉
@@ -212,7 +212,7 @@ Thank you for choosing Al-Maysaroh!
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.25 }}
-            className="mb-6 p-4 rounded-xl bg-gradient-to-r from-purple-50 to-amber-50 dark:from-purple-950/30 dark:to-amber-950/30 border border-purple-200 dark:border-purple-800"
+            className="mb-6 p-4 rounded-xl bg-linear-to-r from-purple-50 to-amber-50 dark:from-purple-950/30 dark:to-amber-950/30 border border-purple-200 dark:border-purple-800"
           >
             <p className="text-[10px] font-black uppercase tracking-wider text-muted-foreground mb-1">
               Application Reference Number
@@ -288,11 +288,11 @@ Thank you for choosing Al-Maysaroh!
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
-            className="p-5 sm:p-6 md:p-7 rounded-xl bg-gradient-to-br from-purple-50/50 to-amber-50/50 dark:from-purple-950/30 dark:to-amber-950/30 border border-purple-200 dark:border-purple-800 mb-6 sm:mb-8 text-left"
+            className="p-5 sm:p-6 md:p-7 rounded-xl bg-linear-to-br from-purple-50/50 to-amber-50/50 dark:from-purple-950/30 dark:to-amber-950/30 border border-purple-200 dark:border-purple-800 mb-6 sm:mb-8 text-left"
           >
             <h3 className="font-black text-sm sm:text-base mb-4 flex items-center gap-2">
               <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 text-amber-500" />
-              <span className="bg-gradient-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent">
+              <span className="bg-linear-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent">
                 What Happens Next?
               </span>
             </h3>
@@ -312,7 +312,7 @@ Thank you for choosing Al-Maysaroh!
                   initial={{ width: 0 }}
                   animate={{ width: "25%" }}
                   transition={{ delay: 0.5, duration: 1 }}
-                  className="h-full bg-gradient-to-r from-purple-600 to-amber-500 rounded-full"
+                  className="h-full bg-linear-to-r from-purple-600 to-amber-500 rounded-full"
                 />
               </div>
             </div>
@@ -346,7 +346,7 @@ Thank you for choosing Al-Maysaroh!
                     key={idx}
                     className="flex gap-3 sm:gap-4 items-start group"
                   >
-                    <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-gradient-to-r from-purple-600 to-purple-700 text-white flex items-center justify-center text-[10px] sm:text-xs font-black shrink-0 mt-0.5 shadow-md group-hover:scale-110 transition-transform">
+                    <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-linear-to-r from-purple-600 to-purple-700 text-white flex items-center justify-center text-[10px] sm:text-xs font-black shrink-0 mt-0.5 shadow-md group-hover:scale-110 transition-transform">
                       {idx + 1}
                     </div>
                     <div className="flex items-start gap-2 flex-1">

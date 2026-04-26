@@ -164,6 +164,34 @@ const COURSES = [
     href: "/courses/tafsir",
     features: ["Classical Sources", "Scholar Mentorship", "Certificate"],
   },
+  {
+    id: "qiraat",
+    name: "Qira'at Al-Quran",
+    tagline: "Variant Readings",
+    description:
+      "Explore the ten authentic Qira'at of the Quran. Learn the differences in pronunciation, recitation, and transmission with Ijazah certification.",
+    duration: "12-24 months",
+    format: "1-on-1",
+    students: "5+",
+    icon: Globe,
+    color: "amber",
+    href: "/courses/qiraat",
+    features: ["Ten Qira'at", "Ijazah Certification", "Sanad Chain"],
+  },
+  {
+    id: "other",
+    name: "Custom Quran Course",
+    tagline: "Tailored Learning",
+    description:
+      "Have specific goals or needs? Work with our scholars to create a personalized Quran course that fits your schedule and learning style.",
+    duration: "Flexible",
+    format: "1-on-1",
+    students: "Varies",
+    icon: Sparkles,
+    color: "purple",
+    href: "/contact",
+    features: ["Personalized Curriculum", "Flexible Scheduling", "Scholar Support"],
+  }
 ];
 
 // Structured data for JSON-LD

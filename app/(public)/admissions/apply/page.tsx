@@ -324,7 +324,7 @@ export default function ApplyPage() {
           </div>
           <h1 className="text-3xl xs:text-4xl sm:text-5xl md:text-6xl font-black tracking-tighter font-heading mb-2 sm:mb-3 px-2">
             Application{" "}
-            <span className="bg-gradient-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent italic">
+            <span className="bg-linear-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent italic">
               Form
             </span>
           </h1>
@@ -345,7 +345,7 @@ export default function ApplyPage() {
                 className={cn(
                   "w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center font-black text-xs sm:text-sm transition-all",
                   step >= s.step
-                    ? "bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-md"
+                    ? "bg-linear-to-r from-purple-600 to-purple-700 text-white shadow-md"
                     : "bg-muted text-muted-foreground",
                 )}
               >
@@ -363,7 +363,7 @@ export default function ApplyPage() {
                   className={cn(
                     "w-8 sm:w-12 md:w-16 h-0.5 mx-1 sm:mx-2",
                     step > s.step
-                      ? "bg-gradient-to-r from-purple-600 to-amber-500"
+                      ? "bg-linear-to-r from-purple-600 to-amber-500"
                       : "bg-muted",
                   )}
                 />
@@ -387,7 +387,7 @@ export default function ApplyPage() {
                   exit={{ opacity: 0, x: -20 }}
                   className="space-y-5 sm:space-y-6"
                 >
-                  <h2 className="text-lg sm:text-xl font-black mb-3 sm:mb-4 bg-gradient-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent">
+                  <h2 className="text-lg sm:text-xl font-black mb-3 sm:mb-4 bg-linear-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent">
                     Personal Information
                   </h2>
 
@@ -660,7 +660,7 @@ export default function ApplyPage() {
                   exit={{ opacity: 0, x: -20 }}
                   className="space-y-5 sm:space-y-6"
                 >
-                  <h2 className="text-lg sm:text-xl font-black mb-3 sm:mb-4 bg-gradient-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent">
+                  <h2 className="text-lg sm:text-xl font-black mb-3 sm:mb-4 bg-linear-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent">
                     Academic Information
                   </h2>
 
@@ -686,11 +686,13 @@ export default function ApplyPage() {
                         <option value="group-tajweed">Group Tajweed</option>
                         <option value="arabic">Al-Lughah Al-Arabiyyah</option>
                         <option value="tafsir">Tafsir Al-Mubin</option>
-                        <option value="qiroah">Qiro'ah Program</option>
-                        <option value="group-qiroah">Group Qiro'ah</option>
-                        <option value="juz-amma">Juz Amma (Children)</option>
+                        <option value="qiroah">{`Qiro'ah Program`}</option>
+                        <option value="group-qiroah">{`Group Qiro'ah`}</option>
+                        <option value="juz-amma">{`Juz Amma`}</option>
                         <option value="juz-tabarak">Juz Tabarak</option>
-                        <option value="murojaah">Muroja'ah Program</option>
+                        <option value="murojaah">{`Muroja'ah Program`}</option>
+                        <option value="qiraat">{`Qira'at`}</option>
+
                       </select>
                       {errors.programInterest && touched.programInterest && (
                         <p className="text-[10px] text-red-500 mt-1 flex items-center gap-1">
@@ -701,7 +703,7 @@ export default function ApplyPage() {
                     </div>
 
                     {selectedProgramInfo && (
-                      <div className="p-3 sm:p-4 rounded-lg bg-gradient-to-r from-purple-50 to-amber-50 dark:from-purple-950/30 dark:to-amber-950/30 border border-purple-200 dark:border-purple-800">
+                      <div className="p-3 sm:p-4 rounded-lg bg-linear-to-r from-purple-50 to-amber-50 dark:from-purple-950/30 dark:to-amber-950/30 border border-purple-200 dark:border-purple-800">
                         <p className="text-xs sm:text-sm mb-1">
                           <span className="font-black text-purple-600">Program Details:</span>
                         </p>
@@ -855,7 +857,7 @@ export default function ApplyPage() {
                   exit={{ opacity: 0, x: -20 }}
                   className="space-y-5 sm:space-y-6"
                 >
-                  <h2 className="text-lg sm:text-xl font-black mb-3 sm:mb-4 bg-gradient-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent">
+                  <h2 className="text-lg sm:text-xl font-black mb-3 sm:mb-4 bg-linear-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent">
                     Additional Information
                   </h2>
 
@@ -979,7 +981,7 @@ export default function ApplyPage() {
                   onClick={nextStep}
                   disabled={!canProceed()}
                   className={cn(
-                    "rounded-full px-5 sm:px-6 py-2.5 sm:py-3 font-black text-sm bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white order-1 xs:order-2",
+                    "rounded-full px-5 sm:px-6 py-2.5 sm:py-3 font-black text-sm bg-linear-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white order-1 xs:order-2",
                     !canProceed() && "opacity-50 cursor-not-allowed",
                     step === 1 && "ml-auto"
                   )}
@@ -991,7 +993,7 @@ export default function ApplyPage() {
                 <Button
                   type="submit"
                   disabled={!formData.agreeTerms || isSubmitting}
-                  className="rounded-full px-6 sm:px-8 py-2.5 sm:py-3 font-black text-sm bg-gradient-to-r from-purple-600 to-amber-600 hover:from-purple-700 hover:to-amber-700 text-white order-1 xs:order-2 ml-auto"
+                  className="rounded-full px-6 sm:px-8 py-2.5 sm:py-3 font-black text-sm bg-linear-to-r from-purple-600 to-amber-600 hover:from-purple-700 hover:to-amber-700 text-white order-1 xs:order-2 ml-auto"
                 >
                   {isSubmitting ? (
                     <Loader2 className="w-4 h-4 animate-spin" />
