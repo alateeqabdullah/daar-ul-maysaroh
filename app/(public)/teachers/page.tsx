@@ -550,7 +550,13 @@ export const metadata: Metadata = {
         "Quranic education",
         "Online Quran classes",
         "Certified Quran teachers",
-        "Authentic Quran teachers",],
+        "Authentic Quran teachers",
+      " Al-Maysaroh scholars", "Al-Maysaroh teachers", "Al-Maysaroh faculty",
+      " Quranic scholars in USA", "Quranic scholars in UK", "Quranic scholars in Middle East",
+      " Quranic scholars in Pakistan", "Quranic scholars in Egypt", "Quranic scholars in Saudi Arabia",
+      "Al-Maysaroh scholars in USA", "Al-Maysaroh scholars in UK", "Al-Maysaroh scholars in Middle East",
+      "Al-Maysaroh scholars in Pakistan", "Al-Maysaroh scholars in Egypt", "Al-Maysaroh scholars in Saudi Arabia"
+      ],
   authors: [{ name: "Al-Maysaroh International Institute" }],
   openGraph: {
     title: "Our Scholars - Carriers of The Sanad | Al-Maysaroh",
