@@ -189,7 +189,7 @@ export default function CoursesClient() {
                     Path.
                   </span>
                 </h1>
-                <p className="text-lg sm:text-xl md:text-2xl text-muted-foreground font-medium leading-relaxed border-l-4 border-primary-700 pl-4 sm:pl-6 md:pl-8 max-w-2xl">
+                <p className=" sm:text-sm md:text-xl text-muted-foreground font-medium leading-relaxed border-l-4 border-primary-700 pl-4 sm:pl-6 md:pl-8 max-w-2xl">
                   {`Embark on a journey of authentic Islamic learning with our comprehensive courses. Each program is meticulously crafted to provide a direct `}
               <span className="text-foreground font-bold">Divine Sanad</span>{" "}to Prophet Muhammad (ﷺ) and Ijazah Certification.
             </p>
