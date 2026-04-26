@@ -250,7 +250,7 @@ export default function TeachersClient() {
                     The Sanad.
                   </span>
                 </h1>
-                <p className="text-lg sm:text-xl md:text-2xl text-muted-foreground font-medium leading-relaxed border-l-4 border-primary-700 pl-4 sm:pl-6 md:pl-8 max-w-2xl">
+                <p className="sm:text-sm md:text-xl text-muted-foreground font-medium leading-relaxed border-l-4 border-primary-700 pl-4 sm:pl-6 md:pl-8 max-w-2xl">
                   {`Our faculty are the direct carriers of the Quranic tradition through an unbroken chain of transmission, known as the `}
               <span className="text-foreground font-bold">Divine Sanad</span>{`,
               ensuring the preservation of the Quran's authentic recitation.`}
