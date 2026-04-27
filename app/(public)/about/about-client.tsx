@@ -340,7 +340,6 @@ export default function AboutClient() {
           <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-amber-500/5 rounded-full blur-[150px]" />
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-purple-500/3 rounded-full blur-[200px]" />
         </div>
-
         {/* Breadcrumb - Fixed pt-30 issue */}
         <div className="container mx-auto px-4 xs:px-5 sm:px-6 pt-20 xs:pt-24 sm:pt-28 md:pt-32 lg:pt-36">
           <nav className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground flex items-center gap-2 mb-6 xs:mb-8 flex-wrap">
@@ -351,7 +350,6 @@ export default function AboutClient() {
             <span className="text-purple-600">About Us</span>
           </nav>
         </div>
-
         {/* Hero Section */}
         <div className="relative pb-12 xs:pb-16 sm:pb-20">
           <div className="container mx-auto px-4 xs:px-5 sm:px-6">
@@ -408,8 +406,8 @@ export default function AboutClient() {
                           <Lightbulb className="w-7 h-7 xs:w-8 xs:h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 text-amber-500" />
                         </div>
                         <p className="text-xl xs:text-2xl sm:text-3xl md:text-4xl font-heading italic leading-tight px-2">
-                          "A generation that carries the Word, and lives its
-                          Light."
+                          {` "A generation that carries the Word, and lives its
+                          Light."`}
                         </p>
                         <div className="h-px w-8 xs:w-10 sm:w-12 bg-amber-500/50 mx-auto" />
                       </div>
@@ -437,7 +435,6 @@ export default function AboutClient() {
             </div>
           </div>
         </div>
-
         {/* Stats Section */}
         <section className="py-8 xs:py-10 sm:py-12 border-y border-border/50 bg-muted/20">
           <div className="container mx-auto px-4 xs:px-5 sm:px-6">
@@ -469,7 +466,6 @@ export default function AboutClient() {
             </div>
           </div>
         </section>
-
         {/* Founder's Story */}
         <section className="py-12 xs:py-16 sm:py-20 md:py-24 lg:py-28">
           <div className="container mx-auto px-4 xs:px-5 sm:px-6">
@@ -499,12 +495,19 @@ export default function AboutClient() {
                     </div>
                   </div>
                   <p className="text-xs xs:text-sm sm:text-base text-muted-foreground leading-relaxed">
-                    With over 13 years of teaching experience, Shaykh Abubakar Al-Maysariy has trained over 100 certified Qurra worldwide. His vision for Al-Maysaroh was born from a deep desire to preserve the authentic transmission of the Quran in an age of rapid change and digital distractions. He believes that the Quran is not just a book to be read, but a living tradition to be transmitted, heart to heart, generation to generation.
+                    With over 13 years of teaching experience, Shaykh Abubakar
+                    Al-Maysariy has trained over 100 certified Qurra worldwide.
+                    His vision for Al-Maysaroh was born from a deep desire to
+                    preserve the authentic transmission of the Quran in an age
+                    of rapid change and digital distractions. He believes that
+                    the Quran is not just a book to be read, but a living
+                    tradition to be transmitted, heart to heart, generation to
+                    generation.
                   </p>
                   <div className="p-4 xs:p-5 sm:p-6 rounded-xl bg-linear-to-br from-purple-50/30 to-amber-50/30 dark:from-purple-950/20 dark:to-amber-950/20 border border-purple-200 dark:border-purple-800 italic">
                     <Quote className="w-5 h-5 xs:w-6 xs:h-6 sm:w-8 sm:h-8 text-amber-500/30 mb-2" />
                     <p className="text-xs xs:text-sm sm:text-base md:text-lg font-medium">
-                     {` "The Quran is not just a book to be read; it is a living
+                      {` "The Quran is not just a book to be read; it is a living
                       tradition to be transmitted, heart to heart, generation to
                       generation."`}
                     </p>
@@ -541,7 +544,6 @@ export default function AboutClient() {
             </div>
           </div>
         </section>
-
         {/* Leadership Team */}
         <section className="py-12 xs:py-16 sm:py-20 md:py-24 bg-linear-to-b from-background via-purple-50/5 to-amber-50/5">
           <div className="container mx-auto px-4 xs:px-5 sm:px-6">
@@ -585,7 +587,6 @@ export default function AboutClient() {
             </div>
           </div>
         </section>
-
         {/* Core Values */}
         <section className="py-12 xs:py-16 sm:py-20 md:py-24">
           <div className="container mx-auto px-4 xs:px-5 sm:px-6">
@@ -628,7 +629,6 @@ export default function AboutClient() {
             </div>
           </div>
         </section>
-
         {/* The 4 Pillars */}
         <section className="py-12 xs:py-16 sm:py-20 md:py-24 bg-linear-to-b from-background via-purple-50/5 to-amber-50/5">
           <div className="container mx-auto px-4 xs:px-5 sm:px-6">
@@ -670,6 +670,64 @@ export default function AboutClient() {
             </div>
           </div>
         </section>
+   
+   
+        {/* Learning Phases Section - ADD THIS */}
+        <section className="py-12 xs:py-16 sm:py-20 md:py-24">
+          <div className="container mx-auto px-4 xs:px-5 sm:px-6">
+            <div className="text-center max-w-2xl mx-auto mb-8 xs:mb-10 sm:mb-12">
+              <div className="inline-flex items-center gap-1.5 text-purple-600 font-black text-[8px] xs:text-[9px] sm:text-[10px] uppercase tracking-[0.2em] mb-2 xs:mb-3">
+                <GraduationCap className="w-3 h-3 xs:w-3.5 xs:h-3.5" /> Your
+                Journey
+              </div>
+              <h2 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter font-heading mb-2 xs:mb-3">
+                The{" "}
+                <span className="bg-gradient-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent italic">
+                  Learning
+                </span>{" "}
+                Path
+              </h2>
+              <p className="text-xs xs:text-sm sm:text-base text-muted-foreground px-4">
+                A structured journey from beginner to Ijazah certification
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-3 gap-5 xs:gap-6 max-w-5xl mx-auto">
+              {LEARNING_PHASES.map((phase, i) => (
+                <Reveal key={i} delay={i * 0.1}>
+                  <div className="bg-card rounded-xl border border-purple-200 dark:border-purple-800 hover:border-purple-300 transition-all p-5 xs:p-6 md:p-8 h-full flex flex-col group">
+                    {/* Phase Number */}
+                    <div className="w-10 h-10 xs:w-11 xs:h-11 rounded-xl bg-gradient-to-r from-purple-600 to-purple-700 text-white flex items-center justify-center text-base xs:text-lg font-black shadow-md mb-4 group-hover:scale-110 transition-transform">
+                      0{i + 1}
+                    </div>
+
+                    {/* Phase Title */}
+                    <h3 className="font-black text-base xs:text-lg md:text-xl mb-3 xs:mb-4 group-hover:text-purple-600 transition-colors">
+                      {phase.lvl}
+                    </h3>
+
+                    {/* Phase Items */}
+                    <ul className="space-y-2 xs:space-y-3">
+                      {phase.items.map((item, idx) => (
+                        <li
+                          key={idx}
+                          className="flex items-center gap-2 xs:gap-3"
+                        >
+                          <CheckCircle2 className="w-3.5 h-3.5 xs:w-4 xs:h-4 text-amber-500 shrink-0" />
+                          <span className="text-xs xs:text-sm text-muted-foreground">
+                            {item}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </Reveal>
+              ))}
+            </div>
+          </div>
+        </section>
+
+
 
         {/* Virtual Campus */}
         <section className="py-12 xs:py-16 sm:py-20 md:py-24">
@@ -743,7 +801,6 @@ export default function AboutClient() {
             </div>
           </div>
         </section>
-
         {/* Timeline Section */}
         <section className="py-12 xs:py-16 sm:py-20 md:py-24 bg-linear-to-b from-background via-purple-50/5 to-amber-50/5">
           <div className="container mx-auto px-4 xs:px-5 sm:px-6">
@@ -800,7 +857,6 @@ export default function AboutClient() {
             </div>
           </div>
         </section>
-
         {/* Testimonials Section */}
         <section className="py-12 xs:py-16 sm:py-20 md:py-24">
           <div className="container mx-auto px-4 xs:px-5 sm:px-6">
@@ -827,7 +883,7 @@ export default function AboutClient() {
                   <div className="bg-card rounded-xl border border-purple-200 dark:border-purple-800 hover:border-purple-300 transition-all p-5 xs:p-6 h-full flex flex-col">
                     <Quote className="w-6 h-6 xs:w-7 xs:h-7 text-purple-200 dark:text-purple-800/30 mb-2 xs:mb-3" />
                     <p className="text-[10px] xs:text-xs sm:text-sm text-muted-foreground italic mb-3 xs:mb-4 flex-1 leading-relaxed">
-                      "{testimonial.content}"
+                      {` "${testimonial.content}"`}
                     </p>
                     <div className="flex items-center gap-2 xs:gap-3 pt-2 xs:pt-3 border-t border-purple-200 dark:border-purple-800">
                       <div className="w-8 h-8 xs:w-9 xs:h-9 sm:w-10 sm:h-10 rounded-full bg-linear-to-br from-purple-600 to-purple-700 flex items-center justify-center text-white font-black text-xs sm:text-sm">
@@ -848,7 +904,6 @@ export default function AboutClient() {
             </div>
           </div>
         </section>
-
         {/* Final CTA */}
         <section className="py-12 xs:py-16 sm:py-20 md:py-24 lg:py-28">
           <div className="container mx-auto px-4 xs:px-5 sm:px-6">
@@ -883,7 +938,6 @@ export default function AboutClient() {
               <p className="text-[9px] xs:text-[10px] sm:text-xs text-muted-foreground mt-4 xs:mt-5 sm:mt-6">
                 Free 20-minute assessment • No commitment • All ages welcome
               </p>
-       
             </div>
           </div>
         </section>
