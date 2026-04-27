@@ -341,7 +341,7 @@ export default function AboutClient() {
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-purple-500/3 rounded-full blur-[200px]" />
         </div>
         {/* Breadcrumb - Fixed pt-30 issue */}
-        <div className="container mx-auto px-4 xs:px-5 sm:px-6 pt-20 xs:pt-24 sm:pt-28 md:pt-32 lg:pt-36">
+        <div className="container mx-auto px-4 xs:px-5 sm:px-6 pt-30 xs:pt-24 sm:pt-28 md:pt-32 lg:pt-36">
           <nav className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground flex items-center gap-2 mb-6 xs:mb-8 flex-wrap">
             <Link href="/" className="hover:text-purple-600 transition-colors">
               Home
