@@ -593,9 +593,9 @@ import MethodologyClient from "./methodology-client";
 
 // Generate metadata for SEO
 export const metadata: Metadata = {
-  title: "Our Methodology | Al-Maysaroh International Institute",
+  title: "Our Methodology | Al-Maysaroh Institute",
   description: "Discover our unique methodology that combines 1,400 years of scholarly tradition with modern learning science. Ijazah-certified teachers, authentic Sanad, and personalized attention.",
-  keywords: "Quran teaching methodology, Ijazah certification, Sanad chain, Tajweed instruction, Hifz program, Quran learning method",
+  keywords: "Quran teaching methodology, Ijazah certification, Sanad chain, Tajweed instruction, Hifz program, Quran learning method,  Al-Maysaroh method, Quran education approach, traditional Quran teaching, modern Quran learning, personalized Quran instruction, cognitive learning techniques, Quran memorization method, Quran recitation training, online Quran classes, Quran learning science, Quran teaching philosophy, ",
   authors: [{ name: "Al-Maysaroh International Institute" }],
   openGraph: {
     title: "The Al-Maysaroh Methodology - Where Science Meets Sanctity",
