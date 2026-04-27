@@ -591,7 +591,6 @@
 
 
 
-
 // app/methodology/page.tsx
 "use client";
 
@@ -778,7 +777,7 @@ const TECHNOLOGY_FEATURES = [
 ];
 
 const getColorStyles = (color: string) => {
-  return {
+  const styles = {
     purple: {
       text: "text-purple-600 dark:text-purple-400",
       bg: "bg-purple-100 dark:bg-purple-950/40",
@@ -791,14 +790,25 @@ const getColorStyles = (color: string) => {
       border: "border-amber-200 dark:border-amber-800",
       gradient: "from-amber-500 to-amber-600",
     },
-    }[color as "purple" | "amber"] || { text: "", bg: "", border: "", gradient: "" };
+  };
+  // ✅ Added fallback
+  return styles[color as keyof typeof styles] || styles.purple;
 };
 
 export default function Methodology() {
   const [expandedStep, setExpandedStep] = useState<number | null>(null);
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) {
+    return null;
+  }
 
   return (
-    <main className="relative bg-background overflow-hidden min-h-screen">
+    <main className="relative bg-background overflow-hidden min-h-screen pb-16 xs:pb-20">
       {/* Background */}
       <div className="fixed inset-0 pointer-events-none">
         <div className="absolute inset-0 opacity-[0.02] bg-[url('/islamic-pattern.svg')] bg-center bg-repeat" style={{ backgroundSize: "300px" }} />
@@ -806,10 +816,10 @@ export default function Methodology() {
         <div className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-amber-500/5 rounded-full blur-[150px]" />
       </div>
 
-      <div className="container mx-auto px-4 sm:px-6">
+      <div className="container mx-auto px-4 xs:px-5 sm:px-6">
         {/* Breadcrumb */}
-        <div className="pt-24 sm:pt-28 md:pt-32">
-          <nav className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground flex items-center gap-2 mb-8 flex-wrap">
+        <div className="pt-20 xs:pt-24 sm:pt-28 md:pt-32">
+          <nav className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground flex items-center gap-2 mb-6 xs:mb-8 flex-wrap">
             <Link href="/" className="hover:text-purple-600 transition-colors">Home</Link>
             <span className="opacity-30">/</span>
             <span className="text-purple-600">Methodology</span>
@@ -817,13 +827,13 @@ export default function Methodology() {
         </div>
 
         {/* Hero Section */}
-        <div className="text-center max-w-4xl mx-auto mb-16 sm:mb-20">
+        <div className="text-center max-w-4xl mx-auto mb-12 xs:mb-16 sm:mb-20">
           <Reveal>
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-purple-100 dark:bg-purple-900/30 border border-purple-200 dark:border-purple-800 mb-6">
-              <Sparkles className="w-4 h-4 text-amber-500" />
-              <span className="text-xs font-black uppercase tracking-wider text-purple-700">The Al-Maysaroh Way</span>
+            <div className="inline-flex items-center gap-2 px-3 xs:px-4 py-1.5 xs:py-2 rounded-full bg-purple-100 dark:bg-purple-900/30 border border-purple-200 dark:border-purple-800 mb-4 xs:mb-6">
+              <Sparkles className="w-3.5 h-3.5 xs:w-4 xs:h-4 text-amber-500" />
+              <span className="text-[10px] xs:text-xs font-black uppercase tracking-wider text-purple-700">The Al-Maysaroh Way</span>
             </div>
-            <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tighter font-heading leading-[1.1] mb-6">
+            <h1 className="text-4xl xs:text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tighter font-heading leading-[1.1] mb-4 xs:mb-6">
               Where{" "}
               <span className="bg-gradient-to-r from-purple-600 to-purple-700 bg-clip-text text-transparent">
                 Science
@@ -834,7 +844,7 @@ export default function Methodology() {
                 Sanctity
               </span>
             </h1>
-            <p className="text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto">
+            <p className="text-base xs:text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto px-4">
               A revolutionary approach that honors 1,400 years of scholarly tradition
               while embracing cutting-edge learning science.
             </p>
@@ -842,7 +852,7 @@ export default function Methodology() {
         </div>
 
         {/* Stats Row */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-20">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 xs:gap-4 mb-16 xs:mb-20">
           {[
             { value: "1,400+", label: "Years of Heritage", icon: Shield },
             { value: "100%", label: "Ijazah Track", icon: Award },
@@ -852,25 +862,26 @@ export default function Methodology() {
             const Icon = stat.icon;
             return (
               <Reveal key={idx} delay={idx * 0.1}>
-                <div className="text-center p-4 rounded-xl bg-card border border-purple-200 dark:border-purple-800">
-                  <Icon className="w-6 h-6 text-purple-600 mx-auto mb-2" />
-                  <div className="text-2xl font-black text-purple-600">{stat.value}</div>
-                  <div className="text-[10px] font-black uppercase tracking-wider text-muted-foreground">{stat.label}</div>
+                <div className="text-center p-3 xs:p-4 rounded-xl bg-card border border-purple-200 dark:border-purple-800">
+                  <Icon className="w-5 h-5 xs:w-6 xs:h-6 text-purple-600 mx-auto mb-1 xs:mb-2" />
+                  <div className="text-xl xs:text-2xl font-black text-purple-600">{stat.value}</div>
+                  <div className="text-[8px] xs:text-[9px] sm:text-[10px] font-black uppercase tracking-wider text-muted-foreground">{stat.label}</div>
                 </div>
               </Reveal>
             );
           })}
         </div>
 
-        {/* The Golden Chain - Simplified */}
+        {/* The Golden Chain */}
         <Reveal delay={0.2}>
-          <div className="bg-card rounded-2xl border border-purple-200 dark:border-purple-800 p-8 mb-20">
-            <div className="text-center mb-8">
-              <h2 className="text-3xl font-black tracking-tighter mb-2">The Golden Chain</h2>
-              <p className="text-muted-foreground">An unbroken lineage of light spanning 1,400 years</p>
+          <div className="bg-card rounded-xl xs:rounded-2xl border border-purple-200 dark:border-purple-800 p-5 xs:p-6 sm:p-8 mb-16 xs:mb-20">
+            <div className="text-center mb-6 xs:mb-8">
+              <h2 className="text-2xl xs:text-3xl font-black tracking-tighter mb-2">The Golden Chain</h2>
+              <p className="text-sm xs:text-base text-muted-foreground">An unbroken lineage of light spanning 1,400 years</p>
             </div>
             
-            <div className="flex flex-wrap justify-center gap-4">
+            {/* ✅ Fixed: Responsive chain layout */}
+            <div className="flex flex-wrap justify-center items-center gap-2 xs:gap-3">
               {[
                 { name: "Allah ﷻ", icon: Sparkle, color: "amber" },
                 { name: "Jibril (AS)", icon: Star, color: "amber" },
@@ -883,20 +894,23 @@ export default function Methodology() {
                 const Icon = node.icon;
                 const colors = getColorStyles(node.color);
                 return (
-                  <div key={idx} className="text-center">
-                    <div className={`w-12 h-12 rounded-full ${colors.bg} border ${colors.border} flex items-center justify-center mx-auto mb-2`}>
-                      <Icon className={`w-5 h-5 ${colors.text}`} />
+                  <div key={idx} className="flex items-center">
+                    <div className="text-center">
+                      <div className={`w-10 h-10 xs:w-12 xs:h-12 rounded-full ${colors.bg} border ${colors.border} flex items-center justify-center mx-auto mb-1 xs:mb-2`}>
+                        <Icon className={`w-4 h-4 xs:w-5 xs:h-5 ${colors.text}`} />
+                      </div>
+                      <span className="text-[9px] xs:text-[10px] sm:text-xs font-black">{node.name}</span>
                     </div>
-                    <span className="text-xs font-black">{node.name}</span>
-                    {idx < 6 && <ArrowRight className="hidden md:inline w-4 h-4 text-muted-foreground mx-1" />}
+                    {/* ✅ Fixed: Hide arrow on mobile */}
+                    {idx < 6 && <ArrowRight className="hidden sm:inline w-3 h-3 xs:w-4 xs:h-4 text-muted-foreground" />}
                   </div>
                 );
               })}
             </div>
             
-            <div className="text-center mt-6">
-              <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-100 dark:bg-amber-950/30 text-amber-600 text-[10px] font-black">
-                <Scroll className="w-3 h-3" />
+            <div className="text-center mt-5 xs:mt-6">
+              <span className="inline-flex items-center gap-1.5 xs:gap-2 px-2.5 xs:px-3 py-1 xs:py-1.5 rounded-full bg-amber-100 dark:bg-amber-950/30 text-amber-600 text-[8px] xs:text-[9px] font-black">
+                <Scroll className="w-2.5 h-2.5 xs:w-3 xs:h-3" />
                 Your voice connects to the Prophet (ﷺ)
               </span>
             </div>
@@ -904,62 +918,70 @@ export default function Methodology() {
         </Reveal>
 
         {/* 6-Step Process */}
-        <div className="mb-20">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-black tracking-tighter mb-2">Your Sacred Journey</h2>
-            <p className="text-muted-foreground">Six transformative phases to mastery</p>
+        <div className="mb-16 xs:mb-20">
+          <div className="text-center mb-8 xs:mb-12">
+            <h2 className="text-2xl xs:text-3xl font-black tracking-tighter mb-2">Your Sacred Journey</h2>
+            <p className="text-sm xs:text-base text-muted-foreground">Six transformative phases to mastery</p>
           </div>
           
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5 xs:gap-6">
             {METHODOLOGY_STEPS.map((step, idx) => {
               const Icon = step.icon;
               const isExpanded = expandedStep === idx;
               
               return (
                 <Reveal key={idx} delay={idx * 0.1}>
-                  <div className="bg-card rounded-xl border border-purple-200 dark:border-purple-800 hover:border-purple-300 transition-all overflow-hidden">
-                    <div className="p-6">
+                  <div className="bg-card rounded-xl border border-purple-200 dark:border-purple-800 hover:border-purple-300 transition-all overflow-hidden h-full flex flex-col">
+                    <div className="p-5 xs:p-6 flex-1">
                       <div className="flex items-center gap-3 mb-4">
-                        <div className="w-12 h-12 rounded-xl bg-gradient-to-r from-purple-600 to-purple-700 flex items-center justify-center shadow-md">
-                          <Icon className="w-6 h-6 text-white" />
+                        <div className="w-10 h-10 xs:w-12 xs:h-12 rounded-xl bg-gradient-to-r from-purple-600 to-purple-700 flex items-center justify-center shadow-md shrink-0">
+                          <Icon className="w-5 h-5 xs:w-6 xs:h-6 text-white" />
                         </div>
                         <div>
-                          <span className="text-[10px] font-black text-purple-600">Step {step.step}</span>
-                          <h3 className="font-black text-lg">{step.title}</h3>
+                          <span className="text-[8px] xs:text-[9px] font-black text-purple-600">Step {step.step}</span>
+                          <h3 className="font-black text-base xs:text-lg">{step.title}</h3>
                         </div>
                       </div>
                       
-                      <p className="text-sm text-muted-foreground mb-4">{step.description}</p>
+                      <p className="text-xs xs:text-sm text-muted-foreground mb-4">{step.description}</p>
                       
-                      <div className="flex items-center justify-between text-xs mb-3">
+                      <div className="flex items-center justify-between text-[10px] xs:text-xs mb-3">
                         <div className="flex items-center gap-1">
                           <Clock className="w-3 h-3 text-amber-500" />
                           <span>{step.duration}</span>
                         </div>
                         <div className="flex items-center gap-1">
                           <Target className="w-3 h-3 text-purple-600" />
-                          <span>{step.milestone}</span>
+                          <span className="line-clamp-1">{step.milestone}</span>
                         </div>
                       </div>
                       
                       <button
                         onClick={() => setExpandedStep(isExpanded ? null : idx)}
-                        className="text-xs font-black text-purple-600 flex items-center gap-1"
+                        className="text-[10px] xs:text-xs font-black text-purple-600 flex items-center gap-1"
                       >
                         {isExpanded ? "Show less" : "Show details"}
                         <ChevronRight className={`w-3 h-3 transition-transform ${isExpanded ? "rotate-90" : ""}`} />
                       </button>
                       
-                      {isExpanded && (
-                        <div className="mt-4 pt-4 border-t border-purple-200 dark:border-purple-800 space-y-2">
-                          {step.details.map((detail, i) => (
-                            <div key={i} className="flex items-center gap-2 text-xs">
-                              <CheckCircle2 className="w-3 h-3 text-green-500 shrink-0" />
-                              <span className="text-muted-foreground">{detail}</span>
-                            </div>
-                          ))}
-                        </div>
-                      )}
+                      <AnimatePresence>
+                        {isExpanded && (
+                          <motion.div
+                            initial={{ height: 0, opacity: 0 }}
+                            animate={{ height: "auto", opacity: 1 }}
+                            exit={{ height: 0, opacity: 0 }}
+                            transition={{ duration: 0.3 }}
+                            className="mt-4 pt-4 border-t border-purple-200 dark:border-purple-800 space-y-2 overflow-hidden"
+                          >
+                            {step.details.map((detail, i) => (
+                              <div key={i} className="flex items-center gap-2 text-[10px] xs:text-xs">
+                                <CheckCircle2 className="w-2.5 h-2.5 xs:w-3 xs:h-3 text-green-500 shrink-0" />
+                                <span className="text-muted-foreground">{detail}</span>
+                              </div>
+                            ))}
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
                     </div>
                     <div className="h-0.5 w-full bg-gradient-to-r from-purple-600 to-amber-500 scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-500" />
                   </div>
@@ -970,25 +992,25 @@ export default function Methodology() {
         </div>
 
         {/* Teaching Pillars */}
-        <div className="mb-20">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-black tracking-tighter mb-2">Our Sacred Pillars</h2>
-            <p className="text-muted-foreground">The foundations of our methodology</p>
+        <div className="mb-16 xs:mb-20">
+          <div className="text-center mb-8 xs:mb-12">
+            <h2 className="text-2xl xs:text-3xl font-black tracking-tighter mb-2">Our Sacred Pillars</h2>
+            <p className="text-sm xs:text-base text-muted-foreground">The foundations of our methodology</p>
           </div>
           
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 xs:gap-6">
             {TEACHING_PILLARS.map((pillar, idx) => {
               const Icon = pillar.icon;
               const colors = getColorStyles(pillar.color);
               
               return (
                 <Reveal key={idx} delay={idx * 0.1}>
-                  <div className="bg-card rounded-xl border border-purple-200 dark:border-purple-800 hover:border-purple-300 transition-all p-6 text-center group">
-                    <div className={`w-14 h-14 rounded-xl ${colors.bg} flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform`}>
-                      <Icon className={`w-7 h-7 ${colors.text}`} />
+                  <div className="bg-card rounded-xl border border-purple-200 dark:border-purple-800 hover:border-purple-300 transition-all p-5 xs:p-6 text-center group h-full">
+                    <div className={`w-12 h-12 xs:w-14 xs:h-14 rounded-xl ${colors.bg} flex items-center justify-center mx-auto mb-3 xs:mb-4 group-hover:scale-110 transition-transform`}>
+                      <Icon className={`w-6 h-6 xs:w-7 xs:h-7 ${colors.text}`} />
                     </div>
-                    <h3 className="font-black text-lg mb-2">{pillar.title}</h3>
-                    <p className="text-sm text-muted-foreground">{pillar.description}</p>
+                    <h3 className="font-black text-base xs:text-lg mb-2">{pillar.title}</h3>
+                    <p className="text-xs xs:text-sm text-muted-foreground">{pillar.description}</p>
                   </div>
                 </Reveal>
               );
@@ -997,30 +1019,30 @@ export default function Methodology() {
         </div>
 
         {/* Technology Section */}
-        <div className="mb-20">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl font-black tracking-tighter mb-2">
+        <div className="mb-16 xs:mb-20">
+          <div className="text-center mb-8 xs:mb-12">
+            <h2 className="text-2xl xs:text-3xl font-black tracking-tighter mb-2">
               <span className="bg-gradient-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent">Technology</span> as a Vessel
             </h2>
-            <p className="text-muted-foreground">Modern tools serving an ancient tradition</p>
+            <p className="text-sm xs:text-base text-muted-foreground">Modern tools serving an ancient tradition</p>
           </div>
           
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5 xs:gap-6">
             {TECHNOLOGY_FEATURES.map((tech, idx) => {
               const Icon = tech.icon;
               return (
                 <Reveal key={idx} delay={idx * 0.1}>
-                  <div className="bg-card rounded-xl border border-purple-200 dark:border-purple-800 hover:border-purple-300 transition-all p-6 group">
+                  <div className="bg-card rounded-xl border border-purple-200 dark:border-purple-800 hover:border-purple-300 transition-all p-5 xs:p-6 group h-full">
                     <div className="flex items-start justify-between mb-3">
-                      <div className="w-10 h-10 rounded-lg bg-purple-100 dark:bg-purple-950/40 flex items-center justify-center group-hover:scale-110 transition-transform">
-                        <Icon className="w-5 h-5 text-purple-600" />
+                      <div className="w-10 h-10 xs:w-11 xs:h-11 rounded-lg bg-purple-100 dark:bg-purple-950/40 flex items-center justify-center group-hover:scale-110 transition-transform">
+                        <Icon className="w-5 h-5 xs:w-5.5 xs:h-5.5 text-purple-600" />
                       </div>
-                      <span className="px-2 py-0.5 rounded-full bg-amber-100 dark:bg-amber-950/40 text-amber-600 text-[8px] font-black">
+                      <span className="px-2 py-0.5 rounded-full bg-amber-100 dark:bg-amber-950/40 text-amber-600 text-[7px] xs:text-[8px] font-black">
                         {tech.badge}
                       </span>
                     </div>
-                    <h3 className="font-black text-base mb-1">{tech.title}</h3>
-                    <p className="text-sm text-muted-foreground">{tech.description}</p>
+                    <h3 className="font-black text-sm xs:text-base mb-1">{tech.title}</h3>
+                    <p className="text-xs xs:text-sm text-muted-foreground">{tech.description}</p>
                   </div>
                 </Reveal>
               );
@@ -1030,24 +1052,24 @@ export default function Methodology() {
 
         {/* CTA Section */}
         <Reveal>
-          <div className="mb-20 rounded-2xl overflow-hidden">
-            <div className="bg-gradient-to-r from-purple-600 to-amber-500 p-12 text-center">
-              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-white/20 flex items-center justify-center">
-                <GraduationCap className="w-8 h-8 text-white" />
+          <div className="mb-16 xs:mb-20 rounded-xl xs:rounded-2xl overflow-hidden">
+            <div className="bg-gradient-to-r from-purple-600 to-amber-500 p-8 xs:p-10 sm:p-12 text-center">
+              <div className="w-12 h-12 xs:w-14 xs:h-14 sm:w-16 sm:h-16 mx-auto mb-3 xs:mb-4 rounded-full bg-white/20 flex items-center justify-center">
+                <GraduationCap className="w-6 h-6 xs:w-7 xs:h-7 sm:w-8 sm:h-8 text-white" />
               </div>
-              <h2 className="text-2xl md:text-3xl font-black text-white mb-3">Ready to Become a Carrier?</h2>
-              <p className="text-white/90 mb-6 max-w-md mx-auto">
+              <h2 className="text-xl xs:text-2xl sm:text-3xl font-black text-white mb-2 xs:mb-3">Ready to Become a Carrier?</h2>
+              <p className="text-white/90 text-sm xs:text-base mb-5 xs:mb-6 max-w-md mx-auto">
                 Begin your journey with a complimentary assessment from our Dean.
               </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link href="/assessment">
-                  <Button className="rounded-full px-6 py-3 bg-white text-purple-600 hover:bg-gray-100 font-black">
+              <div className="flex flex-col sm:flex-row gap-3 xs:gap-4 justify-center">
+                <Link href="/assessment" className="w-full sm:w-auto">
+                  <Button className="w-full rounded-full px-5 xs:px-6 py-2.5 xs:py-3 bg-white text-purple-600 hover:bg-gray-100 font-black text-[10px] xs:text-xs sm:text-sm">
                     Start Free Assessment
-                    <ArrowRight className="ml-2 w-4 h-4" />
+                    <ArrowRight className="ml-1.5 xs:ml-2 w-3 h-3 xs:w-4 xs:h-4" />
                   </Button>
                 </Link>
-                <Link href="/contact">
-                  <Button variant="outline" className="rounded-full px-6 py-3 border-white text-white hover:bg-white/20 font-black">
+                <Link href="/contact" className="w-full sm:w-auto">
+                  <Button variant="outline" className="w-full rounded-full px-5 xs:px-6 py-2.5 xs:py-3 border-white text-white hover:bg-white/20 font-black text-[10px] xs:text-xs sm:text-sm">
                     Speak to an Advisor
                   </Button>
                 </Link>
