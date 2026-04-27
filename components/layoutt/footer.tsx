@@ -57,7 +57,6 @@ export function Footer() {
 
   return (
     <footer className="relative bg-slate-950 text-white">
-      {/* Subtle pattern */}
       <div className="absolute inset-0 opacity-[0.02] bg-[url('/islamic-pattern.svg')] bg-repeat bg-center pointer-events-none" />
 
       <div className="container mx-auto px-6 py-16 lg:py-20">
@@ -78,13 +77,27 @@ export function Footer() {
                 </p>
               </div>
             </div>
-            <div className="quran-monumental text-2xl text-right opacity-30">
-              بِسْمِ ٱللَّٰهِ ٱلرَّحْمَٰنِ ٱلرَّحِيمِ
+
+            {/* Quranic Verse - Surah Al-Isra 17:80 */}
+            <div className="space-y-2">
+              <div className="quran-monumental text-lg text-right opacity-40 leading-relaxed">
+                وَقُل رَّبِّ أَدْخِلْنِي مُدْخَلَ صِدْقٍ وَأَخْرِجْنِي مُخْرَجَ
+                صِدْقٍ وَاجْعَل لِّي مِن لَّدُنكَ سُلْطَانًا نَّصِيرًا
+              </div>
+              <p className="text-[10px] text-slate-500 italic">
+                "My Lord, grant me an honourable entry and an honourable exit,
+                and give me supporting authority from Your presence."
+              </p>
+              <p className="text-[9px] text-slate-600">
+                — Surah Al-Isra (17:80)
+              </p>
             </div>
-            <p className="text-slate-400 text-sm leading-relaxed max-w-md">
+
+            <p className="text-slate-400 text-sm leading-relaxed max-w-md pt-2">
               Preserving the authentic transmission of the Quran through
               Ijazah-certified scholarship and global accessibility.
             </p>
+
             <div className="flex items-center gap-4 pt-2">
               <a
                 href="#"
