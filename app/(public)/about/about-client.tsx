@@ -370,7 +370,7 @@ export default function AboutClient() {
                       of Allah
                     </h1>
                     <p className="text-sm xs:text-base sm:text-lg md:text-xl text-muted-foreground font-light leading-relaxed">
-                      Al-Maysaroh International Institute is a sanctuary of
+                      Al-Maysaroh Institute is a sanctuary of
                       sacred knowledge, dedicated to preserving the authentic
                       transmission of the Quran.
                     </p>
