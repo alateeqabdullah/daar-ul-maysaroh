@@ -735,11 +735,10 @@ import {
   Trophy,
   Users,
   Compass,
-  Gem,
+
   Eye,
   Lightbulb,
-  ChevronRight,
-  UserCheck,
+
   BookOpen,
   Monitor,
   Wifi,
@@ -747,11 +746,10 @@ import {
   CheckCircle2,
 } from "lucide-react";
 import Link from "next/link";
-import Image from "next/image";
 
 // Institute Data
 const INSTITUTE = {
-  name: "Al-Maysaroh International Institute",
+  name: "Al-Maysaroh Institute",
   founded: 2018,
   founder: "Shaykh Abubakar Al-Maysariy",
   tagline: "Preserving the Word of Allah",
@@ -837,11 +835,11 @@ const TESTIMONIALS = [
 const LEARNING_PHASES = [
   {
     lvl: "Phase 01: Foundation",
-    items: ["Qaida Noorania Mastery", "Basic Makharij Alignment", "Juz Amma Recitation"],
+    items: ["Qaida Nuur-ul-bayaan Mastery", "Basic Makharij Alignment", "Juz Amma Recitation"],
   },
   {
     lvl: "Phase 02: Intermediate",
-    items: ["Full Tajweed Science", "Juz Amma & Tabarak Hifz", "Introduction to Sarf"],
+    items: ["Basic Tajweed Science", "Juz Amma & Tabarak Hifz", "Memorization Techniques" ],
   },
   {
     lvl: "Phase 03: Ijazah Track",
