@@ -671,7 +671,7 @@ export default function AboutClient() {
           </div>
         </section>
    
-   
+
         {/* Learning Phases Section - ADD THIS */}
         <section className="py-12 xs:py-16 sm:py-20 md:py-24">
           <div className="container mx-auto px-4 xs:px-5 sm:px-6">
@@ -682,7 +682,7 @@ export default function AboutClient() {
               </div>
               <h2 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter font-heading mb-2 xs:mb-3">
                 The{" "}
-                <span className="bg-gradient-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent italic">
+                <span className="bg-linear-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent italic">
                   Learning
                 </span>{" "}
                 Path
@@ -697,7 +697,7 @@ export default function AboutClient() {
                 <Reveal key={i} delay={i * 0.1}>
                   <div className="bg-card rounded-xl border border-purple-200 dark:border-purple-800 hover:border-purple-300 transition-all p-5 xs:p-6 md:p-8 h-full flex flex-col group">
                     {/* Phase Number */}
-                    <div className="w-10 h-10 xs:w-11 xs:h-11 rounded-xl bg-gradient-to-r from-purple-600 to-purple-700 text-white flex items-center justify-center text-base xs:text-lg font-black shadow-md mb-4 group-hover:scale-110 transition-transform">
+                    <div className="w-10 h-10 xs:w-11 xs:h-11 rounded-xl bg-linear-to-r from-purple-600 to-purple-700 text-white flex items-center justify-center text-base xs:text-lg font-black shadow-md mb-4 group-hover:scale-110 transition-transform">
                       0{i + 1}
                     </div>
 
@@ -857,8 +857,10 @@ export default function AboutClient() {
             </div>
           </div>
         </section>
+
+
         {/* Testimonials Section */}
-        <section className="py-12 xs:py-16 sm:py-20 md:py-24">
+        {/* <section className="py-12 xs:py-16 sm:py-20 md:py-24">
           <div className="container mx-auto px-4 xs:px-5 sm:px-6">
             <div className="text-center max-w-2xl mx-auto mb-8 xs:mb-10 sm:mb-12">
               <div className="inline-flex items-center gap-1.5 text-purple-600 font-black text-[8px] xs:text-[9px] sm:text-[10px] uppercase tracking-[0.2em] mb-2 xs:mb-3">
@@ -903,7 +905,9 @@ export default function AboutClient() {
               ))}
             </div>
           </div>
-        </section>
+        </section> */}
+
+
         {/* Final CTA */}
         <section className="py-12 xs:py-16 sm:py-20 md:py-24 lg:py-28">
           <div className="container mx-auto px-4 xs:px-5 sm:px-6">

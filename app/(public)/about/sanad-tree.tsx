@@ -20,7 +20,7 @@ interface SanadNode {
   era: string;
   location: string;
   color: string;
-  icon: any;
+  icon: React.ComponentType<{ className?: string }>;
   description: string;
   isYou?: boolean;
   children?: SanadNode[];
@@ -128,7 +128,7 @@ function TreeNode({ node, level = 0 }: { node: SanadNode; level?: number }) {
   return (
     <div className="relative">
       {level > 0 && (
-        <div className="absolute left-0 top-0 bottom-0 w-px bg-gradient-to-b from-purple-600/30 to-amber-500/30 -translate-x-1/2" />
+        <div className="absolute left-0 top-0 bottom-0 w-px bg-linear-to-b from-purple-600/30 to-amber-500/30 -translate-x-1/2" />
       )}
 
       <div className="relative flex mb-2">
