@@ -137,6 +137,8 @@ const PUBLIC_ROUTES = [
   "/coming-soon",
   "/offline",
   "/unauthorized",
+  "/compare",
+  
 ];
 
 const AUTH_ROUTES = [
