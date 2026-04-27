@@ -905,7 +905,7 @@ export default function AboutPage() {
       </div>
 
       {/* Breadcrumb */}
-      <div className="container mx-auto px-4 xs:px-5 sm:px-6 pt-20 sm:pt-24 md:pt-28 lg:pt-32">
+      <div className="container mx-auto px-4 xs:px-5 sm:px-6 pt-30 sm:pt-24 md:pt-28 lg:pt-32">
         <nav className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground flex items-center gap-2 mb-8 flex-wrap">
           <Link href="/" className="hover:text-purple-600 transition-colors">Home</Link>
           <span className="opacity-30">/</span>
