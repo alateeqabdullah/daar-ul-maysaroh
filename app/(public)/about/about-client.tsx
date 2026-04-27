@@ -54,7 +54,7 @@ const VALUES = [
     description:
       "Teaching purely for the sake of Allah, seeking His pleasure alone.",
     icon: Heart,
-    gradient: "from-purple-600 to-purple-700",
+    linear: "from-purple-600 to-purple-700",
   },
   {
     title: "Itqan",
@@ -63,7 +63,7 @@ const VALUES = [
     description:
       "Pursuing perfection in every recitation, every rule, every transmission.",
     icon: Target,
-    gradient: "from-amber-500 to-amber-600",
+    linear: "from-amber-500 to-amber-600",
   },
   {
     title: "Amanah",
@@ -72,7 +72,7 @@ const VALUES = [
     description:
       "A sacred responsibility to preserve and transmit the Quran exactly as revealed.",
     icon: Shield,
-    gradient: "from-purple-600 to-amber-500",
+    linear: "from-purple-600 to-amber-500",
   },
 ];
 
@@ -291,13 +291,13 @@ const getColorStyles = (color: string) => {
       text: "text-purple-600 dark:text-purple-400",
       border: "border-purple-200 dark:border-purple-800",
       bg: "bg-purple-100 dark:bg-purple-950/40",
-      gradient: "from-purple-600 to-purple-700",
+      linear: "from-purple-600 to-purple-700",
     },
     amber: {
       text: "text-amber-600 dark:text-amber-400",
       border: "border-amber-200 dark:border-amber-800",
       bg: "bg-amber-100 dark:bg-amber-950/40",
-      gradient: "from-amber-500 to-amber-600",
+      linear: "from-amber-500 to-amber-600",
     },
   };
   return styles[color as keyof typeof styles] || styles.purple;
@@ -365,7 +365,7 @@ export default function AboutClient() {
                     </div>
                     <h1 className="text-4xl xs:text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tighter font-heading leading-[1.1]">
                       Preserving the{" "}
-                      <span className="bg-gradient-to-r from-purple-600 via-purple-700 to-amber-600 bg-clip-text text-transparent">
+                      <span className="bg-linear-to-r from-purple-600 via-purple-700 to-amber-600 bg-clip-text text-transparent">
                         Word
                       </span>
                       <br />
@@ -420,7 +420,7 @@ export default function AboutClient() {
 
               <div className="flex flex-col xs:flex-row gap-3 xs:gap-4 justify-center mt-10 xs:mt-12 sm:mt-16">
                 <Link href="/admissions" className="w-full xs:w-auto">
-                  <Button className="w-full rounded-full px-5 xs:px-6 sm:px-8 py-3 xs:py-3.5 sm:py-4 font-black bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white shadow-xl text-sm xs:text-base">
+                  <Button className="w-full rounded-full px-5 xs:px-6 sm:px-8 py-3 xs:py-3.5 sm:py-4 font-black bg-linear-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white shadow-xl text-sm xs:text-base">
                     BEGIN YOUR JOURNEY{" "}
                     <Rocket className="w-3.5 h-3.5 xs:w-4 xs:h-4 ml-1.5 xs:ml-2" />
                   </Button>
@@ -481,12 +481,12 @@ export default function AboutClient() {
                   </div>
                   <h2 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter font-heading">
                     The Vision Behind{" "}
-                    <span className="bg-gradient-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent italic">
+                    <span className="bg-linear-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent italic">
                       Al-Maysaroh
                     </span>
                   </h2>
                   <div className="flex items-center gap-3 xs:gap-4">
-                    <div className="w-14 h-14 xs:w-16 xs:h-16 sm:w-20 sm:h-20 rounded-full bg-gradient-to-br from-purple-600 to-purple-700 flex items-center justify-center text-white text-xl xs:text-2xl sm:text-3xl font-black shadow-lg shrink-0">
+                    <div className="w-14 h-14 xs:w-16 xs:h-16 sm:w-20 sm:h-20 rounded-full bg-linear-to-br from-purple-600 to-purple-700 flex items-center justify-center text-white text-xl xs:text-2xl sm:text-3xl font-black shadow-lg shrink-0">
                       أ
                     </div>
                     <div>
@@ -499,21 +499,17 @@ export default function AboutClient() {
                     </div>
                   </div>
                   <p className="text-xs xs:text-sm sm:text-base text-muted-foreground leading-relaxed">
-                    Born in Makkah and raised in the sacred precincts of Islamic
-                    scholarship, Shaykh Abubakar dedicated his life to
-                    preserving the authentic transmission of the Quran. He
-                    studied under senior scholars from Al-Azhar, Umm Al-Qura,
-                    and the Moroccan Qira'at schools.
+                    With over 13 years of teaching experience, Shaykh Abubakar Al-Maysariy has trained over 100 certified Qurra worldwide. His vision for Al-Maysaroh was born from a deep desire to preserve the authentic transmission of the Quran in an age of rapid change and digital distractions. He believes that the Quran is not just a book to be read, but a living tradition to be transmitted, heart to heart, generation to generation.
                   </p>
-                  <div className="p-4 xs:p-5 sm:p-6 rounded-xl bg-gradient-to-br from-purple-50/30 to-amber-50/30 dark:from-purple-950/20 dark:to-amber-950/20 border border-purple-200 dark:border-purple-800 italic">
+                  <div className="p-4 xs:p-5 sm:p-6 rounded-xl bg-linear-to-br from-purple-50/30 to-amber-50/30 dark:from-purple-950/20 dark:to-amber-950/20 border border-purple-200 dark:border-purple-800 italic">
                     <Quote className="w-5 h-5 xs:w-6 xs:h-6 sm:w-8 sm:h-8 text-amber-500/30 mb-2" />
                     <p className="text-xs xs:text-sm sm:text-base md:text-lg font-medium">
-                      "The Quran is not just a book to be read; it is a living
+                     {` "The Quran is not just a book to be read; it is a living
                       tradition to be transmitted, heart to heart, generation to
-                      generation."
+                      generation."`}
                     </p>
                     <p className="text-[10px] xs:text-xs sm:text-sm text-purple-600 font-black mt-2 xs:mt-3">
-                      — Shaykh Abubakar Al-Maysariy
+                      -- Shaykh Abubakar Al-Maysariy
                     </p>
                   </div>
                 </div>
@@ -547,7 +543,7 @@ export default function AboutClient() {
         </section>
 
         {/* Leadership Team */}
-        <section className="py-12 xs:py-16 sm:py-20 md:py-24 bg-gradient-to-b from-background via-purple-50/5 to-amber-50/5">
+        <section className="py-12 xs:py-16 sm:py-20 md:py-24 bg-linear-to-b from-background via-purple-50/5 to-amber-50/5">
           <div className="container mx-auto px-4 xs:px-5 sm:px-6">
             <div className="text-center max-w-2xl mx-auto mb-8 xs:mb-10 sm:mb-12">
               <div className="inline-flex items-center gap-1.5 text-purple-600 font-black text-[8px] xs:text-[9px] sm:text-[10px] uppercase tracking-[0.2em] mb-2 xs:mb-3">
@@ -555,7 +551,7 @@ export default function AboutClient() {
               </div>
               <h2 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter font-heading mb-2 xs:mb-3">
                 Guiding the{" "}
-                <span className="bg-gradient-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent italic">
+                <span className="bg-linear-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent italic">
                   Vision
                 </span>
               </h2>
@@ -568,7 +564,7 @@ export default function AboutClient() {
               {LEADERSHIP_TEAM.map((leader, i) => (
                 <Reveal key={i} delay={i * 0.1}>
                   <div className="text-center p-5 xs:p-6 rounded-xl bg-card border border-purple-200 dark:border-purple-800 hover:border-purple-300 transition-all group">
-                    <div className="w-20 h-20 xs:w-24 xs:h-24 mx-auto mb-3 xs:mb-4 rounded-full bg-gradient-to-br from-purple-600 to-amber-500 flex items-center justify-center text-white text-2xl xs:text-3xl font-black shadow-lg group-hover:scale-110 transition-transform">
+                    <div className="w-20 h-20 xs:w-24 xs:h-24 mx-auto mb-3 xs:mb-4 rounded-full bg-linear-to-br from-purple-600 to-amber-500 flex items-center justify-center text-white text-2xl xs:text-3xl font-black shadow-lg group-hover:scale-110 transition-transform">
                       {leader.image}
                     </div>
                     <h3 className="font-black text-base xs:text-lg mb-0.5 xs:mb-1">
@@ -599,7 +595,7 @@ export default function AboutClient() {
               </div>
               <h2 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter font-heading mb-2 xs:mb-3">
                 Core{" "}
-                <span className="bg-gradient-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent italic">
+                <span className="bg-linear-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent italic">
                   Values
                 </span>
               </h2>
@@ -612,7 +608,7 @@ export default function AboutClient() {
                   <Reveal key={i} delay={i * 0.1}>
                     <div className="text-center p-6 xs:p-7 md:p-8 rounded-xl bg-card border border-purple-200 dark:border-purple-800 hover:border-purple-300 transition-all group">
                       <div
-                        className={`w-14 h-14 xs:w-15 xs:h-15 sm:w-16 sm:h-16 mx-auto mb-3 xs:mb-4 rounded-xl bg-gradient-to-br ${value.gradient} flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform`}
+                        className={`w-14 h-14 xs:w-15 xs:h-15 sm:w-16 sm:h-16 mx-auto mb-3 xs:mb-4 rounded-xl bg-linear-to-br ${value.linear} flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform`}
                       >
                         <Icon className="w-7 h-7 xs:w-7.5 xs:h-7.5 sm:w-8 sm:h-8 text-white" />
                       </div>
@@ -634,7 +630,7 @@ export default function AboutClient() {
         </section>
 
         {/* The 4 Pillars */}
-        <section className="py-12 xs:py-16 sm:py-20 md:py-24 bg-gradient-to-b from-background via-purple-50/5 to-amber-50/5">
+        <section className="py-12 xs:py-16 sm:py-20 md:py-24 bg-linear-to-b from-background via-purple-50/5 to-amber-50/5">
           <div className="container mx-auto px-4 xs:px-5 sm:px-6">
             <div className="text-center max-w-2xl mx-auto mb-8 xs:mb-10 sm:mb-12">
               <div className="inline-flex items-center gap-1.5 text-purple-600 font-black text-[8px] xs:text-[9px] sm:text-[10px] uppercase tracking-[0.2em] mb-2 xs:mb-3">
@@ -642,7 +638,7 @@ export default function AboutClient() {
               </div>
               <h2 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter font-heading mb-2 xs:mb-3">
                 The{" "}
-                <span className="bg-gradient-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent italic">
+                <span className="bg-linear-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent italic">
                   Al-Maysaroh
                 </span>{" "}
                 Method
@@ -657,7 +653,7 @@ export default function AboutClient() {
                   <Reveal key={i} delay={i * 0.1}>
                     <div className="text-center p-5 xs:p-6 rounded-xl bg-card border border-purple-200 dark:border-purple-800 hover:border-purple-300 transition-all">
                       <div
-                        className={`w-12 h-12 xs:w-13 xs:h-13 sm:w-14 sm:h-14 mx-auto mb-3 xs:mb-4 rounded-xl bg-gradient-to-br ${colors.gradient} flex items-center justify-center shadow-lg`}
+                        className={`w-12 h-12 xs:w-13 xs:h-13 sm:w-14 sm:h-14 mx-auto mb-3 xs:mb-4 rounded-xl bg-linear-to-br ${colors.linear} flex items-center justify-center shadow-lg`}
                       >
                         <Icon className="w-6 h-6 xs:w-6.5 xs:h-6.5 sm:w-7 sm:h-7 text-white" />
                       </div>
@@ -687,7 +683,7 @@ export default function AboutClient() {
                   </div>
                   <h2 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter font-heading">
                     Our{" "}
-                    <span className="bg-gradient-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent italic">
+                    <span className="bg-linear-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent italic">
                       Virtual
                     </span>{" "}
                     Campus
@@ -717,8 +713,8 @@ export default function AboutClient() {
               </Reveal>
 
               <Reveal delay={0.2}>
-                <div className="bg-gradient-to-br from-purple-600/10 to-amber-500/10 rounded-xl xs:rounded-2xl p-6 xs:p-7 sm:p-8 text-center border border-purple-200 dark:border-purple-800">
-                  <div className="inline-flex items-center justify-center w-16 h-16 xs:w-18 xs:h-18 sm:w-20 sm:h-20 rounded-full bg-gradient-to-br from-purple-600 to-amber-500 mb-3 xs:mb-4">
+                <div className="bg-linear-to-br from-purple-600/10 to-amber-500/10 rounded-xl xs:rounded-2xl p-6 xs:p-7 sm:p-8 text-center border border-purple-200 dark:border-purple-800">
+                  <div className="inline-flex items-center justify-center w-16 h-16 xs:w-18 xs:h-18 sm:w-20 sm:h-20 rounded-full bg-linear-to-br from-purple-600 to-amber-500 mb-3 xs:mb-4">
                     <Monitor className="w-8 h-8 xs:w-9 xs:h-9 sm:w-10 sm:h-10 text-white" />
                   </div>
                   <h3 className="font-black text-xl xs:text-2xl mb-2">
@@ -749,7 +745,7 @@ export default function AboutClient() {
         </section>
 
         {/* Timeline Section */}
-        <section className="py-12 xs:py-16 sm:py-20 md:py-24 bg-gradient-to-b from-background via-purple-50/5 to-amber-50/5">
+        <section className="py-12 xs:py-16 sm:py-20 md:py-24 bg-linear-to-b from-background via-purple-50/5 to-amber-50/5">
           <div className="container mx-auto px-4 xs:px-5 sm:px-6">
             <div className="text-center max-w-2xl mx-auto mb-8 xs:mb-10 sm:mb-12">
               <div className="inline-flex items-center gap-1.5 text-purple-600 font-black text-[8px] xs:text-[9px] sm:text-[10px] uppercase tracking-[0.2em] mb-2 xs:mb-3">
@@ -757,7 +753,7 @@ export default function AboutClient() {
               </div>
               <h2 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter font-heading mb-2 xs:mb-3">
                 A Legacy of{" "}
-                <span className="bg-gradient-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent italic">
+                <span className="bg-linear-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent italic">
                   Excellence
                 </span>
               </h2>
@@ -768,7 +764,7 @@ export default function AboutClient() {
 
             <div className="max-w-3xl mx-auto">
               <div className="relative">
-                <div className="hidden md:block absolute left-1/2 top-0 bottom-0 w-0.5 bg-gradient-to-b from-purple-600 via-amber-500 to-purple-600 -translate-x-1/2" />
+                <div className="hidden md:block absolute left-1/2 top-0 bottom-0 w-0.5 bg-linear-to-b from-purple-600 via-amber-500 to-purple-600 -translate-x-1/2" />
                 <div className="space-y-6 xs:space-y-8">
                   {TIMELINE.map((item, idx) => {
                     const Icon = item.icon;
@@ -790,7 +786,7 @@ export default function AboutClient() {
                             </p>
                           </div>
                           <div className="relative z-10 shrink-0">
-                            <div className="w-10 h-10 xs:w-11 xs:h-11 rounded-full bg-gradient-to-r from-purple-600 to-purple-700 flex items-center justify-center text-white text-sm xs:text-base font-black shadow-md">
+                            <div className="w-10 h-10 xs:w-11 xs:h-11 rounded-full bg-linear-to-r from-purple-600 to-purple-700 flex items-center justify-center text-white text-sm xs:text-base font-black shadow-md">
                               <Icon className="w-4 h-4 xs:w-5 xs:h-5 text-white" />
                             </div>
                           </div>
@@ -815,7 +811,7 @@ export default function AboutClient() {
               </div>
               <h2 className="text-2xl xs:text-3xl sm:text-4xl md:text-5xl font-black tracking-tighter font-heading mb-2 xs:mb-3">
                 Endorsed by{" "}
-                <span className="bg-gradient-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent italic">
+                <span className="bg-linear-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent italic">
                   Leading
                 </span>{" "}
                 Scholars
@@ -834,7 +830,7 @@ export default function AboutClient() {
                       "{testimonial.content}"
                     </p>
                     <div className="flex items-center gap-2 xs:gap-3 pt-2 xs:pt-3 border-t border-purple-200 dark:border-purple-800">
-                      <div className="w-8 h-8 xs:w-9 xs:h-9 sm:w-10 sm:h-10 rounded-full bg-gradient-to-br from-purple-600 to-purple-700 flex items-center justify-center text-white font-black text-xs sm:text-sm">
+                      <div className="w-8 h-8 xs:w-9 xs:h-9 sm:w-10 sm:h-10 rounded-full bg-linear-to-br from-purple-600 to-purple-700 flex items-center justify-center text-white font-black text-xs sm:text-sm">
                         {testimonial.image}
                       </div>
                       <div>
@@ -856,8 +852,8 @@ export default function AboutClient() {
         {/* Final CTA */}
         <section className="py-12 xs:py-16 sm:py-20 md:py-24 lg:py-28">
           <div className="container mx-auto px-4 xs:px-5 sm:px-6">
-            <div className="bg-card rounded-xl xs:rounded-2xl border border-purple-200 dark:border-purple-800 p-6 xs:p-8 sm:p-10 md:p-12 text-center max-w-4xl mx-auto bg-gradient-to-br from-purple-600/5 to-amber-500/5">
-              <div className="inline-flex items-center justify-center w-16 h-16 xs:w-18 xs:h-18 sm:w-20 sm:h-20 rounded-full bg-gradient-to-br from-purple-600 to-amber-500 mb-4 xs:mb-5 sm:mb-6 shadow-xl">
+            <div className="bg-card rounded-xl xs:rounded-2xl border border-purple-200 dark:border-purple-800 p-6 xs:p-8 sm:p-10 md:p-12 text-center max-w-4xl mx-auto bg-linear-to-br from-purple-600/5 to-amber-500/5">
+              <div className="inline-flex items-center justify-center w-16 h-16 xs:w-18 xs:h-18 sm:w-20 sm:h-20 rounded-full bg-linear-to-br from-purple-600 to-amber-500 mb-4 xs:mb-5 sm:mb-6 shadow-xl">
                 <Rocket className="w-8 h-8 xs:w-9 xs:h-9 sm:w-10 sm:h-10 text-white" />
               </div>
               <h2 className="text-2xl xs:text-3xl sm:text-4xl font-black mb-2 xs:mb-3">
@@ -870,7 +866,7 @@ export default function AboutClient() {
               </p>
               <div className="flex flex-col xs:flex-row gap-3 xs:gap-4 justify-center px-4">
                 <Link href="/admissions" className="w-full xs:w-auto">
-                  <Button className="w-full rounded-full px-5 xs:px-6 sm:px-8 py-2.5 xs:py-3 sm:py-4 font-black text-sm xs:text-base bg-gradient-to-r from-purple-600 to-purple-700 text-white">
+                  <Button className="w-full rounded-full px-5 xs:px-6 sm:px-8 py-2.5 xs:py-3 sm:py-4 font-black text-sm xs:text-base bg-linear-to-r from-purple-600 to-purple-700 text-white">
                     START YOUR JOURNEY{" "}
                     <ArrowRight className="w-3.5 h-3.5 xs:w-4 xs:h-4 ml-1.5 xs:ml-2" />
                   </Button>
@@ -887,6 +883,7 @@ export default function AboutClient() {
               <p className="text-[9px] xs:text-[10px] sm:text-xs text-muted-foreground mt-4 xs:mt-5 sm:mt-6">
                 Free 20-minute assessment • No commitment • All ages welcome
               </p>
+       
             </div>
           </div>
         </section>
