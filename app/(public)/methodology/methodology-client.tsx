@@ -30,12 +30,10 @@ import {
   Users,
   Video,
   Scroll,
-  Compass,
   Gem,
   Clock,
 } from "lucide-react";
 import Link from "next/link";
-import { cn } from "@/lib/utils";
 
 // Simple step data without complex animations
 const METHODOLOGY_STEPS = [
@@ -250,7 +248,7 @@ const getColorStyles = (color: string) => {
       text: "text-amber-600 dark:text-amber-400",
       bg: "bg-amber-100 dark:bg-amber-950/40",
       border: "border-amber-200 dark:border-amber-800",
-      gradient: "from-amber-500 to-amber-600",
+      linear: "from-amber-500 to-amber-600",
     },
   };
   return styles[color as keyof typeof styles] || styles.purple;
@@ -336,12 +334,12 @@ export default function MethodologyClient() {
               </div>
               <h1 className="text-4xl xs:text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tighter font-heading leading-[1.1] mb-3 xs:mb-4 sm:mb-6">
                 Where{" "}
-                <span className="bg-gradient-to-r from-purple-600 to-purple-700 bg-clip-text text-transparent">
+                <span className="bg-linear-to-r from-purple-600 to-purple-700 bg-clip-text text-transparent">
                   Science
                 </span>
                 <br />
                 Meets{" "}
-                <span className="bg-gradient-to-r from-amber-500 to-amber-600 bg-clip-text text-transparent">
+                <span className="bg-linear-to-r from-amber-500 to-amber-600 bg-clip-text text-transparent">
                   Sanctity
                 </span>
               </h1>
@@ -445,7 +443,7 @@ export default function MethodologyClient() {
                     <div className="bg-card rounded-xl border border-purple-200 dark:border-purple-800 hover:border-purple-300 transition-all overflow-hidden h-full flex flex-col group">
                       <div className="p-4 xs:p-5 sm:p-6 flex-1">
                         <div className="flex items-center gap-2 xs:gap-3 mb-3 xs:mb-4">
-                          <div className="w-9 h-9 xs:w-10 xs:h-10 sm:w-12 sm:h-12 rounded-xl bg-gradient-to-r from-purple-600 to-purple-700 flex items-center justify-center shadow-md shrink-0">
+                          <div className="w-9 h-9 xs:w-10 xs:h-10 sm:w-12 sm:h-12 rounded-xl bg-linear-to-r from-purple-600 to-purple-700 flex items-center justify-center shadow-md shrink-0">
                             <Icon className="w-4 h-4 xs:w-5 xs:h-5 sm:w-6 sm:h-6 text-white" />
                           </div>
                           <div>
@@ -529,7 +527,7 @@ export default function MethodologyClient() {
                           )
                         )}
                       </div>
-                      <div className="h-0.5 w-full bg-gradient-to-r from-purple-600 to-amber-500 scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-500" />
+                      <div className="h-0.5 w-full bg-linear-to-r from-purple-600 to-amber-500 scale-x-0 group-hover:scale-x-100 transition-transform origin-left duration-500" />
                     </div>
                   </Reveal>
                 );
@@ -580,7 +578,7 @@ export default function MethodologyClient() {
           <div className="mb-12 xs:mb-16 sm:mb-20">
             <div className="text-center mb-6 xs:mb-8 sm:mb-12">
               <h2 className="text-xl xs:text-2xl sm:text-3xl font-black tracking-tighter mb-1 xs:mb-2">
-                <span className="bg-gradient-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent">
+                <span className="bg-linear-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent">
                   Technology
                 </span>{" "}
                 as a Vessel
@@ -620,7 +618,7 @@ export default function MethodologyClient() {
           {/* CTA Section */}
           <Reveal>
             <div className="mb-12 xs:mb-16 sm:mb-20 rounded-xl xs:rounded-2xl overflow-hidden">
-              <div className="bg-gradient-to-r from-purple-600 to-amber-500 p-6 xs:p-8 sm:p-10 md:p-12 text-center">
+              <div className="bg-linear-to-r from-purple-600 to-amber-500 p-6 xs:p-8 sm:p-10 md:p-12 text-center">
                 <div className="w-10 h-10 xs:w-12 xs:h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 mx-auto mb-2 xs:mb-3 sm:mb-4 rounded-full bg-white/20 flex items-center justify-center">
                   <GraduationCap className="w-5 h-5 xs:w-6 xs:h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-white" />
                 </div>
