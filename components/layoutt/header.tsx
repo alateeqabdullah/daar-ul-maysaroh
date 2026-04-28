@@ -2403,9 +2403,7 @@ import {
   Globe,
   Star,
   RefreshCw,
-  Crown,
-  Phone,
-  Calendar,
+ 
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -3074,7 +3072,7 @@ export function Header() {
                     وَقُل رَّبِّ زِدْنِي عِلْمًا
                   </p>
                   <p className="text-[8px] text-slate-600 mt-1 italic">
-                    "My Lord, increase me in knowledge"
+                   {` "My Lord, increase me in knowledge"`}
                   </p>
                 </div>
 
