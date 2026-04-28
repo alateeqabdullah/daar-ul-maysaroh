@@ -243,8 +243,6 @@ import {
   Heart,
   ArrowUp,
   ShieldCheck,
-  Globe,
-  GraduationCap,
   Send,
   Crown,
   Scroll,
@@ -319,8 +317,8 @@ export function Footer() {
                 صِدْقٍ وَاجْعَل لِّي مِن لَّدُنكَ سُلْطَانًا نَّصِيرًا
               </div>
               <p className="text-[10px] text-slate-500 italic">
-                "My Lord, grant me an honourable entry and an honourable exit,
-                and give me supporting authority from Your presence."
+               {` "My Lord, grant me an honourable entry and an honourable exit,
+                and give me supporting authority from Your presence."`}
               </p>
               <p className="text-[9px] text-slate-600">
                 — Surah Al-Isra (17:80)
@@ -365,7 +363,7 @@ export function Footer() {
             <div className="flex items-center gap-2">
               <Crown className="w-4 h-4 text-amber-500" />
               <span className="text-[10px] font-bold uppercase tracking-wider text-amber-500">
-                Dean's Circle
+              {`  Dean's Circle`}
               </span>
             </div>
             <h3 className="text-xl font-bold">Join the Scholarly Circle</h3>
