@@ -97,7 +97,7 @@ model Student {
   // Student Information
   studentId        String    @unique
   dateOfBirth      DateTime?
-  gender           Gender
+  gender           Gender?
   nationality      String?
   address          String?
   city             String?

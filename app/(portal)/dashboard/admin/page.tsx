@@ -1,733 +1,731 @@
-import { prisma } from "@/lib/prisma";
-import { auth } from "@/lib/auth";
-import { redirect } from "next/navigation";
-import AdminDashboardClient from "@/components/admin/dashboard-client";
-
-export default async function AdminDashboardPage() {
-  const session = await auth();
-  if (!session || !["ADMIN", "SUPER_ADMIN"].includes(session.user.role))
-    redirect("/login");
-
-  const now = new Date();
-  const todayStart = new Date(now.setHours(0, 0, 0, 0));
-  const dayOfWeek = new Date().getDay(); // 0-6
-  const currentTime = new Date().toLocaleTimeString("en-GB", {
-    hour: "2-digit",
-    minute: "2-digit",
-    hour12: false,
-  });
-
-  const [
-    pendingUsers,
-    studentCount,
-    revenue,
-    expenses,
-    todayPrayers,
-    liveSessionsRaw,
-    recentLogs,
-  ] = await Promise.all([
-    prisma.user.findMany({ where: { status: "PENDING" }, take: 10 }),
-    prisma.student.count(),
-    prisma.payment.aggregate({
-      _sum: { amount: true },
-      where: { status: "COMPLETED" },
-    }),
-    prisma.expense.aggregate({ _sum: { amount: true } }),
-    prisma.prayerRecord.count({ where: { date: { gte: todayStart } } }),
-    prisma.classSchedule.findMany({
-      where: {
-        dayOfWeek,
-        startTime: { lte: currentTime },
-        endTime: { gte: currentTime },
-      },
-      include: { class: { include: { teacher: { include: { user: true } } } } },
-      take: 3,
-    }),
-    prisma.hifzProgress.findMany({
-      take: 5,
-      orderBy: { createdAt: "desc" },
-      include: { student: { include: { user: true } } },
-    }),
-  ]);
-
-  // Calculate Spiritual Pulse (Today's prayers vs total possible prayers)
-  const totalPossiblePrayers = studentCount * 5;
-  const prayerCompliance =
-    totalPossiblePrayers > 0
-      ? Math.round((todayPrayers / totalPossiblePrayers) * 100)
-      : 0;
-
-  const data = {
-    counts: {
-      pendingUsers: pendingUsers.length,
-      students: studentCount,
-    },
-    finance: {
-      income: Number(revenue._sum.amount) || 0,
-      expenses: Number(expenses._sum.amount) || 0,
-    },
-    spiritualPulse: prayerCompliance,
-    liveSessions: JSON.parse(JSON.stringify(liveSessionsRaw)),
-    recentLogs: JSON.parse(JSON.stringify(recentLogs)),
-    pendingList: JSON.parse(JSON.stringify(pendingUsers)),
-  };
-
-  return <AdminDashboardClient data={data} />;
-}
-
+// // app/(portal)/dashboard/admin/page.tsx
 // "use client";
 
-// import { ApprovalsTable } from "@/components/(portal)/dashboard/ApprovalsTable";
-// import { Counter } from "@/components/admin/dashboard-ui"; // Import the counter we made
-// import { Badge } from "@/components/ui/badge";
-// import { Button } from "@/components/ui/button";
+// import { useState, useEffect } from "react";
 // import {
-//   Card,
-//   CardContent,
-//   CardDescription,
-//   CardHeader,
-//   CardTitle,
-// } from "@/components/ui/card";
-// import { Skeleton } from "@/components/ui/skeleton";
-// import type { DashboardApiResponse, PendingUser } from "@/types/dashboard";
-// import axios from "axios";
-// import { formatDistanceToNow } from "date-fns";
-// import { motion } from "framer-motion";
-// import {
-//   ArrowRight,
-//   BookOpen,
-//   CalendarCheck,
-//   CheckCircle2,
+//   Users,
+//   GraduationCap,
 //   Clock,
 //   DollarSign,
-//   Download,
-//   GraduationCap,
 //   TrendingUp,
-//   UserCheck,
-//   Users,
+//   TrendingDown,
+//   Calendar,
+//   BookOpen,
+//   CheckCircle,
+//   XCircle,
+//   AlertCircle,
+//   UserPlus,
+//   CreditCard,
+//   FileText,
+//   ArrowRight,
+//   RefreshCw,
+//   Loader2,
+//   Eye,
+//   MoreVertical,
+//   Search,
+//   Filter,
+//   Download,
 // } from "lucide-react";
-// import { useRouter } from "next/navigation";
-// import { useEffect, useState } from "react";
+// import { motion, AnimatePresence } from "framer-motion";
+// import { Button } from "@/components/ui/button";
+// import Link from "next/link";
+// import { cn } from "@/lib/utils";
 // import {
-//   Area,
-//   AreaChart,
-//   Bar,
-//   BarChart,
-//   CartesianGrid,
-//   Cell,
-//   Legend,
-//   Pie,
-//   PieChart,
-//   ResponsiveContainer,
-//   Tooltip,
-//   XAxis,
-//   YAxis,
-// } from "recharts";
-// import { toast } from "sonner";
+//   getDashboardStats,
+//   getQuickStats,
+//   getRevenueChartData,
+//   getEnrollmentChartData,
+// } from "./actions/dashboard";
 
-// // --- ANIMATION VARIANTS ---
-// const containerVariants = {
-//   hidden: { opacity: 0 },
-//   show: {
-//     opacity: 1,
-//     transition: {
-//       staggerChildren: 0.1, // Stagger effect
-//       delayChildren: 0.2,
-//     },
-//   },
-// };
-
-// const itemVariants = {
-//   hidden: { y: 20, opacity: 0 },
-//   show: {
-//     y: 0,
-//     opacity: 1,
-//     transition: { type: "spring", stiffness: 50, damping: 10 },
-//   },
-// };
-
-// export default function AdminDashboardPage() {
-//   const router = useRouter();
-//   const [isLoading, setIsLoading] = useState(true);
-//   const [data, setData] = useState<DashboardApiResponse | null>(null);
-//   const [localPendingUsers, setLocalPendingUsers] = useState<PendingUser[]>([]);
-
-//   // 1. Fetch Data
-//   useEffect(() => {
-//     const fetchData = async () => {
-//       try {
-//         const response = await axios.get<DashboardApiResponse>(
-//           "/api/admin/dashboard"
-//         );
-//         setData(response.data);
-//         setLocalPendingUsers(response.data.pendingUsers);
-//       } catch (error: any) {
-//         if (error.response?.status === 401 || error.response?.status === 403) {
-//           toast.error("Unauthorized Access");
-//           router.push("/auth/login");
-//           return;
-//         }
-//         toast.error("Failed to load dashboard data");
-//       } finally {
-//         setIsLoading(false);
-//       }
-//     };
-//     fetchData();
-//   }, [router]);
-
-//   // 2. Export Functionality (CSV Generator)
-//   const handleExport = () => {
-//     if (!data) return;
-
-//     try {
-//       const headers = ["Metric", "Value"];
-//       const rows = [
-//         ["Total Users", data.stats.totalUsers],
-//         ["Revenue", data.stats.revenue],
-//         ["Active Classes", data.stats.activeClasses],
-//         ["Pending Approvals", data.stats.pendingUsers],
-//       ];
-
-//       // Convert to CSV format
-//       const csvContent =
-//         "data:text/csv;charset=utf-8," +
-//         headers.join(",") +
-//         "\n" +
-//         rows.map((e) => e.join(",")).join("\n");
-
-//       // Create download link
-//       const encodedUri = encodeURI(csvContent);
-//       const link = document.createElement("a");
-//       link.setAttribute("href", encodedUri);
-//       link.setAttribute(
-//         "download",
-//         `dashboard_report_${new Date().toISOString().split("T")[0]}.csv`
-//       );
-//       document.body.appendChild(link);
-//       link.click();
-//       document.body.removeChild(link);
-
-//       toast.success("Report downloaded successfully");
-//     } catch (error) {
-//       toast.error("Failed to export data");
-//     }
+// // Types
+// interface DashboardData {
+//   totalUsers: number;
+//   activeStudents: number;
+//   activeTeachers: number;
+//   pendingApprovals: number;
+//   totalClasses: number;
+//   activeClasses: number;
+//   totalEnrollments: number;
+//   newEnrollmentsThisMonth: number;
+//   monthlyRevenue: number;
+//   pendingInvoices: number;
+//   revenueChange: number;
+//   enrollmentChange: number;
+//   userGrowth: Array<{ month: string; count: number }>;
+//   roleDistribution: Array<{ role: string; count: number }>;
+//   recentActivities: {
+//     recentUsers: Array<{
+//       name: string;
+//       email: string;
+//       role: string;
+//       createdAt: Date;
+//     }>;
+//     recentEnrollments: Array<{
+//       studentName: string;
+//       className: string;
+//       enrolledAt: Date;
+//     }>;
+//     recentPayments: Array<{
+//       studentName: string;
+//       amount: number;
+//       status: string;
+//       paidAt: Date;
+//     }>;
+//     pendingApprovalsList: Array<{
+//       name: string;
+//       email: string;
+//       role: string;
+//       createdAt: Date;
+//     }>;
 //   };
+// }
 
-//   // 3. Scroll to Table Action
-//   const scrollToApprovals = () => {
-//     const element = document.getElementById("approvals-section");
-//     if (element) {
-//       element.scrollIntoView({ behavior: "smooth" });
-//     }
+// // Stats Card Component
+// function StatCard({
+//   title,
+//   value,
+//   icon: Icon,
+//   change,
+//   color,
+// }: {
+//   title: string;
+//   value: number | string;
+//   icon: any;
+//   change?: number;
+//   color: "purple" | "amber" | "green" | "blue";
+// }) {
+//   const colors = {
+//     purple: "bg-purple-100 dark:bg-purple-950/40 text-purple-600",
+//     amber: "bg-amber-100 dark:bg-amber-950/40 text-amber-600",
+//     green: "bg-green-100 dark:bg-green-950/40 text-green-600",
+//     blue: "bg-blue-100 dark:bg-blue-950/40 text-blue-600",
 //   };
-
-//   // 4. Approve/Reject Logic
-//   const handleUserAction = async (
-//     userId: string,
-//     action: "APPROVE" | "REJECT"
-//   ) => {
-//     setLocalPendingUsers((prev) => prev.filter((u) => u.id !== userId));
-//     try {
-//       await axios.post("/api/admin/users/action", { userId, action });
-//       toast.success(action === "APPROVE" ? "User Approved" : "User Rejected");
-//     } catch (error) {
-//       toast.error("Action failed");
-//       // Optional: Refetch data here to sync
-//     }
-//   };
-
-//   if (isLoading) return <DashboardSkeleton />;
-//   if (!data) return null;
-
-//   // Configuration for Stats Cards
-//   const statCards = [
-//     {
-//       name: "Total Users",
-//       value: data.stats.totalUsers,
-//       icon: Users,
-//       color: "from-violet-500 to-purple-600",
-//       shadow: "shadow-purple-500/20",
-//     },
-//     {
-//       name: "Pending",
-//       value: data.stats.pendingUsers,
-//       icon: UserCheck,
-//       color: "from-amber-400 to-orange-500",
-//       shadow: "shadow-orange-500/20",
-//     },
-//     {
-//       name: "Classes",
-//       value: data.stats.activeClasses,
-//       icon: BookOpen,
-//       color: "from-blue-400 to-cyan-500",
-//       shadow: "shadow-blue-500/20",
-//     },
-//     {
-//       name: "Teachers",
-//       value: data.stats.activeTeachers,
-//       icon: GraduationCap,
-//       color: "from-emerald-400 to-teal-500",
-//       shadow: "shadow-emerald-500/20",
-//     },
-//     {
-//       name: "Revenue",
-//       value: data.stats.revenue,
-//       prefix: "$",
-//       icon: DollarSign,
-//       color: "from-green-500 to-emerald-700",
-//       shadow: "shadow-green-500/20",
-//     },
-//     {
-//       name: "Attendance",
-//       value: data.stats.attendanceRate,
-//       suffix: "%",
-//       icon: TrendingUp,
-//       color: "from-indigo-400 to-blue-600",
-//       shadow: "shadow-indigo-500/20",
-//     },
-//   ];
 
 //   return (
-//     <motion.div
-//       variants={containerVariants}
-//       initial="hidden"
-//       animate="show"
-//       className="space-y-8 pb-10"
-//     >
-//       {/* --- HEADER --- */}
-//       <motion.div
-//         variants={itemVariants}
-//         className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between"
-//       >
-//         <div>
-//           <h1 className="text-3xl font-bold tracking-tight bg-linear-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-400 bg-clip-text text-transparent">
-//             Admin Dashboard
-//           </h1>
-//           <p className="text-muted-foreground mt-1">
-//             Overview of your madrasah&apos;s performance.
-//           </p>
+//     <div className="bg-card rounded-xl border border-purple-200 dark:border-purple-800 p-5 sm:p-6 hover:shadow-lg transition-all">
+//       <div className="flex items-center justify-between mb-3">
+//         <div
+//           className={cn(
+//             "w-10 h-10 rounded-lg flex items-center justify-center",
+//             colors[color],
+//           )}
+//         >
+//           <Icon className="w-5 h-5" />
 //         </div>
-//         <div className="flex items-center gap-3">
-//           <Button
-//             variant="outline"
-//             size="sm"
-//             onClick={handleExport}
-//             className="gap-2 hover:bg-muted/50 transition-colors"
+//         {change !== undefined && (
+//           <div
+//             className={cn(
+//               "flex items-center gap-1 text-xs font-black",
+//               change >= 0 ? "text-green-600" : "text-red-600",
+//             )}
 //           >
-//             <Download className="h-4 w-4" />
-//             Export
-//           </Button>
-//           <Button
-//             size="sm"
-//             onClick={scrollToApprovals}
-//             className="bg-linear-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 text-white shadow-lg gap-2 transition-all hover:scale-105"
-//           >
-//             <UserCheck className="h-4 w-4" />
-//             Review Requests
-//           </Button>
-//         </div>
-//       </motion.div>
-
-//       {/* --- STATS GRID --- */}
-//       <motion.div
-//         variants={containerVariants}
-//         className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3"
-//       >
-//         {statCards.map((stat, i) => (
-//           <motion.div
-//             key={stat.name}
-//             variants={itemVariants}
-//             whileHover={{ y: -5, transition: { duration: 0.2 } }}
-//             className="group"
-//           >
-//             <Card
-//               className={`border-none shadow-md hover:shadow-xl transition-all duration-300 overflow-hidden relative`}
-//             >
-//               {/* linear Background Decoration */}
-//               <div
-//                 className={`absolute top-0 right-0 w-24 h-24 bg-linear-to-br ${stat.color} opacity-10 rounded-bl-full group-hover:scale-110 transition-transform`}
-//               />
-
-//               <CardContent className="p-6 flex justify-between items-center relative z-10">
-//                 <div>
-//                   <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-//                     {stat.name}
-//                   </p>
-//                   <div className="text-3xl font-bold mt-2 text-foreground">
-//                     <Counter
-//                       value={stat.value}
-//                       prefix={stat.prefix}
-//                       suffix={stat.suffix}
-//                     />
-//                   </div>
-//                 </div>
-//                 <div
-//                   className={`p-3 rounded-xl bg-linear-to-br ${stat.color} text-white ${stat.shadow} shadow-lg group-hover:rotate-6 transition-transform`}
-//                 >
-//                   <stat.icon className="h-6 w-6" />
-//                 </div>
-//               </CardContent>
-//             </Card>
-//           </motion.div>
-//         ))}
-//       </motion.div>
-
-//       {/* --- MAIN CONTENT GRID --- */}
-//       <div className="grid gap-6 lg:grid-cols-3">
-//         {/* LEFT COLUMN */}
-//         <div className="lg:col-span-2 space-y-6">
-//           {/* Revenue Area Chart (More Premium than Line) */}
-//           <motion.div variants={itemVariants}>
-//             <Card className="shadow-md border-muted/50">
-//               <CardHeader>
-//                 <CardTitle>Revenue Analytics</CardTitle>
-//                 <CardDescription>Monthly income trends</CardDescription>
-//               </CardHeader>
-//               <CardContent className="h-80">
-//                 <ResponsiveContainer width="100%" height="100%">
-//                   <AreaChart data={data.charts.revenue}>
-//                     <defs>
-//                       <linearGradient
-//                         id="colorRevenue"
-//                         x1="0"
-//                         y1="0"
-//                         x2="0"
-//                         y2="1"
-//                       >
-//                         <stop
-//                           offset="5%"
-//                           stopColor="#8b5cf6"
-//                           stopOpacity={0.3}
-//                         />
-//                         <stop
-//                           offset="95%"
-//                           stopColor="#8b5cf6"
-//                           stopOpacity={0}
-//                         />
-//                       </linearGradient>
-//                     </defs>
-//                     <CartesianGrid
-//                       strokeDasharray="3 3"
-//                       vertical={false}
-//                       stroke="#e5e7eb"
-//                       opacity={0.5}
-//                     />
-//                     <XAxis
-//                       dataKey="month"
-//                       axisLine={false}
-//                       tickLine={false}
-//                       dy={10}
-//                       tick={{ fontSize: 12, fill: "#6b7280" }}
-//                     />
-//                     <YAxis
-//                       axisLine={false}
-//                       tickLine={false}
-//                       tickFormatter={(v) => `$${v}`}
-//                       tick={{ fontSize: 12, fill: "#6b7280" }}
-//                     />
-//                     <Tooltip
-//                       contentStyle={{
-//                         borderRadius: "12px",
-//                         border: "none",
-//                         boxShadow: "0 10px 15px -3px rgb(0 0 0 / 0.1)",
-//                       }}
-//                       formatter={(value) => [
-//                         `$${Number(value).toLocaleString()}`,
-//                         "Revenue",
-//                       ]}
-//                     />
-//                     <Area
-//                       type="monotone"
-//                       dataKey="revenue"
-//                       stroke="#8b5cf6"
-//                       strokeWidth={3}
-//                       fillOpacity={1}
-//                       fill="url(#colorRevenue)"
-//                     />
-//                   </AreaChart>
-//                 </ResponsiveContainer>
-//               </CardContent>
-//             </Card>
-//           </motion.div>
-
-//           {/* Attendance Bar Chart */}
-//           <motion.div variants={itemVariants}>
-//             <Card className="shadow-md border-muted/50">
-//               <CardHeader className="flex flex-row items-center justify-between">
-//                 <div>
-//                   <CardTitle>Attendance Overview</CardTitle>
-//                   <CardDescription>Weekly student presence</CardDescription>
-//                 </div>
-//                 <Badge variant="outline" className="gap-1">
-//                   <CalendarCheck className="h-3 w-3" /> Last 7 Days
-//                 </Badge>
-//               </CardHeader>
-//               <CardContent className="h-[300px]">
-//                 <ResponsiveContainer width="100%" height="100%">
-//                   <BarChart data={data.charts.attendance} barGap={8}>
-//                     <CartesianGrid
-//                       strokeDasharray="3 3"
-//                       vertical={false}
-//                       stroke="#e5e7eb"
-//                       opacity={0.5}
-//                     />
-//                     <XAxis
-//                       dataKey="day"
-//                       axisLine={false}
-//                       tickLine={false}
-//                       dy={10}
-//                       tick={{ fontSize: 12, fill: "#6b7280" }}
-//                     />
-//                     <YAxis
-//                       axisLine={false}
-//                       tickLine={false}
-//                       tick={{ fontSize: 12, fill: "#6b7280" }}
-//                     />
-//                     <Tooltip
-//                       cursor={{ fill: "#f3f4f6", opacity: 0.4 }}
-//                       contentStyle={{
-//                         borderRadius: "12px",
-//                         border: "none",
-//                         boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
-//                       }}
-//                     />
-//                     <Legend
-//                       iconType="circle"
-//                       wrapperStyle={{ paddingTop: "20px" }}
-//                     />
-//                     <Bar
-//                       dataKey="present"
-//                       name="Present"
-//                       fill="#8b5cf6"
-//                       radius={[6, 6, 0, 0]}
-//                       maxBarSize={50}
-//                     />
-//                     <Bar
-//                       dataKey="absent"
-//                       name="Absent"
-//                       fill="#ef4444"
-//                       radius={[6, 6, 0, 0]}
-//                       maxBarSize={50}
-//                     />
-//                   </BarChart>
-//                 </ResponsiveContainer>
-//               </CardContent>
-//             </Card>
-//           </motion.div>
-
-//           {/* Pending Approvals (Scroll Target) */}
-//           <motion.div variants={itemVariants} id="approvals-section">
-//             <Card
-//               className={`shadow-md border-muted/50 ${
-//                 localPendingUsers.length > 0
-//                   ? "border-l-4 border-l-yellow-400"
-//                   : "border-l-4 border-l-green-400"
-//               }`}
-//             >
-//               <CardHeader className="flex flex-row items-center justify-between">
-//                 <div>
-//                   <CardTitle>Pending Approvals</CardTitle>
-//                   <CardDescription>New users awaiting access</CardDescription>
-//                 </div>
-//                 <Badge
-//                   className={`${
-//                     localPendingUsers.length > 0
-//                       ? "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-100"
-//                       : "bg-green-100 text-green-800"
-//                   }`}
-//                 >
-//                   {localPendingUsers.length} Requests
-//                 </Badge>
-//               </CardHeader>
-//               <CardContent>
-//                 {localPendingUsers.length === 0 ? (
-//                   <div className="text-center py-12 text-muted-foreground flex flex-col items-center animate-in fade-in zoom-in duration-500">
-//                     <div className="h-16 w-16 bg-green-50 rounded-full flex items-center justify-center mb-4">
-//                       <CheckCircle2 className="h-8 w-8 text-green-500" />
-//                     </div>
-//                     <p className="font-medium text-lg">All Caught Up!</p>
-//                     <p className="text-sm">
-//                       There are no pending registration requests.
-//                     </p>
-//                   </div>
-//                 ) : (
-//                   <ApprovalsTable
-//                     users={localPendingUsers}
-//                     onApprove={(id) => handleUserAction(id, "APPROVE")}
-//                     onReject={(id) => handleUserAction(id, "REJECT")}
-//                   />
-//                 )}
-//               </CardContent>
-//             </Card>
-//           </motion.div>
-//         </div>
-
-//         {/* RIGHT COLUMN */}
-//         <div className="space-y-6">
-//           {/* Pie Chart */}
-//           <motion.div variants={itemVariants}>
-//             <Card className="shadow-md border-muted/50">
-//               <CardHeader>
-//                 <CardTitle>User Demographics</CardTitle>
-//                 <CardDescription>Role distribution</CardDescription>
-//               </CardHeader>
-//               <CardContent className="h-[250px] flex justify-center">
-//                 <ResponsiveContainer width="100%" height="100%">
-//                   <PieChart>
-//                     <Pie
-//                       data={data.charts.userDistribution}
-//                       innerRadius={60}
-//                       outerRadius={80}
-//                       paddingAngle={5}
-//                       dataKey="value"
-//                       stroke="none"
-//                     >
-//                       {data.charts.userDistribution.map((entry, index) => (
-//                         <Cell key={`cell-${index}`} fill={entry.color} />
-//                       ))}
-//                     </Pie>
-//                     <Tooltip
-//                       contentStyle={{
-//                         borderRadius: "12px",
-//                         border: "none",
-//                         boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
-//                       }}
-//                     />
-//                     <Legend
-//                       verticalAlign="bottom"
-//                       height={36}
-//                       iconType="circle"
-//                     />
-//                   </PieChart>
-//                 </ResponsiveContainer>
-//               </CardContent>
-//             </Card>
-//           </motion.div>
-
-//           {/* Activity Feed */}
-//           <motion.div variants={itemVariants}>
-//             <Card className="shadow-md border-muted/50 h-fit">
-//               <CardHeader>
-//                 <CardTitle>Live Activity</CardTitle>
-//                 <CardDescription>Recent system events</CardDescription>
-//               </CardHeader>
-//               <CardContent>
-//                 <div className="space-y-0">
-//                   {data.recentActivity.length === 0 ? (
-//                     <div className="text-center py-8 text-muted-foreground">
-//                       <Clock className="h-8 w-8 mx-auto mb-2 opacity-50" />
-//                       <p>No recent activity</p>
-//                     </div>
-//                   ) : (
-//                     data.recentActivity.map((activity, idx) => (
-//                       <div
-//                         key={activity.id}
-//                         className="relative flex gap-4 pb-6 last:pb-0"
-//                       >
-//                         {/* Timeline Line */}
-//                         {idx !== data.recentActivity.length - 1 && (
-//                           <span className="absolute left-4 top-8 bottom-0 w-0.5 bg-linear-to-b from-border to-transparent" />
-//                         )}
-
-//                         <div
-//                           className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full shadow-sm z-10
-//                           ${
-//                             activity.type === "PAYMENT"
-//                               ? "bg-green-100 text-green-600"
-//                               : "bg-blue-100 text-blue-600"
-//                           }`}
-//                         >
-//                           {activity.type === "PAYMENT" ? (
-//                             <DollarSign className="h-4 w-4" />
-//                           ) : (
-//                             <Users className="h-4 w-4" />
-//                           )}
-//                         </div>
-
-//                         <div className="space-y-1 flex-1">
-//                           <div className="flex justify-between items-start">
-//                             <p className="text-sm font-semibold leading-none text-foreground">
-//                               {activity.title}
-//                             </p>
-//                             <span className="text-[10px] text-muted-foreground bg-muted px-2 py-0.5 rounded-full">
-//                               {formatDistanceToNow(
-//                                 new Date(activity.timestamp),
-//                                 { addSuffix: false }
-//                               )}
-//                             </span>
-//                           </div>
-//                           <p className="text-xs text-muted-foreground line-clamp-2">
-//                             {activity.description}
-//                           </p>
-//                           {activity.amount && (
-//                             <p className="text-xs font-medium text-green-600">
-//                               +${activity.amount.toLocaleString()}
-//                             </p>
-//                           )}
-//                         </div>
-//                       </div>
-//                     ))
-//                   )}
-//                 </div>
-//               </CardContent>
-//             </Card>
-//           </motion.div>
-
-//           {/* Quick Tip / Promo Card */}
-//           <motion.div variants={itemVariants}>
-//             <div className="rounded-xl bg-linear-to-br from-indigo-600 to-purple-700 p-6 text-white shadow-lg">
-//               <h3 className="font-bold text-lg mb-2">Need Help?</h3>
-//               <p className="text-indigo-100 text-sm mb-4">
-//                 Check our documentation for advanced reports and system
-//                 configuration.
-//               </p>
-//               <Button
-//                 variant="secondary"
-//                 size="sm"
-//                 className="w-full text-indigo-700 font-semibold hover:bg-white/90"
-//               >
-//                 View Docs <ArrowRight className="h-4 w-4 ml-2" />
-//               </Button>
-//             </div>
-//           </motion.div>
-//         </div>
+//             {change >= 0 ? (
+//               <TrendingUp className="w-3 h-3" />
+//             ) : (
+//               <TrendingDown className="w-3 h-3" />
+//             )}
+//             <span>{Math.abs(change)}%</span>
+//           </div>
+//         )}
 //       </div>
-//     </motion.div>
+//       <p className="text-2xl sm:text-3xl font-black">
+//         {value.toLocaleString()}
+//       </p>
+//       <p className="text-xs text-muted-foreground mt-1 font-medium">{title}</p>
+//     </div>
 //   );
 // }
 
-// // --- SKELETON LOADER (Matches new layout) ---
-// function DashboardSkeleton() {
+// // Chart Component (Simple bar chart)
+// function SimpleBarChart({
+//   data,
+//   color,
+// }: {
+//   data: Array<{ month: string; count: number }>;
+//   color: string;
+// }) {
+//   const maxValue = Math.max(...data.map((d) => d.count), 1);
+
 //   return (
-//     <div className="space-y-8 pb-10">
-//       <div className="flex justify-between items-center">
-//         <div className="space-y-2">
-//           <Skeleton className="h-8 w-[200px]" />
-//           <Skeleton className="h-4 w-[300px]" />
-//         </div>
-//         <div className="flex gap-2">
-//           <Skeleton className="h-9 w-[100px]" />
-//           <Skeleton className="h-9 w-[140px]" />
-//         </div>
-//       </div>
-
-//       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-//         {[...Array(6)].map((_, i) => (
-//           <Skeleton key={i} className="h-[120px] rounded-xl" />
+//     <div className="h-48 sm:h-56 mt-4">
+//       <div className="flex h-full items-end gap-2 sm:gap-3">
+//         {data.map((item, idx) => (
+//           <div key={idx} className="flex-1 flex flex-col items-center gap-2">
+//             <div
+//               className={cn(
+//                 "w-full rounded-t-lg transition-all duration-500 hover:opacity-80",
+//                 color === "purple" ? "bg-purple-500" : "bg-amber-500",
+//               )}
+//               style={{
+//                 height: `${(item.count / maxValue) * 100}%`,
+//                 minHeight: "4px",
+//               }}
+//             />
+//             <span className="text-[10px] sm:text-xs text-muted-foreground rotate-45 sm:rotate-0 origin-left sm:origin-center">
+//               {item.month}
+//             </span>
+//           </div>
 //         ))}
-//       </div>
-
-//       <div className="grid gap-6 lg:grid-cols-3">
-//         <div className="lg:col-span-2 space-y-6">
-//           <Skeleton className="h-[350px] rounded-xl" />
-//           <Skeleton className="h-[350px] rounded-xl" />
-//           <Skeleton className="h-[300px] rounded-xl" />
-//         </div>
-//         <div className="space-y-6">
-//           <Skeleton className="h-[300px] rounded-xl" />
-//           <Skeleton className="h-[500px] rounded-xl" />
-//         </div>
 //       </div>
 //     </div>
 //   );
 // }
+
+// // Donut Chart Component
+// function DonutChart({
+//   data,
+// }: {
+//   data: Array<{ role: string; count: number }>;
+// }) {
+//   const total = data.reduce((sum, item) => sum + item.count, 0);
+//   const colors = [
+//     "#8B5CF6",
+//     "#F59E0B",
+//     "#10B981",
+//     "#3B82F6",
+//     "#EF4444",
+//     "#06B6D4",
+//   ];
+
+//   let currentAngle = 0;
+//   const segments = data.map((item, idx) => {
+//     const percentage = (item.count / total) * 100;
+//     const angle = (percentage / 100) * 360;
+//     const start = currentAngle;
+//     const end = currentAngle + angle;
+//     currentAngle = end;
+//     return {
+//       ...item,
+//       percentage,
+//       start,
+//       end,
+//       color: colors[idx % colors.length],
+//     };
+//   });
+
+//   return (
+//     <div className="flex flex-col items-center">
+//       <div className="relative w-32 h-32 sm:w-40 sm:h-40">
+//         <svg viewBox="0 0 100 100" className="w-full h-full -rotate-90">
+//           {segments.map((segment, idx) => {
+//             const startAngle = (segment.start / 360) * 2 * Math.PI;
+//             const endAngle = (segment.end / 360) * 2 * Math.PI;
+//             const x1 = 50 + 40 * Math.cos(startAngle);
+//             const y1 = 50 + 40 * Math.sin(startAngle);
+//             const x2 = 50 + 40 * Math.cos(endAngle);
+//             const y2 = 50 + 40 * Math.sin(endAngle);
+//             const largeArc = segment.percentage > 50 ? 1 : 0;
+
+//             return (
+//               <path
+//                 key={idx}
+//                 d={`M 50 50 L ${x1} ${y1} A 40 40 0 ${largeArc} 1 ${x2} ${y2} Z`}
+//                 fill={segment.color}
+//                 className="transition-all duration-300 hover:opacity-80 cursor-pointer"
+//               />
+//             );
+//           })}
+//           <circle
+//             cx="50"
+//             cy="50"
+//             r="25"
+//             fill="white"
+//             className="dark:fill-slate-950"
+//           />
+//         </svg>
+//       </div>
+//       <div className="flex flex-wrap justify-center gap-3 mt-4">
+//         {segments.map((segment, idx) => (
+//           <div key={idx} className="flex items-center gap-1.5">
+//             <div
+//               className="w-3 h-3 rounded-full"
+//               style={{ backgroundColor: segment.color }}
+//             />
+//             <span className="text-[10px] sm:text-xs font-medium">
+//               {segment.role} ({segment.count})
+//             </span>
+//           </div>
+//         ))}
+//       </div>
+//     </div>
+//   );
+// }
+
+// export default function AdminDashboard() {
+//   const [loading, setLoading] = useState(true);
+//   const [dashboardData, setDashboardData] = useState<DashboardData | null>(
+//     null,
+//   );
+//   const [quickStats, setQuickStats] = useState<any>(null);
+//   const [revenueData, setRevenueData] = useState<
+//     Array<{ month: string; revenue: number }>
+//   >([]);
+//   const [enrollmentData, setEnrollmentData] = useState<
+//     Array<{ month: string; enrollments: number }>
+//   >([]);
+//   const [activeTab, setActiveTab] = useState<
+//     "overview" | "users" | "financial"
+//   >("overview");
+//   const [refreshing, setRefreshing] = useState(false);
+
+//   useEffect(() => {
+//     fetchAllData();
+//   }, []);
+
+//   const fetchAllData = async () => {
+//     setLoading(true);
+//     try {
+//       const [stats, quick, revenue, enrollment] = await Promise.all([
+//         getDashboardStats(),
+//         getQuickStats(),
+//         getRevenueChartData(6),
+//         getEnrollmentChartData(6),
+//       ]);
+
+//       if (stats.success) setDashboardData(stats.data as DashboardData);
+//       if (quick.success) setQuickStats(quick.data);
+//       if (revenue.success) setRevenueData(revenue.data);
+//       if (enrollment.success) setEnrollmentData(enrollment.data);
+//     } catch (error) {
+//       console.error("Error fetching dashboard data:", error);
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   const refreshData = async () => {
+//     setRefreshing(true);
+//     await fetchAllData();
+//     setRefreshing(false);
+//   };
+
+//   if (loading) {
+//     return (
+//       <div className="min-h-screen bg-background flex items-center justify-center">
+//         <div className="text-center">
+//           <Loader2 className="w-8 h-8 animate-spin text-purple-600 mx-auto mb-4" />
+//           <p className="text-muted-foreground">Loading dashboard...</p>
+//         </div>
+//       </div>
+//     );
+//   }
+
+//   return (
+//     <div className="min-h-screen bg-gradient-to-b from-background via-purple-50/5 to-amber-50/5">
+//       <div className="container mx-auto px-4 sm:px-6 py-6 sm:py-8">
+//         {/* Header */}
+//         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 sm:mb-8">
+//           <div>
+//             <h1 className="text-2xl sm:text-3xl font-black tracking-tighter">
+//               Admin Dashboard
+//             </h1>
+//             <p className="text-sm text-muted-foreground">
+//               Welcome back! Here's what's happening today.
+//             </p>
+//           </div>
+//           <div className="flex gap-2">
+//             <Button
+//               variant="outline"
+//               onClick={refreshData}
+//               disabled={refreshing}
+//               className="rounded-full border-purple-300 text-purple-600"
+//             >
+//               <RefreshCw
+//                 className={cn("w-4 h-4 mr-2", refreshing && "animate-spin")}
+//               />
+//               Refresh
+//             </Button>
+//             <Button className="rounded-full bg-purple-600 hover:bg-purple-700 text-white">
+//               <Download className="w-4 h-4 mr-2" />
+//               Export
+//             </Button>
+//           </div>
+//         </div>
+
+//         {/* Stats Grid */}
+//         <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 mb-6 sm:mb-8">
+//           <StatCard
+//             title="Total Users"
+//             value={dashboardData?.totalUsers || 0}
+//             icon={Users}
+//             color="purple"
+//           />
+//           <StatCard
+//             title="Active Students"
+//             value={dashboardData?.activeStudents || 0}
+//             icon={GraduationCap}
+//             change={dashboardData?.enrollmentChange}
+//             color="green"
+//           />
+//           <StatCard
+//             title="Pending Approvals"
+//             value={dashboardData?.pendingApprovals || 0}
+//             icon={Clock}
+//             color="amber"
+//           />
+//           <StatCard
+//             title="Monthly Revenue"
+//             value={`$${dashboardData?.monthlyRevenue || 0}`}
+//             icon={DollarSign}
+//             change={dashboardData?.revenueChange}
+//             color="blue"
+//           />
+//         </div>
+
+//         {/* Tabs */}
+//         <div className="flex gap-1 border-b border-purple-200 dark:border-purple-800 mb-6">
+//           {[
+//             { id: "overview", label: "Overview", icon: Eye },
+//             { id: "users", label: "Users & Activity", icon: Users },
+//             { id: "financial", label: "Financial", icon: DollarSign },
+//           ].map((tab) => {
+//             const Icon = tab.icon;
+//             return (
+//               <button
+//                 key={tab.id}
+//                 onClick={() => setActiveTab(tab.id as any)}
+//                 className={cn(
+//                   "flex items-center gap-2 px-4 py-2 text-sm font-black uppercase tracking-wider transition-all",
+//                   activeTab === tab.id
+//                     ? "border-b-2 border-purple-600 text-purple-600"
+//                     : "text-muted-foreground hover:text-purple-600",
+//                 )}
+//               >
+//                 <Icon className="w-4 h-4" />
+//                 {tab.label}
+//               </button>
+//             );
+//           })}
+//         </div>
+
+//         {/* Overview Tab */}
+//         {activeTab === "overview" && (
+//           <div className="space-y-6">
+//             {/* Charts Row */}
+//             <div className="grid lg:grid-cols-2 gap-5 sm:gap-6">
+//               {/* User Growth Chart */}
+//               <div className="bg-card rounded-xl border border-purple-200 dark:border-purple-800 p-5 sm:p-6">
+//                 <div className="flex items-center justify-between mb-4">
+//                   <h3 className="font-black text-base">User Growth</h3>
+//                   <Users className="w-4 h-4 text-muted-foreground" />
+//                 </div>
+//                 {dashboardData?.userGrowth &&
+//                 dashboardData.userGrowth.length > 0 ? (
+//                   <SimpleBarChart
+//                     data={dashboardData.userGrowth}
+//                     color="purple"
+//                   />
+//                 ) : (
+//                   <p className="text-center text-muted-foreground py-12">
+//                     No data available
+//                   </p>
+//                 )}
+//               </div>
+
+//               {/* Role Distribution */}
+//               <div className="bg-card rounded-xl border border-purple-200 dark:border-purple-800 p-5 sm:p-6">
+//                 <div className="flex items-center justify-between mb-4">
+//                   <h3 className="font-black text-base">Role Distribution</h3>
+//                   <Users className="w-4 h-4 text-muted-foreground" />
+//                 </div>
+//                 {dashboardData?.roleDistribution &&
+//                 dashboardData.roleDistribution.length > 0 ? (
+//                   <DonutChart data={dashboardData.roleDistribution} />
+//                 ) : (
+//                   <p className="text-center text-muted-foreground py-12">
+//                     No data available
+//                   </p>
+//                 )}
+//               </div>
+//             </div>
+
+//             {/* Recent Activity */}
+//             <div className="bg-card rounded-xl border border-purple-200 dark:border-purple-800 p-5 sm:p-6">
+//               <h3 className="font-black text-base mb-4">Recent Activity</h3>
+//               <div className="space-y-4">
+//                 {dashboardData?.recentActivities.recentUsers
+//                   .slice(0, 5)
+//                   .map((user, idx) => (
+//                     <div
+//                       key={idx}
+//                       className="flex items-center justify-between py-2 border-b border-border/50 last:border-0"
+//                     >
+//                       <div>
+//                         <p className="font-black text-sm">{user.name}</p>
+//                         <p className="text-xs text-muted-foreground">
+//                           {user.email}
+//                         </p>
+//                       </div>
+//                       <div className="flex items-center gap-2">
+//                         <span className="text-[10px] font-black uppercase tracking-wider text-purple-600">
+//                           {user.role}
+//                         </span>
+//                         <span className="text-[9px] text-muted-foreground">
+//                           {new Date(user.createdAt).toLocaleDateString()}
+//                         </span>
+//                       </div>
+//                     </div>
+//                   ))}
+//               </div>
+//             </div>
+//           </div>
+//         )}
+
+//         {/* Users Tab */}
+//         {activeTab === "users" && (
+//           <div className="grid lg:grid-cols-2 gap-5 sm:gap-6">
+//             {/* Pending Approvals */}
+//             <div className="bg-card rounded-xl border border-purple-200 dark:border-purple-800 p-5 sm:p-6">
+//               <div className="flex items-center justify-between mb-4">
+//                 <h3 className="font-black text-base">Pending Approvals</h3>
+//                 <AlertCircle className="w-4 h-4 text-amber-500" />
+//               </div>
+//               {dashboardData?.recentActivities.pendingApprovalsList.length ===
+//               0 ? (
+//                 <p className="text-center text-muted-foreground py-8">
+//                   No pending approvals
+//                 </p>
+//               ) : (
+//                 <div className="space-y-3">
+//                   {dashboardData?.recentActivities.pendingApprovalsList.map(
+//                     (user, idx) => (
+//                       <div
+//                         key={idx}
+//                         className="flex items-center justify-between py-2 border-b border-border/50 last:border-0"
+//                       >
+//                         <div>
+//                           <p className="font-black text-sm">
+//                             {user.name || "Unnamed"}
+//                           </p>
+//                           <p className="text-xs text-muted-foreground">
+//                             {user.email}
+//                           </p>
+//                         </div>
+//                         <div className="flex items-center gap-2">
+//                           <span className="text-[10px] font-black uppercase tracking-wider text-amber-600">
+//                             {user.role}
+//                           </span>
+//                           <Button
+//                             size="sm"
+//                             className="h-7 px-3 text-xs bg-purple-600 hover:bg-purple-700"
+//                           >
+//                             Review
+//                           </Button>
+//                         </div>
+//                       </div>
+//                     ),
+//                   )}
+//                 </div>
+//               )}
+//             </div>
+
+//             {/* Recent Enrollments */}
+//             <div className="bg-card rounded-xl border border-purple-200 dark:border-purple-800 p-5 sm:p-6">
+//               <div className="flex items-center justify-between mb-4">
+//                 <h3 className="font-black text-base">Recent Enrollments</h3>
+//                 <BookOpen className="w-4 h-4 text-green-500" />
+//               </div>
+//               {dashboardData?.recentActivities.recentEnrollments.length ===
+//               0 ? (
+//                 <p className="text-center text-muted-foreground py-8">
+//                   No recent enrollments
+//                 </p>
+//               ) : (
+//                 <div className="space-y-3">
+//                   {dashboardData?.recentActivities.recentEnrollments.map(
+//                     (enrollment, idx) => (
+//                       <div
+//                         key={idx}
+//                         className="py-2 border-b border-border/50 last:border-0"
+//                       >
+//                         <p className="font-black text-sm">
+//                           {enrollment.studentName}
+//                         </p>
+//                         <p className="text-xs text-muted-foreground">
+//                           Enrolled in: {enrollment.className}
+//                         </p>
+//                         <p className="text-[9px] text-purple-600 mt-0.5">
+//                           {new Date(enrollment.enrolledAt).toLocaleDateString()}
+//                         </p>
+//                       </div>
+//                     ),
+//                   )}
+//                 </div>
+//               )}
+//             </div>
+//           </div>
+//         )}
+
+//         {/* Financial Tab */}
+//         {activeTab === "financial" && (
+//           <div className="grid lg:grid-cols-2 gap-5 sm:gap-6">
+//             {/* Revenue Chart */}
+//             <div className="bg-card rounded-xl border border-purple-200 dark:border-purple-800 p-5 sm:p-6">
+//               <div className="flex items-center justify-between mb-4">
+//                 <h3 className="font-black text-base">Monthly Revenue</h3>
+//                 <DollarSign className="w-4 h-4 text-green-500" />
+//               </div>
+//               {revenueData.length > 0 ? (
+//                 <>
+//                   <div className="mb-4">
+//                     <p className="text-2xl font-black text-green-600">
+//                       ${dashboardData?.monthlyRevenue || 0}
+//                     </p>
+//                     <p className="text-xs text-muted-foreground">This month</p>
+//                   </div>
+//                   <SimpleBarChart
+//                     data={revenueData.map((d) => ({
+//                       month: d.month,
+//                       count: d.revenue,
+//                     }))}
+//                     color="green"
+//                   />
+//                 </>
+//               ) : (
+//                 <p className="text-center text-muted-foreground py-12">
+//                   No revenue data available
+//                 </p>
+//               )}
+//             </div>
+
+//             {/* Enrollment Chart */}
+//             <div className="bg-card rounded-xl border border-purple-200 dark:border-purple-800 p-5 sm:p-6">
+//               <div className="flex items-center justify-between mb-4">
+//                 <h3 className="font-black text-base">Monthly Enrollments</h3>
+//                 <GraduationCap className="w-4 h-4 text-purple-500" />
+//               </div>
+//               {enrollmentData.length > 0 ? (
+//                 <>
+//                   <div className="mb-4">
+//                     <p className="text-2xl font-black text-purple-600">
+//                       {dashboardData?.newEnrollmentsThisMonth || 0}
+//                     </p>
+//                     <p className="text-xs text-muted-foreground">
+//                       New this month
+//                     </p>
+//                   </div>
+//                   <SimpleBarChart
+//                     data={enrollmentData.map((d) => ({
+//                       month: d.month,
+//                       count: d.enrollments,
+//                     }))}
+//                     color="purple"
+//                   />
+//                 </>
+//               ) : (
+//                 <p className="text-center text-muted-foreground py-12">
+//                   No enrollment data available
+//                 </p>
+//               )}
+//             </div>
+
+//             {/* Recent Payments */}
+//             <div className="bg-card rounded-xl border border-purple-200 dark:border-purple-800 p-5 sm:p-6 lg:col-span-2">
+//               <div className="flex items-center justify-between mb-4">
+//                 <h3 className="font-black text-base">Recent Payments</h3>
+//                 <CreditCard className="w-4 h-4 text-blue-500" />
+//               </div>
+//               {dashboardData?.recentActivities.recentPayments.length === 0 ? (
+//                 <p className="text-center text-muted-foreground py-8">
+//                   No recent payments
+//                 </p>
+//               ) : (
+//                 <div className="overflow-x-auto">
+//                   <table className="w-full text-sm">
+//                     <thead className="border-b border-purple-200 dark:border-purple-800">
+//                       <tr className="text-left">
+//                         <th className="pb-2 font-black">Student</th>
+//                         <th className="pb-2 font-black">Amount</th>
+//                         <th className="pb-2 font-black">Status</th>
+//                         <th className="pb-2 font-black">Date</th>
+//                       </tr>
+//                     </thead>
+//                     <tbody>
+//                       {dashboardData?.recentActivities.recentPayments.map(
+//                         (payment, idx) => (
+//                           <tr key={idx} className="border-b border-border/50">
+//                             <td className="py-2">{payment.studentName}</td>
+//                             <td className="py-2 font-black text-green-600">
+//                               ${payment.amount}
+//                             </td>
+//                             <td className="py-2">
+//                               <span className="text-[9px] font-black uppercase text-green-600">
+//                                 {payment.status}
+//                               </span>
+//                             </td>
+//                             <td className="py-2 text-xs text-muted-foreground">
+//                               {new Date(payment.paidAt).toLocaleDateString()}
+//                             </td>
+//                           </tr>
+//                         ),
+//                       )}
+//                     </tbody>
+//                   </table>
+//                 </div>
+//               )}
+//             </div>
+//           </div>
+//         )}
+//       </div>
+//     </div>
+//   );
+// }
+
+
+
+
+
+
+// app/(portal)/dashboard/admin/page.tsx
+import { Metadata } from "next";
+import { DashboardClient } from "./dashboard-client";
+import {
+  getDashboardStats,
+  getRevenueData,
+  getEnrollmentTrends,
+  getRecentActivities,
+  getSubscriptionAnalytics,
+  getAttendanceSummary,
+  getRecentAnnouncements,
+  getUpcomingEvents,
+} from "./actions/dashboard";
+
+export const metadata: Metadata = {
+  title: "Admin Dashboard | Al-Maysaroh",
+  description: "Comprehensive overview of institute operations",
+};
+
+export default async function AdminDashboardPage() {
+  const [
+    stats,
+    revenueData,
+    enrollmentTrends,
+    recentActivities,
+    subscriptionAnalytics,
+    attendanceSummary,
+    recentAnnouncements,
+    upcomingEvents,
+  ] = await Promise.all([
+    getDashboardStats(),
+    getRevenueData(30),
+    getEnrollmentTrends(6),
+    getRecentActivities(10),
+    getSubscriptionAnalytics(),
+    getAttendanceSummary(),
+    getRecentAnnouncements(5),
+    getUpcomingEvents(5),
+  ]);
+
+  return (
+    <DashboardClient
+      stats={stats}
+      revenueData={revenueData}
+      enrollmentTrends={enrollmentTrends}
+      recentActivities={recentActivities}
+      subscriptionAnalytics={subscriptionAnalytics}
+      attendanceSummary={attendanceSummary}
+      recentAnnouncements={recentAnnouncements}
+      upcomingEvents={upcomingEvents}
+    />
+  );
+}

@@ -260,7 +260,7 @@ export type StudentGroupByOutputType = {
   userId: string
   studentId: string
   dateOfBirth: Date | null
-  gender: $Enums.Gender
+  gender: $Enums.Gender | null
   nationality: string | null
   address: string | null
   city: string | null
@@ -307,7 +307,7 @@ export type StudentWhereInput = {
   userId?: Prisma.StringFilter<"Student"> | string
   studentId?: Prisma.StringFilter<"Student"> | string
   dateOfBirth?: Prisma.DateTimeNullableFilter<"Student"> | Date | string | null
-  gender?: Prisma.EnumGenderFilter<"Student"> | $Enums.Gender
+  gender?: Prisma.EnumGenderNullableFilter<"Student"> | $Enums.Gender | null
   nationality?: Prisma.StringNullableFilter<"Student"> | string | null
   address?: Prisma.StringNullableFilter<"Student"> | string | null
   city?: Prisma.StringNullableFilter<"Student"> | string | null
@@ -349,7 +349,7 @@ export type StudentOrderByWithRelationInput = {
   userId?: Prisma.SortOrder
   studentId?: Prisma.SortOrder
   dateOfBirth?: Prisma.SortOrderInput | Prisma.SortOrder
-  gender?: Prisma.SortOrder
+  gender?: Prisma.SortOrderInput | Prisma.SortOrder
   nationality?: Prisma.SortOrderInput | Prisma.SortOrder
   address?: Prisma.SortOrderInput | Prisma.SortOrder
   city?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -394,7 +394,7 @@ export type StudentWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.StudentWhereInput[]
   NOT?: Prisma.StudentWhereInput | Prisma.StudentWhereInput[]
   dateOfBirth?: Prisma.DateTimeNullableFilter<"Student"> | Date | string | null
-  gender?: Prisma.EnumGenderFilter<"Student"> | $Enums.Gender
+  gender?: Prisma.EnumGenderNullableFilter<"Student"> | $Enums.Gender | null
   nationality?: Prisma.StringNullableFilter<"Student"> | string | null
   address?: Prisma.StringNullableFilter<"Student"> | string | null
   city?: Prisma.StringNullableFilter<"Student"> | string | null
@@ -436,7 +436,7 @@ export type StudentOrderByWithAggregationInput = {
   userId?: Prisma.SortOrder
   studentId?: Prisma.SortOrder
   dateOfBirth?: Prisma.SortOrderInput | Prisma.SortOrder
-  gender?: Prisma.SortOrder
+  gender?: Prisma.SortOrderInput | Prisma.SortOrder
   nationality?: Prisma.SortOrderInput | Prisma.SortOrder
   address?: Prisma.SortOrderInput | Prisma.SortOrder
   city?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -468,7 +468,7 @@ export type StudentScalarWhereWithAggregatesInput = {
   userId?: Prisma.StringWithAggregatesFilter<"Student"> | string
   studentId?: Prisma.StringWithAggregatesFilter<"Student"> | string
   dateOfBirth?: Prisma.DateTimeNullableWithAggregatesFilter<"Student"> | Date | string | null
-  gender?: Prisma.EnumGenderWithAggregatesFilter<"Student"> | $Enums.Gender
+  gender?: Prisma.EnumGenderNullableWithAggregatesFilter<"Student"> | $Enums.Gender | null
   nationality?: Prisma.StringNullableWithAggregatesFilter<"Student"> | string | null
   address?: Prisma.StringNullableWithAggregatesFilter<"Student"> | string | null
   city?: Prisma.StringNullableWithAggregatesFilter<"Student"> | string | null
@@ -493,7 +493,7 @@ export type StudentCreateInput = {
   id?: string
   studentId: string
   dateOfBirth?: Date | string | null
-  gender: $Enums.Gender
+  gender?: $Enums.Gender | null
   nationality?: string | null
   address?: string | null
   city?: string | null
@@ -533,7 +533,7 @@ export type StudentUncheckedCreateInput = {
   userId: string
   studentId: string
   dateOfBirth?: Date | string | null
-  gender: $Enums.Gender
+  gender?: $Enums.Gender | null
   nationality?: string | null
   address?: string | null
   city?: string | null
@@ -571,7 +571,7 @@ export type StudentUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
   nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -611,7 +611,7 @@ export type StudentUncheckedUpdateInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
   nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -650,7 +650,7 @@ export type StudentCreateManyInput = {
   userId: string
   studentId: string
   dateOfBirth?: Date | string | null
-  gender: $Enums.Gender
+  gender?: $Enums.Gender | null
   nationality?: string | null
   address?: string | null
   city?: string | null
@@ -675,7 +675,7 @@ export type StudentUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
   nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -699,7 +699,7 @@ export type StudentUncheckedUpdateManyInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
   nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -850,8 +850,8 @@ export type StudentUncheckedUpdateOneWithoutUserNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.StudentUpdateToOneWithWhereWithoutUserInput, Prisma.StudentUpdateWithoutUserInput>, Prisma.StudentUncheckedUpdateWithoutUserInput>
 }
 
-export type EnumGenderFieldUpdateOperationsInput = {
-  set?: $Enums.Gender
+export type NullableEnumGenderFieldUpdateOperationsInput = {
+  set?: $Enums.Gender | null
 }
 
 export type StudentCreateNestedManyWithoutParentInput = {
@@ -1126,7 +1126,7 @@ export type StudentCreateWithoutUserInput = {
   id?: string
   studentId: string
   dateOfBirth?: Date | string | null
-  gender: $Enums.Gender
+  gender?: $Enums.Gender | null
   nationality?: string | null
   address?: string | null
   city?: string | null
@@ -1164,7 +1164,7 @@ export type StudentUncheckedCreateWithoutUserInput = {
   id?: string
   studentId: string
   dateOfBirth?: Date | string | null
-  gender: $Enums.Gender
+  gender?: $Enums.Gender | null
   nationality?: string | null
   address?: string | null
   city?: string | null
@@ -1218,7 +1218,7 @@ export type StudentUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
   nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1256,7 +1256,7 @@ export type StudentUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
   nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1294,7 +1294,7 @@ export type StudentCreateWithoutParentInput = {
   id?: string
   studentId: string
   dateOfBirth?: Date | string | null
-  gender: $Enums.Gender
+  gender?: $Enums.Gender | null
   nationality?: string | null
   address?: string | null
   city?: string | null
@@ -1333,7 +1333,7 @@ export type StudentUncheckedCreateWithoutParentInput = {
   userId: string
   studentId: string
   dateOfBirth?: Date | string | null
-  gender: $Enums.Gender
+  gender?: $Enums.Gender | null
   nationality?: string | null
   address?: string | null
   city?: string | null
@@ -1400,7 +1400,7 @@ export type StudentScalarWhereInput = {
   userId?: Prisma.StringFilter<"Student"> | string
   studentId?: Prisma.StringFilter<"Student"> | string
   dateOfBirth?: Prisma.DateTimeNullableFilter<"Student"> | Date | string | null
-  gender?: Prisma.EnumGenderFilter<"Student"> | $Enums.Gender
+  gender?: Prisma.EnumGenderNullableFilter<"Student"> | $Enums.Gender | null
   nationality?: Prisma.StringNullableFilter<"Student"> | string | null
   address?: Prisma.StringNullableFilter<"Student"> | string | null
   city?: Prisma.StringNullableFilter<"Student"> | string | null
@@ -1425,7 +1425,7 @@ export type StudentCreateWithoutCurrentClassInput = {
   id?: string
   studentId: string
   dateOfBirth?: Date | string | null
-  gender: $Enums.Gender
+  gender?: $Enums.Gender | null
   nationality?: string | null
   address?: string | null
   city?: string | null
@@ -1464,7 +1464,7 @@ export type StudentUncheckedCreateWithoutCurrentClassInput = {
   userId: string
   studentId: string
   dateOfBirth?: Date | string | null
-  gender: $Enums.Gender
+  gender?: $Enums.Gender | null
   nationality?: string | null
   address?: string | null
   city?: string | null
@@ -1527,7 +1527,7 @@ export type StudentCreateWithoutEnrollmentsInput = {
   id?: string
   studentId: string
   dateOfBirth?: Date | string | null
-  gender: $Enums.Gender
+  gender?: $Enums.Gender | null
   nationality?: string | null
   address?: string | null
   city?: string | null
@@ -1566,7 +1566,7 @@ export type StudentUncheckedCreateWithoutEnrollmentsInput = {
   userId: string
   studentId: string
   dateOfBirth?: Date | string | null
-  gender: $Enums.Gender
+  gender?: $Enums.Gender | null
   nationality?: string | null
   address?: string | null
   city?: string | null
@@ -1619,7 +1619,7 @@ export type StudentUpdateWithoutEnrollmentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
   nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1658,7 +1658,7 @@ export type StudentUncheckedUpdateWithoutEnrollmentsInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
   nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1695,7 +1695,7 @@ export type StudentCreateWithoutAttendanceInput = {
   id?: string
   studentId: string
   dateOfBirth?: Date | string | null
-  gender: $Enums.Gender
+  gender?: $Enums.Gender | null
   nationality?: string | null
   address?: string | null
   city?: string | null
@@ -1734,7 +1734,7 @@ export type StudentUncheckedCreateWithoutAttendanceInput = {
   userId: string
   studentId: string
   dateOfBirth?: Date | string | null
-  gender: $Enums.Gender
+  gender?: $Enums.Gender | null
   nationality?: string | null
   address?: string | null
   city?: string | null
@@ -1787,7 +1787,7 @@ export type StudentUpdateWithoutAttendanceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
   nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1826,7 +1826,7 @@ export type StudentUncheckedUpdateWithoutAttendanceInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
   nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1863,7 +1863,7 @@ export type StudentCreateWithoutGroupMembershipsInput = {
   id?: string
   studentId: string
   dateOfBirth?: Date | string | null
-  gender: $Enums.Gender
+  gender?: $Enums.Gender | null
   nationality?: string | null
   address?: string | null
   city?: string | null
@@ -1902,7 +1902,7 @@ export type StudentUncheckedCreateWithoutGroupMembershipsInput = {
   userId: string
   studentId: string
   dateOfBirth?: Date | string | null
-  gender: $Enums.Gender
+  gender?: $Enums.Gender | null
   nationality?: string | null
   address?: string | null
   city?: string | null
@@ -1955,7 +1955,7 @@ export type StudentUpdateWithoutGroupMembershipsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
   nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1994,7 +1994,7 @@ export type StudentUncheckedUpdateWithoutGroupMembershipsInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
   nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2031,7 +2031,7 @@ export type StudentCreateWithoutGroupAttendancesInput = {
   id?: string
   studentId: string
   dateOfBirth?: Date | string | null
-  gender: $Enums.Gender
+  gender?: $Enums.Gender | null
   nationality?: string | null
   address?: string | null
   city?: string | null
@@ -2070,7 +2070,7 @@ export type StudentUncheckedCreateWithoutGroupAttendancesInput = {
   userId: string
   studentId: string
   dateOfBirth?: Date | string | null
-  gender: $Enums.Gender
+  gender?: $Enums.Gender | null
   nationality?: string | null
   address?: string | null
   city?: string | null
@@ -2123,7 +2123,7 @@ export type StudentUpdateWithoutGroupAttendancesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
   nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2162,7 +2162,7 @@ export type StudentUncheckedUpdateWithoutGroupAttendancesInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
   nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2199,7 +2199,7 @@ export type StudentCreateWithoutGroupSubmissionsInput = {
   id?: string
   studentId: string
   dateOfBirth?: Date | string | null
-  gender: $Enums.Gender
+  gender?: $Enums.Gender | null
   nationality?: string | null
   address?: string | null
   city?: string | null
@@ -2238,7 +2238,7 @@ export type StudentUncheckedCreateWithoutGroupSubmissionsInput = {
   userId: string
   studentId: string
   dateOfBirth?: Date | string | null
-  gender: $Enums.Gender
+  gender?: $Enums.Gender | null
   nationality?: string | null
   address?: string | null
   city?: string | null
@@ -2291,7 +2291,7 @@ export type StudentUpdateWithoutGroupSubmissionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
   nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2330,7 +2330,7 @@ export type StudentUncheckedUpdateWithoutGroupSubmissionsInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
   nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2367,7 +2367,7 @@ export type StudentCreateWithoutSubmissionsInput = {
   id?: string
   studentId: string
   dateOfBirth?: Date | string | null
-  gender: $Enums.Gender
+  gender?: $Enums.Gender | null
   nationality?: string | null
   address?: string | null
   city?: string | null
@@ -2406,7 +2406,7 @@ export type StudentUncheckedCreateWithoutSubmissionsInput = {
   userId: string
   studentId: string
   dateOfBirth?: Date | string | null
-  gender: $Enums.Gender
+  gender?: $Enums.Gender | null
   nationality?: string | null
   address?: string | null
   city?: string | null
@@ -2459,7 +2459,7 @@ export type StudentUpdateWithoutSubmissionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
   nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2498,7 +2498,7 @@ export type StudentUncheckedUpdateWithoutSubmissionsInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
   nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2535,7 +2535,7 @@ export type StudentCreateWithoutGradesInput = {
   id?: string
   studentId: string
   dateOfBirth?: Date | string | null
-  gender: $Enums.Gender
+  gender?: $Enums.Gender | null
   nationality?: string | null
   address?: string | null
   city?: string | null
@@ -2574,7 +2574,7 @@ export type StudentUncheckedCreateWithoutGradesInput = {
   userId: string
   studentId: string
   dateOfBirth?: Date | string | null
-  gender: $Enums.Gender
+  gender?: $Enums.Gender | null
   nationality?: string | null
   address?: string | null
   city?: string | null
@@ -2627,7 +2627,7 @@ export type StudentUpdateWithoutGradesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
   nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2666,7 +2666,7 @@ export type StudentUncheckedUpdateWithoutGradesInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
   nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2703,7 +2703,7 @@ export type StudentCreateWithoutQuranProgressInput = {
   id?: string
   studentId: string
   dateOfBirth?: Date | string | null
-  gender: $Enums.Gender
+  gender?: $Enums.Gender | null
   nationality?: string | null
   address?: string | null
   city?: string | null
@@ -2742,7 +2742,7 @@ export type StudentUncheckedCreateWithoutQuranProgressInput = {
   userId: string
   studentId: string
   dateOfBirth?: Date | string | null
-  gender: $Enums.Gender
+  gender?: $Enums.Gender | null
   nationality?: string | null
   address?: string | null
   city?: string | null
@@ -2795,7 +2795,7 @@ export type StudentUpdateWithoutQuranProgressInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
   nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2834,7 +2834,7 @@ export type StudentUncheckedUpdateWithoutQuranProgressInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
   nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2871,7 +2871,7 @@ export type StudentCreateWithoutPrayerRecordsInput = {
   id?: string
   studentId: string
   dateOfBirth?: Date | string | null
-  gender: $Enums.Gender
+  gender?: $Enums.Gender | null
   nationality?: string | null
   address?: string | null
   city?: string | null
@@ -2910,7 +2910,7 @@ export type StudentUncheckedCreateWithoutPrayerRecordsInput = {
   userId: string
   studentId: string
   dateOfBirth?: Date | string | null
-  gender: $Enums.Gender
+  gender?: $Enums.Gender | null
   nationality?: string | null
   address?: string | null
   city?: string | null
@@ -2963,7 +2963,7 @@ export type StudentUpdateWithoutPrayerRecordsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
   nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3002,7 +3002,7 @@ export type StudentUncheckedUpdateWithoutPrayerRecordsInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
   nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3039,7 +3039,7 @@ export type StudentCreateWithoutPaymentsInput = {
   id?: string
   studentId: string
   dateOfBirth?: Date | string | null
-  gender: $Enums.Gender
+  gender?: $Enums.Gender | null
   nationality?: string | null
   address?: string | null
   city?: string | null
@@ -3078,7 +3078,7 @@ export type StudentUncheckedCreateWithoutPaymentsInput = {
   userId: string
   studentId: string
   dateOfBirth?: Date | string | null
-  gender: $Enums.Gender
+  gender?: $Enums.Gender | null
   nationality?: string | null
   address?: string | null
   city?: string | null
@@ -3131,7 +3131,7 @@ export type StudentUpdateWithoutPaymentsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
   nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3170,7 +3170,7 @@ export type StudentUncheckedUpdateWithoutPaymentsInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
   nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3207,7 +3207,7 @@ export type StudentCreateWithoutCertificatesInput = {
   id?: string
   studentId: string
   dateOfBirth?: Date | string | null
-  gender: $Enums.Gender
+  gender?: $Enums.Gender | null
   nationality?: string | null
   address?: string | null
   city?: string | null
@@ -3246,7 +3246,7 @@ export type StudentUncheckedCreateWithoutCertificatesInput = {
   userId: string
   studentId: string
   dateOfBirth?: Date | string | null
-  gender: $Enums.Gender
+  gender?: $Enums.Gender | null
   nationality?: string | null
   address?: string | null
   city?: string | null
@@ -3299,7 +3299,7 @@ export type StudentUpdateWithoutCertificatesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
   nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3338,7 +3338,7 @@ export type StudentUncheckedUpdateWithoutCertificatesInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
   nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3375,7 +3375,7 @@ export type StudentCreateWithoutSubscriptionsInput = {
   id?: string
   studentId: string
   dateOfBirth?: Date | string | null
-  gender: $Enums.Gender
+  gender?: $Enums.Gender | null
   nationality?: string | null
   address?: string | null
   city?: string | null
@@ -3414,7 +3414,7 @@ export type StudentUncheckedCreateWithoutSubscriptionsInput = {
   userId: string
   studentId: string
   dateOfBirth?: Date | string | null
-  gender: $Enums.Gender
+  gender?: $Enums.Gender | null
   nationality?: string | null
   address?: string | null
   city?: string | null
@@ -3467,7 +3467,7 @@ export type StudentUpdateWithoutSubscriptionsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
   nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3506,7 +3506,7 @@ export type StudentUncheckedUpdateWithoutSubscriptionsInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
   nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3543,7 +3543,7 @@ export type StudentCreateWithoutHifzLogsInput = {
   id?: string
   studentId: string
   dateOfBirth?: Date | string | null
-  gender: $Enums.Gender
+  gender?: $Enums.Gender | null
   nationality?: string | null
   address?: string | null
   city?: string | null
@@ -3582,7 +3582,7 @@ export type StudentUncheckedCreateWithoutHifzLogsInput = {
   userId: string
   studentId: string
   dateOfBirth?: Date | string | null
-  gender: $Enums.Gender
+  gender?: $Enums.Gender | null
   nationality?: string | null
   address?: string | null
   city?: string | null
@@ -3635,7 +3635,7 @@ export type StudentUpdateWithoutHifzLogsInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
   nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3674,7 +3674,7 @@ export type StudentUncheckedUpdateWithoutHifzLogsInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
   nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3712,7 +3712,7 @@ export type StudentCreateManyParentInput = {
   userId: string
   studentId: string
   dateOfBirth?: Date | string | null
-  gender: $Enums.Gender
+  gender?: $Enums.Gender | null
   nationality?: string | null
   address?: string | null
   city?: string | null
@@ -3736,7 +3736,7 @@ export type StudentUpdateWithoutParentInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
   nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3775,7 +3775,7 @@ export type StudentUncheckedUpdateWithoutParentInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
   nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3813,7 +3813,7 @@ export type StudentUncheckedUpdateManyWithoutParentInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
   nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3838,7 +3838,7 @@ export type StudentCreateManyCurrentClassInput = {
   userId: string
   studentId: string
   dateOfBirth?: Date | string | null
-  gender: $Enums.Gender
+  gender?: $Enums.Gender | null
   nationality?: string | null
   address?: string | null
   city?: string | null
@@ -3862,7 +3862,7 @@ export type StudentUpdateWithoutCurrentClassInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
   nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3901,7 +3901,7 @@ export type StudentUncheckedUpdateWithoutCurrentClassInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
   nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3939,7 +3939,7 @@ export type StudentUncheckedUpdateManyWithoutCurrentClassInput = {
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   studentId?: Prisma.StringFieldUpdateOperationsInput | string
   dateOfBirth?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  gender?: Prisma.EnumGenderFieldUpdateOperationsInput | $Enums.Gender
+  gender?: Prisma.NullableEnumGenderFieldUpdateOperationsInput | $Enums.Gender | null
   nationality?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   city?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -4281,7 +4281,7 @@ export type $StudentPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     userId: string
     studentId: string
     dateOfBirth: Date | null
-    gender: $Enums.Gender
+    gender: $Enums.Gender | null
     nationality: string | null
     address: string | null
     city: string | null
