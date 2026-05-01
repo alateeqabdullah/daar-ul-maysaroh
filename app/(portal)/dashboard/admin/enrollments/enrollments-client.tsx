@@ -79,6 +79,7 @@ import {
   deleteEnrollment,
   bulkUpdateEnrollmentStatus,
   bulkDeleteEnrollments,
+  getEnrollments,
 } from "../actions/enrollments";
 import { EnrollmentStatus, EnrollmentType } from "@/app/generated/prisma/enums";
 
@@ -164,16 +165,40 @@ interface EnrollmentsClientProps {
   classes: Class[];
 }
 
-const STATUS_COLORS: Record<EnrollmentStatus, { bg: string; text: string; dot: string }> = {
-  ACTIVE: { bg: "bg-green-100 dark:bg-green-950/30", text: "text-green-700 dark:text-green-400", dot: "bg-green-500" },
-  COMPLETED: { bg: "bg-blue-100 dark:bg-blue-950/30", text: "text-blue-700 dark:text-blue-400", dot: "bg-blue-500" },
-  DROPPED: { bg: "bg-red-100 dark:bg-red-950/30", text: "text-red-700 dark:text-red-400", dot: "bg-red-500" },
-  SUSPENDED: { bg: "bg-orange-100 dark:bg-orange-950/30", text: "text-orange-700 dark:text-orange-400", dot: "bg-orange-500" },
-  FAILED: { bg: "bg-gray-100 dark:bg-gray-800", text: "text-gray-500 dark:text-gray-400", dot: "bg-gray-500" },
+const STATUS_COLORS: Record<
+  EnrollmentStatus,
+  { bg: string; text: string; dot: string }
+> = {
+  ACTIVE: {
+    bg: "bg-green-100 dark:bg-green-950/30",
+    text: "text-green-700 dark:text-green-400",
+    dot: "bg-green-500",
+  },
+  COMPLETED: {
+    bg: "bg-blue-100 dark:bg-blue-950/30",
+    text: "text-blue-700 dark:text-blue-400",
+    dot: "bg-blue-500",
+  },
+  DROPPED: {
+    bg: "bg-red-100 dark:bg-red-950/30",
+    text: "text-red-700 dark:text-red-400",
+    dot: "bg-red-500",
+  },
+  SUSPENDED: {
+    bg: "bg-orange-100 dark:bg-orange-950/30",
+    text: "text-orange-700 dark:text-orange-400",
+    dot: "bg-orange-500",
+  },
+  FAILED: {
+    bg: "bg-gray-100 dark:bg-gray-800",
+    text: "text-gray-500 dark:text-gray-400",
+    dot: "bg-gray-500",
+  },
 };
 
 const TYPE_COLORS: Record<EnrollmentType, string> = {
-  REGULAR: "bg-purple-100 text-purple-700 dark:bg-purple-950/40 dark:text-purple-400",
+  REGULAR:
+    "bg-purple-100 text-purple-700 dark:bg-purple-950/40 dark:text-purple-400",
   TRIAL: "bg-amber-100 text-amber-700 dark:bg-amber-950/40 dark:text-amber-400",
   AUDIT: "bg-cyan-100 text-cyan-700 dark:bg-cyan-950/40 dark:text-cyan-400",
   MAKEUP: "bg-rose-100 text-rose-700 dark:bg-rose-950/40 dark:text-rose-400",
@@ -215,19 +240,24 @@ export function EnrollmentsClient({
 
   // Data states
   const [enrollments, setEnrollments] = useState(initialEnrollments);
-  const [stats, setStats] = useState(initialStats);
+  const [stats] = useState(initialStats);
   const [totalPages, setTotalPages] = useState(initialTotalPages);
-  const [totalEnrollmentsCount, setTotalEnrollmentsCount] = useState(initialTotalEnrollments);
+  const [totalEnrollmentsCount, setTotalEnrollmentsCount] = useState(
+    initialTotalEnrollments,
+  );
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [isActionLoading, setIsActionLoading] = useState(false);
 
   // Selection states
-  const [selectedEnrollments, setSelectedEnrollments] = useState<Set<string>>(new Set());
+  const [selectedEnrollments, setSelectedEnrollments] = useState<Set<string>>(
+    new Set(),
+  );
 
   // Dialog states
   const [openStatusDialog, setOpenStatusDialog] = useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-  const [selectedEnrollment, setSelectedEnrollment] = useState<EnrollmentWithRelations | null>(null);
+  const [selectedEnrollment, setSelectedEnrollment] =
+    useState<EnrollmentWithRelations | null>(null);
   const [newStatus, setNewStatus] = useState<EnrollmentStatus | null>(null);
 
   // Filter states
@@ -240,26 +270,25 @@ export function EnrollmentsClient({
 
   const hasEnrollments = enrollments && enrollments.length > 0;
 
-  // Fetch enrollments using server action
+  // Fetch enrollments using server action directly
   const fetchEnrollments = useCallback(async () => {
     setIsRefreshing(true);
     try {
-      const params = new URLSearchParams();
-      params.set("page", page.toString());
-      params.set("limit", "10");
-      if (search) params.set("search", search);
-      if (classId !== "all") params.set("classId", classId);
-      if (status !== "all") params.set("status", status);
-      if (type !== "all") params.set("type", type);
+      const result = await getEnrollments({
+        page,
+        limit: 10,
+        search: search || undefined,
+        classId: classId !== "all" ? classId : undefined,
+        status: status !== "all" ? (status as EnrollmentStatus) : undefined,
+        enrollmentType: type !== "all" ? (type as EnrollmentType) : undefined,
+      });
 
-      const response = await fetch(`/api/admin/enrollments?${params.toString()}`);
-      const data = await response.json();
-
-      setEnrollments(data.data);
-      setTotalPages(data.totalPages);
-      setTotalEnrollmentsCount(data.total);
+      setEnrollments(result.data);
+      setTotalPages(result.totalPages);
+      setTotalEnrollmentsCount(result.total);
       setSelectedEnrollments(new Set());
     } catch (error) {
+      console.error("Error fetching enrollments:", error);
       toast.error("Failed to load enrollments");
     } finally {
       setIsRefreshing(false);
@@ -306,7 +335,10 @@ export function EnrollmentsClient({
     setPage(1);
   };
 
-  const handleStatusChange = async (enrollmentId: string, newStatus: EnrollmentStatus) => {
+  const handleStatusChange = async (
+    enrollmentId: string,
+    newStatus: EnrollmentStatus,
+  ) => {
     setIsActionLoading(true);
     try {
       await updateEnrollmentStatus(enrollmentId, newStatus);
@@ -337,7 +369,9 @@ export function EnrollmentsClient({
     }
   };
 
-  const handleBulkAction = async (action: "activate" | "complete" | "drop" | "delete") => {
+  const handleBulkAction = async (
+    action: "activate" | "complete" | "drop" | "delete",
+  ) => {
     const ids = Array.from(selectedEnrollments);
     if (ids.length === 0) return;
 
@@ -432,7 +466,8 @@ export function EnrollmentsClient({
                   Student Enrollments
                 </h1>
                 <p className="text-muted-foreground text-sm mt-1">
-                  Manage student registrations, track progress, and handle class enrollments
+                  Manage student registrations, track progress, and handle class
+                  enrollments
                 </p>
               </div>
               <Link href="/dashboard/admin/enrollments/new">
@@ -450,8 +485,12 @@ export function EnrollmentsClient({
               <CardContent className="pt-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-muted-foreground">Total Enrollments</p>
-                    <p className="text-3xl font-black">{stats.totalEnrollments}</p>
+                    <p className="text-sm text-muted-foreground">
+                      Total Enrollments
+                    </p>
+                    <p className="text-3xl font-black">
+                      {stats.totalEnrollments}
+                    </p>
                   </div>
                   <div className="w-10 h-10 rounded-full bg-purple-100 dark:bg-purple-950/40 flex items-center justify-center">
                     <Users className="w-5 h-5 text-purple-600" />
@@ -464,7 +503,9 @@ export function EnrollmentsClient({
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm text-muted-foreground">Active</p>
-                    <p className="text-3xl font-black text-emerald-600">{stats.activeEnrollments}</p>
+                    <p className="text-3xl font-black text-emerald-600">
+                      {stats.activeEnrollments}
+                    </p>
                   </div>
                   <div className="w-10 h-10 rounded-full bg-emerald-100 dark:bg-emerald-950/40 flex items-center justify-center">
                     <CheckCircle className="w-5 h-5 text-emerald-600" />
@@ -477,7 +518,9 @@ export function EnrollmentsClient({
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm text-muted-foreground">Completed</p>
-                    <p className="text-3xl font-black text-blue-600">{stats.completedEnrollments}</p>
+                    <p className="text-3xl font-black text-blue-600">
+                      {stats.completedEnrollments}
+                    </p>
                   </div>
                   <div className="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-950/40 flex items-center justify-center">
                     <TrendingUp className="w-5 h-5 text-blue-600" />
@@ -489,8 +532,12 @@ export function EnrollmentsClient({
               <CardContent className="pt-6">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-sm text-muted-foreground">Completion Rate</p>
-                    <p className="text-3xl font-black text-amber-600">{stats.completionRate}%</p>
+                    <p className="text-sm text-muted-foreground">
+                      Completion Rate
+                    </p>
+                    <p className="text-3xl font-black text-amber-600">
+                      {stats.completionRate}%
+                    </p>
                   </div>
                   <div className="w-10 h-10 rounded-full bg-amber-100 dark:bg-amber-950/40 flex items-center justify-center">
                     <Clock className="w-5 h-5 text-amber-600" />
@@ -514,7 +561,9 @@ export function EnrollmentsClient({
             <div className="bg-purple-50 dark:bg-purple-950/30 rounded-xl p-4 mb-6 flex flex-wrap items-center justify-between gap-4 border border-purple-200 dark:border-purple-800">
               <div className="flex items-center gap-2">
                 <CheckCircle className="w-5 h-5 text-purple-600" />
-                <span className="text-sm font-black">{selectedEnrollments.size} enrollment(s) selected</span>
+                <span className="text-sm font-black">
+                  {selectedEnrollments.size} enrollment(s) selected
+                </span>
               </div>
               <div className="flex flex-wrap gap-2">
                 <Button
@@ -614,12 +663,22 @@ export function EnrollmentsClient({
                     ))}
                   </SelectContent>
                 </Select>
-                <Button onClick={handleSearch} className="rounded-full px-6 bg-purple-600 hover:bg-purple-700">
+                <Button
+                  onClick={handleSearch}
+                  className="rounded-full px-6 bg-purple-600 hover:bg-purple-700"
+                >
                   <Search className="w-4 h-4 mr-2" />
                   Search
                 </Button>
-                {(classId !== "all" || status !== "all" || type !== "all" || search) && (
-                  <Button onClick={clearFilters} variant="outline" className="rounded-full">
+                {(classId !== "all" ||
+                  status !== "all" ||
+                  type !== "all" ||
+                  search) && (
+                  <Button
+                    onClick={clearFilters}
+                    variant="outline"
+                    className="rounded-full"
+                  >
                     <X className="w-4 h-4 mr-2" />
                     Clear
                   </Button>
@@ -637,7 +696,11 @@ export function EnrollmentsClient({
                     <TableHead className="w-12">
                       <input
                         type="checkbox"
-                        checked={hasEnrollments ? selectedEnrollments.size === enrollments.length : false}
+                        checked={
+                          hasEnrollments
+                            ? selectedEnrollments.size === enrollments.length
+                            : false
+                        }
                         onChange={toggleSelectAll}
                         disabled={isRefreshing || !hasEnrollments}
                         className="w-4 h-4 rounded border-slate-300"
@@ -658,8 +721,15 @@ export function EnrollmentsClient({
                       <TableCell colSpan={8} className="text-center py-12">
                         <div className="flex flex-col items-center gap-2">
                           <Users className="w-12 h-12 text-muted-foreground/30" />
-                          <p className="text-muted-foreground">No enrollments found</p>
-                          <Button onClick={clearFilters} variant="outline" size="sm" className="mt-2">
+                          <p className="text-muted-foreground">
+                            No enrollments found
+                          </p>
+                          <Button
+                            onClick={clearFilters}
+                            variant="outline"
+                            size="sm"
+                            className="mt-2"
+                          >
                             Clear filters
                           </Button>
                         </div>
@@ -672,12 +742,17 @@ export function EnrollmentsClient({
                       const progress = enrollment.progress || 0;
 
                       return (
-                        <TableRow key={enrollment.id} className="hover:bg-slate-50 dark:hover:bg-slate-800/50">
+                        <TableRow
+                          key={enrollment.id}
+                          className="hover:bg-slate-50 dark:hover:bg-slate-800/50"
+                        >
                           <TableCell>
                             <input
                               type="checkbox"
                               checked={selectedEnrollments.has(enrollment.id)}
-                              onChange={() => toggleSelectEnrollment(enrollment.id)}
+                              onChange={() =>
+                                toggleSelectEnrollment(enrollment.id)
+                              }
                               disabled={isRefreshing}
                               className="w-4 h-4 rounded border-slate-300"
                             />
@@ -690,7 +765,9 @@ export function EnrollmentsClient({
                                 </AvatarFallback>
                               </Avatar>
                               <div>
-                                <p className="font-black text-sm">{enrollment.student.user.name}</p>
+                                <p className="font-black text-sm">
+                                  {enrollment.student.user.name}
+                                </p>
                                 <p className="text-xs text-muted-foreground flex items-center gap-1">
                                   <Mail className="w-3 h-3" />
                                   {enrollment.student.user.email}
@@ -703,20 +780,35 @@ export function EnrollmentsClient({
                           </TableCell>
                           <TableCell>
                             <div>
-                              <p className="font-medium text-sm">{enrollment.class.name}</p>
-                              <p className="text-xs text-muted-foreground font-mono">{enrollment.class.code}</p>
-                              <p className="text-xs text-muted-foreground">{enrollment.class.level}</p>
+                              <p className="font-medium text-sm">
+                                {enrollment.class.name}
+                              </p>
+                              <p className="text-xs text-muted-foreground font-mono">
+                                {enrollment.class.code}
+                              </p>
+                              <p className="text-xs text-muted-foreground">
+                                {enrollment.class.level}
+                              </p>
                             </div>
                           </TableCell>
                           <TableCell>
-                            <span className={cn("text-xs font-black px-2 py-0.5 rounded-full", typeColor)}>
+                            <span
+                              className={cn(
+                                "text-xs font-black px-2 py-0.5 rounded-full",
+                                typeColor,
+                              )}
+                            >
                               {enrollment.enrollmentType}
                             </span>
                           </TableCell>
                           <TableCell>
                             <div className="flex items-center gap-2">
-                              <div className={`w-2 h-2 rounded-full ${statusColors.dot}`} />
-                              <span className={`text-xs font-black ${statusColors.text}`}>
+                              <div
+                                className={`w-2 h-2 rounded-full ${statusColors.dot}`}
+                              />
+                              <span
+                                className={`text-xs font-black ${statusColors.text}`}
+                              >
                                 {enrollment.status}
                               </span>
                             </div>
@@ -740,19 +832,28 @@ export function EnrollmentsClient({
                           <TableCell>
                             <DropdownMenu>
                               <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" size="icon" className="h-8 w-8" disabled={isActionLoading}>
+                                <Button
+                                  variant="ghost"
+                                  size="icon"
+                                  className="h-8 w-8"
+                                  disabled={isActionLoading}
+                                >
                                   <MoreHorizontal className="w-4 h-4" />
                                 </Button>
                               </DropdownMenuTrigger>
                               <DropdownMenuContent align="end" className="w-48">
                                 <DropdownMenuItem asChild>
-                                  <Link href={`/dashboard/admin/enrollments/${enrollment.id}`}>
+                                  <Link
+                                    href={`/dashboard/admin/enrollments/${enrollment.id}`}
+                                  >
                                     <Eye className="w-4 h-4 mr-2" />
                                     View Details
                                   </Link>
                                 </DropdownMenuItem>
                                 <DropdownMenuItem asChild>
-                                  <Link href={`/dashboard/admin/enrollments/${enrollment.id}/edit`}>
+                                  <Link
+                                    href={`/dashboard/admin/enrollments/${enrollment.id}/edit`}
+                                  >
                                     <Edit className="w-4 h-4 mr-2" />
                                     Edit Enrollment
                                   </Link>
@@ -823,7 +924,8 @@ export function EnrollmentsClient({
             {totalPages > 1 && (
               <div className="flex items-center justify-between px-4 py-4 border-t">
                 <p className="text-sm text-muted-foreground">
-                  Page {page} of {totalPages} • {totalEnrollmentsCount} total enrollments
+                  Page {page} of {totalPages} • {totalEnrollmentsCount} total
+                  enrollments
                 </p>
                 <div className="flex gap-2">
                   <Button
@@ -886,25 +988,37 @@ export function EnrollmentsClient({
             <DialogTitle>Update Enrollment Status</DialogTitle>
             <DialogDescription>
               Are you sure you want to change the status of{" "}
-              <span className="font-bold">{selectedEnrollment?.student.user.name}</span>'s
-              enrollment in <span className="font-bold">{selectedEnrollment?.class.name}</span> to{" "}
-              <span className="font-bold">{newStatus}?</span>
+              <span className="font-bold">
+                {selectedEnrollment?.student.user.name}
+              </span>
+              's enrollment in{" "}
+              <span className="font-bold">
+                {selectedEnrollment?.class.name}
+              </span>{" "}
+              to <span className="font-bold">{newStatus}?</span>
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setOpenStatusDialog(false)}>
+            <Button
+              variant="outline"
+              onClick={() => setOpenStatusDialog(false)}
+            >
               Cancel
             </Button>
             <Button
-              onClick={() => handleStatusChange(selectedEnrollment!.id, newStatus!)}
+              onClick={() =>
+                handleStatusChange(selectedEnrollment!.id, newStatus!)
+              }
               disabled={isActionLoading}
               className={cn(
                 newStatus === "ACTIVE" && "bg-green-600 hover:bg-green-700",
                 newStatus === "COMPLETED" && "bg-blue-600 hover:bg-blue-700",
-                newStatus === "DROPPED" && "bg-red-600 hover:bg-red-700"
+                newStatus === "DROPPED" && "bg-red-600 hover:bg-red-700",
               )}
             >
-              {isActionLoading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+              {isActionLoading && (
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+              )}
               Confirm
             </Button>
           </DialogFooter>
@@ -918,13 +1032,21 @@ export function EnrollmentsClient({
             <DialogTitle>Delete Enrollment</DialogTitle>
             <DialogDescription>
               Are you sure you want to delete{" "}
-              <span className="font-bold">{selectedEnrollment?.student.user.name}</span>'s
-              enrollment from <span className="font-bold">{selectedEnrollment?.class.name}</span>?
-              This action cannot be undone.
+              <span className="font-bold">
+                {selectedEnrollment?.student.user.name}
+              </span>
+              's enrollment from{" "}
+              <span className="font-bold">
+                {selectedEnrollment?.class.name}
+              </span>
+              ? This action cannot be undone.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setOpenDeleteDialog(false)}>
+            <Button
+              variant="outline"
+              onClick={() => setOpenDeleteDialog(false)}
+            >
               Cancel
             </Button>
             <Button
@@ -932,7 +1054,9 @@ export function EnrollmentsClient({
               disabled={isActionLoading}
               className="bg-red-600 hover:bg-red-700"
             >
-              {isActionLoading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+              {isActionLoading && (
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+              )}
               Delete Enrollment
             </Button>
           </DialogFooter>
