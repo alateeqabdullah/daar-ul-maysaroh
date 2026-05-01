@@ -12,16 +12,12 @@ import {
   ChevronRight,
   MoreHorizontal,
   Calendar,
-  BookOpen,
-  School,
   Loader2,
   CheckCircle,
-  XCircle,
   Eye,
   Edit,
   Trash2,
   Plus,
-  FileText,
   Clock,
   TrendingUp,
   Users,
@@ -59,13 +55,9 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { Badge } from "@/components/ui/badge";
 import {
   Card,
   CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { toast } from "sonner";
