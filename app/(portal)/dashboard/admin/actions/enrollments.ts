@@ -3,18 +3,17 @@
 
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
-import { EnrollmentType, EnrollmentStatus } from "@/app/generated/prisma/enums";
+import { EnrollmentStatus, EnrollmentType } from "@/app/generated/prisma/enums";
+import { Prisma } from "@/app/generated/prisma/client";
 
 // ==================== TYPES ====================
 
 export interface EnrollmentFilters {
   search?: string;
-  studentId?: string;
   classId?: string;
+  studentId?: string;
   status?: EnrollmentStatus;
   enrollmentType?: EnrollmentType;
-  dateFrom?: Date;
-  dateTo?: Date;
   page?: number;
   limit?: number;
 }
@@ -28,11 +27,13 @@ export interface EnrollmentWithRelations {
   status: EnrollmentStatus;
   progress: number | null;
   completedAt: Date | null;
+  paymentId: string | null;
   createdAt: Date;
   updatedAt: Date;
   student: {
     id: string;
     studentId: string;
+    currentLevel: string | null;
     user: {
       id: string;
       name: string;
@@ -40,8 +41,6 @@ export interface EnrollmentWithRelations {
       phone: string | null;
       image: string | null;
     };
-    currentLevel: string | null;
-    enrollmentDate: Date;
   };
   class: {
     id: string;
@@ -63,35 +62,6 @@ export interface EnrollmentWithRelations {
     status: string;
     paidAt: Date | null;
   } | null;
-  certificates?: {
-    id: string;
-    type: string;
-    title: string;
-    issuedAt: Date;
-  }[];
-  attendance: {
-    id: string;
-    date: Date;
-    status: string;
-  }[];
-  grades: {
-    id: string;
-    subjectId: string;
-    score: number;
-    percentage: number;
-    grade: string | null;
-  }[];
-}
-
-export interface EnrollmentSummary {
-  id: string;
-  studentName: string;
-  studentEmail: string;
-  className: string;
-  classCode: string;
-  enrolledAt: Date;
-  status: EnrollmentStatus;
-  progress: number | null;
 }
 
 export interface PaginatedResponse<T> {
@@ -100,6 +70,19 @@ export interface PaginatedResponse<T> {
   page: number;
   totalPages: number;
   limit: number;
+}
+
+export interface EnrollmentStats {
+  totalEnrollments: number;
+  activeEnrollments: number;
+  completedEnrollments: number;
+  droppedEnrollments: number;
+  suspendedEnrollments: number;
+  failedEnrollments: number;
+  byClass: { className: string; count: number }[];
+  byLevel: { level: string; count: number }[];
+  recentEnrollments: number;
+  completionRate: number;
 }
 
 // ==================== READ OPERATIONS ====================
@@ -112,12 +95,10 @@ export async function getEnrollments(
 ): Promise<PaginatedResponse<EnrollmentWithRelations>> {
   const {
     search,
-    studentId,
     classId,
+    studentId,
     status,
     enrollmentType,
-    dateFrom,
-    dateTo,
     page = 1,
     limit = 20,
   } = filters;
@@ -125,14 +106,14 @@ export async function getEnrollments(
   const skip = (page - 1) * limit;
 
   // Build where clause
-  const where: any = {};
-
-  if (studentId) {
-    where.studentId = studentId;
-  }
+  const where: Prisma.EnrollmentWhereInput = {};
 
   if (classId) {
     where.classId = classId;
+  }
+
+  if (studentId) {
+    where.studentId = studentId;
   }
 
   if (status) {
@@ -143,20 +124,12 @@ export async function getEnrollments(
     where.enrollmentType = enrollmentType;
   }
 
-  if (dateFrom || dateTo) {
-    where.enrolledAt = {};
-    if (dateFrom) where.enrolledAt.gte = dateFrom;
-    if (dateTo) where.enrolledAt.lte = dateTo;
-  }
-
   if (search) {
     where.OR = [
       {
         student: { user: { name: { contains: search, mode: "insensitive" } } },
       },
-      {
-        student: { user: { email: { contains: search, mode: "insensitive" } } },
-      },
+      { student: { studentId: { contains: search, mode: "insensitive" } } },
       { class: { name: { contains: search, mode: "insensitive" } } },
       { class: { code: { contains: search, mode: "insensitive" } } },
     ];
@@ -197,40 +170,21 @@ export async function getEnrollments(
               },
             },
           },
-          payment: true,
-          attendance: {
-            orderBy: { date: "desc" },
-            take: 10,
+          payment: {
+            select: {
+              id: true,
+              amount: true,
+              status: true,
+              paidAt: true,
+            },
           },
-          grades: true,
         },
       }),
       prisma.enrollment.count({ where }),
     ]);
 
-    // Get certificates separately for each enrollment (certificates belong to student, not enrollment)
-    const enrollmentsWithCertificates = await Promise.all(
-      enrollments.map(async (enrollment) => {
-        const certificates = await prisma.certificate.findMany({
-          where: { studentId: enrollment.studentId },
-          orderBy: { issuedAt: "desc" },
-          select: {
-            id: true,
-            type: true,
-            title: true,
-            issuedAt: true,
-          },
-        });
-
-        return {
-          ...enrollment,
-          certificates,
-        };
-      }),
-    );
-
     return {
-      data: enrollmentsWithCertificates as EnrollmentWithRelations[],
+      data: enrollments as unknown as EnrollmentWithRelations[],
       total,
       page,
       totalPages: Math.ceil(total / limit),
@@ -243,7 +197,7 @@ export async function getEnrollments(
 }
 
 /**
- * Get single enrollment by ID
+ * Get enrollment by ID
  */
 export async function getEnrollmentById(
   id: string,
@@ -278,39 +232,14 @@ export async function getEnrollmentById(
               },
             },
             schedules: true,
-            subjects: true,
           },
         },
         payment: true,
-        attendance: {
-          orderBy: { date: "desc" },
-        },
-        grades: {
-          include: {
-            subject: true,
-          },
-        },
+        courses: true,
       },
     });
 
-    if (!enrollment) return null;
-
-    // Get certificates separately
-    const certificates = await prisma.certificate.findMany({
-      where: { studentId: enrollment.studentId },
-      orderBy: { issuedAt: "desc" },
-      select: {
-        id: true,
-        type: true,
-        title: true,
-        issuedAt: true,
-      },
-    });
-
-    return {
-      ...enrollment,
-      certificates,
-    } as EnrollmentWithRelations;
+    return enrollment as EnrollmentWithRelations | null;
   } catch (error) {
     console.error("Error fetching enrollment:", error);
     throw new Error("Failed to fetch enrollment");
@@ -342,35 +271,11 @@ export async function getEnrollmentsByStudent(
             },
           },
         },
-        attendance: {
-          take: 5,
-          orderBy: { date: "desc" },
-        },
+        payment: true,
       },
     });
 
-    // Get certificates for each enrollment
-    const enrollmentsWithCertificates = await Promise.all(
-      enrollments.map(async (enrollment) => {
-        const certificates = await prisma.certificate.findMany({
-          where: { studentId: enrollment.studentId },
-          orderBy: { issuedAt: "desc" },
-          select: {
-            id: true,
-            type: true,
-            title: true,
-            issuedAt: true,
-          },
-        });
-
-        return {
-          ...enrollment,
-          certificates,
-        };
-      }),
-    );
-
-    return enrollmentsWithCertificates as EnrollmentWithRelations[];
+    return enrollments as unknown as EnrollmentWithRelations[];
   } catch (error) {
     console.error("Error fetching enrollments by student:", error);
     throw new Error("Failed to fetch enrollments");
@@ -386,7 +291,7 @@ export async function getEnrollmentsByClass(
   try {
     const enrollments = await prisma.enrollment.findMany({
       where: { classId, status: "ACTIVE" },
-      orderBy: { enrolledAt: "asc" },
+      orderBy: { enrolledAt: "desc" },
       include: {
         student: {
           include: {
@@ -395,36 +300,16 @@ export async function getEnrollmentsByClass(
                 name: true,
                 email: true,
                 phone: true,
+                image: true,
               },
             },
           },
         },
-        attendance: true,
-        grades: true,
+        payment: true,
       },
     });
 
-    // Get certificates for each enrollment
-    const enrollmentsWithCertificates = await Promise.all(
-      enrollments.map(async (enrollment) => {
-        const certificates = await prisma.certificate.findMany({
-          where: { studentId: enrollment.studentId },
-          select: {
-            id: true,
-            type: true,
-            title: true,
-            issuedAt: true,
-          },
-        });
-
-        return {
-          ...enrollment,
-          certificates,
-        };
-      }),
-    );
-
-    return enrollmentsWithCertificates as EnrollmentWithRelations[];
+    return enrollments as unknown as EnrollmentWithRelations[];
   } catch (error) {
     console.error("Error fetching enrollments by class:", error);
     throw new Error("Failed to fetch enrollments");
@@ -432,21 +317,9 @@ export async function getEnrollmentsByClass(
 }
 
 /**
- * Get enrollment summary for dashboard
+ * Get enrollment statistics
  */
-export async function getEnrollmentSummary(): Promise<{
-  totalEnrollments: number;
-  activeEnrollments: number;
-  completedEnrollments: number;
-  droppedEnrollments: number;
-  suspendedEnrollments: number;
-  failedEnrollments: number;
-  enrollmentTrend: { month: string; count: number }[];
-  recentEnrollments: EnrollmentSummary[];
-}> {
-  const now = new Date();
-  const sixMonthsAgo = new Date(now.getFullYear(), now.getMonth() - 5, 1);
-
+export async function getEnrollmentStats(): Promise<EnrollmentStats> {
   try {
     const [
       totalEnrollments,
@@ -456,6 +329,8 @@ export async function getEnrollmentSummary(): Promise<{
       suspendedEnrollments,
       failedEnrollments,
       recentEnrollments,
+      byClass,
+      byLevel,
     ] = await Promise.all([
       prisma.enrollment.count(),
       prisma.enrollment.count({ where: { status: "ACTIVE" } }),
@@ -463,73 +338,58 @@ export async function getEnrollmentSummary(): Promise<{
       prisma.enrollment.count({ where: { status: "DROPPED" } }),
       prisma.enrollment.count({ where: { status: "SUSPENDED" } }),
       prisma.enrollment.count({ where: { status: "FAILED" } }),
-      prisma.enrollment.findMany({
-        take: 10,
-        orderBy: { enrolledAt: "desc" },
-        include: {
-          student: {
-            include: {
-              user: {
-                select: {
-                  name: true,
-                  email: true,
-                },
-              },
-            },
+      prisma.enrollment.count({
+        where: {
+          enrolledAt: {
+            gte: new Date(new Date().setDate(new Date().getDate() - 30)),
           },
+        },
+      }),
+      prisma.enrollment.groupBy({
+        by: ["classId"],
+        _count: true,
+        orderBy: { _count: { classId: "desc" } },
+        take: 5,
+      }),
+      prisma.enrollment.findMany({
+        select: {
           class: {
-            select: {
-              name: true,
-              code: true,
-            },
+            select: { level: true },
           },
         },
       }),
     ]);
 
-    // Calculate enrollment trend by month
-    const enrollmentTrend: { month: string; count: number }[] = [];
-    for (let i = 5; i >= 0; i--) {
-      const monthDate = new Date(now.getFullYear(), now.getMonth() - i, 1);
-      const monthStart = new Date(
-        monthDate.getFullYear(),
-        monthDate.getMonth(),
-        1,
-      );
-      const monthEnd = new Date(
-        monthDate.getFullYear(),
-        monthDate.getMonth() + 1,
-        0,
-      );
+    // Get class names for byClass stats
+    const classStats = await Promise.all(
+      byClass.map(async (item) => {
+        const classData = await prisma.class.findUnique({
+          where: { id: item.classId },
+          select: { name: true },
+        });
+        return {
+          className: classData?.name || "Unknown",
+          count: item._count,
+        };
+      }),
+    );
 
-      const count = await prisma.enrollment.count({
-        where: {
-          enrolledAt: {
-            gte: monthStart,
-            lte: monthEnd,
-          },
-        },
-      });
+    // Calculate by level
+    const levelMap = new Map<string, number>();
+    byLevel.forEach((enrollment) => {
+      const level = enrollment.class?.level || "Unknown";
+      levelMap.set(level, (levelMap.get(level) || 0) + 1);
+    });
 
-      enrollmentTrend.push({
-        month: monthDate.toLocaleString("default", {
-          month: "short",
-          year: "numeric",
-        }),
-        count,
-      });
-    }
-
-    const recent = recentEnrollments.map((enrollment) => ({
-      id: enrollment.id,
-      studentName: enrollment.student.user.name,
-      studentEmail: enrollment.student.user.email,
-      className: enrollment.class.name,
-      classCode: enrollment.class.code,
-      enrolledAt: enrollment.enrolledAt,
-      status: enrollment.status,
-      progress: enrollment.progress,
+    const levelStats = Array.from(levelMap.entries()).map(([level, count]) => ({
+      level,
+      count,
     }));
+
+    const completionRate =
+      totalEnrollments > 0
+        ? (completedEnrollments / totalEnrollments) * 100
+        : 0;
 
     return {
       totalEnrollments,
@@ -538,23 +398,47 @@ export async function getEnrollmentSummary(): Promise<{
       droppedEnrollments,
       suspendedEnrollments,
       failedEnrollments,
-      enrollmentTrend,
-      recentEnrollments: recent,
+      byClass: classStats,
+      byLevel: levelStats,
+      recentEnrollments,
+      completionRate: Math.round(completionRate * 10) / 10,
     };
   } catch (error) {
-    console.error("Error fetching enrollment summary:", error);
-    throw new Error("Failed to fetch enrollment summary");
+    console.error("Error fetching enrollment stats:", error);
+    throw new Error("Failed to fetch enrollment stats");
+  }
+}
+
+/**
+ * Check if student is enrolled in class
+ */
+export async function isStudentEnrolled(
+  studentId: string,
+  classId: string,
+): Promise<boolean> {
+  try {
+    const enrollment = await prisma.enrollment.findUnique({
+      where: {
+        studentId_classId: {
+          studentId,
+          classId,
+        },
+      },
+    });
+    return !!enrollment;
+  } catch (error) {
+    console.error("Error checking enrollment:", error);
+    throw new Error("Failed to check enrollment");
   }
 }
 
 // ==================== WRITE OPERATIONS ====================
 
-interface CreateEnrollmentInput {
+export interface CreateEnrollmentInput {
   studentId: string;
   classId: string;
   enrollmentType?: EnrollmentType;
   paymentId?: string;
-  progress?: number;
 }
 
 /**
@@ -563,13 +447,7 @@ interface CreateEnrollmentInput {
 export async function createEnrollment(
   input: CreateEnrollmentInput,
 ): Promise<EnrollmentWithRelations> {
-  const {
-    studentId,
-    classId,
-    enrollmentType = "REGULAR",
-    paymentId,
-    progress = 0,
-  } = input;
+  const { studentId, classId, enrollmentType = "REGULAR", paymentId } = input;
 
   try {
     // Check if already enrolled
@@ -589,28 +467,37 @@ export async function createEnrollment(
     // Check class capacity
     const classData = await prisma.class.findUnique({
       where: { id: classId },
-      select: { capacity: true, currentEnrollment: true },
+      select: { capacity: true, currentEnrollment: true, isActive: true },
     });
 
-    if (classData && classData.currentEnrollment >= classData.capacity) {
+    if (!classData) {
+      throw new Error("Class not found");
+    }
+
+    if (!classData.isActive) {
+      throw new Error("Class is not active");
+    }
+
+    if (classData.currentEnrollment >= classData.capacity) {
       throw new Error("Class has reached maximum capacity");
     }
 
     // Create enrollment and update class capacity in a transaction
-    const [enrollment] = await prisma.$transaction([
-      prisma.enrollment.create({
+    const result = await prisma.$transaction(async (tx) => {
+      const enrollment = await tx.enrollment.create({
         data: {
           studentId,
           classId,
           enrollmentType,
           paymentId,
-          progress,
+          status: "ACTIVE",
         },
         include: {
           student: {
             include: {
               user: {
                 select: {
+                  id: true,
                   name: true,
                   email: true,
                   phone: true,
@@ -634,45 +521,41 @@ export async function createEnrollment(
             },
           },
           payment: true,
-          attendance: true,
-          grades: true,
         },
-      }),
-      prisma.class.update({
+      });
+
+      await tx.class.update({
         where: { id: classId },
         data: { currentEnrollment: { increment: 1 } },
-      }),
-    ]);
+      });
+
+      return enrollment;
+    });
 
     revalidatePath(`/dashboard/admin/classes/${classId}`);
     revalidatePath("/dashboard/admin/enrollments");
-
-    return {
-      ...enrollment,
-      certificates: [],
-    } as EnrollmentWithRelations;
+    return result as unknown as EnrollmentWithRelations;
   } catch (error) {
     console.error("Error creating enrollment:", error);
     throw error;
   }
 }
 
-interface UpdateEnrollmentInput {
+export interface UpdateEnrollmentInput {
   status?: EnrollmentStatus;
   progress?: number;
-  completedAt?: Date | null;
-  enrollmentType?: EnrollmentType;
-  paymentId?: string | null;
+  completedAt?: Date;
+  paymentId?: string;
 }
 
 /**
- * Update enrollment details
+ * Update enrollment
  */
 export async function updateEnrollment(
   id: string,
   input: UpdateEnrollmentInput,
 ): Promise<EnrollmentWithRelations> {
-  const { status, progress, completedAt, enrollmentType, paymentId } = input;
+  const { status, progress, completedAt, paymentId } = input;
 
   try {
     const enrollment = await prisma.enrollment.update({
@@ -681,7 +564,6 @@ export async function updateEnrollment(
         status,
         progress,
         completedAt,
-        enrollmentType,
         paymentId,
       },
       include: {
@@ -689,6 +571,7 @@ export async function updateEnrollment(
           include: {
             user: {
               select: {
+                id: true,
                 name: true,
                 email: true,
                 phone: true,
@@ -712,29 +595,12 @@ export async function updateEnrollment(
           },
         },
         payment: true,
-        attendance: true,
-        grades: true,
-      },
-    });
-
-    // Get certificates separately
-    const certificates = await prisma.certificate.findMany({
-      where: { studentId: enrollment.studentId },
-      select: {
-        id: true,
-        type: true,
-        title: true,
-        issuedAt: true,
       },
     });
 
     revalidatePath(`/dashboard/admin/enrollments/${id}`);
     revalidatePath(`/dashboard/admin/classes/${enrollment.classId}`);
-
-    return {
-      ...enrollment,
-      certificates,
-    } as EnrollmentWithRelations;
+    return enrollment as unknown as EnrollmentWithRelations;
   } catch (error) {
     console.error("Error updating enrollment:", error);
     throw new Error("Failed to update enrollment");
@@ -742,81 +608,43 @@ export async function updateEnrollment(
 }
 
 /**
- * Update enrollment progress
+ * Update enrollment status
  */
-export async function updateEnrollmentProgress(
+export async function updateEnrollmentStatus(
   id: string,
-  progress: number,
-): Promise<void> {
-  try {
-    await prisma.enrollment.update({
-      where: { id },
-      data: { progress },
-    });
-
-    revalidatePath(`/dashboard/admin/enrollments/${id}`);
-  } catch (error) {
-    console.error("Error updating enrollment progress:", error);
-    throw new Error("Failed to update enrollment progress");
-  }
-}
-
-/**
- * Complete enrollment (mark as completed)
- */
-export async function completeEnrollment(id: string): Promise<void> {
-  try {
-    await prisma.enrollment.update({
-      where: { id },
-      data: {
-        status: "COMPLETED",
-        completedAt: new Date(),
-        progress: 100,
-      },
-    });
-
-    revalidatePath(`/dashboard/admin/enrollments/${id}`);
-  } catch (error) {
-    console.error("Error completing enrollment:", error);
-    throw new Error("Failed to complete enrollment");
-  }
-}
-
-/**
- * Drop enrollment
- */
-export async function dropEnrollment(
-  id: string,
-  reason?: string,
+  status: EnrollmentStatus,
 ): Promise<void> {
   try {
     const enrollment = await prisma.enrollment.findUnique({
       where: { id },
-      select: { classId: true, studentId: true },
+      select: { classId: true, status: true },
     });
 
     if (!enrollment) {
       throw new Error("Enrollment not found");
     }
 
-    await prisma.$transaction([
-      prisma.enrollment.update({
-        where: { id },
-        data: {
-          status: "DROPPED",
-        },
-      }),
-      prisma.class.update({
+    await prisma.enrollment.update({
+      where: { id },
+      data: { status },
+    });
+
+    // If dropping/removing, decrement class capacity
+    if (
+      enrollment.status === "ACTIVE" &&
+      (status === "DROPPED" || status === "COMPLETED" || status === "SUSPENDED")
+    ) {
+      await prisma.class.update({
         where: { id: enrollment.classId },
         data: { currentEnrollment: { decrement: 1 } },
-      }),
-    ]);
+      });
+    }
 
+    revalidatePath(`/dashboard/admin/enrollments/${id}`);
     revalidatePath(`/dashboard/admin/classes/${enrollment.classId}`);
-    revalidatePath("/dashboard/admin/enrollments");
   } catch (error) {
-    console.error("Error dropping enrollment:", error);
-    throw new Error("Failed to drop enrollment");
+    console.error("Error updating enrollment status:", error);
+    throw new Error("Failed to update enrollment status");
   }
 }
 
@@ -835,12 +663,12 @@ export async function deleteEnrollment(id: string): Promise<void> {
     }
 
     await prisma.$transaction([
-      prisma.enrollment.delete({
-        where: { id },
-      }),
       prisma.class.update({
         where: { id: enrollment.classId },
         data: { currentEnrollment: { decrement: 1 } },
+      }),
+      prisma.enrollment.delete({
+        where: { id },
       }),
     ]);
 
@@ -852,262 +680,36 @@ export async function deleteEnrollment(id: string): Promise<void> {
   }
 }
 
-// ==================== ATTENDANCE OPERATIONS ====================
-
-interface RecordAttendanceInput {
-  enrollmentId: string;
-  date: Date;
-  status: "PRESENT" | "ABSENT" | "LATE" | "EXCUSED" | "LEAVE";
-  remarks?: string;
-  markedBy: string;
-}
-
-/**
- * Record attendance for an enrollment
- */
-export async function recordAttendance(
-  input: RecordAttendanceInput,
-): Promise<void> {
-  const { enrollmentId, date, status, remarks, markedBy } = input;
-
-  try {
-    const enrollment = await prisma.enrollment.findUnique({
-      where: { id: enrollmentId },
-      select: { studentId: true, classId: true },
-    });
-
-    if (!enrollment) {
-      throw new Error("Enrollment not found");
-    }
-
-    // Get class schedule for the day
-    const schedule = await prisma.classSchedule.findFirst({
-      where: {
-        classId: enrollment.classId,
-        dayOfWeek: date.getDay(),
-      },
-    });
-
-    if (!schedule) {
-      throw new Error("No schedule found for this day");
-    }
-
-    await prisma.attendance.upsert({
-      where: {
-        studentId_scheduleId_date: {
-          studentId: enrollment.studentId,
-          scheduleId: schedule.id,
-          date,
-        },
-      },
-      update: {
-        status,
-        remarks,
-        markedBy,
-        markedAt: new Date(),
-      },
-      create: {
-        studentId: enrollment.studentId,
-        classId: enrollment.classId,
-        scheduleId: schedule.id,
-        date,
-        status,
-        remarks,
-        markedBy,
-        markedAt: new Date(),
-      },
-    });
-
-    revalidatePath(`/dashboard/admin/enrollments/${enrollmentId}`);
-  } catch (error) {
-    console.error("Error recording attendance:", error);
-    throw new Error("Failed to record attendance");
-  }
-}
-
-/**
- * Get attendance for an enrollment
- */
-export async function getEnrollmentAttendance(
-  enrollmentId: string,
-): Promise<{
-  present: number;
-  absent: number;
-  late: number;
-  excused: number;
-  total: number;
-  rate: number;
-}> {
-  try {
-    const enrollment = await prisma.enrollment.findUnique({
-      where: { id: enrollmentId },
-      select: { studentId: true },
-    });
-
-    if (!enrollment) {
-      throw new Error("Enrollment not found");
-    }
-
-    const attendance = await prisma.attendance.findMany({
-      where: { studentId: enrollment.studentId },
-    });
-
-    const present = attendance.filter((a) => a.status === "PRESENT").length;
-    const absent = attendance.filter((a) => a.status === "ABSENT").length;
-    const late = attendance.filter((a) => a.status === "LATE").length;
-    const excused = attendance.filter(
-      (a) => a.status === "EXCUSED" || a.status === "LEAVE",
-    ).length;
-    const total = attendance.length;
-    const rate = total > 0 ? (present / total) * 100 : 0;
-
-    return {
-      present,
-      absent,
-      late,
-      excused,
-      total,
-      rate: Math.round(rate * 10) / 10,
-    };
-  } catch (error) {
-    console.error("Error fetching attendance:", error);
-    throw new Error("Failed to fetch attendance");
-  }
-}
-
-// ==================== GRADE OPERATIONS ====================
-
-interface RecordGradeInput {
-  enrollmentId: string;
-  subjectId: string;
-  examType:
-    | "MIDTERM"
-    | "FINAL"
-    | "QUIZ"
-    | "ASSIGNMENT"
-    | "RECITATION_TEST"
-    | "MEMORIZATION_TEST"
-    | "ORAL_EXAM"
-    | "WRITTEN_EXAM";
-  score: number;
-  totalScore?: number;
-  remarks?: string;
-  assessedBy: string;
-}
-
-/**
- * Record a grade for an enrollment
- */
-export async function recordGrade(input: RecordGradeInput): Promise<void> {
-  const {
-    enrollmentId,
-    subjectId,
-    examType,
-    score,
-    totalScore = 100,
-    remarks,
-    assessedBy,
-  } = input;
-
-  try {
-    const enrollment = await prisma.enrollment.findUnique({
-      where: { id: enrollmentId },
-      select: { studentId: true },
-    });
-
-    if (!enrollment) {
-      throw new Error("Enrollment not found");
-    }
-
-    const percentage = (score / totalScore) * 100;
-    let grade: string | null = null;
-
-    if (percentage >= 90) grade = "A+";
-    else if (percentage >= 85) grade = "A";
-    else if (percentage >= 80) grade = "A-";
-    else if (percentage >= 75) grade = "B+";
-    else if (percentage >= 70) grade = "B";
-    else if (percentage >= 65) grade = "B-";
-    else if (percentage >= 60) grade = "C+";
-    else if (percentage >= 55) grade = "C";
-    else if (percentage >= 50) grade = "C-";
-    else if (percentage >= 45) grade = "D+";
-    else if (percentage >= 40) grade = "D";
-    else grade = "F";
-
-    await prisma.grade.create({
-      data: {
-        studentId: enrollment.studentId,
-        subjectId,
-        examType,
-        score,
-        totalScore,
-        percentage,
-        grade,
-        remarks,
-        assessedBy,
-      },
-    });
-
-    revalidatePath(`/dashboard/admin/enrollments/${enrollmentId}`);
-  } catch (error) {
-    console.error("Error recording grade:", error);
-    throw new Error("Failed to record grade");
-  }
-}
-
-/**
- * Get grades for an enrollment
- */
-export async function getEnrollmentGrades(enrollmentId: string): Promise<
-  {
-    id: string;
-    subjectName: string;
-    examType: string;
-    score: number;
-    totalScore: number;
-    percentage: number;
-    grade: string | null;
-    assessedAt: Date;
-  }[]
-> {
-  try {
-    const enrollment = await prisma.enrollment.findUnique({
-      where: { id: enrollmentId },
-      select: { studentId: true },
-    });
-
-    if (!enrollment) {
-      throw new Error("Enrollment not found");
-    }
-
-    const grades = await prisma.grade.findMany({
-      where: { studentId: enrollment.studentId },
-      include: {
-        subject: {
-          select: { name: true },
-        },
-      },
-      orderBy: { assessmentDate: "desc" },
-    });
-
-    return grades.map((grade) => ({
-      id: grade.id,
-      subjectName: grade.subject.name,
-      examType: grade.examType,
-      score: grade.score,
-      totalScore: grade.totalScore,
-      percentage: grade.percentage,
-      grade: grade.grade,
-      assessedAt: grade.assessmentDate,
-    }));
-  } catch (error) {
-    console.error("Error fetching grades:", error);
-    throw new Error("Failed to fetch grades");
-  }
-}
-
 // ==================== BULK OPERATIONS ====================
+
+/**
+ * Bulk create enrollments
+ */
+export async function bulkCreateEnrollments(
+  enrollments: CreateEnrollmentInput[],
+): Promise<number> {
+  let successCount = 0;
+
+  try {
+    for (const enrollment of enrollments) {
+      try {
+        await createEnrollment(enrollment);
+        successCount++;
+      } catch (error) {
+        console.error(
+          `Failed to enroll student ${enrollment.studentId}:`,
+          error,
+        );
+      }
+    }
+
+    revalidatePath("/dashboard/admin/enrollments");
+    return successCount;
+  } catch (error) {
+    console.error("Error bulk creating enrollments:", error);
+    throw new Error("Failed to bulk create enrollments");
+  }
+}
 
 /**
  * Bulk update enrollment status
@@ -1135,32 +737,23 @@ export async function bulkUpdateEnrollmentStatus(
  */
 export async function bulkDeleteEnrollments(ids: string[]): Promise<number> {
   try {
-    // Get class IDs to update capacities
+    // Get all enrollments to decrement class capacities
     const enrollments = await prisma.enrollment.findMany({
       where: { id: { in: ids } },
       select: { classId: true },
     });
 
-    const classIds = [...new Set(enrollments.map((e) => e.classId))];
-
-    const result = await prisma.$transaction(async (tx) => {
-      const deleteResult = await tx.enrollment.deleteMany({
-        where: { id: { in: ids } },
+    // Decrement class capacities
+    for (const enrollment of enrollments) {
+      await prisma.class.update({
+        where: { id: enrollment.classId },
+        data: { currentEnrollment: { decrement: 1 } },
       });
+    }
 
-      // Update class capacities
-      for (const classId of classIds) {
-        const activeEnrollments = await tx.enrollment.count({
-          where: { classId, status: "ACTIVE" },
-        });
-
-        await tx.class.update({
-          where: { id: classId },
-          data: { currentEnrollment: activeEnrollments },
-        });
-      }
-
-      return deleteResult;
+    // Delete enrollments
+    const result = await prisma.enrollment.deleteMany({
+      where: { id: { in: ids } },
     });
 
     revalidatePath("/dashboard/admin/enrollments");
@@ -1174,12 +767,26 @@ export async function bulkDeleteEnrollments(ids: string[]): Promise<number> {
 // ==================== HELPER FUNCTIONS ====================
 
 /**
- * Check if student is enrolled in class
+ * Get available enrollment statuses
  */
-export async function isStudentEnrolled(
+export async function getEnrollmentStatuses(): Promise<string[]> {
+  return ["ACTIVE", "COMPLETED", "DROPPED", "SUSPENDED", "FAILED"];
+}
+
+/**
+ * Get available enrollment types
+ */
+export async function getEnrollmentTypes(): Promise<string[]> {
+  return ["REGULAR", "TRIAL", "AUDIT", "MAKEUP"];
+}
+
+/**
+ * Get enrollment by student and class
+ */
+export async function getEnrollmentByStudentAndClass(
   studentId: string,
   classId: string,
-): Promise<boolean> {
+): Promise<EnrollmentWithRelations | null> {
   try {
     const enrollment = await prisma.enrollment.findUnique({
       where: {
@@ -1188,69 +795,92 @@ export async function isStudentEnrolled(
           classId,
         },
       },
+      include: {
+        student: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                name: true,
+                email: true,
+                phone: true,
+                image: true,
+              },
+            },
+          },
+        },
+        class: {
+          include: {
+            teacher: {
+              include: {
+                user: {
+                  select: {
+                    name: true,
+                    email: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+        payment: true,
+      },
     });
-    return !!enrollment;
+
+    return enrollment as EnrollmentWithRelations | null;
   } catch (error) {
-    console.error("Error checking enrollment:", error);
-    throw new Error("Failed to check enrollment");
+    console.error("Error fetching enrollment by student and class:", error);
+    throw new Error("Failed to fetch enrollment");
   }
 }
 
 /**
- * Get enrollment statistics
+ * Get students not enrolled in a class
  */
-export async function getEnrollmentStats(): Promise<{
-  byStatus: Record<EnrollmentStatus, number>;
-  byType: Record<EnrollmentType, number>;
-  completionRate: number;
-  averageProgress: number;
-}> {
+export async function getAvailableStudentsForClass(
+  classId: string,
+  search?: string,
+): Promise<{ id: string; name: string; email: string; studentId: string }[]> {
   try {
-    const [
-      byStatus,
-      byType,
-      totalEnrollments,
-      completedEnrollments,
-      totalProgress,
-    ] = await Promise.all([
-      prisma.enrollment.groupBy({
-        by: ["status"],
-        _count: true,
-      }),
-      prisma.enrollment.groupBy({
-        by: ["enrollmentType"],
-        _count: true,
-      }),
-      prisma.enrollment.count(),
-      prisma.enrollment.count({ where: { status: "COMPLETED" } }),
-      prisma.enrollment.aggregate({
-        _avg: { progress: true },
-      }),
-    ]);
-
-    const statusCounts = {} as Record<EnrollmentStatus, number>;
-    byStatus.forEach((item) => {
-      statusCounts[item.status as EnrollmentStatus] = item._count;
+    // Get enrolled student IDs
+    const enrolledStudents = await prisma.enrollment.findMany({
+      where: { classId },
+      select: { studentId: true },
     });
 
-    const typeCounts = {} as Record<EnrollmentType, number>;
-    byType.forEach((item) => {
-      typeCounts[item.enrollmentType as EnrollmentType] = item._count;
+    const enrolledIds = enrolledStudents.map((e) => e.studentId);
+
+    // Get available students
+    const students = await prisma.student.findMany({
+      where: {
+        id: { notIn: enrolledIds },
+        ...(search && {
+          OR: [
+            { user: { name: { contains: search, mode: "insensitive" } } },
+            { studentId: { contains: search, mode: "insensitive" } },
+            { user: { email: { contains: search, mode: "insensitive" } } },
+          ],
+        }),
+      },
+      include: {
+        user: {
+          select: {
+            name: true,
+            email: true,
+          },
+        },
+      },
+      take: 20,
     });
 
-    const completionRate =
-      totalEnrollments > 0
-        ? (completedEnrollments / totalEnrollments) * 100
-        : 0;
-
-    return {
-      byStatus: statusCounts,
-      byType: typeCounts,
-      completionRate: Math.round(completionRate * 10) / 10,
-      averageProgress: Math.round((totalProgress._avg.progress || 0) * 10) / 10,
-    };
+    return students.map((student) => ({
+      id: student.id,
+      name: student.user.name,
+      email: student.user.email,
+      studentId: student.studentId,
+    }));
   } catch (error) {
-    console.error("Error fetching enrollment stats:", error);
-    throw new Error("Failed to fetch enrollment stats");
+    console.error("Error fetching available students:", error);
+    throw new Error("Failed to fetch available students");
   }
 }
