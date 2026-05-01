@@ -14,7 +14,17 @@ export default async function NewClassPage() {
   // Get current admin user ID from session or use a fallback
   // For now, get the first admin user
   let adminId = "";
-  let teachersData: any[] = [];
+  let teachersData: {
+    id: string;
+    specialization: string | null;
+    user: {
+      id: string;
+      name: string | null;
+      email: string | null;
+      image: string | null;
+    };
+  }[] = [];
+
   let academicYears: string[] = ["2024-2025", "2025-2026"];
   let levels: string[] = ["Beginner", "Intermediate", "Advanced", "Expert"];
 
