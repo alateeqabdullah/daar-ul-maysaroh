@@ -1,3 +1,934 @@
+// // app/(portal)/dashboard/admin/classes/classes-client.tsx
+// "use client";
+
+// import { useState, useCallback, useEffect } from "react";
+// import { useRouter, usePathname } from "next/navigation";
+// import Link from "next/link";
+// import {
+//   School,
+//   Search,
+//   X,
+//   ChevronLeft,
+//   ChevronRight,
+//   MoreHorizontal,
+//   Calendar,
+//   Users,
+//   BookOpen,
+//   Clock,
+//   Plus,
+//   Edit,
+//   Trash2,
+//   Eye,
+//   Loader2,
+//   CheckCircle,
+//   XCircle,
+//   AlertCircle,
+// } from "lucide-react";
+// import { Button } from "@/components/ui/button";
+// import { Input } from "@/components/ui/input";
+// import {
+//   Select,
+//   SelectContent,
+//   SelectItem,
+//   SelectTrigger,
+//   SelectValue,
+// } from "@/components/ui/select";
+// import {
+//   Dialog,
+//   DialogContent,
+//   DialogDescription,
+//   DialogFooter,
+//   DialogHeader,
+//   DialogTitle,
+// } from "@/components/ui/dialog";
+// import {
+//   DropdownMenu,
+//   DropdownMenuContent,
+//   DropdownMenuItem,
+//   DropdownMenuSeparator,
+//   DropdownMenuTrigger,
+// } from "@/components/ui/dropdown-menu";
+// import {
+//   Table,
+//   TableBody,
+//   TableCell,
+//   TableHead,
+//   TableHeader,
+//   TableRow,
+// } from "@/components/ui/table";
+// import { Badge } from "@/components/ui/badge";
+// import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+// import { TooltipProvider } from "@/components/ui/tooltip";
+// import { toast } from "sonner";
+// import { cn } from "@/lib/utils";
+// import {
+//   deleteClass,
+//   bulkActivateClasses,
+//   bulkDeactivateClasses,
+//   bulkDeleteClasses,
+//   getClasses, // Import the server action
+// } from "../actions/classes";
+
+// // Types
+// interface ClassWithRelations {
+//   id: string;
+//   name: string;
+//   code: string;
+//   description: string | null;
+//   level: string;
+//   section: string | null;
+//   capacity: number;
+//   currentEnrollment: number;
+//   academicYear: string;
+//   term: string | null;
+//   scheduleType: string;
+//   isActive: boolean;
+//   startDate: Date | null;
+//   endDate: Date | null;
+//   createdAt: Date;
+//   teacher: {
+//     id: string;
+//     user: {
+//       name: string;
+//       email: string;
+//       image: string | null;
+//     };
+//     specialization: string | null;
+//   };
+//   schedules: Array<{
+//     id: string;
+//     dayOfWeek: number;
+//     startTime: string;
+//     endTime: string;
+//   }>;
+// }
+
+// interface Stats {
+//   totalClasses: number;
+//   activeClasses: number;
+//   totalEnrollments: number;
+//   averageClassSize: number;
+//   classesByLevel: Record<string, number>;
+// }
+
+// interface Teacher {
+//   id: string;
+//   user: {
+//     name: string;
+//     email: string;
+//   };
+// }
+
+// interface ClassesClientProps {
+//   initialClasses: ClassWithRelations[];
+//   initialStats: Stats;
+//   initialPage: number;
+//   initialSearch?: string;
+//   initialLevel?: string;
+//   initialAcademicYear?: string;
+//   initialTeacherId?: string;
+//   totalPages: number;
+//   totalClasses: number;
+//   academicYears: string[];
+//   levels: string[];
+//   teachers: Teacher[];
+// }
+
+// const getLevelColor = (level: string) => {
+//   const colors: Record<string, string> = {
+//     Beginner:
+//       "bg-emerald-100 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400",
+//     Intermediate:
+//       "bg-blue-100 text-blue-700 dark:bg-blue-950/40 dark:text-blue-400",
+//     Advanced:
+//       "bg-purple-100 text-purple-700 dark:bg-purple-950/40 dark:text-purple-400",
+//     Expert:
+//       "bg-amber-100 text-amber-700 dark:bg-amber-950/40 dark:text-amber-400",
+//   };
+//   return (
+//     colors[level] ||
+//     "bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-400"
+//   );
+// };
+
+// const getDayName = (day: number) => {
+//   const days = [
+//     "Sunday",
+//     "Monday",
+//     "Tuesday",
+//     "Wednesday",
+//     "Thursday",
+//     "Friday",
+//     "Saturday",
+//   ];
+//   return days[day] || "Unknown";
+// };
+
+// const getInitials = (name: string) => {
+//   if (!name) return "??";
+//   return name
+//     .split(" ")
+//     .map((n) => n[0])
+//     .join("")
+//     .toUpperCase()
+//     .slice(0, 2);
+// };
+
+// export function ClassesClient({
+//   initialClasses = [],
+//   initialStats,
+//   initialPage,
+//   initialSearch,
+//   initialLevel,
+//   initialAcademicYear,
+//   initialTeacherId,
+//   totalPages: initialTotalPages = 1,
+//   totalClasses: initialTotalClasses = 0,
+//   academicYears = [],
+//   levels = [],
+//   teachers = [],
+// }: ClassesClientProps) {
+//   const router = useRouter();
+//   const pathname = usePathname();
+
+//   // Data states
+//   const [classes, setClasses] = useState<ClassWithRelations[]>(initialClasses);
+//   const [totalPages, setTotalPages] = useState(initialTotalPages);
+//   const [totalClassesCount, setTotalClassesCount] =
+//     useState(initialTotalClasses);
+//   const [isRefreshing, setIsRefreshing] = useState(false);
+//   const [isActionLoading, setIsActionLoading] = useState(false);
+
+//   // Selection states
+//   const [selectedClasses, setSelectedClasses] = useState<Set<string>>(
+//     new Set(),
+//   );
+
+//   // Dialog states
+//   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+//   const [selectedClass, setSelectedClass] = useState<ClassWithRelations | null>(
+//     null,
+//   );
+
+//   // Filter states
+//   const [page, setPage] = useState(initialPage);
+//   const [search, setSearch] = useState(initialSearch || "");
+//   const [searchInput, setSearchInput] = useState(initialSearch || "");
+//   const [level, setLevel] = useState(initialLevel || "all");
+//   const [academicYear, setAcademicYear] = useState(
+//     initialAcademicYear || "all",
+//   );
+//   const [teacherId, setTeacherId] = useState(initialTeacherId || "all");
+
+//   const hasClasses = classes && classes.length > 0;
+
+//   // Fetch classes using server action
+//   const fetchClasses = useCallback(async () => {
+//     setIsRefreshing(true);
+//     try {
+//       const result = await getClasses({
+//         page,
+//         limit: 10,
+//         search: search || undefined,
+//         level: level !== "all" ? level : undefined,
+//         academicYear: academicYear !== "all" ? academicYear : undefined,
+//         teacherId: teacherId !== "all" ? teacherId : undefined,
+//       });
+
+//       setClasses(result.data || []);
+//       setTotalPages(result.totalPages || 1);
+//       setTotalClassesCount(result.total || 0);
+//       setSelectedClasses(new Set());
+//     } catch (error) {
+//       console.error("Error fetching classes:", error);
+//       toast.error("Failed to load classes");
+//     } finally {
+//       setIsRefreshing(false);
+//     }
+//   }, [page, search, level, academicYear, teacherId]);
+
+//   // Update URL when filters change
+//   const updateUrl = useCallback(() => {
+//     const params = new URLSearchParams();
+//     if (page > 1) params.set("page", page.toString());
+//     if (search) params.set("search", search);
+//     if (level !== "all") params.set("level", level);
+//     if (academicYear !== "all") params.set("academicYear", academicYear);
+//     if (teacherId !== "all") params.set("teacherId", teacherId);
+
+//     const newUrl = `${pathname}${params.toString() ? `?${params.toString()}` : ""}`;
+//     router.replace(newUrl, { scroll: false });
+//   }, [page, search, level, academicYear, teacherId, router, pathname]);
+
+//   // Fetch data when filters change
+//   useEffect(() => {
+//     fetchClasses();
+//   }, [fetchClasses]);
+
+//   // Update URL when filters change (debounced)
+//   useEffect(() => {
+//     const timer = setTimeout(() => {
+//       updateUrl();
+//     }, 300);
+//     return () => clearTimeout(timer);
+//   }, [page, search, level, academicYear, teacherId, updateUrl]);
+
+//   const handleSearch = () => {
+//     setSearch(searchInput);
+//     setPage(1);
+//   };
+
+//   const clearFilters = () => {
+//     setSearchInput("");
+//     setSearch("");
+//     setLevel("all");
+//     setAcademicYear("all");
+//     setTeacherId("all");
+//     setPage(1);
+//   };
+
+//   const handleDeleteClass = async (id: string) => {
+//     setIsActionLoading(true);
+//     try {
+//       await deleteClass(id);
+//       await fetchClasses();
+//       toast.success("Class deleted successfully");
+//       setOpenDeleteDialog(false);
+//       setSelectedClass(null);
+//     } catch (error) {
+//       toast.error("Failed to delete class");
+//     } finally {
+//       setIsActionLoading(false);
+//     }
+//   };
+
+//   const handleBulkAction = async (
+//     action: "activate" | "deactivate" | "delete",
+//   ) => {
+//     const ids = Array.from(selectedClasses);
+//     if (ids.length === 0) return;
+
+//     let confirmMessage = "";
+//     let actionFn: any;
+
+//     switch (action) {
+//       case "activate":
+//         confirmMessage = `Activate ${ids.length} class(es)?`;
+//         actionFn = bulkActivateClasses;
+//         break;
+//       case "deactivate":
+//         confirmMessage = `Deactivate ${ids.length} class(es)?`;
+//         actionFn = bulkDeactivateClasses;
+//         break;
+//       case "delete":
+//         confirmMessage = `Delete ${ids.length} class(es)? This action cannot be undone.`;
+//         actionFn = bulkDeleteClasses;
+//         break;
+//     }
+
+//     if (!confirm(confirmMessage)) return;
+
+//     setIsActionLoading(true);
+//     try {
+//       await actionFn(ids);
+//       await fetchClasses();
+//       setSelectedClasses(new Set());
+//       toast.success(`${ids.length} class(es) ${action}d successfully`);
+//     } catch (error) {
+//       toast.error(`Failed to ${action} classes`);
+//     } finally {
+//       setIsActionLoading(false);
+//     }
+//   };
+
+//   const toggleSelectAll = () => {
+//     if (!hasClasses) return;
+
+//     if (selectedClasses.size === classes.length) {
+//       setSelectedClasses(new Set());
+//     } else {
+//       setSelectedClasses(new Set(classes.map((c) => c.id)));
+//     }
+//   };
+
+//   const toggleSelectClass = (id: string) => {
+//     const newSelected = new Set(selectedClasses);
+//     if (newSelected.has(id)) {
+//       newSelected.delete(id);
+//     } else {
+//       newSelected.add(id);
+//     }
+//     setSelectedClasses(newSelected);
+//   };
+
+//   // Get safe display name for teacher
+//   const getTeacherName = (teacher: ClassWithRelations["teacher"]) => {
+//     return teacher?.user?.name || "Not Assigned";
+//   };
+
+//   // Get safe schedule display
+//   const getScheduleDisplay = (schedules: ClassWithRelations["schedules"]) => {
+//     if (!schedules || schedules.length === 0) {
+//       return { day: "No schedule", time: "" };
+//     }
+//     const firstSchedule = schedules[0];
+//     return {
+//       day: getDayName(firstSchedule.dayOfWeek),
+//       time: `${firstSchedule.startTime} - ${firstSchedule.endTime}`,
+//     };
+//   };
+
+//   // Get enrollment percentage
+//   const getEnrollmentPercentage = (current: number, capacity: number) => {
+//     if (!capacity || capacity === 0) return 0;
+//     return Math.min(100, (current / capacity) * 100);
+//   };
+
+//   return (
+//     <TooltipProvider>
+//       <div className="min-h-screen bg-gradient-to-b from-slate-50 to-slate-100 dark:from-slate-950 dark:to-slate-900">
+//         <div className="container mx-auto px-4 sm:px-6 py-6 sm:py-8">
+//           {/* Header */}
+//           <div className="mb-8">
+//             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+//               <div>
+//                 <div className="flex items-center gap-2 mb-1">
+//                   <School className="w-5 h-5 text-amber-500" />
+//                   <span className="text-xs font-black uppercase tracking-wider text-amber-600 dark:text-amber-400">
+//                     Academic Management
+//                   </span>
+//                 </div>
+//                 <h1 className="text-3xl sm:text-4xl font-black tracking-tighter bg-gradient-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent">
+//                   Class Management
+//                 </h1>
+//                 <p className="text-muted-foreground text-sm mt-1">
+//                   Manage classes, schedules, enrollments, and subjects
+//                 </p>
+//               </div>
+//               <Link href="/dashboard/admin/classes/new">
+//                 <Button className="rounded-full bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 shadow-md">
+//                   <Plus className="w-4 h-4 mr-2" />
+//                   Create Class
+//                 </Button>
+//               </Link>
+//             </div>
+//           </div>
+
+//           {/* Stats Cards */}
+//           <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+//             <div className="bg-white dark:bg-slate-900 rounded-xl p-4 border border-slate-200 dark:border-slate-800 shadow-sm">
+//               <div className="flex items-center justify-between">
+//                 <div>
+//                   <p className="text-sm text-muted-foreground">Total Classes</p>
+//                   <p className="text-2xl font-black">
+//                     {initialStats?.totalClasses || 0}
+//                   </p>
+//                 </div>
+//                 <div className="w-10 h-10 rounded-full bg-purple-100 dark:bg-purple-950/40 flex items-center justify-center">
+//                   <School className="w-5 h-5 text-purple-600" />
+//                 </div>
+//               </div>
+//             </div>
+//             <div className="bg-white dark:bg-slate-900 rounded-xl p-4 border border-slate-200 dark:border-slate-800 shadow-sm">
+//               <div className="flex items-center justify-between">
+//                 <div>
+//                   <p className="text-sm text-muted-foreground">
+//                     Active Classes
+//                   </p>
+//                   <p className="text-2xl font-black text-emerald-600">
+//                     {initialStats?.activeClasses || 0}
+//                   </p>
+//                 </div>
+//                 <div className="w-10 h-10 rounded-full bg-emerald-100 dark:bg-emerald-950/40 flex items-center justify-center">
+//                   <CheckCircle className="w-5 h-5 text-emerald-600" />
+//                 </div>
+//               </div>
+//             </div>
+//             <div className="bg-white dark:bg-slate-900 rounded-xl p-4 border border-slate-200 dark:border-slate-800 shadow-sm">
+//               <div className="flex items-center justify-between">
+//                 <div>
+//                   <p className="text-sm text-muted-foreground">
+//                     Total Enrollments
+//                   </p>
+//                   <p className="text-2xl font-black">
+//                     {initialStats?.totalEnrollments || 0}
+//                   </p>
+//                 </div>
+//                 <div className="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-950/40 flex items-center justify-center">
+//                   <Users className="w-5 h-5 text-blue-600" />
+//                 </div>
+//               </div>
+//             </div>
+//             <div className="bg-white dark:bg-slate-900 rounded-xl p-4 border border-slate-200 dark:border-slate-800 shadow-sm">
+//               <div className="flex items-center justify-between">
+//                 <div>
+//                   <p className="text-sm text-muted-foreground">
+//                     Avg. Class Size
+//                   </p>
+//                   <p className="text-2xl font-black text-amber-600">
+//                     {initialStats?.averageClassSize || 0}
+//                   </p>
+//                 </div>
+//                 <div className="w-10 h-10 rounded-full bg-amber-100 dark:bg-amber-950/40 flex items-center justify-center">
+//                   <Users className="w-5 h-5 text-amber-600" />
+//                 </div>
+//               </div>
+//             </div>
+//           </div>
+
+//           {/* Loading Overlay */}
+//           {(isRefreshing || isActionLoading) && (
+//             <div className="fixed inset-0 bg-black/20 z-50 flex items-center justify-center pointer-events-none">
+//               <div className="bg-white dark:bg-slate-900 rounded-full p-3 shadow-lg">
+//                 <Loader2 className="w-6 h-6 animate-spin text-purple-600" />
+//               </div>
+//             </div>
+//           )}
+
+//           {/* Bulk Actions Bar */}
+//           {selectedClasses.size > 0 && (
+//             <div className="bg-purple-50 dark:bg-purple-950/30 rounded-xl p-4 mb-6 flex flex-wrap items-center justify-between gap-4 border border-purple-200 dark:border-purple-800">
+//               <div className="flex items-center gap-2">
+//                 <CheckCircle className="w-5 h-5 text-purple-600" />
+//                 <span className="text-sm font-black">
+//                   {selectedClasses.size} class(es) selected
+//                 </span>
+//               </div>
+//               <div className="flex flex-wrap gap-2">
+//                 <Button
+//                   size="sm"
+//                   variant="outline"
+//                   onClick={() => handleBulkAction("activate")}
+//                   disabled={isActionLoading}
+//                   className="border-emerald-300 text-emerald-600 hover:bg-emerald-50"
+//                 >
+//                   <CheckCircle className="w-4 h-4 mr-1" />
+//                   Activate
+//                 </Button>
+//                 <Button
+//                   size="sm"
+//                   variant="outline"
+//                   onClick={() => handleBulkAction("deactivate")}
+//                   disabled={isActionLoading}
+//                   className="border-orange-300 text-orange-600 hover:bg-orange-50"
+//                 >
+//                   <XCircle className="w-4 h-4 mr-1" />
+//                   Deactivate
+//                 </Button>
+//                 <Button
+//                   size="sm"
+//                   variant="outline"
+//                   onClick={() => handleBulkAction("delete")}
+//                   disabled={isActionLoading}
+//                   className="border-red-300 text-red-600 hover:bg-red-50"
+//                 >
+//                   <Trash2 className="w-4 h-4 mr-1" />
+//                   Delete
+//                 </Button>
+//               </div>
+//             </div>
+//           )}
+
+//           {/* Filters */}
+//           <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 p-4 mb-6">
+//             <div className="flex flex-col sm:flex-row gap-3">
+//               <div className="relative flex-1">
+//                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+//                 <Input
+//                   placeholder="Search by name or code..."
+//                   value={searchInput}
+//                   onChange={(e) => setSearchInput(e.target.value)}
+//                   onKeyPress={(e) => e.key === "Enter" && handleSearch()}
+//                   className="pl-9 rounded-full border-slate-200 dark:border-slate-800"
+//                 />
+//               </div>
+//               <Select value={level} onValueChange={setLevel}>
+//                 <SelectTrigger className="w-full sm:w-36 rounded-full">
+//                   <SelectValue placeholder="Level" />
+//                 </SelectTrigger>
+//                 <SelectContent>
+//                   <SelectItem value="all">All Levels</SelectItem>
+//                   {levels.map((l) => (
+//                     <SelectItem key={l} value={l}>
+//                       {l}
+//                     </SelectItem>
+//                   ))}
+//                 </SelectContent>
+//               </Select>
+//               <Select value={academicYear} onValueChange={setAcademicYear}>
+//                 <SelectTrigger className="w-full sm:w-36 rounded-full">
+//                   <SelectValue placeholder="Year" />
+//                 </SelectTrigger>
+//                 <SelectContent>
+//                   <SelectItem value="all">All Years</SelectItem>
+//                   {academicYears.map((year) => (
+//                     <SelectItem key={year} value={year}>
+//                       {year}
+//                     </SelectItem>
+//                   ))}
+//                 </SelectContent>
+//               </Select>
+//               <Select value={teacherId} onValueChange={setTeacherId}>
+//                 <SelectTrigger className="w-full sm:w-44 rounded-full">
+//                   <SelectValue placeholder="Teacher" />
+//                 </SelectTrigger>
+//                 <SelectContent>
+//                   <SelectItem value="all">All Teachers</SelectItem>
+//                   {teachers.map((teacher) => (
+//                     <SelectItem key={teacher.id} value={teacher.id}>
+//                       {teacher.user?.name || "Unknown Teacher"}
+//                     </SelectItem>
+//                   ))}
+//                 </SelectContent>
+//               </Select>
+//               <Button
+//                 onClick={handleSearch}
+//                 className="rounded-full px-6 bg-purple-600 hover:bg-purple-700"
+//               >
+//                 <Search className="w-4 h-4 mr-2" />
+//                 Search
+//               </Button>
+//               {(level !== "all" ||
+//                 academicYear !== "all" ||
+//                 teacherId !== "all" ||
+//                 search) && (
+//                 <Button
+//                   onClick={clearFilters}
+//                   variant="outline"
+//                   className="rounded-full"
+//                 >
+//                   <X className="w-4 h-4 mr-2" />
+//                   Clear
+//                 </Button>
+//               )}
+//             </div>
+//           </div>
+
+//           {/* Classes Table */}
+//           <div className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm">
+//             <div className="overflow-x-auto">
+//               <Table>
+//                 <TableHeader className="bg-slate-50 dark:bg-slate-800/50">
+//                   <TableRow>
+//                     <TableHead className="w-12">
+//                       <input
+//                         type="checkbox"
+//                         checked={
+//                           hasClasses
+//                             ? selectedClasses.size === classes.length
+//                             : false
+//                         }
+//                         onChange={toggleSelectAll}
+//                         disabled={isRefreshing || !hasClasses}
+//                         className="w-4 h-4 rounded border-slate-300"
+//                       />
+//                     </TableHead>
+//                     <TableHead>Class</TableHead>
+//                     <TableHead>Level</TableHead>
+//                     <TableHead>Teacher</TableHead>
+//                     <TableHead>Schedule</TableHead>
+//                     <TableHead>Enrollment</TableHead>
+//                     <TableHead>Status</TableHead>
+//                     <TableHead className="w-12"></TableHead>
+//                   </TableRow>
+//                 </TableHeader>
+//                 <TableBody>
+//                   {!hasClasses ? (
+//                     <TableRow>
+//                       <TableCell colSpan={8} className="text-center py-12">
+//                         <div className="flex flex-col items-center gap-2">
+//                           <School className="w-12 h-12 text-muted-foreground/30" />
+//                           <p className="text-muted-foreground">
+//                             No classes found
+//                           </p>
+//                           <Button
+//                             onClick={clearFilters}
+//                             variant="outline"
+//                             size="sm"
+//                             className="mt-2"
+//                           >
+//                             Clear filters
+//                           </Button>
+//                         </div>
+//                       </TableCell>
+//                     </TableRow>
+//                   ) : (
+//                     classes.map((cls) => {
+//                       const schedule = getScheduleDisplay(cls.schedules);
+//                       const enrollmentPercent = getEnrollmentPercentage(
+//                         cls.currentEnrollment,
+//                         cls.capacity,
+//                       );
+
+//                       return (
+//                         <TableRow
+//                           key={cls.id}
+//                           className="hover:bg-slate-50 dark:hover:bg-slate-800/50"
+//                         >
+//                           <TableCell>
+//                             <input
+//                               type="checkbox"
+//                               checked={selectedClasses.has(cls.id)}
+//                               onChange={() => toggleSelectClass(cls.id)}
+//                               disabled={isRefreshing}
+//                               className="w-4 h-4 rounded border-slate-300"
+//                             />
+//                           </TableCell>
+//                           <TableCell>
+//                             <div>
+//                               <p className="font-black text-sm">{cls.name}</p>
+//                               <p className="text-xs text-muted-foreground font-mono">
+//                                 {cls.code}
+//                               </p>
+//                             </div>
+//                           </TableCell>
+//                           <TableCell>
+//                             <span
+//                               className={cn(
+//                                 "text-xs font-black px-2 py-0.5 rounded-full",
+//                                 getLevelColor(cls.level),
+//                               )}
+//                             >
+//                               {cls.level}
+//                             </span>
+//                           </TableCell>
+//                           <TableCell>
+//                             <div className="flex items-center gap-2">
+//                               <Avatar className="w-6 h-6">
+//                                 <AvatarFallback className="text-[10px]">
+//                                   {getInitials(getTeacherName(cls.teacher))}
+//                                 </AvatarFallback>
+//                               </Avatar>
+//                               <span className="text-sm font-medium">
+//                                 {getTeacherName(cls.teacher)}
+//                               </span>
+//                             </div>
+//                           </TableCell>
+//                           <TableCell>
+//                             <div className="text-xs">
+//                               <p className="font-medium">{schedule.day}</p>
+//                               {schedule.time && (
+//                                 <p className="text-muted-foreground">
+//                                   {schedule.time}
+//                                 </p>
+//                               )}
+//                             </div>
+//                           </TableCell>
+//                           <TableCell>
+//                             <div className="flex flex-col gap-1">
+//                               <div className="flex items-center gap-2">
+//                                 <span className="text-sm font-black">
+//                                   {cls.currentEnrollment}
+//                                 </span>
+//                                 <span className="text-xs text-muted-foreground">
+//                                   / {cls.capacity}
+//                                 </span>
+//                               </div>
+//                               <div className="w-20 h-1.5 bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+//                                 <div
+//                                   className="h-full bg-purple-600 rounded-full"
+//                                   style={{ width: `${enrollmentPercent}%` }}
+//                                 />
+//                               </div>
+//                             </div>
+//                           </TableCell>
+//                           <TableCell>
+//                             {cls.isActive ? (
+//                               <Badge className="bg-emerald-100 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400 border-0">
+//                                 Active
+//                               </Badge>
+//                             ) : (
+//                               <Badge
+//                                 variant="secondary"
+//                                 className="bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400"
+//                               >
+//                                 Inactive
+//                               </Badge>
+//                             )}
+//                           </TableCell>
+//                           <TableCell>
+//                             <DropdownMenu>
+//                               <DropdownMenuTrigger asChild>
+//                                 <Button
+//                                   variant="ghost"
+//                                   size="icon"
+//                                   className="h-8 w-8"
+//                                   disabled={isActionLoading}
+//                                 >
+//                                   <MoreHorizontal className="w-4 h-4" />
+//                                 </Button>
+//                               </DropdownMenuTrigger>
+//                               <DropdownMenuContent align="end" className="w-48">
+//                                 <DropdownMenuItem asChild>
+//                                   <Link
+//                                     href={`/dashboard/admin/classes/${cls.id}`}
+//                                   >
+//                                     <Eye className="w-4 h-4 mr-2" />
+//                                     View Details
+//                                   </Link>
+//                                 </DropdownMenuItem>
+//                                 <DropdownMenuItem asChild>
+//                                   <Link
+//                                     href={`/dashboard/admin/classes/${cls.id}/edit`}
+//                                   >
+//                                     <Edit className="w-4 h-4 mr-2" />
+//                                     Edit Class
+//                                   </Link>
+//                                 </DropdownMenuItem>
+//                                 <DropdownMenuItem asChild>
+//                                   <Link
+//                                     href={`/dashboard/admin/classes/${cls.id}/schedule`}
+//                                   >
+//                                     <Calendar className="w-4 h-4 mr-2" />
+//                                     Manage Schedule
+//                                   </Link>
+//                                 </DropdownMenuItem>
+//                                 <DropdownMenuItem asChild>
+//                                   <Link
+//                                     href={`/dashboard/admin/classes/${cls.id}/students`}
+//                                   >
+//                                     <Users className="w-4 h-4 mr-2" />
+//                                     Manage Students
+//                                   </Link>
+//                                 </DropdownMenuItem>
+//                                 <DropdownMenuSeparator />
+//                                 <DropdownMenuItem
+//                                   onClick={() => {
+//                                     setSelectedClass(cls);
+//                                     setOpenDeleteDialog(true);
+//                                   }}
+//                                   className="text-red-600"
+//                                 >
+//                                   <Trash2 className="w-4 h-4 mr-2" />
+//                                   Delete Class
+//                                 </DropdownMenuItem>
+//                               </DropdownMenuContent>
+//                             </DropdownMenu>
+//                           </TableCell>
+//                         </TableRow>
+//                       );
+//                     })
+//                   )}
+//                 </TableBody>
+//               </Table>
+//             </div>
+
+//             {/* Pagination */}
+//             {totalPages > 1 && (
+//               <div className="flex items-center justify-between px-4 py-4 border-t border-slate-200 dark:border-slate-800">
+//                 <p className="text-sm text-muted-foreground">
+//                   Page {page} of {totalPages} • {totalClassesCount} total
+//                   classes
+//                 </p>
+//                 <div className="flex gap-2">
+//                   <Button
+//                     variant="outline"
+//                     size="sm"
+//                     onClick={() => setPage((p) => Math.max(1, p - 1))}
+//                     disabled={page === 1 || isRefreshing}
+//                     className="rounded-full"
+//                   >
+//                     <ChevronLeft className="w-4 h-4" />
+//                     Previous
+//                   </Button>
+//                   <div className="flex gap-1">
+//                     {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+//                       let pageNum: number;
+//                       if (totalPages <= 5) {
+//                         pageNum = i + 1;
+//                       } else if (page <= 3) {
+//                         pageNum = i + 1;
+//                       } else if (page >= totalPages - 2) {
+//                         pageNum = totalPages - 4 + i;
+//                       } else {
+//                         pageNum = page - 2 + i;
+//                       }
+//                       return (
+//                         <Button
+//                           key={pageNum}
+//                           variant={page === pageNum ? "default" : "outline"}
+//                           size="sm"
+//                           onClick={() => setPage(pageNum)}
+//                           disabled={isRefreshing}
+//                           className={`rounded-full w-9 ${page === pageNum ? "bg-purple-600 hover:bg-purple-700" : ""}`}
+//                         >
+//                           {pageNum}
+//                         </Button>
+//                       );
+//                     })}
+//                   </div>
+//                   <Button
+//                     variant="outline"
+//                     size="sm"
+//                     onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+//                     disabled={page === totalPages || isRefreshing}
+//                     className="rounded-full"
+//                   >
+//                     Next
+//                     <ChevronRight className="w-4 h-4" />
+//                   </Button>
+//                 </div>
+//               </div>
+//             )}
+//           </div>
+//         </div>
+//       </div>
+
+//       {/* Delete Confirmation Dialog */}
+//       <Dialog open={openDeleteDialog} onOpenChange={setOpenDeleteDialog}>
+//         <DialogContent className="sm:max-w-md">
+//           <DialogHeader>
+//             <DialogTitle>Delete Class</DialogTitle>
+//             <DialogDescription>
+//               Are you sure you want to delete "{selectedClass?.name}"? This
+//               action cannot be undone.
+//               {selectedClass && selectedClass.currentEnrollment > 0 && (
+//                 <div className="mt-2 p-2 bg-amber-50 dark:bg-amber-950/30 rounded-lg flex items-center gap-2 text-amber-600 dark:text-amber-400">
+//                   <AlertCircle className="w-4 h-4" />
+//                   <span className="text-sm">
+//                     This class has {selectedClass.currentEnrollment} enrolled
+//                     students.
+//                   </span>
+//                 </div>
+//               )}
+//             </DialogDescription>
+//           </DialogHeader>
+//           <DialogFooter>
+//             <Button
+//               variant="outline"
+//               onClick={() => setOpenDeleteDialog(false)}
+//             >
+//               Cancel
+//             </Button>
+//             <Button
+//               onClick={() => handleDeleteClass(selectedClass!.id)}
+//               disabled={isActionLoading}
+//               className="bg-red-600 hover:bg-red-700"
+//             >
+//               {isActionLoading && (
+//                 <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+//               )}
+//               Delete Class
+//             </Button>
+//           </DialogFooter>
+//         </DialogContent>
+//       </Dialog>
+//     </TooltipProvider>
+//   );
+// }
+
+
+
+
+
+
+
+
+
+
+
+
+
 // app/(portal)/dashboard/admin/classes/classes-client.tsx
 "use client";
 
@@ -80,12 +1011,7 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { useMediaQuery } from "@/hooks/use-media-query";
@@ -183,19 +1109,12 @@ interface ClassesClientProps {
 // ============ HELPERS ============
 const getLevelColor = (level: string) => {
   const colors: Record<string, string> = {
-    Beginner:
-      "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800",
-    Intermediate:
-      "bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-200 dark:border-blue-800",
-    Advanced:
-      "bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-200 dark:border-purple-800",
-    Expert:
-      "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-200 dark:border-amber-800",
+    Beginner: "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800",
+    Intermediate: "bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-200 dark:border-blue-800",
+    Advanced: "bg-purple-500/10 text-purple-600 dark:text-purple-400 border-purple-200 dark:border-purple-800",
+    Expert: "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-200 dark:border-amber-800",
   };
-  return (
-    colors[level] ||
-    "bg-gray-500/10 text-gray-600 dark:text-gray-400 border-gray-200 dark:border-gray-800"
-  );
+  return colors[level] || "bg-gray-500/10 text-gray-600 dark:text-gray-400 border-gray-200 dark:border-gray-800";
 };
 
 const getLevelGradient = (level: string) => {
@@ -209,17 +1128,9 @@ const getLevelGradient = (level: string) => {
 };
 
 const getDayName = (day: number, short = false) => {
-  const days = short
+  const days = short 
     ? ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
-    : [
-        "Sunday",
-        "Monday",
-        "Tuesday",
-        "Wednesday",
-        "Thursday",
-        "Friday",
-        "Saturday",
-      ];
+    : ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
   return days[day] || "Unknown";
 };
 
@@ -252,14 +1163,7 @@ interface StatCardProps {
   delay: number;
 }
 
-function StatCard({
-  title,
-  value,
-  icon: Icon,
-  trend,
-  color,
-  delay,
-}: StatCardProps) {
+function StatCard({ title, value, icon: Icon, trend, color, delay }: StatCardProps) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -268,66 +1172,30 @@ function StatCard({
       className={cn(
         "relative overflow-hidden rounded-2xl border bg-white dark:bg-slate-900/50 p-5",
         "backdrop-blur-sm transition-all duration-300 hover:shadow-lg hover:-translate-y-0.5",
-        `border-${color}-200 dark:border-${color}-800`,
+        `border-${color}-200 dark:border-${color}-800`
       )}
     >
       <div className="flex items-start justify-between">
         <div>
           <p className="text-sm font-medium text-muted-foreground">{title}</p>
-          <p
-            className={cn(
-              "text-3xl font-black mt-1",
-              `text-${color}-600 dark:text-${color}-400`,
-            )}
-          >
+          <p className={cn("text-3xl font-black mt-1", `text-${color}-600 dark:text-${color}-400`)}>
             {value}
           </p>
           {trend !== undefined && (
             <div className="flex items-center gap-1 mt-2">
-              <TrendingUp
-                className={cn(
-                  "w-3 h-3",
-                  trend >= 0 ? "text-emerald-500" : "text-red-500",
-                )}
-              />
-              <span
-                className={cn(
-                  "text-xs font-medium",
-                  trend >= 0 ? "text-emerald-500" : "text-red-500",
-                )}
-              >
-                {trend >= 0 ? "+" : ""}
-                {trend}%
+              <TrendingUp className={cn("w-3 h-3", trend >= 0 ? "text-emerald-500" : "text-red-500")} />
+              <span className={cn("text-xs font-medium", trend >= 0 ? "text-emerald-500" : "text-red-500")}>
+                {trend >= 0 ? "+" : ""}{trend}%
               </span>
-              <span className="text-xs text-muted-foreground">
-                vs last month
-              </span>
+              <span className="text-xs text-muted-foreground">vs last month</span>
             </div>
           )}
         </div>
-        <div
-          className={cn(
-            "rounded-xl p-3",
-            `bg-${color}-100 dark:bg-${color}-950/40`,
-          )}
-        >
-          <Icon
-            className={cn(
-              "w-5 h-5",
-              `text-${color}-600 dark:text-${color}-400`,
-            )}
-          />
+        <div className={cn("rounded-xl p-3", `bg-${color}-100 dark:bg-${color}-950/40`)}>
+          <Icon className={cn("w-5 h-5", `text-${color}-600 dark:text-${color}-400`)} />
         </div>
       </div>
-      <div
-        className={cn(
-          "absolute bottom-0 left-0 h-1",
-          `bg-gradient-to-r ${getLevelGradient(title)}`,
-        )}
-        style={{
-          width: `${Math.min(100, typeof value === "number" ? value : 0)}%`,
-        }}
-      />
+      <div className={cn("absolute bottom-0 left-0 h-1", `bg-gradient-to-r ${getLevelGradient(title)}`)} style={{ width: `${Math.min(100, typeof value === 'number' ? value : 0)}%` }} />
     </motion.div>
   );
 }
@@ -341,17 +1209,9 @@ interface MobileClassCardProps {
   isActionLoading: boolean;
 }
 
-function MobileClassCard({
-  cls,
-  isSelected,
-  onSelect,
-  onDelete,
-  isActionLoading,
-}: MobileClassCardProps) {
+function MobileClassCard({ cls, isSelected, onSelect, onDelete, isActionLoading }: MobileClassCardProps) {
   const schedule = cls.schedules?.[0];
-  const enrollmentPercent = cls.capacity
-    ? (cls.currentEnrollment / cls.capacity) * 100
-    : 0;
+  const enrollmentPercent = cls.capacity ? (cls.currentEnrollment / cls.capacity) * 100 : 0;
   const teacherName = cls.teacher?.user?.name || "Not Assigned";
 
   return (
@@ -362,9 +1222,7 @@ function MobileClassCard({
       whileHover={{ y: -2 }}
       className={cn(
         "relative rounded-xl border bg-white dark:bg-slate-900 p-4 transition-all",
-        isSelected
-          ? "border-purple-400 bg-purple-50/50 dark:bg-purple-950/20"
-          : "border-slate-200 dark:border-slate-800",
+        isSelected ? "border-purple-400 bg-purple-50/50 dark:bg-purple-950/20" : "border-slate-200 dark:border-slate-800"
       )}
     >
       {/* Selection Checkbox */}
@@ -379,14 +1237,12 @@ function MobileClassCard({
 
       {/* Status Badge */}
       <div className="absolute top-4 right-4">
-        <div
-          className={cn(
-            "px-2 py-0.5 rounded-full text-xs font-medium",
-            cls.isActive
-              ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400"
-              : "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400",
-          )}
-        >
+        <div className={cn(
+          "px-2 py-0.5 rounded-full text-xs font-medium",
+          cls.isActive 
+            ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400"
+            : "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400"
+        )}>
           {cls.isActive ? "Active" : "Inactive"}
         </div>
       </div>
@@ -395,31 +1251,22 @@ function MobileClassCard({
       <div className="pt-6 px-2 pb-2">
         {/* Class Header */}
         <div className="flex items-start gap-3 mb-3">
-          <div
-            className={cn(
-              "w-12 h-12 rounded-xl flex items-center justify-center",
-              "bg-gradient-to-br shadow-md",
-              getLevelGradient(cls.level),
-            )}
-          >
+          <div className={cn(
+            "w-12 h-12 rounded-xl flex items-center justify-center",
+            "bg-gradient-to-br shadow-md",
+            getLevelGradient(cls.level)
+          )}>
             <School className="w-6 h-6 text-white" />
           </div>
           <div className="flex-1 min-w-0">
             <h3 className="font-bold text-base truncate">{cls.name}</h3>
-            <p className="text-xs font-mono text-muted-foreground">
-              {cls.code}
-            </p>
+            <p className="text-xs font-mono text-muted-foreground">{cls.code}</p>
           </div>
         </div>
 
         {/* Level Badge */}
         <div className="mb-3">
-          <span
-            className={cn(
-              "text-xs font-medium px-2 py-1 rounded-full border",
-              getLevelColor(cls.level),
-            )}
-          >
+          <span className={cn("text-xs font-medium px-2 py-1 rounded-full border", getLevelColor(cls.level))}>
             {cls.level}
           </span>
         </div>
@@ -427,15 +1274,11 @@ function MobileClassCard({
         {/* Teacher Info */}
         <div className="flex items-center gap-2 mb-3 p-2 rounded-lg bg-slate-50 dark:bg-slate-800/50">
           <Avatar className="w-8 h-8">
-            <AvatarFallback className="text-xs">
-              {getInitials(teacherName)}
-            </AvatarFallback>
+            <AvatarFallback className="text-xs">{getInitials(teacherName)}</AvatarFallback>
           </Avatar>
           <div className="flex-1 min-w-0">
             <p className="text-sm font-medium truncate">{teacherName}</p>
-            <p className="text-xs text-muted-foreground truncate">
-              {cls.teacher?.specialization || "Teacher"}
-            </p>
+            <p className="text-xs text-muted-foreground truncate">{cls.teacher?.specialization || "Teacher"}</p>
           </div>
         </div>
 
@@ -443,9 +1286,7 @@ function MobileClassCard({
         {schedule && (
           <div className="flex items-center gap-2 mb-3 text-sm">
             <Calendar className="w-4 h-4 text-muted-foreground" />
-            <span className="font-medium">
-              {getDayName(schedule.dayOfWeek, true)}
-            </span>
+            <span className="font-medium">{getDayName(schedule.dayOfWeek, true)}</span>
             <span className="text-muted-foreground">
               {formatTime(schedule.startTime)} - {formatTime(schedule.endTime)}
             </span>
@@ -456,9 +1297,7 @@ function MobileClassCard({
         <div className="mb-3">
           <div className="flex justify-between text-xs mb-1">
             <span className="text-muted-foreground">Enrollment</span>
-            <span className="font-medium">
-              {cls.currentEnrollment} / {cls.capacity}
-            </span>
+            <span className="font-medium">{cls.currentEnrollment} / {cls.capacity}</span>
           </div>
           <Progress value={enrollmentPercent} className="h-2" />
         </div>
@@ -478,10 +1317,7 @@ function MobileClassCard({
               View
             </Button>
           </Link>
-          <Link
-            href={`/dashboard/admin/classes/${cls.id}/edit`}
-            className="flex-1"
-          >
+          <Link href={`/dashboard/admin/classes/${cls.id}/edit`} className="flex-1">
             <Button variant="outline" size="sm" className="w-full gap-1">
               <Edit className="w-3 h-3" />
               Edit
@@ -526,32 +1362,25 @@ export function ClassesClient({
   // Data states
   const [classes, setClasses] = useState<ClassWithRelations[]>(initialClasses);
   const [totalPages, setTotalPages] = useState(initialTotalPages);
-  const [totalClassesCount, setTotalClassesCount] =
-    useState(initialTotalClasses);
+  const [totalClassesCount, setTotalClassesCount] = useState(initialTotalClasses);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [isActionLoading, setIsActionLoading] = useState(false);
   const [stats, setStats] = useState<Stats>(initialStats);
 
   // Selection states
-  const [selectedClasses, setSelectedClasses] = useState<Set<string>>(
-    new Set(),
-  );
+  const [selectedClasses, setSelectedClasses] = useState<Set<string>>(new Set());
 
   // UI States
   const [isFilterSheetOpen, setIsFilterSheetOpen] = useState(false);
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-  const [selectedClass, setSelectedClass] = useState<ClassWithRelations | null>(
-    null,
-  );
+  const [selectedClass, setSelectedClass] = useState<ClassWithRelations | null>(null);
 
   // Filter states
   const [page, setPage] = useState(initialPage);
   const [search, setSearch] = useState(initialSearch || "");
   const [searchInput, setSearchInput] = useState(initialSearch || "");
   const [level, setLevel] = useState(initialLevel || "all");
-  const [academicYear, setAcademicYear] = useState(
-    initialAcademicYear || "all",
-  );
+  const [academicYear, setAcademicYear] = useState(initialAcademicYear || "all");
   const [teacherId, setTeacherId] = useState(initialTeacherId || "all");
   const [showOnlyActive, setShowOnlyActive] = useState(false);
 
@@ -561,7 +1390,7 @@ export function ClassesClient({
   const filteredClasses = useMemo(() => {
     let filtered = [...classes];
     if (showOnlyActive) {
-      filtered = filtered.filter((c) => c.isActive);
+      filtered = filtered.filter(c => c.isActive);
     }
     return filtered;
   }, [classes, showOnlyActive]);
@@ -583,10 +1412,10 @@ export function ClassesClient({
       setTotalPages(result.totalPages || 1);
       setTotalClassesCount(result.total || 0);
       setSelectedClasses(new Set());
-
+      
       // Update stats if provided in response
       if (result.stats) {
-        setStats((prev) => ({ ...prev, ...result.stats }));
+        setStats(prev => ({ ...prev, ...result.stats }));
       }
     } catch (error) {
       console.error("Error fetching classes:", error);
@@ -653,9 +1482,7 @@ export function ClassesClient({
     }
   };
 
-  const handleBulkAction = async (
-    action: "activate" | "deactivate" | "delete",
-  ) => {
+  const handleBulkAction = async (action: "activate" | "deactivate" | "delete") => {
     const ids = Array.from(selectedClasses);
     if (ids.length === 0) return;
 
@@ -721,7 +1548,7 @@ export function ClassesClient({
     level !== "all" && "level",
     academicYear !== "all" && "year",
     teacherId !== "all" && "teacher",
-    showOnlyActive && "active",
+    showOnlyActive && "active"
   ].filter(Boolean).length;
 
   // Render mobile filters sheet
@@ -738,10 +1565,7 @@ export function ClassesClient({
           )}
         </Button>
       </SheetTrigger>
-      <SheetContent
-        side="bottom"
-        className="rounded-t-2xl max-h-[85vh] overflow-y-auto"
-      >
+      <SheetContent side="bottom" className="rounded-t-2xl max-h-[85vh] overflow-y-auto">
         <SheetHeader>
           <SheetTitle>Filter Classes</SheetTitle>
           <SheetDescription>Narrow down your class list</SheetDescription>
@@ -768,9 +1592,7 @@ export function ClassesClient({
               <SelectContent>
                 <SelectItem value="all">All Levels</SelectItem>
                 {levels.map((l) => (
-                  <SelectItem key={l} value={l}>
-                    {l}
-                  </SelectItem>
+                  <SelectItem key={l} value={l}>{l}</SelectItem>
                 ))}
               </SelectContent>
             </Select>
@@ -786,9 +1608,7 @@ export function ClassesClient({
               <SelectContent>
                 <SelectItem value="all">All Years</SelectItem>
                 {academicYears.map((year) => (
-                  <SelectItem key={year} value={year}>
-                    {year}
-                  </SelectItem>
+                  <SelectItem key={year} value={year}>{year}</SelectItem>
                 ))}
               </SelectContent>
             </Select>
@@ -815,28 +1635,18 @@ export function ClassesClient({
           {/* Active Only Toggle */}
           <div className="flex items-center justify-between">
             <Label>Show active only</Label>
-            <Switch
-              checked={showOnlyActive}
-              onCheckedChange={setShowOnlyActive}
-            />
+            <Switch checked={showOnlyActive} onCheckedChange={setShowOnlyActive} />
           </div>
 
           <Separator />
 
           {/* Action Buttons */}
           <div className="flex gap-3 pt-2">
-            <Button
-              onClick={handleSearch}
-              className="flex-1 rounded-full bg-purple-600"
-            >
+            <Button onClick={handleSearch} className="flex-1 rounded-full bg-purple-600">
               <Search className="w-4 h-4 mr-2" />
               Apply Filters
             </Button>
-            <Button
-              variant="outline"
-              onClick={clearFilters}
-              className="flex-1 rounded-full"
-            >
+            <Button variant="outline" onClick={clearFilters} className="flex-1 rounded-full">
               <X className="w-4 h-4 mr-2" />
               Clear All
             </Button>
@@ -851,54 +1661,16 @@ export function ClassesClient({
     if (activeFilterCount === 0) return null;
 
     const filters = [];
-    if (search)
-      filters.push({
-        label: `"${search}"`,
-        onRemove: () => {
-          setSearch("");
-          setSearchInput("");
-          setPage(1);
-        },
-      });
-    if (level !== "all")
-      filters.push({
-        label: levels.find((l) => l === level) || level,
-        onRemove: () => {
-          setLevel("all");
-          setPage(1);
-        },
-      });
-    if (academicYear !== "all")
-      filters.push({
-        label: academicYear,
-        onRemove: () => {
-          setAcademicYear("all");
-          setPage(1);
-        },
-      });
-    if (teacherId !== "all")
-      filters.push({
-        label:
-          teachers.find((t) => t.id === teacherId)?.user?.name || "Teacher",
-        onRemove: () => {
-          setTeacherId("all");
-          setPage(1);
-        },
-      });
-    if (showOnlyActive)
-      filters.push({
-        label: "Active only",
-        onRemove: () => setShowOnlyActive(false),
-      });
+    if (search) filters.push({ label: `"${search}"`, onRemove: () => { setSearch(""); setSearchInput(""); setPage(1); } });
+    if (level !== "all") filters.push({ label: levels.find(l => l === level) || level, onRemove: () => { setLevel("all"); setPage(1); } });
+    if (academicYear !== "all") filters.push({ label: academicYear, onRemove: () => { setAcademicYear("all"); setPage(1); } });
+    if (teacherId !== "all") filters.push({ label: teachers.find(t => t.id === teacherId)?.user?.name || "Teacher", onRemove: () => { setTeacherId("all"); setPage(1); } });
+    if (showOnlyActive) filters.push({ label: "Active only", onRemove: () => setShowOnlyActive(false) });
 
     return (
       <div className="flex flex-wrap gap-2 mt-3">
         {filters.map((filter, i) => (
-          <Badge
-            key={i}
-            variant="secondary"
-            className="gap-1 px-3 py-1.5 rounded-full"
-          >
+          <Badge key={i} variant="secondary" className="gap-1 px-3 py-1.5 rounded-full">
             {filter.label}
             <X
               className="w-3 h-3 ml-1 cursor-pointer hover:text-red-500"
@@ -906,12 +1678,7 @@ export function ClassesClient({
             />
           </Badge>
         ))}
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={clearFilters}
-          className="text-xs h-7"
-        >
+        <Button variant="ghost" size="sm" onClick={clearFilters} className="text-xs h-7">
           Clear all
         </Button>
       </div>
@@ -953,12 +1720,7 @@ export function ClassesClient({
                         disabled={isRefreshing}
                         className="rounded-full"
                       >
-                        <RefreshCw
-                          className={cn(
-                            "w-4 h-4",
-                            isRefreshing && "animate-spin",
-                          )}
-                        />
+                        <RefreshCw className={cn("w-4 h-4", isRefreshing && "animate-spin")} />
                       </Button>
                     </TooltipTrigger>
                     <TooltipContent>Refresh</TooltipContent>
@@ -1044,8 +1806,7 @@ export function ClassesClient({
                       <CheckCircle className="w-4 h-4 text-purple-600 dark:text-purple-400" />
                     </div>
                     <span className="text-sm font-semibold">
-                      {selectedClasses.size} class
-                      {selectedClasses.size !== 1 ? "es" : ""} selected
+                      {selectedClasses.size} class{selectedClasses.size !== 1 ? "es" : ""} selected
                     </span>
                   </div>
                   <div className="flex flex-wrap gap-2">
@@ -1144,9 +1905,7 @@ export function ClassesClient({
                     <SelectContent>
                       <SelectItem value="all">All Levels</SelectItem>
                       {levels.map((l) => (
-                        <SelectItem key={l} value={l}>
-                          {l}
-                        </SelectItem>
+                        <SelectItem key={l} value={l}>{l}</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
@@ -1157,9 +1916,7 @@ export function ClassesClient({
                     <SelectContent>
                       <SelectItem value="all">All Years</SelectItem>
                       {academicYears.map((year) => (
-                        <SelectItem key={year} value={year}>
-                          {year}
-                        </SelectItem>
+                        <SelectItem key={year} value={year}>{year}</SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
@@ -1176,10 +1933,7 @@ export function ClassesClient({
                       ))}
                     </SelectContent>
                   </Select>
-                  <Button
-                    onClick={handleSearch}
-                    className="rounded-full px-6 bg-purple-600"
-                  >
+                  <Button onClick={handleSearch} className="rounded-full px-6 bg-purple-600">
                     <Search className="w-4 h-4 mr-2" />
                     Search
                   </Button>
@@ -1193,10 +1947,7 @@ export function ClassesClient({
                     variant={viewMode === "table" ? "default" : "ghost"}
                     size="sm"
                     onClick={() => setViewMode("table")}
-                    className={cn(
-                      "rounded-full",
-                      viewMode === "table" ? "bg-purple-600" : "",
-                    )}
+                    className={cn("rounded-full", viewMode === "table" ? "bg-purple-600" : "")}
                   >
                     <List className="w-4 h-4" />
                   </Button>
@@ -1204,10 +1955,7 @@ export function ClassesClient({
                     variant={viewMode === "grid" ? "default" : "ghost"}
                     size="sm"
                     onClick={() => setViewMode("grid")}
-                    className={cn(
-                      "rounded-full",
-                      viewMode === "grid" ? "bg-purple-600" : "",
-                    )}
+                    className={cn("rounded-full", viewMode === "grid" ? "bg-purple-600" : "")}
                   >
                     <Grid3x3 className="w-4 h-4" />
                   </Button>
@@ -1229,11 +1977,7 @@ export function ClassesClient({
                       <TableHead className="w-12">
                         <input
                           type="checkbox"
-                          checked={
-                            hasClasses
-                              ? selectedClasses.size === filteredClasses.length
-                              : false
-                          }
+                          checked={hasClasses ? selectedClasses.size === filteredClasses.length : false}
                           onChange={toggleSelectAll}
                           disabled={isRefreshing || !hasClasses}
                           className="w-4 h-4 rounded border-slate-300 focus:ring-purple-500"
@@ -1260,15 +2004,8 @@ export function ClassesClient({
                             <div className="w-16 h-16 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
                               <School className="w-8 h-8 text-muted-foreground/50" />
                             </div>
-                            <p className="text-muted-foreground">
-                              No classes found
-                            </p>
-                            <Button
-                              onClick={clearFilters}
-                              variant="outline"
-                              size="sm"
-                              className="rounded-full"
-                            >
+                            <p className="text-muted-foreground">No classes found</p>
+                            <Button onClick={clearFilters} variant="outline" size="sm" className="rounded-full">
                               Clear filters
                             </Button>
                           </motion.div>
@@ -1277,11 +2014,8 @@ export function ClassesClient({
                     ) : (
                       filteredClasses.map((cls, idx) => {
                         const schedule = cls.schedules?.[0];
-                        const enrollmentPercent = cls.capacity
-                          ? (cls.currentEnrollment / cls.capacity) * 100
-                          : 0;
-                        const teacherName =
-                          cls.teacher?.user?.name || "Not Assigned";
+                        const enrollmentPercent = cls.capacity ? (cls.currentEnrollment / cls.capacity) * 100 : 0;
+                        const teacherName = cls.teacher?.user?.name || "Not Assigned";
 
                         return (
                           <motion.tr
@@ -1290,9 +2024,7 @@ export function ClassesClient({
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ delay: idx * 0.03 }}
                             className="hover:bg-slate-50 dark:hover:bg-slate-800/50 cursor-pointer"
-                            onClick={() =>
-                              router.push(`/dashboard/admin/classes/${cls.id}`)
-                            }
+                            onClick={() => router.push(`/dashboard/admin/classes/${cls.id}`)}
                           >
                             <TableCell onClick={(e) => e.stopPropagation()}>
                               <input
@@ -1306,116 +2038,71 @@ export function ClassesClient({
                             <TableCell>
                               <div>
                                 <p className="font-bold text-sm">{cls.name}</p>
-                                <p className="text-xs text-muted-foreground font-mono">
-                                  {cls.code}
-                                </p>
+                                <p className="text-xs text-muted-foreground font-mono">{cls.code}</p>
                               </div>
                             </TableCell>
                             <TableCell>
-                              <Badge
-                                className={cn(
-                                  "border font-medium",
-                                  getLevelColor(cls.level),
-                                )}
-                              >
+                              <Badge className={cn("border font-medium", getLevelColor(cls.level))}>
                                 {cls.level}
                               </Badge>
                             </TableCell>
                             <TableCell>
                               <div className="flex items-center gap-2">
                                 <Avatar className="w-6 h-6">
-                                  <AvatarFallback className="text-[10px]">
-                                    {getInitials(teacherName)}
-                                  </AvatarFallback>
+                                  <AvatarFallback className="text-[10px]">{getInitials(teacherName)}</AvatarFallback>
                                 </Avatar>
-                                <span className="text-sm font-medium truncate max-w-[120px]">
-                                  {teacherName}
-                                </span>
+                                <span className="text-sm font-medium truncate max-w-[120px]">{teacherName}</span>
                               </div>
                             </TableCell>
                             <TableCell>
                               {schedule ? (
                                 <div className="text-xs">
-                                  <p className="font-medium">
-                                    {getDayName(schedule.dayOfWeek, true)}
-                                  </p>
+                                  <p className="font-medium">{getDayName(schedule.dayOfWeek, true)}</p>
                                   <p className="text-muted-foreground text-[10px]">
-                                    {formatTime(schedule.startTime)} -{" "}
-                                    {formatTime(schedule.endTime)}
+                                    {formatTime(schedule.startTime)} - {formatTime(schedule.endTime)}
                                   </p>
                                 </div>
                               ) : (
-                                <span className="text-xs text-muted-foreground">
-                                  No schedule
-                                </span>
+                                <span className="text-xs text-muted-foreground">No schedule</span>
                               )}
                             </TableCell>
                             <TableCell>
                               <div className="flex flex-col gap-1 min-w-[100px]">
                                 <div className="flex items-center justify-between gap-2 text-xs">
-                                  <span className="font-medium">
-                                    {cls.currentEnrollment}
-                                  </span>
-                                  <span className="text-muted-foreground">
-                                    / {cls.capacity}
-                                  </span>
-                                  <span className="text-emerald-600 font-medium">
-                                    {Math.round(enrollmentPercent)}%
-                                  </span>
+                                  <span className="font-medium">{cls.currentEnrollment}</span>
+                                  <span className="text-muted-foreground">/ {cls.capacity}</span>
+                                  <span className="text-emerald-600 font-medium">{Math.round(enrollmentPercent)}%</span>
                                 </div>
-                                <Progress
-                                  value={enrollmentPercent}
-                                  className="h-1.5"
-                                />
+                                <Progress value={enrollmentPercent} className="h-1.5" />
                               </div>
                             </TableCell>
                             <TableCell>
-                              <div
-                                className={cn(
-                                  "px-2 py-1 rounded-full text-xs font-medium inline-flex items-center gap-1",
-                                  cls.isActive
-                                    ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400"
-                                    : "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400",
-                                )}
-                              >
-                                <div
-                                  className={cn(
-                                    "w-1.5 h-1.5 rounded-full",
-                                    cls.isActive
-                                      ? "bg-emerald-500"
-                                      : "bg-gray-400",
-                                  )}
-                                />
+                              <div className={cn(
+                                "px-2 py-1 rounded-full text-xs font-medium inline-flex items-center gap-1",
+                                cls.isActive 
+                                  ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400"
+                                  : "bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400"
+                              )}>
+                                <div className={cn("w-1.5 h-1.5 rounded-full", cls.isActive ? "bg-emerald-500" : "bg-gray-400")} />
                                 {cls.isActive ? "Active" : "Inactive"}
                               </div>
                             </TableCell>
                             <TableCell onClick={(e) => e.stopPropagation()}>
                               <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
-                                  <Button
-                                    variant="ghost"
-                                    size="icon"
-                                    className="h-8 w-8 rounded-full"
-                                  >
+                                  <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full">
                                     <MoreHorizontal className="w-4 h-4" />
                                   </Button>
                                 </DropdownMenuTrigger>
-                                <DropdownMenuContent
-                                  align="end"
-                                  className="w-48"
-                                >
+                                <DropdownMenuContent align="end" className="w-48">
                                   <DropdownMenuItem asChild>
-                                    <Link
-                                      href={`/dashboard/admin/classes/${cls.id}`}
-                                    >
+                                    <Link href={`/dashboard/admin/classes/${cls.id}`}>
                                       <Eye className="w-4 h-4 mr-2" />
                                       View Details
                                     </Link>
                                   </DropdownMenuItem>
                                   <DropdownMenuItem asChild>
-                                    <Link
-                                      href={`/dashboard/admin/classes/${cls.id}/edit`}
-                                    >
+                                    <Link href={`/dashboard/admin/classes/${cls.id}/edit`}>
                                       <Edit className="w-4 h-4 mr-2" />
                                       Edit Class
                                     </Link>
@@ -1452,7 +2139,7 @@ export function ClassesClient({
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => setPage((p) => Math.max(1, p - 1))}
+                      onClick={() => setPage(p => Math.max(1, p - 1))}
                       disabled={page === 1 || isRefreshing}
                       className="rounded-full"
                     >
@@ -1460,39 +2147,30 @@ export function ClassesClient({
                       Prev
                     </Button>
                     <div className="hidden sm:flex gap-1">
-                      {Array.from(
-                        { length: Math.min(5, totalPages) },
-                        (_, i) => {
-                          let pageNum: number;
-                          if (totalPages <= 5) pageNum = i + 1;
-                          else if (page <= 3) pageNum = i + 1;
-                          else if (page >= totalPages - 2)
-                            pageNum = totalPages - 4 + i;
-                          else pageNum = page - 2 + i;
-                          return (
-                            <Button
-                              key={pageNum}
-                              variant={page === pageNum ? "default" : "outline"}
-                              size="sm"
-                              onClick={() => setPage(pageNum)}
-                              disabled={isRefreshing}
-                              className={cn(
-                                "rounded-full w-9",
-                                page === pageNum ? "bg-purple-600" : "",
-                              )}
-                            >
-                              {pageNum}
-                            </Button>
-                          );
-                        },
-                      )}
+                      {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                        let pageNum: number;
+                        if (totalPages <= 5) pageNum = i + 1;
+                        else if (page <= 3) pageNum = i + 1;
+                        else if (page >= totalPages - 2) pageNum = totalPages - 4 + i;
+                        else pageNum = page - 2 + i;
+                        return (
+                          <Button
+                            key={pageNum}
+                            variant={page === pageNum ? "default" : "outline"}
+                            size="sm"
+                            onClick={() => setPage(pageNum)}
+                            disabled={isRefreshing}
+                            className={cn("rounded-full w-9", page === pageNum ? "bg-purple-600" : "")}
+                          >
+                            {pageNum}
+                          </Button>
+                        );
+                      })}
                     </div>
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() =>
-                        setPage((p) => Math.min(totalPages, p + 1))
-                      }
+                      onClick={() => setPage(p => Math.min(totalPages, p + 1))}
                       disabled={page === totalPages || isRefreshing}
                       className="rounded-full"
                     >
@@ -1542,15 +2220,8 @@ export function ClassesClient({
                         <div className="w-16 h-16 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
                           <School className="w-8 h-8 text-muted-foreground/50" />
                         </div>
-                        <p className="text-muted-foreground">
-                          No classes found
-                        </p>
-                        <Button
-                          onClick={clearFilters}
-                          variant="outline"
-                          size="sm"
-                          className="rounded-full"
-                        >
+                        <p className="text-muted-foreground">No classes found</p>
+                        <Button onClick={clearFilters} variant="outline" size="sm" className="rounded-full">
                           Clear filters
                         </Button>
                       </div>
@@ -1579,7 +2250,7 @@ export function ClassesClient({
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => setPage((p) => Math.max(1, p - 1))}
+                    onClick={() => setPage(p => Math.max(1, p - 1))}
                     disabled={page === 1 || isRefreshing}
                     className="rounded-full"
                   >
@@ -1591,7 +2262,7 @@ export function ClassesClient({
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+                    onClick={() => setPage(p => Math.min(totalPages, p + 1))}
                     disabled={page === totalPages || isRefreshing}
                     className="rounded-full"
                   >
@@ -1613,11 +2284,7 @@ export function ClassesClient({
             </div>
             <DialogTitle className="text-center">Delete Class</DialogTitle>
             <DialogDescription className="text-center">
-              Are you sure you want to delete{" "}
-              <span className="font-semibold text-foreground">
-                "{selectedClass?.name}"
-              </span>
-              ?
+              Are you sure you want to delete <span className="font-semibold text-foreground">"{selectedClass?.name}"</span>?
               <br />
               This action cannot be undone.
             </DialogDescription>
@@ -1626,9 +2293,7 @@ export function ClassesClient({
             <div className="p-3 bg-amber-50 dark:bg-amber-950/30 rounded-lg flex items-center gap-2 text-amber-600 dark:text-amber-400">
               <AlertCircle className="w-4 h-4 shrink-0" />
               <span className="text-sm">
-                This class has{" "}
-                <strong>{selectedClass.currentEnrollment}</strong> enrolled
-                students.
+                This class has <strong>{selectedClass.currentEnrollment}</strong> enrolled students.
               </span>
             </div>
           )}
@@ -1645,9 +2310,7 @@ export function ClassesClient({
               disabled={isActionLoading}
               className="flex-1 rounded-full bg-red-600 hover:bg-red-700"
             >
-              {isActionLoading && (
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-              )}
+              {isActionLoading && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
               Delete
             </Button>
           </DialogFooter>
