@@ -1,4 +1,3 @@
-
 // app/(portal)/dashboard/admin/classes/new/new-class-client.tsx
 "use client";
 
@@ -11,14 +10,11 @@ import {
   X,
   Plus,
   Trash2,
-  Clock,
-  Calendar,
-  Users,
-  BookOpen,
   School,
   Loader2,
   CheckCircle,
   AlertCircle,
+  BookOpen,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -50,7 +46,6 @@ import {
 } from "../../actions/classes";
 import { ScheduleType } from "@/app/generated/prisma/enums";
 
-// Types
 interface Teacher {
   id: string;
   name: string;
@@ -69,6 +64,7 @@ interface NewClassClientProps {
   teachers: Teacher[];
   academicYears: string[];
   levels: string[];
+  adminId: string;
 }
 
 const DAYS_OF_WEEK = [
@@ -82,19 +78,44 @@ const DAYS_OF_WEEK = [
 ];
 
 const TIME_SLOTS = [
-  "08:00", "08:30", "09:00", "09:30", "10:00", "10:30",
-  "11:00", "11:30", "12:00", "12:30", "13:00", "13:30",
-  "14:00", "14:30", "15:00", "15:30", "16:00", "16:30",
-  "17:00", "17:30", "18:00", "18:30", "19:00", "19:30",
-  "20:00", "20:30",
+  "08:00",
+  "08:30",
+  "09:00",
+  "09:30",
+  "10:00",
+  "10:30",
+  "11:00",
+  "11:30",
+  "12:00",
+  "12:30",
+  "13:00",
+  "13:30",
+  "14:00",
+  "14:30",
+  "15:00",
+  "15:30",
+  "16:00",
+  "16:30",
+  "17:00",
+  "17:30",
+  "18:00",
+  "18:30",
+  "19:00",
+  "19:30",
+  "20:00",
+  "20:30",
 ];
 
-export function NewClassClient({ teachers, academicYears, levels }: NewClassClientProps) {
+export function NewClassClient({
+  teachers,
+  academicYears,
+  levels,
+  adminId,
+}: NewClassClientProps) {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [activeTab, setActiveTab] = useState("basic");
 
-  // Form state
   const [formData, setFormData] = useState({
     name: "",
     code: "",
@@ -111,17 +132,22 @@ export function NewClassClient({ teachers, academicYears, levels }: NewClassClie
     endDate: "",
   });
 
-  // Schedules state
   const [schedules, setSchedules] = useState<Schedule[]>([
-    { id: crypto.randomUUID(), dayOfWeek: 1, startTime: "09:00", endTime: "10:00" },
+    {
+      id: crypto.randomUUID(),
+      dayOfWeek: 1,
+      startTime: "09:00",
+      endTime: "10:00",
+    },
   ]);
 
-  // Subjects state
-  const [subjects, setSubjects] = useState<Array<{ id: string; name: string; teacherId: string }>>([]);
+  const [subjects, setSubjects] = useState<
+    Array<{ id: string; name: string; teacherId: string }>
+  >([]);
   const [newSubject, setNewSubject] = useState({ name: "", teacherId: "" });
 
   const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -140,11 +166,15 @@ export function NewClassClient({ teachers, academicYears, levels }: NewClassClie
     setFormData((prev) => ({ ...prev, isActive: checked }));
   };
 
-  // Schedule management
   const addSchedule = () => {
     setSchedules((prev) => [
       ...prev,
-      { id: crypto.randomUUID(), dayOfWeek: 1, startTime: "09:00", endTime: "10:00" },
+      {
+        id: crypto.randomUUID(),
+        dayOfWeek: 1,
+        startTime: "09:00",
+        endTime: "10:00",
+      },
     ]);
   };
 
@@ -156,13 +186,16 @@ export function NewClassClient({ teachers, academicYears, levels }: NewClassClie
     setSchedules((prev) => prev.filter((s) => s.id !== id));
   };
 
-  const updateSchedule = (id: string, field: keyof Schedule, value: string | number) => {
+  const updateSchedule = (
+    id: string,
+    field: keyof Schedule,
+    value: string | number,
+  ) => {
     setSchedules((prev) =>
-      prev.map((s) => (s.id === id ? { ...s, [field]: value } : s))
+      prev.map((s) => (s.id === id ? { ...s, [field]: value } : s)),
     );
   };
 
-  // Subject management
   const addSubject = () => {
     if (!newSubject.name.trim()) {
       toast.error("Please enter a subject name");
@@ -196,7 +229,6 @@ export function NewClassClient({ teachers, academicYears, levels }: NewClassClie
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Validation
     if (!formData.name.trim()) {
       toast.error("Class name is required");
       setActiveTab("basic");
@@ -222,6 +254,10 @@ export function NewClassClient({ teachers, academicYears, levels }: NewClassClie
       setActiveTab("basic");
       return;
     }
+    if (!adminId) {
+      toast.error("No admin user found. Please contact support.");
+      return;
+    }
     if (schedules.length === 0) {
       toast.error("At least one schedule is required");
       setActiveTab("schedule");
@@ -231,7 +267,6 @@ export function NewClassClient({ teachers, academicYears, levels }: NewClassClie
     setIsSubmitting(true);
 
     try {
-      // 1. Create the class
       const classData = {
         name: formData.name,
         code: formData.code,
@@ -243,14 +278,15 @@ export function NewClassClient({ teachers, academicYears, levels }: NewClassClie
         term: formData.term || undefined,
         scheduleType: formData.scheduleType as ScheduleType,
         teacherId: formData.teacherId,
-        createdById: formData.teacherId,
-        startDate: formData.startDate ? new Date(formData.startDate) : undefined,
+        createdById: adminId,
+        startDate: formData.startDate
+          ? new Date(formData.startDate)
+          : undefined,
         endDate: formData.endDate ? new Date(formData.endDate) : undefined,
       };
 
       const newClass = await createClass(classData);
 
-      // 2. Add schedules
       for (const schedule of schedules) {
         await addClassSchedule({
           classId: newClass.id,
@@ -264,9 +300,11 @@ export function NewClassClient({ teachers, academicYears, levels }: NewClassClie
         });
       }
 
-      // 3. Add subjects
       for (const subject of subjects) {
-        const subjectCode = subject.name.substring(0, 3).toUpperCase() + "-" + Math.random().toString(36).substring(2, 5).toUpperCase();
+        const subjectCode =
+          subject.name.substring(0, 3).toUpperCase() +
+          "-" +
+          Math.random().toString(36).substring(2, 5).toUpperCase();
         await addSubjectToClass({
           name: subject.name,
           code: subjectCode,
@@ -281,7 +319,9 @@ export function NewClassClient({ teachers, academicYears, levels }: NewClassClie
       router.refresh();
     } catch (error) {
       console.error("Error creating class:", error);
-      toast.error(error instanceof Error ? error.message : "Failed to create class");
+      toast.error(
+        error instanceof Error ? error.message : "Failed to create class",
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -304,7 +344,8 @@ export function NewClassClient({ teachers, academicYears, levels }: NewClassClie
                 Create New Class
               </h1>
               <p className="text-muted-foreground text-sm mt-1">
-                Set up a new class with schedules, teacher assignment, and subjects
+                Set up a new class with schedules, teacher assignment, and
+                subjects
               </p>
             </div>
             <div className="flex gap-3">
@@ -331,15 +372,28 @@ export function NewClassClient({ teachers, academicYears, levels }: NewClassClie
         </div>
 
         <form onSubmit={handleSubmit}>
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
+          <Tabs
+            value={activeTab}
+            onValueChange={setActiveTab}
+            className="space-y-6"
+          >
             <TabsList className="grid w-full max-w-md grid-cols-3 rounded-full bg-slate-100 dark:bg-slate-800 p-1">
-              <TabsTrigger value="basic" className="rounded-full data-[state=active]:bg-purple-600 data-[state=active]:text-white">
+              <TabsTrigger
+                value="basic"
+                className="rounded-full data-[state=active]:bg-purple-600 data-[state=active]:text-white"
+              >
                 Basic Info
               </TabsTrigger>
-              <TabsTrigger value="schedule" className="rounded-full data-[state=active]:bg-purple-600 data-[state=active]:text-white">
+              <TabsTrigger
+                value="schedule"
+                className="rounded-full data-[state=active]:bg-purple-600 data-[state=active]:text-white"
+              >
                 Schedule
               </TabsTrigger>
-              <TabsTrigger value="subjects" className="rounded-full data-[state=active]:bg-purple-600 data-[state=active]:text-white">
+              <TabsTrigger
+                value="subjects"
+                className="rounded-full data-[state=active]:bg-purple-600 data-[state=active]:text-white"
+              >
                 Subjects
               </TabsTrigger>
             </TabsList>
@@ -349,7 +403,9 @@ export function NewClassClient({ teachers, academicYears, levels }: NewClassClie
               <Card>
                 <CardHeader>
                   <CardTitle>Basic Information</CardTitle>
-                  <CardDescription>Enter the core details of the class</CardDescription>
+                  <CardDescription>
+                    Enter the core details of the class
+                  </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -403,7 +459,10 @@ export function NewClassClient({ teachers, academicYears, levels }: NewClassClie
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label htmlFor="level">Level *</Label>
-                      <Select value={formData.level} onValueChange={(v) => handleSelectChange("level", v)}>
+                      <Select
+                        value={formData.level}
+                        onValueChange={(v) => handleSelectChange("level", v)}
+                      >
                         <SelectTrigger className="rounded-lg">
                           <SelectValue placeholder="Select level" />
                         </SelectTrigger>
@@ -447,7 +506,9 @@ export function NewClassClient({ teachers, academicYears, levels }: NewClassClie
                       <Label htmlFor="academicYear">Academic Year *</Label>
                       <Select
                         value={formData.academicYear}
-                        onValueChange={(v) => handleSelectChange("academicYear", v)}
+                        onValueChange={(v) =>
+                          handleSelectChange("academicYear", v)
+                        }
                       >
                         <SelectTrigger className="rounded-lg">
                           <SelectValue placeholder="Select year" />
@@ -479,7 +540,9 @@ export function NewClassClient({ teachers, academicYears, levels }: NewClassClie
                       <Label htmlFor="teacherId">Teacher *</Label>
                       <Select
                         value={formData.teacherId}
-                        onValueChange={(v) => handleSelectChange("teacherId", v)}
+                        onValueChange={(v) =>
+                          handleSelectChange("teacherId", v)
+                        }
                       >
                         <SelectTrigger className="rounded-lg">
                           <SelectValue placeholder="Select teacher" />
@@ -487,7 +550,10 @@ export function NewClassClient({ teachers, academicYears, levels }: NewClassClie
                         <SelectContent>
                           {teachers.map((teacher) => (
                             <SelectItem key={teacher.id} value={teacher.id}>
-                              {teacher.name} {teacher.specialization ? `(${teacher.specialization})` : ""}
+                              {teacher.name}{" "}
+                              {teacher.specialization
+                                ? `(${teacher.specialization})`
+                                : ""}
                             </SelectItem>
                           ))}
                         </SelectContent>
@@ -497,7 +563,9 @@ export function NewClassClient({ teachers, academicYears, levels }: NewClassClie
                       <Label htmlFor="scheduleType">Schedule Type</Label>
                       <Select
                         value={formData.scheduleType}
-                        onValueChange={(v) => handleSelectChange("scheduleType", v)}
+                        onValueChange={(v) =>
+                          handleSelectChange("scheduleType", v)
+                        }
                       >
                         <SelectTrigger className="rounded-lg">
                           <SelectValue placeholder="Select type" />
@@ -538,8 +606,12 @@ export function NewClassClient({ teachers, academicYears, levels }: NewClassClie
 
                   <div className="flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-800/50 rounded-lg">
                     <div>
-                      <Label htmlFor="isActive" className="font-black">Active Status</Label>
-                      <p className="text-xs text-muted-foreground">Class will be visible and enrollable</p>
+                      <Label htmlFor="isActive" className="font-black">
+                        Active Status
+                      </Label>
+                      <p className="text-xs text-muted-foreground">
+                        Class will be visible and enrollable
+                      </p>
                     </div>
                     <Switch
                       id="isActive"
@@ -560,19 +632,31 @@ export function NewClassClient({ teachers, academicYears, levels }: NewClassClie
                 </CardHeader>
                 <CardContent className="space-y-4">
                   {schedules.map((schedule) => (
-                    <div key={schedule.id} className="flex flex-wrap items-end gap-3 p-4 bg-slate-50 dark:bg-slate-800/50 rounded-lg">
+                    <div
+                      key={schedule.id}
+                      className="flex flex-wrap items-end gap-3 p-4 bg-slate-50 dark:bg-slate-800/50 rounded-lg"
+                    >
                       <div className="flex-1 min-w-[140px]">
                         <Label className="text-xs">Day</Label>
                         <Select
                           value={schedule.dayOfWeek.toString()}
-                          onValueChange={(v) => updateSchedule(schedule.id, "dayOfWeek", parseInt(v))}
+                          onValueChange={(v) =>
+                            updateSchedule(
+                              schedule.id,
+                              "dayOfWeek",
+                              parseInt(v),
+                            )
+                          }
                         >
                           <SelectTrigger className="rounded-lg">
                             <SelectValue />
                           </SelectTrigger>
                           <SelectContent>
                             {DAYS_OF_WEEK.map((day) => (
-                              <SelectItem key={day.value} value={day.value.toString()}>
+                              <SelectItem
+                                key={day.value}
+                                value={day.value.toString()}
+                              >
                                 {day.label}
                               </SelectItem>
                             ))}
@@ -583,7 +667,9 @@ export function NewClassClient({ teachers, academicYears, levels }: NewClassClie
                         <Label className="text-xs">Start Time</Label>
                         <Select
                           value={schedule.startTime}
-                          onValueChange={(v) => updateSchedule(schedule.id, "startTime", v)}
+                          onValueChange={(v) =>
+                            updateSchedule(schedule.id, "startTime", v)
+                          }
                         >
                           <SelectTrigger className="rounded-lg">
                             <SelectValue />
@@ -601,7 +687,9 @@ export function NewClassClient({ teachers, academicYears, levels }: NewClassClie
                         <Label className="text-xs">End Time</Label>
                         <Select
                           value={schedule.endTime}
-                          onValueChange={(v) => updateSchedule(schedule.id, "endTime", v)}
+                          onValueChange={(v) =>
+                            updateSchedule(schedule.id, "endTime", v)
+                          }
                         >
                           <SelectTrigger className="rounded-lg">
                             <SelectValue />
@@ -633,8 +721,7 @@ export function NewClassClient({ teachers, academicYears, levels }: NewClassClie
                     onClick={addSchedule}
                     className="w-full rounded-lg border-dashed"
                   >
-                    <Plus className="w-4 h-4 mr-2" />
-                    Add Another Time Slot
+                    <Plus className="w-4 h-4 mr-2" /> Add Another Time Slot
                   </Button>
 
                   <div className="mt-4 p-4 bg-amber-50 dark:bg-amber-950/20 rounded-lg">
@@ -645,8 +732,8 @@ export function NewClassClient({ teachers, academicYears, levels }: NewClassClie
                           Schedule Note
                         </p>
                         <p className="text-xs text-amber-600 dark:text-amber-500">
-                          All times are displayed in the timezone selected for the class.
-                          Students will see these times converted to their local timezone.
+                          All times are displayed in UTC. Students will see
+                          times converted to their local timezone.
                         </p>
                       </div>
                     </div>
@@ -660,23 +747,28 @@ export function NewClassClient({ teachers, academicYears, levels }: NewClassClie
               <Card>
                 <CardHeader>
                   <CardTitle>Subjects & Curriculum</CardTitle>
-                  <CardDescription>Add subjects taught in this class</CardDescription>
+                  <CardDescription>
+                    Add subjects taught in this class
+                  </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  {/* Add Subject Form */}
                   <div className="flex flex-wrap gap-3 p-4 bg-slate-50 dark:bg-slate-800/50 rounded-lg">
                     <div className="flex-1 min-w-[200px]">
                       <Input
                         placeholder="Subject name (e.g., Quran, Tajweed, Arabic)"
                         value={newSubject.name}
-                        onChange={(e) => setNewSubject({ ...newSubject, name: e.target.value })}
+                        onChange={(e) =>
+                          setNewSubject({ ...newSubject, name: e.target.value })
+                        }
                         className="rounded-lg"
                       />
                     </div>
                     <div className="w-48">
                       <Select
                         value={newSubject.teacherId}
-                        onValueChange={(v) => setNewSubject({ ...newSubject, teacherId: v })}
+                        onValueChange={(v) =>
+                          setNewSubject({ ...newSubject, teacherId: v })
+                        }
                       >
                         <SelectTrigger className="rounded-lg">
                           <SelectValue placeholder="Assign teacher" />
@@ -695,22 +787,24 @@ export function NewClassClient({ teachers, academicYears, levels }: NewClassClie
                       onClick={addSubject}
                       className="rounded-lg bg-purple-600 hover:bg-purple-700"
                     >
-                      <Plus className="w-4 h-4 mr-2" />
-                      Add Subject
+                      <Plus className="w-4 h-4 mr-2" /> Add Subject
                     </Button>
                   </div>
 
-                  {/* Subjects List */}
                   {subjects.length === 0 ? (
                     <div className="text-center py-8 text-muted-foreground">
                       <BookOpen className="w-12 h-12 mx-auto mb-3 opacity-30" />
                       <p>No subjects added yet</p>
-                      <p className="text-sm">Add subjects to build the curriculum</p>
+                      <p className="text-sm">
+                        Add subjects to build the curriculum
+                      </p>
                     </div>
                   ) : (
                     <div className="space-y-2">
                       {subjects.map((subject) => {
-                        const teacher = teachers.find((t) => t.id === subject.teacherId);
+                        const teacher = teachers.find(
+                          (t) => t.id === subject.teacherId,
+                        );
                         return (
                           <div
                             key={subject.id}
@@ -748,8 +842,8 @@ export function NewClassClient({ teachers, academicYears, levels }: NewClassClie
                           Curriculum Note
                         </p>
                         <p className="text-xs text-blue-600 dark:text-blue-500">
-                          Subjects can be managed and reordered later. Each subject
-                          will have its own gradebook and assignments.
+                          Subjects can be managed later. Each subject will have
+                          its own gradebook and assignments.
                         </p>
                       </div>
                     </div>
@@ -760,43 +854,56 @@ export function NewClassClient({ teachers, academicYears, levels }: NewClassClie
           </Tabs>
         </form>
 
-        {/* Creation Progress Summary */}
         <Card className="mt-6 border-dashed">
           <CardContent className="pt-6">
             <div className="flex flex-wrap items-center justify-between gap-4">
               <div className="flex items-center gap-4">
                 <div className="flex items-center gap-2">
-                  <div className={cn(
-                    "w-8 h-8 rounded-full flex items-center justify-center",
-                    formData.name ? "bg-green-100 text-green-600" : "bg-slate-100 text-slate-400"
-                  )}>
+                  <div
+                    className={cn(
+                      "w-8 h-8 rounded-full flex items-center justify-center",
+                      formData.name
+                        ? "bg-green-100 text-green-600"
+                        : "bg-slate-100 text-slate-400",
+                    )}
+                  >
                     {formData.name ? <CheckCircle className="w-4 h-4" /> : "1"}
                   </div>
                   <span className="text-sm">Basic Info</span>
                 </div>
                 <div className="w-8 h-px bg-border" />
                 <div className="flex items-center gap-2">
-                  <div className={cn(
-                    "w-8 h-8 rounded-full flex items-center justify-center",
-                    schedules.length > 0 ? "bg-green-100 text-green-600" : "bg-slate-100 text-slate-400"
-                  )}>
-                    {schedules.length > 0 ? <CheckCircle className="w-4 h-4" /> : "2"}
+                  <div
+                    className={cn(
+                      "w-8 h-8 rounded-full flex items-center justify-center",
+                      schedules.length > 0
+                        ? "bg-green-100 text-green-600"
+                        : "bg-slate-100 text-slate-400",
+                    )}
+                  >
+                    {schedules.length > 0 ? (
+                      <CheckCircle className="w-4 h-4" />
+                    ) : (
+                      "2"
+                    )}
                   </div>
                   <span className="text-sm">Schedule</span>
                 </div>
                 <div className="w-8 h-px bg-border" />
                 <div className="flex items-center gap-2">
-                  <div className={cn(
-                    "w-8 h-8 rounded-full flex items-center justify-center",
-                    "bg-slate-100 text-slate-400"
-                  )}>
+                  <div className="w-8 h-8 rounded-full flex items-center justify-center bg-slate-100 text-slate-400">
                     3
                   </div>
                   <span className="text-sm">Subjects</span>
                 </div>
               </div>
-              <Badge variant="outline" className="text-purple-600 border-purple-200">
-                {formData.isActive ? "Will be active immediately" : "Will be saved as draft"}
+              <Badge
+                variant="outline"
+                className="text-purple-600 border-purple-200"
+              >
+                {formData.isActive
+                  ? "Will be active immediately"
+                  : "Will be saved as draft"}
               </Badge>
             </div>
           </CardContent>
