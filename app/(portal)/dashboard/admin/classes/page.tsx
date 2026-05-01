@@ -7,6 +7,10 @@ import {
   getAcademicYears,
   getClassLevels,
 } from "../actions/classes";
+<<<<<<< HEAD
+=======
+import { getUsersByRole } from "../actions/users";
+>>>>>>> 7a4dd40e090cb3ddef36ddbdb69a3b6bf074ca71
 import { prisma } from "@/lib/prisma"; // Add this import
 
 export const metadata: Metadata = {

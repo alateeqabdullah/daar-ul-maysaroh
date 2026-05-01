@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 // // app/(portal)/dashboard/admin/actions/classes.ts
 // "use server";
 
@@ -1055,19 +1056,25 @@
 
 
 
+=======
+>>>>>>> 7a4dd40e090cb3ddef36ddbdb69a3b6bf074ca71
 // app/(portal)/dashboard/admin/actions/classes.ts
 "use server";
 
 import { prisma } from "@/lib/prisma";
 import { revalidatePath } from "next/cache";
+<<<<<<< HEAD
 import { auth } from "@/lib/auth";
 import { z } from "zod";
 import type { Prisma } from "@/app/generated/prisma/client";
 import type { Subject } from "@/app/generated/prisma/client";
+=======
+>>>>>>> 7a4dd40e090cb3ddef36ddbdb69a3b6bf074ca71
 import {
   ScheduleType,
   MeetingPlatform,
   EnrollmentStatus,
+<<<<<<< HEAD
   SubjectCategory,
   EnrollmentType,
 } from "@/app/generated/prisma/enums";
@@ -1183,6 +1190,10 @@ async function requireTeacherOrAdmin() {
   return session;
 }
 
+=======
+} from "@/app/generated/prisma/enums";
+
+>>>>>>> 7a4dd40e090cb3ddef36ddbdb69a3b6bf074ca71
 // ==================== TYPES ====================
 
 export interface ClassFilters {
@@ -1261,7 +1272,11 @@ export interface SubjectSummary {
   id: string;
   name: string;
   code: string;
+<<<<<<< HEAD
   category: SubjectCategory;
+=======
+  category: string;
+>>>>>>> 7a4dd40e090cb3ddef36ddbdb69a3b6bf074ca71
   teacherId: string;
   teacherName: string;
 }
@@ -1281,6 +1296,7 @@ export interface PaginatedResponse<T> {
   limit: number;
 }
 
+<<<<<<< HEAD
 // ==================== HELPER FUNCTIONS ====================
 
 function formatClassResponse(classData: any): ClassWithRelations {
@@ -1322,6 +1338,16 @@ export async function getClasses(
 ): Promise<PaginatedResponse<ClassWithRelations>> {
   await requireTeacherOrAdmin();
 
+=======
+// ==================== READ OPERATIONS ====================
+
+/**
+ * Get paginated list of classes with filters
+ */
+export async function getClasses(
+  filters: ClassFilters = {},
+): Promise<PaginatedResponse<ClassWithRelations>> {
+>>>>>>> 7a4dd40e090cb3ddef36ddbdb69a3b6bf074ca71
   const {
     search,
     teacherId,
@@ -1334,7 +1360,12 @@ export async function getClasses(
 
   const skip = (page - 1) * limit;
 
+<<<<<<< HEAD
   const where: Prisma.ClassWhereInput = { isActive };
+=======
+  // Build where clause
+  const where: any = { isActive };
+>>>>>>> 7a4dd40e090cb3ddef36ddbdb69a3b6bf074ca71
 
   if (search) {
     where.OR = [
@@ -1416,10 +1447,43 @@ export async function getClasses(
       prisma.class.count({ where }),
     ]);
 
+<<<<<<< HEAD
     const formattedClasses = classes.map(formatClassResponse);
 
     return {
       data: formattedClasses,
+=======
+    // Format the response
+    const formattedClasses = classes.map((cls) => ({
+      ...cls,
+      enrollments: cls.enrollments.map((enrollment) => ({
+        id: enrollment.id,
+        studentId: enrollment.student.id,
+        studentName: enrollment.student.user.name,
+        studentEmail: enrollment.student.user.email,
+        enrolledAt: enrollment.enrolledAt,
+        status: enrollment.status,
+        progress: enrollment.progress,
+      })),
+      subjects: cls.subjects.map((subject) => ({
+        id: subject.id,
+        name: subject.name,
+        code: subject.code,
+        category: subject.category,
+        teacherId: subject.teacherId,
+        teacherName: subject.teacher.user.name,
+      })),
+      studentGroups: cls.studentGroups.map((group) => ({
+        id: group.id,
+        name: group.name,
+        type: group.type,
+        memberCount: group.currentCount,
+      })),
+    }));
+
+    return {
+      data: formattedClasses as ClassWithRelations[],
+>>>>>>> 7a4dd40e090cb3ddef36ddbdb69a3b6bf074ca71
       total,
       page,
       totalPages: Math.ceil(total / limit),
@@ -1427,6 +1491,7 @@ export async function getClasses(
     };
   } catch (error) {
     console.error("Error fetching classes:", error);
+<<<<<<< HEAD
     throw new ClassError("Failed to fetch classes", "FETCH_ERROR", 500);
   }
 }
@@ -1436,6 +1501,18 @@ export async function getClassById(
 ): Promise<ClassWithRelations | null> {
   await requireTeacherOrAdmin();
 
+=======
+    throw new Error("Failed to fetch classes");
+  }
+}
+
+/**
+ * Get single class by ID with full details
+ */
+export async function getClassById(
+  id: string,
+): Promise<ClassWithRelations | null> {
+>>>>>>> 7a4dd40e090cb3ddef36ddbdb69a3b6bf074ca71
   try {
     const classData = await prisma.class.findUnique({
       where: { id },
@@ -1519,6 +1596,7 @@ export async function getClassById(
 
     if (!classData) return null;
 
+<<<<<<< HEAD
     return formatClassResponse(classData);
   } catch (error) {
     console.error("Error fetching class:", error);
@@ -1531,6 +1609,46 @@ export async function getClassByCode(
 ): Promise<ClassWithRelations | null> {
   await requireTeacherOrAdmin();
 
+=======
+    return {
+      ...classData,
+      enrollments: classData.enrollments.map((enrollment) => ({
+        id: enrollment.id,
+        studentId: enrollment.student.id,
+        studentName: enrollment.student.user.name,
+        studentEmail: enrollment.student.user.email,
+        enrolledAt: enrollment.enrolledAt,
+        status: enrollment.status,
+        progress: enrollment.progress,
+      })),
+      subjects: classData.subjects.map((subject) => ({
+        id: subject.id,
+        name: subject.name,
+        code: subject.code,
+        category: subject.category,
+        teacherId: subject.teacherId,
+        teacherName: subject.teacher.user.name,
+      })),
+      studentGroups: classData.studentGroups.map((group) => ({
+        id: group.id,
+        name: group.name,
+        type: group.type,
+        memberCount: group.members.length,
+      })),
+    } as ClassWithRelations;
+  } catch (error) {
+    console.error("Error fetching class:", error);
+    throw new Error("Failed to fetch class");
+  }
+}
+
+/**
+ * Get class by code
+ */
+export async function getClassByCode(
+  code: string,
+): Promise<ClassWithRelations | null> {
+>>>>>>> 7a4dd40e090cb3ddef36ddbdb69a3b6bf074ca71
   try {
     const classData = await prisma.class.findUnique({
       where: { code },
@@ -1553,6 +1671,7 @@ export async function getClassByCode(
       },
     });
 
+<<<<<<< HEAD
     if (!classData) return null;
     return formatClassResponse(classData);
   } catch (error) {
@@ -1566,11 +1685,27 @@ export async function getClassesByTeacher(
 ): Promise<ClassWithRelations[]> {
   await requireTeacherOrAdmin();
 
+=======
+    return classData as ClassWithRelations | null;
+  } catch (error) {
+    console.error("Error fetching class by code:", error);
+    throw new Error("Failed to fetch class");
+  }
+}
+
+/**
+ * Get classes by teacher
+ */
+export async function getClassesByTeacher(
+  teacherId: string,
+): Promise<ClassWithRelations[]> {
+>>>>>>> 7a4dd40e090cb3ddef36ddbdb69a3b6bf074ca71
   try {
     const classes = await prisma.class.findMany({
       where: { teacherId, isActive: true },
       orderBy: { name: "asc" },
       include: {
+<<<<<<< HEAD
         teacher: {
           include: {
             user: {
@@ -1582,10 +1717,13 @@ export async function getClassesByTeacher(
             },
           },
         },
+=======
+>>>>>>> 7a4dd40e090cb3ddef36ddbdb69a3b6bf074ca71
         schedules: true,
         enrollments: {
           select: { id: true },
         },
+<<<<<<< HEAD
         subjects: true,
         studentGroups: true,
         createdBy: {
@@ -1619,6 +1757,24 @@ export async function getClassesByStudent(
     );
   }
 
+=======
+      },
+    });
+
+    return classes as unknown as ClassWithRelations[];
+  } catch (error) {
+    console.error("Error fetching classes by teacher:", error);
+    throw new Error("Failed to fetch classes");
+  }
+}
+
+/**
+ * Get classes by student
+ */
+export async function getClassesByStudent(
+  studentId: string,
+): Promise<ClassWithRelations[]> {
+>>>>>>> 7a4dd40e090cb3ddef36ddbdb69a3b6bf074ca71
   try {
     const enrollments = await prisma.enrollment.findMany({
       where: { studentId, status: "ACTIVE" },
@@ -1636,6 +1792,7 @@ export async function getClassesByStudent(
               },
             },
             schedules: true,
+<<<<<<< HEAD
             createdBy: {
               select: {
                 id: true,
@@ -1655,21 +1812,34 @@ export async function getClassesByStudent(
               },
             },
             studentGroups: true,
+=======
+>>>>>>> 7a4dd40e090cb3ddef36ddbdb69a3b6bf074ca71
           },
         },
       },
     });
 
+<<<<<<< HEAD
     return enrollments.map((e) => formatClassResponse(e.class));
   } catch (error) {
     console.error("Error fetching classes by student:", error);
     throw new ClassError("Failed to fetch classes", "FETCH_ERROR", 500);
+=======
+    return enrollments.map((e) => e.class as unknown as ClassWithRelations);
+  } catch (error) {
+    console.error("Error fetching classes by student:", error);
+    throw new Error("Failed to fetch classes");
+>>>>>>> 7a4dd40e090cb3ddef36ddbdb69a3b6bf074ca71
   }
 }
 
 // ==================== WRITE OPERATIONS ====================
 
+<<<<<<< HEAD
 export interface CreateClassInput {
+=======
+interface CreateClassInput {
+>>>>>>> 7a4dd40e090cb3ddef36ddbdb69a3b6bf074ca71
   name: string;
   code: string;
   description?: string;
@@ -1685,12 +1855,21 @@ export interface CreateClassInput {
   endDate?: Date;
 }
 
+<<<<<<< HEAD
 export async function createClass(
   input: CreateClassInput,
 ): Promise<ClassWithRelations> {
   await requireAdmin();
 
   const validated = createClassSchema.parse(input);
+=======
+/**
+ * Create a new class
+ */
+export async function createClass(
+  input: CreateClassInput,
+): Promise<ClassWithRelations> {
+>>>>>>> 7a4dd40e090cb3ddef36ddbdb69a3b6bf074ca71
   const {
     name,
     code,
@@ -1700,19 +1879,31 @@ export async function createClass(
     capacity = 20,
     academicYear,
     term,
+<<<<<<< HEAD
     scheduleType = ScheduleType.REGULAR,
+=======
+    scheduleType = "REGULAR",
+>>>>>>> 7a4dd40e090cb3ddef36ddbdb69a3b6bf074ca71
     teacherId,
     createdById,
     startDate,
     endDate,
+<<<<<<< HEAD
   } = validated;
 
   try {
+=======
+  } = input;
+
+  try {
+    // Check if class code already exists
+>>>>>>> 7a4dd40e090cb3ddef36ddbdb69a3b6bf074ca71
     const existingClass = await prisma.class.findUnique({
       where: { code },
     });
 
     if (existingClass) {
+<<<<<<< HEAD
       throw new ClassError(
         "Class with this code already exists",
         "DUPLICATE_CODE",
@@ -1720,6 +1911,12 @@ export async function createClass(
       );
     }
 
+=======
+      throw new Error("Class with this code already exists");
+    }
+
+    // Create class
+>>>>>>> 7a4dd40e090cb3ddef36ddbdb69a3b6bf074ca71
     const newClass = await prisma.class.create({
       data: {
         name,
@@ -1757,6 +1954,7 @@ export async function createClass(
           },
         },
         schedules: true,
+<<<<<<< HEAD
         enrollments: true,
         subjects: true,
         studentGroups: true,
@@ -1776,6 +1974,20 @@ export async function createClass(
 }
 
 export interface UpdateClassInput {
+=======
+      },
+    });
+
+    revalidatePath("/dashboard/admin/classes");
+    return newClass as unknown as ClassWithRelations;
+  } catch (error) {
+    console.error("Error creating class:", error);
+    throw error;
+  }
+}
+
+interface UpdateClassInput {
+>>>>>>> 7a4dd40e090cb3ddef36ddbdb69a3b6bf074ca71
   name?: string;
   description?: string;
   level?: string;
@@ -1790,10 +2002,17 @@ export interface UpdateClassInput {
   isActive?: boolean;
 }
 
+<<<<<<< HEAD
+=======
+/**
+ * Update class details
+ */
+>>>>>>> 7a4dd40e090cb3ddef36ddbdb69a3b6bf074ca71
 export async function updateClass(
   id: string,
   input: UpdateClassInput,
 ): Promise<ClassWithRelations> {
+<<<<<<< HEAD
   await requireAdmin();
 
   const validated = updateClassSchema.parse(input);
@@ -1802,6 +2021,12 @@ export async function updateClass(
     const updatedClass = await prisma.class.update({
       where: { id },
       data: validated,
+=======
+  try {
+    const updatedClass = await prisma.class.update({
+      where: { id },
+      data: input,
+>>>>>>> 7a4dd40e090cb3ddef36ddbdb69a3b6bf074ca71
       include: {
         teacher: {
           include: {
@@ -1815,6 +2040,7 @@ export async function updateClass(
           },
         },
         schedules: true,
+<<<<<<< HEAD
         enrollments: true,
         subjects: true,
         studentGroups: true,
@@ -1843,12 +2069,31 @@ export async function updateClass(
 export async function deleteClass(id: string): Promise<void> {
   await requireAdmin();
 
+=======
+      },
+    });
+
+    revalidatePath(`/dashboard/admin/classes/${id}`);
+    revalidatePath("/dashboard/admin/classes");
+    return updatedClass as unknown as ClassWithRelations;
+  } catch (error) {
+    console.error("Error updating class:", error);
+    throw new Error("Failed to update class");
+  }
+}
+
+/**
+ * Delete class (soft delete by deactivating)
+ */
+export async function deleteClass(id: string): Promise<void> {
+>>>>>>> 7a4dd40e090cb3ddef36ddbdb69a3b6bf074ca71
   try {
     await prisma.class.update({
       where: { id },
       data: { isActive: false },
     });
 
+<<<<<<< HEAD
     // Log activity
     await logClassActivity("DEACTIVATED", id, "system", {});
 
@@ -1862,11 +2107,25 @@ export async function deleteClass(id: string): Promise<void> {
 export async function hardDeleteClass(id: string): Promise<void> {
   await requireAdmin();
 
+=======
+    revalidatePath("/dashboard/admin/classes");
+  } catch (error) {
+    console.error("Error deleting class:", error);
+    throw new Error("Failed to delete class");
+  }
+}
+
+/**
+ * Permanently delete class (hard delete - use with caution)
+ */
+export async function hardDeleteClass(id: string): Promise<void> {
+>>>>>>> 7a4dd40e090cb3ddef36ddbdb69a3b6bf074ca71
   try {
     await prisma.class.delete({
       where: { id },
     });
 
+<<<<<<< HEAD
     // Log activity
     await logClassActivity("PERMANENTLY_DELETED", id, "system", {});
 
@@ -1878,12 +2137,22 @@ export async function hardDeleteClass(id: string): Promise<void> {
       "DELETE_ERROR",
       500,
     );
+=======
+    revalidatePath("/dashboard/admin/classes");
+  } catch (error) {
+    console.error("Error permanently deleting class:", error);
+    throw new Error("Failed to permanently delete class");
+>>>>>>> 7a4dd40e090cb3ddef36ddbdb69a3b6bf074ca71
   }
 }
 
 // ==================== SCHEDULE OPERATIONS ====================
 
+<<<<<<< HEAD
 export interface CreateScheduleInput {
+=======
+interface CreateScheduleInput {
+>>>>>>> 7a4dd40e090cb3ddef36ddbdb69a3b6bf074ca71
   classId: string;
   dayOfWeek: number;
   startTime: string;
@@ -1898,12 +2167,21 @@ export interface CreateScheduleInput {
   recurrenceRule?: string;
 }
 
+<<<<<<< HEAD
 export async function addClassSchedule(
   input: CreateScheduleInput,
 ): Promise<ClassSchedule> {
   await requireAdmin();
 
   const validated = createScheduleSchema.parse(input);
+=======
+/**
+ * Add schedule to class
+ */
+export async function addClassSchedule(
+  input: CreateScheduleInput,
+): Promise<ClassSchedule> {
+>>>>>>> 7a4dd40e090cb3ddef36ddbdb69a3b6bf074ca71
   const {
     classId,
     dayOfWeek,
@@ -1911,15 +2189,26 @@ export async function addClassSchedule(
     endTime,
     timezone = "UTC",
     isLive = true,
+<<<<<<< HEAD
     meetingPlatform = MeetingPlatform.ZOOM,
+=======
+    meetingPlatform = "ZOOM",
+>>>>>>> 7a4dd40e090cb3ddef36ddbdb69a3b6bf074ca71
     meetingUrl,
     meetingId,
     meetingPassword,
     isRecurring = true,
     recurrenceRule,
+<<<<<<< HEAD
   } = validated;
 
   try {
+=======
+  } = input;
+
+  try {
+    // Check if schedule already exists for this day/time
+>>>>>>> 7a4dd40e090cb3ddef36ddbdb69a3b6bf074ca71
     const existingSchedule = await prisma.classSchedule.findFirst({
       where: {
         classId,
@@ -1929,11 +2218,15 @@ export async function addClassSchedule(
     });
 
     if (existingSchedule) {
+<<<<<<< HEAD
       throw new ClassError(
         "A schedule already exists for this day and time",
         "DUPLICATE_SCHEDULE",
         409,
       );
+=======
+      throw new Error("A schedule already exists for this day and time");
+>>>>>>> 7a4dd40e090cb3ddef36ddbdb69a3b6bf074ca71
     }
 
     const schedule = await prisma.classSchedule.create({
@@ -1956,18 +2249,32 @@ export async function addClassSchedule(
     revalidatePath(`/dashboard/admin/classes/${classId}`);
     return schedule;
   } catch (error) {
+<<<<<<< HEAD
     if (error instanceof ClassError) throw error;
     console.error("Error adding schedule:", error);
     throw new ClassError("Failed to add schedule", "CREATE_ERROR", 500);
   }
 }
 
+=======
+    console.error("Error adding schedule:", error);
+    throw error;
+  }
+}
+
+/**
+ * Update class schedule
+ */
+>>>>>>> 7a4dd40e090cb3ddef36ddbdb69a3b6bf074ca71
 export async function updateClassSchedule(
   id: string,
   input: Partial<CreateScheduleInput>,
 ): Promise<ClassSchedule> {
+<<<<<<< HEAD
   await requireAdmin();
 
+=======
+>>>>>>> 7a4dd40e090cb3ddef36ddbdb69a3b6bf074ca71
   try {
     const schedule = await prisma.classSchedule.update({
       where: { id },
@@ -1978,6 +2285,7 @@ export async function updateClassSchedule(
     return schedule;
   } catch (error) {
     console.error("Error updating schedule:", error);
+<<<<<<< HEAD
     throw new ClassError("Failed to update schedule", "UPDATE_ERROR", 500);
   }
 }
@@ -1985,6 +2293,16 @@ export async function updateClassSchedule(
 export async function deleteClassSchedule(id: string): Promise<void> {
   await requireAdmin();
 
+=======
+    throw new Error("Failed to update schedule");
+  }
+}
+
+/**
+ * Delete class schedule
+ */
+export async function deleteClassSchedule(id: string): Promise<void> {
+>>>>>>> 7a4dd40e090cb3ddef36ddbdb69a3b6bf074ca71
   try {
     const schedule = await prisma.classSchedule.findUnique({
       where: { id },
@@ -2000,12 +2318,17 @@ export async function deleteClassSchedule(id: string): Promise<void> {
     }
   } catch (error) {
     console.error("Error deleting schedule:", error);
+<<<<<<< HEAD
     throw new ClassError("Failed to delete schedule", "DELETE_ERROR", 500);
+=======
+    throw new Error("Failed to delete schedule");
+>>>>>>> 7a4dd40e090cb3ddef36ddbdb69a3b6bf074ca71
   }
 }
 
 // ==================== ENROLLMENT OPERATIONS ====================
 
+<<<<<<< HEAD
 export interface EnrollStudentInput {
   studentId: string;
   classId: string;
@@ -2023,6 +2346,28 @@ export async function enrollStudent(input: EnrollStudentInput): Promise<void> {
   } = validated;
 
   try {
+=======
+interface EnrollStudentInput {
+  studentId: string;
+  classId: string;
+  enrollmentType?: "REGULAR" | "TRIAL" | "AUDIT" | "MAKEUP";
+}
+
+/**
+ * Enroll a student in a class
+ */
+export async function enrollStudent(input: EnrollStudentInput): Promise<void> {
+
+    
+  const { studentId, classId, enrollmentType = "REGULAR" } = input;
+  const student = await prisma.student.findUnique({
+    where: { id: studentId },
+  });
+  if (!student) throw new Error("Student not found");
+
+  try {
+    // Check if already enrolled
+>>>>>>> 7a4dd40e090cb3ddef36ddbdb69a3b6bf074ca71
     const existingEnrollment = await prisma.enrollment.findUnique({
       where: {
         studentId_classId: {
@@ -2033,6 +2378,7 @@ export async function enrollStudent(input: EnrollStudentInput): Promise<void> {
     });
 
     if (existingEnrollment) {
+<<<<<<< HEAD
       throw new ClassError(
         "Student is already enrolled in this class",
         "DUPLICATE_ENROLLMENT",
@@ -2053,6 +2399,22 @@ export async function enrollStudent(input: EnrollStudentInput): Promise<void> {
       );
     }
 
+=======
+      throw new Error("Student is already enrolled in this class");
+    }
+
+    // Check class capacity
+    const classData = await prisma.class.findUnique({
+      where: { id: classId },
+      select: { capacity: true, currentEnrollment: true },
+    });
+
+    if (classData && classData.currentEnrollment >= classData.capacity) {
+      throw new Error("Class has reached maximum capacity");
+    }
+
+    // Create enrollment and update class capacity in a transaction
+>>>>>>> 7a4dd40e090cb3ddef36ddbdb69a3b6bf074ca71
     await prisma.$transaction([
       prisma.enrollment.create({
         data: {
@@ -2067,6 +2429,7 @@ export async function enrollStudent(input: EnrollStudentInput): Promise<void> {
       }),
     ]);
 
+<<<<<<< HEAD
     // Create notification for student
     await prisma.notification.create({
       data: {
@@ -2088,12 +2451,28 @@ export async function enrollStudent(input: EnrollStudentInput): Promise<void> {
   }
 }
 
+=======
+    revalidatePath(`/dashboard/admin/classes/${classId}`);
+    revalidatePath("/dashboard/admin/enrollments");
+  } catch (error) {
+    console.error("Error enrolling student:", error);
+    throw error;
+  }
+}
+
+/**
+ * Remove student from class
+ */
+>>>>>>> 7a4dd40e090cb3ddef36ddbdb69a3b6bf074ca71
 export async function removeStudentFromClass(
   studentId: string,
   classId: string,
 ): Promise<void> {
+<<<<<<< HEAD
   await requireAdmin();
 
+=======
+>>>>>>> 7a4dd40e090cb3ddef36ddbdb69a3b6bf074ca71
   try {
     await prisma.$transaction([
       prisma.enrollment.delete({
@@ -2114,6 +2493,7 @@ export async function removeStudentFromClass(
     revalidatePath("/dashboard/admin/enrollments");
   } catch (error) {
     console.error("Error removing student from class:", error);
+<<<<<<< HEAD
     throw new ClassError(
       "Failed to remove student from class",
       "REMOVE_ERROR",
@@ -2129,6 +2509,20 @@ export async function updateEnrollmentStatus(
 ): Promise<void> {
   await requireAdmin();
 
+=======
+    throw new Error("Failed to remove student from class");
+  }
+}
+
+/**
+ * Update enrollment status
+ */
+export async function updateEnrollmentStatus(
+  studentId: string,
+  classId: string,
+  status: "ACTIVE" | "COMPLETED" | "DROPPED" | "SUSPENDED" | "FAILED",
+): Promise<void> {
+>>>>>>> 7a4dd40e090cb3ddef36ddbdb69a3b6bf074ca71
   try {
     await prisma.enrollment.update({
       where: {
@@ -2143,16 +2537,21 @@ export async function updateEnrollmentStatus(
     revalidatePath(`/dashboard/admin/classes/${classId}`);
   } catch (error) {
     console.error("Error updating enrollment status:", error);
+<<<<<<< HEAD
     throw new ClassError(
       "Failed to update enrollment status",
       "UPDATE_ERROR",
       500,
     );
+=======
+    throw new Error("Failed to update enrollment status");
+>>>>>>> 7a4dd40e090cb3ddef36ddbdb69a3b6bf074ca71
   }
 }
 
 // ==================== SUBJECT OPERATIONS ====================
 
+<<<<<<< HEAD
 export interface AddSubjectToClassInput {
   name: string;
   code: string;
@@ -2187,10 +2586,31 @@ export async function addSubjectToClass(
         code,
         category,
         teacherId,
+=======
+interface AddSubjectToClassInput {
+  classId: string;
+  subjectId: string;
+}
+
+/**
+ * Add subject to class
+ */
+export async function addSubjectToClass(
+  input: AddSubjectToClassInput,
+): Promise<void> {
+  const { classId, subjectId } = input;
+
+  try {
+    // Check if subject already exists in class
+    const existing = await prisma.subject.findFirst({
+      where: {
+        id: subjectId,
+>>>>>>> 7a4dd40e090cb3ddef36ddbdb69a3b6bf074ca71
         classId,
       },
     });
 
+<<<<<<< HEAD
     revalidatePath(`/dashboard/admin/classes/${classId}`);
     return subject;
   } catch (error) {
@@ -2203,14 +2623,42 @@ export async function addSubjectToClass(
 export async function removeSubjectFromClass(subjectId: string): Promise<void> {
   await requireAdmin();
 
+=======
+    if (existing) {
+      throw new Error("Subject is already assigned to this class");
+    }
+
+    await prisma.subject.update({
+      where: { id: subjectId },
+      data: { classId },
+    });
+
+    revalidatePath(`/dashboard/admin/classes/${classId}`);
+  } catch (error) {
+    console.error("Error adding subject to class:", error);
+    throw error;
+  }
+}
+
+/**
+ * Remove subject from class
+ */
+export async function removeSubjectFromClass(subjectId: string): Promise<void> {
+>>>>>>> 7a4dd40e090cb3ddef36ddbdb69a3b6bf074ca71
   try {
     const subject = await prisma.subject.findUnique({
       where: { id: subjectId },
       select: { classId: true },
     });
 
+<<<<<<< HEAD
     await prisma.subject.delete({
       where: { id: subjectId },
+=======
+    await prisma.subject.update({
+      where: { id: subjectId },
+      data: { classId: null },
+>>>>>>> 7a4dd40e090cb3ddef36ddbdb69a3b6bf074ca71
     });
 
     if (subject?.classId) {
@@ -2218,6 +2666,7 @@ export async function removeSubjectFromClass(subjectId: string): Promise<void> {
     }
   } catch (error) {
     console.error("Error removing subject from class:", error);
+<<<<<<< HEAD
     throw new ClassError("Failed to remove subject", "DELETE_ERROR", 500);
   }
 }
@@ -2372,11 +2821,15 @@ export async function bulkDeleteClasses(ids: string[]): Promise<number> {
       "BULK_DELETE_ERROR",
       500,
     );
+=======
+    throw new Error("Failed to remove subject from class");
+>>>>>>> 7a4dd40e090cb3ddef36ddbdb69a3b6bf074ca71
   }
 }
 
 // ==================== HELPER FUNCTIONS ====================
 
+<<<<<<< HEAD
 async function logClassActivity(
   action: string,
   classId: string,
@@ -2461,6 +2914,43 @@ export async function getAcademicYears(): Promise<string[]> {
 export async function isClassCodeExists(code: string): Promise<boolean> {
   await requireTeacherOrAdmin();
 
+=======
+/**
+ * Get available class levels
+ */
+export async function getClassLevels(): Promise<string[]> {
+  try {
+    const levels = await prisma.class.groupBy({
+      by: ["level"],
+    });
+    return levels.map((l) => l.level);
+  } catch (error) {
+    console.error("Error fetching class levels:", error);
+    throw new Error("Failed to fetch class levels");
+  }
+}
+
+/**
+ * Get available academic years
+ */
+export async function getAcademicYears(): Promise<string[]> {
+  try {
+    const years = await prisma.class.groupBy({
+      by: ["academicYear"],
+      orderBy: { academicYear: "desc" },
+    });
+    return years.map((y) => y.academicYear);
+  } catch (error) {
+    console.error("Error fetching academic years:", error);
+    throw new Error("Failed to fetch academic years");
+  }
+}
+
+/**
+ * Check if class code exists
+ */
+export async function isClassCodeExists(code: string): Promise<boolean> {
+>>>>>>> 7a4dd40e090cb3ddef36ddbdb69a3b6bf074ca71
   try {
     const classData = await prisma.class.findUnique({
       where: { code },
@@ -2469,10 +2959,20 @@ export async function isClassCodeExists(code: string): Promise<boolean> {
     return !!classData;
   } catch (error) {
     console.error("Error checking class code:", error);
+<<<<<<< HEAD
     throw new ClassError("Failed to check class code", "CHECK_ERROR", 500);
   }
 }
 
+=======
+    throw new Error("Failed to check class code");
+  }
+}
+
+/**
+ * Get class statistics
+ */
+>>>>>>> 7a4dd40e090cb3ddef36ddbdb69a3b6bf074ca71
 export async function getClassStats(): Promise<{
   totalClasses: number;
   activeClasses: number;
@@ -2480,14 +2980,21 @@ export async function getClassStats(): Promise<{
   averageClassSize: number;
   classesByLevel: Record<string, number>;
 }> {
+<<<<<<< HEAD
   await requireTeacherOrAdmin();
 
+=======
+>>>>>>> 7a4dd40e090cb3ddef36ddbdb69a3b6bf074ca71
   try {
     const [totalClasses, activeClasses, totalEnrollments, classesByLevel] =
       await Promise.all([
         prisma.class.count(),
         prisma.class.count({ where: { isActive: true } }),
+<<<<<<< HEAD
         prisma.enrollment.count({ where: { status: EnrollmentStatus.ACTIVE } }),
+=======
+        prisma.enrollment.count({ where: { status: "ACTIVE" } }),
+>>>>>>> 7a4dd40e090cb3ddef36ddbdb69a3b6bf074ca71
         prisma.class.groupBy({
           by: ["level"],
           _count: true,
@@ -2496,9 +3003,13 @@ export async function getClassStats(): Promise<{
 
     const levelCounts: Record<string, number> = {};
     classesByLevel.forEach((item) => {
+<<<<<<< HEAD
       if (item.level) {
         levelCounts[item.level] = item._count;
       }
+=======
+      levelCounts[item.level] = item._count;
+>>>>>>> 7a4dd40e090cb3ddef36ddbdb69a3b6bf074ca71
     });
 
     const averageClassSize =
@@ -2513,6 +3024,66 @@ export async function getClassStats(): Promise<{
     };
   } catch (error) {
     console.error("Error fetching class stats:", error);
+<<<<<<< HEAD
     throw new ClassError("Failed to fetch class stats", "STATS_ERROR", 500);
+=======
+    throw new Error("Failed to fetch class stats");
+  }
+}
+
+// ==================== BULK OPERATIONS ====================
+
+/**
+ * Bulk activate classes
+ */
+export async function bulkActivateClasses(ids: string[]): Promise<number> {
+  try {
+    const result = await prisma.class.updateMany({
+      where: { id: { in: ids } },
+      data: { isActive: true },
+    });
+
+    revalidatePath("/dashboard/admin/classes");
+    return result.count;
+  } catch (error) {
+    console.error("Error bulk activating classes:", error);
+    throw new Error("Failed to bulk activate classes");
+  }
+}
+
+/**
+ * Bulk deactivate classes
+ */
+export async function bulkDeactivateClasses(ids: string[]): Promise<number> {
+  try {
+    const result = await prisma.class.updateMany({
+      where: { id: { in: ids } },
+      data: { isActive: false },
+    });
+
+    revalidatePath("/dashboard/admin/classes");
+    return result.count;
+  } catch (error) {
+    console.error("Error bulk deactivating classes:", error);
+    throw new Error("Failed to bulk deactivate classes");
+  }
+}
+
+/**
+ * Bulk delete classes (soft delete)
+ */
+export async function bulkDeleteClasses(ids: string[]): Promise<number> {
+  try {
+    const result = await prisma.class.updateMany({
+      where: { id: { in: ids } },
+      data: { isActive: false },
+    });
+
+    revalidatePath("/dashboard/admin/classes");
+    return result.count;
+  } catch (error) {
+    console.error("Error bulk deleting classes:", error);
+    throw new Error("Failed to bulk delete classes");
+>>>>>>> 7a4dd40e090cb3ddef36ddbdb69a3b6bf074ca71
   }
 }
