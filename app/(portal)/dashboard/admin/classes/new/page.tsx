@@ -14,6 +14,10 @@ export default async function NewClassPage() {
   // Get current admin user ID from session or use a fallback
   // For now, get the first admin user
   let adminId = "";
+  let teachersData: any[] = [];
+  let academicYears: string[] = ["2024-2025", "2025-2026"];
+  let levels: string[] = ["Beginner", "Intermediate", "Advanced", "Expert"];
+
   try {
     const adminUser = await prisma.user.findFirst({
       where: {
@@ -25,54 +29,39 @@ export default async function NewClassPage() {
     if (adminUser) {
       adminId = adminUser.id;
     }
-  } catch (error) {
-    console.error("Error fetching admin user:", error);
-  }
 
-  try {
-    const [teachers, academicYears, levels] = await Promise.all([
+    const [teachers, years, classLevels] = await Promise.all([
       prisma.teacher.findMany({
         where: { isAvailable: true },
         include: {
-          user: {
-            select: {
-              id: true,
-              name: true,
-              email: true,
-              image: true,
-            },
-          },
+          user: { select: { id: true, name: true, email: true, image: true } },
         },
         orderBy: { user: { name: "asc" } },
       }),
       getAcademicYears(),
       getClassLevels(),
     ]);
-
-    const formattedTeachers = teachers.map((teacher) => ({
-      id: teacher.id,
-      name: teacher.user?.name || "Unknown Teacher",
-      email: teacher.user?.email || "",
-      specialization: teacher.specialization,
-    }));
-
-    return (
-      <NewClassClient
-        teachers={formattedTeachers}
-        academicYears={academicYears}
-        levels={levels}
-        adminId={adminId}
-      />
-    );
+    
+    teachersData = teachers;
+    academicYears = years;
+    levels = classLevels;
   } catch (error) {
-    console.error("Error loading new class page:", error);
-    return (
-      <NewClassClient
-        teachers={[]}
-        academicYears={["2024-2025", "2025-2026"]}
-        levels={["Beginner", "Intermediate", "Advanced", "Expert"]}
-        adminId={adminId}
-      />
-    );
+    console.error("Error loading new class data:", error);
   }
+
+  const formattedTeachers = teachersData.map((teacher) => ({
+    id: teacher.id,
+    name: teacher.user?.name || "Unknown Teacher",
+    email: teacher.user?.email || "",
+    specialization: teacher.specialization,
+  }));
+
+  return (
+    <NewClassClient
+      teachers={formattedTeachers}
+      academicYears={academicYears}
+      levels={levels}
+      adminId={adminId}
+    />
+  );
 }

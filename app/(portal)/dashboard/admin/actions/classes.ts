@@ -6,11 +6,14 @@ import { revalidatePath } from "next/cache";
 import {
   ScheduleType,
   MeetingPlatform,
-  EnrollmentStatus,
+  EnrollmentType,
   SubjectCategory,
 } from "@/app/generated/prisma/enums";
+import { Prisma, Subject } from "@/app/generated/prisma/client";
 
 // ==================== TYPES ====================
+
+type EnrollmentStatusType = "ACTIVE" | "COMPLETED" | "DROPPED" | "SUSPENDED" | "FAILED";
 
 export interface ClassFilters {
   search?: string;
@@ -125,7 +128,7 @@ export async function getClasses(
 
   const skip = (page - 1) * limit;
 
-  const where: any = { isActive };
+  const where: Prisma.ClassWhereInput = { isActive }; // Import Prisma types
 
   if (search) {
     where.OR = [
@@ -818,7 +821,8 @@ export async function removeStudentFromClass(
 export async function updateEnrollmentStatus(
   studentId: string,
   classId: string,
-  status: "ACTIVE" | "COMPLETED" | "DROPPED" | "SUSPENDED" | "FAILED",
+  // status: "ACTIVE" | "COMPLETED" | "DROPPED" | "SUSPENDED" | "FAILED",
+  status: EnrollmentStatusType
 ): Promise<void> {
   try {
     await prisma.enrollment.update({
@@ -850,7 +854,7 @@ export interface AddSubjectToClassInput {
 
 export async function addSubjectToClass(
   input: AddSubjectToClassInput,
-): Promise<any> {
+): Promise<Subject> {
   const { name, code, category, teacherId, classId } = input;
 
   try {
