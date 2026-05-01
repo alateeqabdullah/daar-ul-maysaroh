@@ -1,0 +1,51 @@
+enum QuranType {
+  MEMORIZATION
+  REVISION
+  STUDY
+  RECITATION
+}
+
+enum ProgressStatus {
+  NOT_STARTED
+  IN_PROGRESS
+  COMPLETED
+  REVIEWED
+  MASTERED
+}
+
+enum EvaluationType {
+  FLUENCY
+  TAJWEED
+  MELODY
+  MEMORIZATION
+  COMPREHENSION
+}
+
+enum PrayerType {
+  FAJR
+  DHUHR
+  ASR
+  MAGHRIB
+  ISHA
+}
+
+enum PrayerStatus {
+  PERFORMED
+  MISSED
+  QADA
+  EXCUSED
+}
+
+enum CongregationType {
+  ALONE
+  WITH_FAMILY
+  IN_MASJID
+  WITH_GROUP
+}
+
+enum HifzStatus {
+  PASS
+  NEEDS_PRACTICE
+  FAIL
+  EXCELLENT
+}

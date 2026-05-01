@@ -1,0 +1,58 @@
+model User {
+  id            String     @id @default(cuid())
+  email         String     @unique
+  password      String? // Nullable for OAuth users
+  name          String
+  phone         String?
+  image         String?
+  role          UserRole   @default(STUDENT)
+  status        UserStatus @default(PENDING)
+  emailVerified DateTime?
+  phoneVerified Boolean    @default(false)
+  language      String     @default("en")
+  timezone      String     @default("UTC")
+
+  // Approval tracking
+  approvedAt      DateTime?
+  approvedBy      User?     @relation("UserApprovals", fields: [approvedById], references: [id])
+  approvedById    String?
+  rejectionReason String?
+
+  // Role-specific profiles (one-to-one relations)
+  studentProfile Student?
+  teacherProfile Teacher?
+  parentProfile  Parent?
+  adminProfile   AdminProfile?
+
+  // Authentication
+  sessions           Session[]
+  accounts           Account[]
+  verificationTokens VerificationToken[]
+
+  // Activity tracking
+  lastLogin  DateTime?
+  loginCount Int       @default(0)
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  isActive   Boolean   @default(true)
+
+  // Relations (direct)
+  notifications       Notification[]
+  sentMessages        Message[]            @relation("MessageSender")
+  receivedMessages    Message[]            @relation("MessageReceiver")
+  createdClasses      Class[]              @relation("ClassCreator")
+  approvedUsers       User[]               @relation("UserApprovals")
+  groupAnnouncements  GroupAnnouncement[]
+  groupAssignments    GroupAssignment[]
+  assignments         Assignment[]
+  classMaterials      ClassMaterial[]
+  subjectMaterials    SubjectMaterial[]
+  announcements       Announcement[]
+  events              Event[]
+  courseAnnouncements CourseAnnouncement[]
+
+  @@index([email])
+  @@index([status])
+  @@index([role])
+  @@map("users")
+}

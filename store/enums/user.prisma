@@ -1,0 +1,36 @@
+enum UserRole {
+  SUPER_ADMIN
+  ADMIN
+  TEACHER
+  STUDENT
+  PARENT
+  CONTENT_MANAGER
+  SUPPORT
+}
+
+enum UserStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  SUSPENDED
+  DEACTIVATED
+}
+
+enum Gender {
+  MALE
+  FEMALE
+}
+
+enum ContractType {
+  FULL_TIME
+  PART_TIME
+  CONTRACTUAL
+  VOLUNTEER
+}
+
+enum MaritalStatus {
+  SINGLE
+  MARRIED
+  DIVORCED
+  WIDOWED
+}

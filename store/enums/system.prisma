@@ -1,0 +1,129 @@
+enum MaterialType {
+  DOCUMENT
+  VIDEO
+  AUDIO
+  IMAGE
+  PRESENTATION
+  LINK
+  OTHER
+}
+
+enum AnnouncementType {
+  GENERAL
+  ACADEMIC
+  FINANCIAL
+  EVENT
+  HOLIDAY
+  URGENT
+  SYSTEM
+}
+
+enum MessageType {
+  TEXT
+  IMAGE
+  AUDIO
+  VIDEO
+  DOCUMENT
+  SYSTEM
+}
+
+enum NotificationType {
+  SYSTEM
+  ANNOUNCEMENT
+  ASSIGNMENT
+  GRADE
+  ATTENDANCE
+  PAYMENT
+  MESSAGE
+  EVENT
+}
+
+enum AudienceType {
+  ALL
+  STUDENTS
+  TEACHERS
+  PARENTS
+  ADMINS
+  SPECIFIC_CLASS
+  SPECIFIC_USERS
+}
+
+enum PriorityLevel {
+  LOW
+  NORMAL
+  HIGH
+  URGENT
+}
+
+enum CertificateType {
+  COMPLETION
+  MEMORIZATION
+  EXCELLENCE
+  ATTENDANCE
+  PARTICIPATION
+  ACHIEVEMENT
+}
+
+enum SettingType {
+  STRING
+  NUMBER
+  BOOLEAN
+  JSON
+  ARRAY
+}
+
+enum EventType {
+  CLASS
+  EXAM
+  HOLIDAY
+  EVENT
+  MEETING
+  DEADLINE
+  CUSTOM
+}
+
+enum SessionStatus {
+  SCHEDULED
+  COMPLETED
+  CANCELLED
+  RESCHEDULED
+  NO_SHOW
+}
+
+enum GroupType {
+  ACADEMIC
+  HIFZ
+  REVISION
+  SUPPORT
+  PROJECT
+  COMPETITION
+  SOCIAL
+  OTHER
+}
+
+enum GroupRole {
+  LEADER
+  ASSISTANT
+  MEMBER
+  MONITOR
+}
+
+enum MembershipStatus {
+  ACTIVE
+  INACTIVE
+  SUSPENDED
+  GRADUATED
+}
+
+enum CourseCategory {
+  QURAN
+  TAJWEED
+  ARABIC
+  FIQH
+  AQEEDAH
+  SEERAH
+  HADITH
+  AKHLAQ
+  ISLAMIC_HISTORY
+  OTHER
+}

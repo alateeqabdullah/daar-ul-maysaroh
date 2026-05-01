@@ -1,0 +1,78 @@
+enum ScheduleType {
+  REGULAR
+  FLEXIBLE
+  SELF_PACED
+}
+
+enum MeetingPlatform {
+  ZOOM
+  GOOGLE_MEET
+  MICROSOFT_TEAMS
+  JITSI
+  OTHER
+}
+
+enum SubjectCategory {
+  QURAN
+  TAJWEED
+  ARABIC
+  FIQH
+  AQEEDAH
+  SEERAH
+  HADITH
+  AKHLAQ
+  HISTORY
+  OTHER
+}
+
+enum EnrollmentType {
+  REGULAR
+  TRIAL
+  AUDIT
+  MAKEUP
+}
+
+enum EnrollmentStatus {
+  ACTIVE
+  COMPLETED
+  DROPPED
+  SUSPENDED
+  FAILED
+}
+
+enum AttendanceStatus {
+  PRESENT
+  ABSENT
+  LATE
+  EXCUSED
+  LEAVE
+}
+
+enum AssignmentType {
+  HOMEWORK
+  PROJECT
+  QUIZ
+  TEST
+  PRESENTATION
+  RECITATION
+  OTHER
+}
+
+enum SubmissionStatus {
+  NOT_SUBMITTED
+  SUBMITTED
+  LATE
+  GRADED
+  RETURNED
+}
+
+enum ExamType {
+  MIDTERM
+  FINAL
+  QUIZ
+  ASSIGNMENT
+  RECITATION_TEST
+  MEMORIZATION_TEST
+  ORAL_EXAM
+  WRITTEN_EXAM
+}
