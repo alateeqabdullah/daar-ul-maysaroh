@@ -413,7 +413,7 @@ export function EditGroupClient({ group, types, teachers, classes }: EditGroupCl
                           <SelectValue placeholder="Select teacher" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="">None</SelectItem>
+                          <SelectItem value="none">None</SelectItem>
                           {teachers.map((t) => (
                             <SelectItem key={t.id} value={t.id}>{t.name}</SelectItem>
                           ))}
@@ -427,7 +427,7 @@ export function EditGroupClient({ group, types, teachers, classes }: EditGroupCl
                           <SelectValue placeholder="Select assistant" />
                         </SelectTrigger>
                         <SelectContent>
-                          <SelectItem value="">None</SelectItem>
+                          <SelectItem value="none">None</SelectItem>
                           {teachers.map((t) => (
                             <SelectItem key={t.id} value={t.id}>{t.name}</SelectItem>
                           ))}
@@ -443,7 +443,7 @@ export function EditGroupClient({ group, types, teachers, classes }: EditGroupCl
                         <SelectValue placeholder="Select class" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="">None</SelectItem>
+                        <SelectItem value="none">None</SelectItem>
                         {classes.map((c) => (
                           <SelectItem key={c.id} value={c.id}>{c.name} ({c.code})</SelectItem>
                         ))}
@@ -550,7 +550,7 @@ export function EditGroupClient({ group, types, teachers, classes }: EditGroupCl
                                   <SelectValue />
                                 </SelectTrigger>
                                 <SelectContent>
-                                  {TIME_SLOTS.map((time) => (
+                                {TIME_SLOTS.map((time) => (
                                     <SelectItem key={time} value={time}>{time}</SelectItem>
                                   ))}
                                 </SelectContent>
@@ -560,7 +560,7 @@ export function EditGroupClient({ group, types, teachers, classes }: EditGroupCl
                               <Label className="text-xs">End Time</Label>
                               <Select
                                 value={newSchedule.endTime}
-                                onValueChange={(v) => setNewSchedule({ ...newSchedule, endTime: v })>
+                                onValueChange={(v) => setNewSchedule({ ...newSchedule, endTime: v })}
                               >
                                 <SelectTrigger className="rounded-lg">
                                   <SelectValue />
