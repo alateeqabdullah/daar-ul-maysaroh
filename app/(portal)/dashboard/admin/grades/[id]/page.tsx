@@ -15,8 +15,8 @@ export async function generateMetadata({
   const grade = await getGradeById(id);
 
   return {
-    title: `${grade?.student.user.name} - ${grade?.subject.name} | Grade Details | Al-Maysaroh`,
-    description: `Grade details for ${grade?.student.user.name} in ${grade?.subject.name}`,
+    title: `${grade?.student?.user?.name || "Grade"} - Grade Details | Admin Dashboard | Al-Maysaroh`,
+    description: "View grade details and assessment information",
   };
 }
 
