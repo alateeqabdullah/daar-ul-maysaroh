@@ -698,7 +698,7 @@ export function ManageSubmissionsClient({
           <DialogHeader>
             <DialogTitle>Grade Submission</DialogTitle>
             <DialogDescription>
-              Grade {selectedSubmission?.studentName}'s submission
+             {` Grade ${selectedSubmission?.studentName}'s submission`}
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
