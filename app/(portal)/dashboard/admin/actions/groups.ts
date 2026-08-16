@@ -677,6 +677,8 @@ export async function hardDeleteGroup(id: string): Promise<void> {
   }
 }
 
+// app/(portal)/dashboard/admin/actions/groups.ts
+
 // ==================== MEMBER OPERATIONS ====================
 
 export interface AddMemberInput {
@@ -688,32 +690,65 @@ export interface AddMemberInput {
 /**
  * Add member to group
  */
-export async function addGroupMember(input: AddMemberInput): Promise<void> {
+export async function addGroupMember(input: AddMemberInput): Promise<{ success: boolean; message: string }> {
   const { groupId, studentId, role = "MEMBER" } = input;
 
   try {
+    // Validate inputs
+    if (!groupId || !studentId) {
+      return { success: false, message: "Group ID and Student ID are required" };
+    }
+
+    // Check if group exists
     const group = await prisma.studentGroup.findUnique({
       where: { id: groupId },
-      select: { capacity: true, currentCount: true, isActive: true },
+      select: { 
+        capacity: true, 
+        currentCount: true, 
+        isActive: true,
+        name: true,
+      },
     });
 
-    if (!group) throw new Error("Group not found");
-    if (!group.isActive) throw new Error("Group is not active");
-    if (group.currentCount >= group.capacity)
-      throw new Error("Group has reached maximum capacity");
+    if (!group) {
+      return { success: false, message: "Group not found" };
+    }
+    
+    if (!group.isActive) {
+      return { success: false, message: "Group is not active" };
+    }
+    
+    if (group.currentCount >= group.capacity) {
+      return { success: false, message: `Group has reached maximum capacity of ${group.capacity}` };
+    }
 
-    const existingMember = await prisma.groupMember.findUnique({
-      where: {
-        groupId_studentId: {
-          groupId,
-          studentId,
+    // Check if student exists
+    const student = await prisma.student.findUnique({
+      where: { id: studentId },
+      include: {
+        user: {
+          select: { name: true, email: true },
         },
       },
     });
 
-    if (existingMember)
-      throw new Error("Student is already a member of this group");
+    if (!student) {
+      return { success: false, message: "Student not found" };
+    }
 
+    // Check if already a member
+    const existingMember = await prisma.groupMember.findFirst({
+      where: {
+        groupId: groupId,
+        studentId: studentId,
+      },
+    });
+
+    if (existingMember) {
+      return { success: false, message: "Student is already a member of this group" };
+    }
+
+    // Add member and update group count in transaction
     await prisma.$transaction([
       prisma.groupMember.create({
         data: {
@@ -721,6 +756,8 @@ export async function addGroupMember(input: AddMemberInput): Promise<void> {
           studentId,
           role,
           status: "ACTIVE",
+          joinedAt: new Date(),
+          groupProgress: 0,
         },
       }),
       prisma.studentGroup.update({
@@ -730,9 +767,13 @@ export async function addGroupMember(input: AddMemberInput): Promise<void> {
     ]);
 
     revalidatePath(`/dashboard/admin/groups/${groupId}`);
+    revalidatePath(`/dashboard/admin/groups/${groupId}/members`);
+    
+    return { success: true, message: `Successfully added ${student.user.name} to the group` };
+    
   } catch (error) {
     console.error("Error adding group member:", error);
-    throw error;
+    return { success: false, message: error instanceof Error ? error.message : "Failed to add group member" };
   }
 }
 

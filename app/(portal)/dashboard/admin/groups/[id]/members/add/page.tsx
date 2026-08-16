@@ -32,8 +32,12 @@ export default async function AddMembersPage({ params }: PageProps) {
   const availableStudents = await prisma.student.findMany({
     where: {
       id: { notIn: existingMemberIds },
-      status: "ACTIVE",
-      ...(group.classId && { classId: group.classId }),
+      user: {
+        isActive: true,
+        status: "APPROVED",
+      },
+      // Fix: Use currentClassId instead of classId
+      ...(group.classId && { currentClassId: group.classId }),
     },
     include: {
       user: {
@@ -41,6 +45,8 @@ export default async function AddMembersPage({ params }: PageProps) {
           id: true,
           name: true,
           email: true,
+          isActive: true,
+          status: true,
         },
       },
     },

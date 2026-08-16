@@ -66,20 +66,26 @@ const getInitials = (name: string) => {
     .slice(0, 2);
 };
 
-export function AddMembersClient({ group, availableStudents: initialAvailable }: AddMembersClientProps) {
+export function AddMembersClient({
+  group,
+  availableStudents: initialAvailable,
+}: AddMembersClientProps) {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [selectedStudents, setSelectedStudents] = useState<Set<string>>(new Set());
+  const [selectedStudents, setSelectedStudents] = useState<Set<string>>(
+    new Set(),
+  );
   const [selectedRole, setSelectedRole] = useState("MEMBER");
 
   const remainingCapacity = group.capacity - group.currentCount;
 
-  const filteredStudents = initialAvailable.filter((student) =>
-    searchQuery === "" ||
-    student.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    student.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    student.studentId.toLowerCase().includes(searchQuery.toLowerCase())
+  const filteredStudents = initialAvailable.filter(
+    (student) =>
+      searchQuery === "" ||
+      student.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      student.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      student.studentId.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
   const toggleSelectStudent = (studentId: string) => {
@@ -105,6 +111,7 @@ export function AddMembersClient({ group, availableStudents: initialAvailable }:
     setIsLoading(true);
     let successCount = 0;
     let failCount = 0;
+    const errors: string[] = [];
 
     for (const studentId of selectedStudents) {
       try {
@@ -116,18 +123,24 @@ export function AddMembersClient({ group, availableStudents: initialAvailable }:
         successCount++;
       } catch (error) {
         failCount++;
+        const student = initialAvailable.find((s) => s.id === studentId);
+        errors.push(student?.name || studentId);
+        console.error(`Failed to add student ${studentId}:`, error);
       }
     }
 
     if (successCount > 0) {
       toast.success(`${successCount} student(s) added successfully`);
+      router.push(`/dashboard/admin/groups/${group.id}`);
+      router.refresh();
     }
     if (failCount > 0) {
-      toast.error(`${failCount} student(s) failed to add`);
+      toast.error(
+        `Failed to add ${failCount} student(s): ${errors.join(", ")}`,
+      );
     }
 
-    router.push(`/dashboard/admin/groups/${group.id}`);
-    router.refresh();
+    setIsLoading(false);
   };
 
   const memberRate = (group.currentCount / group.capacity) * 100;
@@ -166,7 +179,9 @@ export function AddMembersClient({ group, availableStudents: initialAvailable }:
           <CardContent className="pt-6">
             <div className="flex justify-between items-center mb-2">
               <span className="text-sm font-black">Group Capacity</span>
-              <span className="text-sm font-black">{group.currentCount} / {group.capacity}</span>
+              <span className="text-sm font-black">
+                {group.currentCount} / {group.capacity}
+              </span>
             </div>
             <Progress value={memberRate} className="h-2" />
             <p className="text-xs text-muted-foreground mt-2">
@@ -207,7 +222,9 @@ export function AddMembersClient({ group, availableStudents: initialAvailable }:
                       <Users className="w-12 h-12 mx-auto mb-3 opacity-30" />
                       <p>No available students found</p>
                       {group.classId && (
-                        <p className="text-sm">Only students from the associated class can be added</p>
+                        <p className="text-sm">
+                          Only students from the associated class can be added
+                        </p>
                       )}
                     </div>
                   ) : (
@@ -217,13 +234,18 @@ export function AddMembersClient({ group, availableStudents: initialAvailable }:
                         <button
                           key={student.id}
                           onClick={() => toggleSelectStudent(student.id)}
-                          disabled={!isSelected && selectedStudents.size >= remainingCapacity}
+                          disabled={
+                            !isSelected &&
+                            selectedStudents.size >= remainingCapacity
+                          }
                           className={cn(
                             "w-full p-3 rounded-lg flex items-center justify-between transition-all",
                             isSelected
                               ? "bg-purple-50 border border-purple-200"
                               : "hover:bg-slate-50 border border-transparent",
-                            !isSelected && selectedStudents.size >= remainingCapacity && "opacity-50 cursor-not-allowed"
+                            !isSelected &&
+                              selectedStudents.size >= remainingCapacity &&
+                              "opacity-50 cursor-not-allowed",
                           )}
                         >
                           <div className="flex items-center gap-3">
@@ -233,9 +255,15 @@ export function AddMembersClient({ group, availableStudents: initialAvailable }:
                               </AvatarFallback>
                             </Avatar>
                             <div className="text-left">
-                              <p className="font-black text-sm">{student.name}</p>
-                              <p className="text-xs text-muted-foreground">{student.email}</p>
-                              <p className="text-xs text-muted-foreground font-mono">ID: {student.studentId}</p>
+                              <p className="font-black text-sm">
+                                {student.name}
+                              </p>
+                              <p className="text-xs text-muted-foreground">
+                                {student.email}
+                              </p>
+                              <p className="text-xs text-muted-foreground font-mono">
+                                ID: {student.studentId}
+                              </p>
                             </div>
                           </div>
                           {isSelected ? (
@@ -260,9 +288,15 @@ export function AddMembersClient({ group, availableStudents: initialAvailable }:
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="p-4 bg-slate-50 dark:bg-slate-800/50 rounded-lg text-center">
-                  <p className="text-sm text-muted-foreground">Selected Students</p>
-                  <p className="text-3xl font-black text-purple-600">{selectedStudents.size}</p>
-                  <p className="text-xs text-muted-foreground">of {remainingCapacity} available slots</p>
+                  <p className="text-sm text-muted-foreground">
+                    Selected Students
+                  </p>
+                  <p className="text-3xl font-black text-purple-600">
+                    {selectedStudents.size}
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    of {remainingCapacity} available slots
+                  </p>
                 </div>
 
                 <div className="space-y-2">
@@ -298,12 +332,19 @@ export function AddMembersClient({ group, availableStudents: initialAvailable }:
 
                 {selectedStudents.size > 0 && (
                   <div className="pt-4 border-t">
-                    <p className="text-xs font-black mb-2">Selected Students:</p>
+                    <p className="text-xs font-black mb-2">
+                      Selected Students:
+                    </p>
                     <div className="space-y-1 max-h-40 overflow-y-auto">
                       {Array.from(selectedStudents).map((studentId) => {
-                        const student = initialAvailable.find(s => s.id === studentId);
+                        const student = initialAvailable.find(
+                          (s) => s.id === studentId,
+                        );
                         return (
-                          <div key={studentId} className="flex items-center justify-between text-xs">
+                          <div
+                            key={studentId}
+                            className="flex items-center justify-between text-xs"
+                          >
                             <span>{student?.name}</span>
                             <button
                               onClick={() => toggleSelectStudent(studentId)}
@@ -327,8 +368,10 @@ export function AddMembersClient({ group, availableStudents: initialAvailable }:
                   <div>
                     <p className="text-sm font-black text-amber-700">Note</p>
                     <p className="text-xs text-amber-600 mt-1">
-                      Students can only be added if they are not already in the group.
-                      {group.classId && " Only students from the associated class are shown."}
+                      Students can only be added if they are not already in the
+                      group.
+                      {group.classId &&
+                        " Only students from the associated class are shown."}
                     </p>
                   </div>
                 </div>
