@@ -20,9 +20,7 @@ import {
   Target,
   Infinity,
   Quote,
-  Zap,
-  Star,
-  GraduationCap,
+
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -623,7 +621,7 @@ export default function LandingPage() {
                 <div className="bg-slate-900/50 rounded-2xl border border-slate-800/50 hover:border-purple-600/50 transition-all p-6 h-full flex flex-col">
                   <Quote className="w-8 h-8 text-amber-500/30 mb-3" />
                   <p className="text-sm text-slate-300 italic mb-4 flex-1 leading-relaxed">
-                    "{testimonial.content}"
+                    {`"${testimonial.content}"`}
                   </p>
                   <div className="flex items-center gap-3 pt-3 border-t border-slate-800/50">
                     <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-600 to-amber-500 flex items-center justify-center text-white font-black text-sm">
@@ -714,7 +712,7 @@ export default function LandingPage() {
             </span>
             <span className="flex items-center gap-1.5">
               <Globe className="w-3.5 h-3.5 text-amber-400" />
-              15+ Countries
+              5+ Countries
             </span>
           </div>
         </div>

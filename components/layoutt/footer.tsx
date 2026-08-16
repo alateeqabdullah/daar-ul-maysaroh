@@ -259,31 +259,31 @@ export function Footer() {
 
   const footerLinks = {
     Programs: [
-      { name: "Hifz Al-Quran", href: "/courses/hifz" },
-      { name: "Tajweed Mastery", href: "/courses/tajweed" },
-      { name: "Quranic Arabic", href: "/courses/arabic" },
-      { name: "Group Qiro'ah", href: "/courses/group-qiroah" },
-      { name: "All Courses", href: "/courses" },
+      { name: "Hifz Al-Quran", href: "/online/courses/hifz" },
+      { name: "Tajweed Mastery", href: "/online/courses/tajweed" },
+      { name: "Quranic Arabic", href: "/online/courses/arabic" },
+      { name: "Group Qiro'ah", href: "/online/courses/group-qiroah" },
+      { name: "All Courses", href: "/online/courses" },
     ],
     Institute: [
-      { name: "Our Scholars", href: "/teachers" },
-      { name: "Methodology", href: "/methodology" },
-      { name: "About Us", href: "/about" },
-      { name: "Resources", href: "/resources" },
-      { name: "Contact", href: "/contact" },
+      { name: "Our Scholars", href: "/online/teachers" },
+      { name: "Methodology", href: "/online/methodology" },
+      { name: "About Us", href: "/online/about" },
+      { name: "Resources", href: "/online/resources" },
+      { name: "Contact", href: "/online/contact" },
     ],
     Admission: [
-      { name: "Free Assessment", href: "/assessment" },
-      { name: "Pricing", href: "/pricing" },
-      { name: "Scholarships", href: "/pricing#grants" },
-      { name: "Student Portal", href: "/dashboard" },
-      { name: "FAQ", href: "/faq" },
+      { name: "Free Assessment", href: "/online/assessment" },
+      { name: "Pricing", href: "/online/pricing" },
+      { name: "Scholarships", href: "/online/pricing#grants" },
+      { name: "Student Portal", href: "/online/dashboard" },
+      { name: "FAQ", href: "/online/faq" },
     ],
     Legal: [
-      { name: "Privacy Policy", href: "/legal" },
-      { name: "Terms of Service", href: "/legal" },
-      { name: "Refund Policy", href: "/legal" },
-      { name: "Sitemap", href: "/sitemap" },
+      { name: "Privacy Policy", href: "/online/legal" },
+      { name: "Terms of Service", href: "/online/legal" },
+      { name: "Refund Policy", href: "/online/legal" },
+      { name: "Sitemap", href: "/online/sitemap" },
     ],
   };
 
@@ -297,7 +297,7 @@ export function Footer() {
           {/* Brand */}
           <div className="space-y-5">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-gradient-to-br from-purple-600 to-amber-500 rounded-xl flex items-center justify-center shadow-lg">
+              <div className="w-10 h-10 bg-linear-to-br from-purple-600 to-amber-500 rounded-xl flex items-center justify-center shadow-lg">
                 <BookOpen className="w-5 h-5 text-white" />
               </div>
               <div>
@@ -305,7 +305,7 @@ export function Footer() {
                   AL-MAYSAROH
                 </h1>
                 <p className="text-[9px] text-amber-500 font-bold tracking-[0.25em] uppercase">
-                  International Institute
+                   Institute (Online)
                 </p>
               </div>
             </div>
@@ -331,30 +331,30 @@ export function Footer() {
             </p>
 
             <div className="flex items-center gap-4 pt-2">
-              <a
+              <Link
                 href="#"
                 className="text-slate-500 hover:text-amber-500 transition"
               >
                 <Facebook className="w-4 h-4" />
-              </a>
-              <a
+              </Link>
+              <Link
                 href="#"
                 className="text-slate-500 hover:text-amber-500 transition"
               >
                 <Twitter className="w-4 h-4" />
-              </a>
-              <a
+              </Link>
+              <Link
                 href="#"
                 className="text-slate-500 hover:text-amber-500 transition"
               >
                 <Instagram className="w-4 h-4" />
-              </a>
-              <a
+              </Link>
+              <Link
                 href="#"
                 className="text-slate-500 hover:text-amber-500 transition"
               >
                 <Youtube className="w-4 h-4" />
-              </a>
+              </Link>
             </div>
           </div>
 
@@ -376,7 +376,7 @@ export function Footer() {
                 placeholder="Enter your email"
                 className="flex-1 h-11 px-4 bg-white/5 border border-white/10 rounded-l-xl outline-none focus:border-amber-500 text-sm"
               />
-              <Button className="h-11 px-5 rounded-r-xl bg-gradient-to-r from-purple-600 to-amber-500 hover:from-purple-700 hover:to-amber-600 text-white font-bold text-sm">
+              <Button className="h-11 px-5 rounded-r-xl bg-linear-to-r from-purple-600 to-amber-500 hover:from-purple-700 hover:to-amber-600 text-white font-bold text-sm">
                 <Send className="w-4 h-4" />
               </Button>
             </div>
@@ -430,7 +430,7 @@ export function Footer() {
             </div>
             <button
               onClick={scrollToTop}
-              className="w-8 h-8 rounded-full bg-white/5 hover:bg-gradient-to-r hover:from-purple-600 hover:to-amber-500 transition flex items-center justify-center group"
+              className="w-8 h-8 rounded-full bg-white/5 hover:bg-linear-to-r hover:from-purple-600 hover:to-amber-500 transition flex items-center justify-center group"
             >
               <ArrowUp className="w-4 h-4 text-slate-400 group-hover:text-white" />
             </button>

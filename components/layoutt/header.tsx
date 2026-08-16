@@ -2412,60 +2412,60 @@ import { usePathname } from "next/navigation";
 import Image from "next/image";
 
 const navigation = [
-  { name: "Home", href: "/" },
-  { name: "About", href: "/about" },
+  { name: "Home", href: "/online" },
+  { name: "About", href: "/online/about" },
   {
     name: "Programs",
-    href: "/courses",
+    href: "/online/courses",
     dropdown: true,
   },
-  { name: "Faculty", href: "/teachers" },
-  { name: "Pricing", href: "/pricing" },
-  { name: "Contact", href: "/contact" },
+  { name: "Faculty", href: "/online/teachers" },
+  { name: "Pricing", href: "/online/pricing" },
+  { name: "Contact", href: "/online/contact" },
 ];
 
 // Mega menu data - UPDATED with Gold/Purple theme
 const MEGA_MENU = {
   featured: {
     name: "ALL PROGRAMS",
-    href: "/courses",
+    href: "/online/courses",
     desc: "Browse our complete catalog",
     icon: BookOpen,
   },
   oneOnOne: [
     {
       name: "Hifz Program",
-      href: "/courses/hifz",
+      href: "/online/courses/hifz",
       icon: BookMarked,
       desc: "Complete Quran memorization with Ijazah",
     },
     {
       name: "Qiro'ah Program",
-      href: "/courses/qiroah",
+      href: "/online/courses/qiroah",
       icon: Users,
       desc: "Master Quran reading and recitation",
     },
     {
       name: "Tajweed Mastery",
-      href: "/courses/tajweed",
+      href: "/online/courses/tajweed",
       icon: Mic,
       desc: "Scientific recitation rules",
     },
     {
       name: "Arabic Language",
-      href: "/courses/arabic",
+      href: "/online/courses/arabic",
       icon: Globe,
       desc: "Unlock the Quranic language",
     },
     {
       name: "Tafsir Studies",
-      href: "/courses/tafsir",
+      href: "/online/courses/tafsir",
       icon: BookOpen,
       desc: "Deep Quranic understanding",
     },
     {
       name: "Muroja'ah Program",
-      href: "/courses/murojaah",
+      href: "/online/courses/murojaah",
       icon: RefreshCw,
       desc: "Preserve & perfect your memorization",
     },
@@ -2473,28 +2473,28 @@ const MEGA_MENU = {
   groupPrograms: [
     {
       name: "Group Qiro'ah",
-      href: "/courses/group-qiroah",
+      href: "/online/courses/group-qiroah",
       icon: Users,
       desc: "All Ages • Learn to read with joy",
       badge: "Popular",
     },
     {
       name: "Group Tajweed",
-      href: "/courses/group-tajweed",
+      href: "/online/courses/group-tajweed",
       icon: Mic,
       desc: "All Ages • Master Tajweed together",
       badge: "New",
     },
     {
       name: "Juz Amma Group",
-      href: "/courses/juz-amma",
+      href: "/online/courses/juz-amma",
       icon: Star,
       desc: "All Ages • Memorize the last Juz",
       badge: "Popular",
     },
     {
       name: "Juz Tabarak Group",
-      href: "/courses/juz-tabarak",
+      href: "/online/courses/juz-tabarak",
       icon: Star,
       desc: "All Ages • Next step after Juz Amma",
       badge: "New",
@@ -2585,7 +2585,7 @@ export function Header() {
         <nav className="container mx-auto px-4 md:px-6 flex items-center justify-between">
           {/* --- LOGO SECTION - ENHANCED --- */}
           <Link
-            href="/"
+            href="/online"
             className="flex items-center space-x-3 md:space-x-4 relative z-60 group outline-none min-h-11 min-w-11"
             onClick={() => setMobileMenuOpen(false)}
             aria-label="AL-MAYSAROH Institute - Home"
@@ -2775,7 +2775,7 @@ export function Header() {
                             • For all ages
                           </p>
                           <Link
-                            href="/courses"
+                            href="/online/courses"
                             className="text-xs font-black text-amber-500 hover:text-amber-400 transition flex items-center gap-2"
                           >
                             VIEW ALL PROGRAMS

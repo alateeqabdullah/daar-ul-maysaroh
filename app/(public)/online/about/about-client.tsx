@@ -343,7 +343,7 @@ export default function AboutClient() {
         {/* Breadcrumb - Fixed pt-30 issue */}
         <div className="container mx-auto px-4 xs:px-5 sm:px-6 pt-30 xs:pt-24 sm:pt-28 md:pt-32 lg:pt-36">
           <nav className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground flex items-center gap-2 mb-6 xs:mb-8 flex-wrap">
-            <Link href="/" className="hover:text-purple-600 transition-colors">
+            <Link href="/online" className="hover:text-purple-600 transition-colors">
               Home
             </Link>
             <span className="opacity-30">/</span>
@@ -417,13 +417,13 @@ export default function AboutClient() {
               </div>
 
               <div className="flex flex-col xs:flex-row gap-3 xs:gap-4 justify-center mt-10 xs:mt-12 sm:mt-16">
-                <Link href="/admissions" className="w-full xs:w-auto">
+                <Link href="/onlineadmissions" className="w-full xs:w-auto">
                   <Button className="w-full rounded-full px-5 xs:px-6 sm:px-8 py-3 xs:py-3.5 sm:py-4 font-black bg-linear-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white shadow-xl text-sm xs:text-base">
                     BEGIN YOUR JOURNEY{" "}
                     <Rocket className="w-3.5 h-3.5 xs:w-4 xs:h-4 ml-1.5 xs:ml-2" />
                   </Button>
                 </Link>
-                <Link href="/assessment" className="w-full xs:w-auto">
+                <Link href="/online/assessment" className="w-full xs:w-auto">
                   <Button
                     variant="outline"
                     className="w-full rounded-full px-5 xs:px-6 sm:px-8 py-3 xs:py-3.5 sm:py-4 font-black border-amber-500 text-amber-600 text-sm xs:text-base"
@@ -924,13 +924,13 @@ export default function AboutClient() {
                 assessment.
               </p>
               <div className="flex flex-col xs:flex-row gap-3 xs:gap-4 justify-center px-4">
-                <Link href="/admissions" className="w-full xs:w-auto">
+                <Link href="/online/admissions" className="w-full xs:w-auto">
                   <Button className="w-full rounded-full px-5 xs:px-6 sm:px-8 py-2.5 xs:py-3 sm:py-4 font-black text-sm xs:text-base bg-linear-to-r from-purple-600 to-purple-700 text-white">
                     START YOUR JOURNEY{" "}
                     <ArrowRight className="w-3.5 h-3.5 xs:w-4 xs:h-4 ml-1.5 xs:ml-2" />
                   </Button>
                 </Link>
-                <Link href="/contact" className="w-full xs:w-auto">
+                <Link href="/online/contact" className="w-full xs:w-auto">
                   <Button
                     variant="outline"
                     className="w-full rounded-full px-5 xs:px-6 sm:px-8 py-2.5 xs:py-3 sm:py-4 font-black text-sm xs:text-base border-amber-500 text-amber-600"
