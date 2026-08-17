@@ -1,6 +1,6 @@
 // app/(marketing)/onsite/admissions/page.tsx
 import { Metadata } from "next";
-import OnsiteAdmissionsClient from "./onsite-admissions-client";
+import AdmissionsClient from "./admissions-client";
 
 export const metadata: Metadata = {
   title: "Admissions | Daar-ul-Maysaroh - Quran Memorization Institute",
@@ -19,5 +19,5 @@ export const metadata: Metadata = {
 };
 
 export default function AdmissionsPage() {
-  return <OnsiteAdmissionsClient />;
+  return <AdmissionsClient />;
 }
