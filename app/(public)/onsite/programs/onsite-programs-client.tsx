@@ -6,21 +6,21 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import {
-    ArrowRight,
-    BookOpen,
-    Calendar,
-    CheckCircle2,
-    Clock,
-    Crown,
-    Globe,
-    GraduationCap,
-    Heart,
-    Moon,
-    Shield,
-    Star,
-    Sun,
-    Target,
-    Zap
+  ArrowRight,
+  BookOpen,
+  Calendar,
+  CheckCircle2,
+  Clock,
+  Crown,
+  Globe,
+  GraduationCap,
+  Heart,
+  Moon,
+  Shield,
+  Star,
+  Sun,
+  Target,
+  Zap,
 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
@@ -42,6 +42,7 @@ const ATTENDANCE_OPTIONS = [
       "Tahfeedh & Tajweed",
       "Islamic Studies",
     ],
+    slug: "part-time-day",
   },
   {
     id: "full-time-day",
@@ -59,6 +60,7 @@ const ATTENDANCE_OPTIONS = [
       "Complete curriculum",
       "Accelerated progress",
     ],
+    slug: "full-time-day",
   },
   {
     id: "part-time-boarding",
@@ -76,6 +78,7 @@ const ATTENDANCE_OPTIONS = [
       "Full supervision",
       "Community experience",
     ],
+    slug: "part-time-boarding",
   },
   {
     id: "full-time-boarding",
@@ -93,6 +96,7 @@ const ATTENDANCE_OPTIONS = [
       "24/7 supervision",
       "Accelerated memorization",
     ],
+    slug: "full-time-boarding",
   },
 ];
 
@@ -201,8 +205,6 @@ const getColorStyles = (color: string) => {
       glow: "shadow-amber-500/30",
     },
   } as const;
-
-  // Return a safe default (purple) if an unknown color is provided
   return map[color as keyof typeof map] ?? map.purple;
 };
 
@@ -293,7 +295,6 @@ export default function OnsiteProgramsClient() {
             {ATTENDANCE_OPTIONS.map((option, index) => {
               const Icon = option.icon;
               const colors = getColorStyles(option.color);
-              const isPurple = option.color === "purple";
               return (
                 <Reveal key={option.id} delay={index * 0.08}>
                   <motion.div
@@ -344,13 +345,11 @@ export default function OnsiteProgramsClient() {
                       ))}
                     </div>
 
-                    <Link href="/onsite/admissions">
-                      <Button
-                        variant="outline"
-                        className="w-full rounded-xl py-2.5 font-black text-xs border-slate-700 text-slate-300 hover:bg-slate-800/50 transition-all"
-                      >
-                        Apply Now
-                        <ArrowRight className="w-3.5 h-3.5 ml-1.5 inline" />
+                    {/* ===== REGISTER BUTTON - UPDATED ===== */}
+                    <Link href={`/onsite/register?program=${option.slug}`}>
+                      <Button className="w-full rounded-xl py-2.5 font-black text-xs bg-gradient-to-r from-purple-600 to-amber-500 hover:from-purple-700 hover:to-amber-600 text-white shadow-lg shadow-purple-500/20 transition-all group">
+                        Register Now
+                        <ArrowRight className="w-3.5 h-3.5 ml-1.5 group-hover:translate-x-1 transition-transform" />
                       </Button>
                     </Link>
                   </motion.div>
@@ -366,7 +365,6 @@ export default function OnsiteProgramsClient() {
             {CURRICULUM.map((subject, index) => {
               const Icon = subject.icon;
               const colors = getColorStyles(subject.color);
-              const isPurple = subject.color === "purple";
               return (
                 <Reveal key={index} delay={index * 0.05}>
                   <motion.div

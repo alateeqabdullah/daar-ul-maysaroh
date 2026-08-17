@@ -452,7 +452,7 @@ export function OnsiteFooter() {
               </h4>
               <ul className="space-y-2.5">
                 {FOOTER_LINKS.support.map((item) => (
-                  <li key={item.href}>
+                  <li key={item.label}>
                     <Link
                       href={item.href}
                       className="text-sm text-slate-400 hover:text-amber-400 transition-colors flex items-center gap-1.5 group"
