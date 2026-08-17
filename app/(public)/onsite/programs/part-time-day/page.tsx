@@ -1,6 +1,6 @@
 // app/(marketing)/onsite/programs/part-time-day/page.tsx
 import { Metadata } from "next";
-import ProgramRegistrationClient from "./program-registration-client";
+import ProgramRegistrationClient from "../[program]/program-registration-client";
 
 export const metadata: Metadata = {
   title: "Part-Time Day Programme | Daar-ul-Maysaroh",
