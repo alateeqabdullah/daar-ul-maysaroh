@@ -255,7 +255,7 @@ const FEATURED_COURSES = [
     level: "Beginner+",
     students: "150+",
     rating: 4.9,
-    href: "/courses/qiroah",
+    href: "/online/courses/qiroah",
     features: ["Certificate", "24/7 Portal", "Analytics", "Live Correction"],
     color: "purple",
     popular: true,
@@ -271,7 +271,7 @@ const FEATURED_COURSES = [
     level: "All Levels",
     students: "200+",
     rating: 4.9,
-    href: "/courses/hifz",
+    href: "/online/courses/hifz",
     features: ["Ijazah", "24/7 Portal", "Analytics", "Revision System"],
     color: "amber",
     popular: true,
@@ -287,7 +287,7 @@ const FEATURED_COURSES = [
     level: "Intermediate+",
     students: "300+",
     rating: 4.8,
-    href: "/courses/tajweed",
+    href: "/online/courses/tajweed",
     features: ["Live Correction", "Audio Analysis", "Certificate", "Progress Tracking"],
     color: "teal",
     popular: true,
@@ -303,7 +303,7 @@ const FEATURED_COURSES = [
     level: "Beginner",
     students: "120+",
     rating: 4.7,
-    href: "/courses/arabic",
+    href: "/online/courses/arabic",
     features: ["Grammar Focus", "Vocabulary Builder", "Tafsir Integration", "Certificate"],
     color: "green",
     popular: false,
@@ -319,7 +319,7 @@ const FEATURED_COURSES = [
     level: "Advanced",
     students: "80+",
     rating: 4.9,
-    href: "/courses/tafsir",
+    href: "/online/courses/tafsir",
     features: ["Classical Sources", "Scholar Mentorship", "Research", "Certificate"],
     color: "slate",
     popular: false,
@@ -335,7 +335,7 @@ const FEATURED_COURSES = [
     level: "Beginner",
     students: "100+",
     rating: 4.9,
-    href: "/courses/group-qiroah",
+    href: "/online/courses/group-qiroah",
     features: ["Interactive Games", "Reward System", "Parent Portal", "Certificate"],
     color: "emerald",
     popular: true,
@@ -607,7 +607,7 @@ export function FeaturedCourses() {
                 ✨ Each program includes Ijazah / certification and scholarly mentorship with authentic Sanad.
               </div> */}
 
-              <Link href="/courses">
+              <Link href="/online/courses">
                 <Button className="rounded-full px-6 xs:px-7 sm:px-8 md:px-10 py-2.5 xs:py-3 sm:py-3.5 md:py-4 text-[10px] xs:text-xs sm:text-sm font-black bg-linear-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white shadow-lg hover:shadow-xl hover:shadow-purple-500/25 transition-all duration-300 group">
                   <span className="flex items-center gap-2 xs:gap-3">
                     VIEW ALL PROGRAMS

@@ -552,7 +552,7 @@ export function Hero({ className }: HeroProps) {
 
           {/* CALL TO ACTION */}
           <div className="flex flex-col xs:flex-row flex-wrap gap-3 xs:gap-4 sm:gap-5 md:gap-6 pt-2 xs:pt-3 sm:pt-4 pb-6 xs:pb-7 sm:pb-8">
-            <Link href="/courses" className="w-full xs:w-auto">
+            <Link href="/online/courses" className="w-full xs:w-auto">
               <Button
                 size={isMobile ? "default" : "lg"}
                 className="h-12 xs:h-13 sm:h-14 md:h-15 lg:h-16 w-full xs:w-auto px-5 xs:px-6 sm:px-7 md:px-10 lg:px-12 rounded-xl xs:rounded-2xl sm:rounded-2xl md:rounded-3xl text-xs xs:text-sm sm:text-sm md:text-base font-black bg-linear-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white shadow-lg transition-all group overflow-hidden"

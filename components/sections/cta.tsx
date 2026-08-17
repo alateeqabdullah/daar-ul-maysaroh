@@ -70,7 +70,7 @@ export function CTA() {
           {/* Buttons */}
           <Reveal delay={0.3}>
             <div className="flex flex-col sm:flex-row gap-3 justify-center mb-10">
-              <Link href="/assessment" className="w-full sm:w-auto">
+              <Link href="/online/assessment" className="w-full sm:w-auto">
                 <motion.button
                   whileHover={{ scale: hoverScale }}
                   whileTap={{ scale: tapScale }}
@@ -81,7 +81,7 @@ export function CTA() {
                 </motion.button>
               </Link>
 
-              <Link href="/courses" className="w-full sm:w-auto">
+              <Link href="/online/courses" className="w-full sm:w-auto">
                 <motion.button
                   whileHover={{ scale: hoverScale }}
                   whileTap={{ scale: tapScale }}

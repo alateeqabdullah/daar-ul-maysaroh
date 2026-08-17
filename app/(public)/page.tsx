@@ -173,14 +173,14 @@ const getColorStyles = (color: string) => {
       text: "text-purple-400",
       border: "border-purple-800/30",
       bg: "bg-purple-600/20",
-      gradient: "from-purple-500 to-purple-600",
+      linear: "from-purple-500 to-purple-600",
       glow: "shadow-purple-500/30",
     },
     amber: {
       text: "text-amber-400",
       border: "border-amber-800/30",
       bg: "bg-amber-500/20",
-      gradient: "from-amber-500 to-amber-600",
+      linear: "from-amber-500 to-amber-600",
       glow: "shadow-amber-500/30",
     },
   };
@@ -270,7 +270,7 @@ function PremiumCampusCard({
           <Button
             className={cn(
               "w-full font-black group/btn rounded-xl py-3",
-              `bg-gradient-to-r ${colors.gradient} text-white shadow-lg ${colors.glow} hover:shadow-xl transition-all`,
+              `bg-linear-to-r ${colors.linear} text-white shadow-lg ${colors.glow} hover:shadow-xl transition-all`,
             )}
           >
             {buttonText}
@@ -323,7 +323,7 @@ export default function LandingPage() {
 
               <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-black tracking-tighter leading-[1.1] mb-6 text-white">
                 Your Journey to
-                <span className="block bg-gradient-to-r from-purple-400 via-amber-500 to-purple-400 bg-clip-text text-transparent">
+                <span className="block bg-linear-to-r from-purple-400 via-amber-500 to-purple-400 bg-clip-text text-transparent">
                   Quranic Excellence
                 </span>
               </h1>
@@ -436,22 +436,22 @@ export default function LandingPage() {
           <Reveal>
             <div className="text-center max-w-2xl mx-auto mb-12 md:mb-16">
               <div className="flex items-center justify-center gap-3 mb-4">
-                <div className="w-12 h-0.5 bg-gradient-to-r from-transparent to-amber-500" />
+                <div className="w-12 h-0.5 bg-linear-to-r from-transparent to-amber-500" />
                 <span className="text-amber-500 font-black text-xs uppercase tracking-wider flex items-center gap-2">
                   <Compass className="w-4 h-4" />
                   Our Programs
                 </span>
-                <div className="w-12 h-0.5 bg-gradient-to-l from-transparent to-amber-500" />
+                <div className="w-12 h-0.5 bg-linear-to-l from-transparent to-amber-500" />
               </div>
               <h2 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tighter font-heading text-white mb-4">
                 Comprehensive{" "}
-                <span className="bg-gradient-to-r from-purple-400 to-amber-400 bg-clip-text text-transparent italic">
+                <span className="bg-linear-to-r from-purple-400 to-amber-400 bg-clip-text text-transparent italic">
                   Quranic Education
                 </span>
               </h2>
               <p className="text-lg text-slate-300">
-                Whether you're beginning your journey or seeking advanced
-                certification, we have a program tailored for you.
+               {` Whether you're beginning your journey or seeking advanced
+                certification, we have a program tailored for you.`}
               </p>
             </div>
           </Reveal>
@@ -518,7 +518,7 @@ export default function LandingPage() {
           <Reveal delay={0.3}>
             <div className="text-center mt-12">
               <Link href="/courses">
-                <Button className="rounded-full px-8 py-4 font-black bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white shadow-lg hover:shadow-xl transition-all duration-300 group">
+                <Button className="rounded-full px-8 py-4 font-black bg-linear-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white shadow-lg hover:shadow-xl transition-all duration-300 group">
                   View All Programs
                   <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
                 </Button>
@@ -531,21 +531,21 @@ export default function LandingPage() {
       {/* ============================================================
            FEATURES SECTION - PREMIUM DARK
            ============================================================ */}
-      <section className="py-16 md:py-24 bg-gradient-to-b from-transparent via-purple-600/5 to-amber-600/5">
+      <section className="py-16 md:py-24 bg-linear-to-b from-transparent via-purple-600/5 to-amber-600/5">
         <div className="container mx-auto px-4 xs:px-5 sm:px-6">
           <Reveal>
             <div className="text-center max-w-2xl mx-auto mb-12 md:mb-16">
               <div className="flex items-center justify-center gap-3 mb-4">
-                <div className="w-12 h-0.5 bg-gradient-to-r from-transparent to-purple-500" />
+                <div className="w-12 h-0.5 bg-linear-to-r from-transparent to-purple-500" />
                 <span className="text-purple-400 font-black text-xs uppercase tracking-wider flex items-center gap-2">
                   <Target className="w-4 h-4" />
                   Why Choose Us
                 </span>
-                <div className="w-12 h-0.5 bg-gradient-to-l from-transparent to-purple-500" />
+                <div className="w-12 h-0.5 bg-linear-to-l from-transparent to-purple-500" />
               </div>
               <h2 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tighter font-heading text-white mb-4">
                 The{" "}
-                <span className="bg-gradient-to-r from-purple-400 to-amber-400 bg-clip-text text-transparent italic">
+                <span className="bg-linear-to-r from-purple-400 to-amber-400 bg-clip-text text-transparent italic">
                   Al-Maysaroh
                 </span>{" "}
                 Advantage
@@ -598,16 +598,16 @@ export default function LandingPage() {
           <Reveal>
             <div className="text-center max-w-2xl mx-auto mb-12 md:mb-16">
               <div className="flex items-center justify-center gap-3 mb-4">
-                <div className="w-12 h-0.5 bg-gradient-to-r from-transparent to-amber-500" />
+                <div className="w-12 h-0.5 bg-linear-to-r from-transparent to-amber-500" />
                 <span className="text-amber-500 font-black text-xs uppercase tracking-wider flex items-center gap-2">
                   <Quote className="w-4 h-4" />
                   Testimonials
                 </span>
-                <div className="w-12 h-0.5 bg-gradient-to-l from-transparent to-amber-500" />
+                <div className="w-12 h-0.5 bg-linear-to-l from-transparent to-amber-500" />
               </div>
               <h2 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tighter font-heading text-white mb-4">
                 What Our{" "}
-                <span className="bg-gradient-to-r from-purple-400 to-amber-400 bg-clip-text text-transparent italic">
+                <span className="bg-linear-to-r from-purple-400 to-amber-400 bg-clip-text text-transparent italic">
                   Students
                 </span>{" "}
                 Say
@@ -624,7 +624,7 @@ export default function LandingPage() {
                     {`"${testimonial.content}"`}
                   </p>
                   <div className="flex items-center gap-3 pt-3 border-t border-slate-800/50">
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-600 to-amber-500 flex items-center justify-center text-white font-black text-sm">
+                    <div className="w-10 h-10 rounded-full bg-linear-to-br from-purple-600 to-amber-500 flex items-center justify-center text-white font-black text-sm">
                       {testimonial.initials}
                     </div>
                     <div>
@@ -646,7 +646,7 @@ export default function LandingPage() {
       {/* ============================================================
            CTA SECTION - PREMIUM DARK
            ============================================================ */}
-      <section className="py-16 md:py-24 bg-gradient-to-br from-purple-600/20 via-purple-700/20 to-amber-600/20">
+      <section className="py-16 md:py-24 bg-linear-to-br from-purple-600/20 via-purple-700/20 to-amber-600/20">
         <div className="container mx-auto px-4 xs:px-5 sm:px-6">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -654,7 +654,7 @@ export default function LandingPage() {
             viewport={{ once: true }}
             className="max-w-3xl mx-auto text-center"
           >
-            <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br from-purple-600 to-amber-500 mb-6 shadow-xl shadow-purple-500/30">
+            <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-linear-to-br from-purple-600 to-amber-500 mb-6 shadow-xl shadow-purple-500/30">
               <Sparkles className="w-10 h-10 text-white" />
             </div>
 
@@ -669,7 +669,7 @@ export default function LandingPage() {
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/online">
-                <Button className="rounded-full px-8 py-4 font-black bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white shadow-lg hover:shadow-xl transition-all group">
+                <Button className="rounded-full px-8 py-4 font-black bg-linear-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white shadow-lg hover:shadow-xl transition-all group">
                   Start Online
                   <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
                 </Button>

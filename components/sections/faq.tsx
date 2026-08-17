@@ -143,7 +143,7 @@ export function FAQ() {
         <Reveal delay={0.3}>
           <div className="text-center mt-8 xs:mt-10 sm:mt-12">
             <Link
-              href="/faq"
+              href="/online/faq"
               className="inline-flex items-center gap-1.5 text-xs sm:text-sm font-black text-purple-600 hover:text-purple-700 transition-colors group"
             >
               View all FAQs
@@ -163,12 +163,12 @@ export function FAQ() {
                 </span>
               </div>
               <div className="flex flex-col xs:flex-row gap-2 xs:gap-3">
-                <Link href="/contact">
+                <Link href="/online/contact">
                   <button className="px-4 xs:px-5 py-1.5 xs:py-2 rounded-full bg-linear-to-r from-purple-600 to-purple-700 text-white font-black text-[10px] xs:text-xs uppercase tracking-wider hover:from-purple-700 hover:to-purple-800 transition-all shadow-md">
                     Contact Support
                   </button>
                 </Link>
-                <Link href="/admissions/apply">
+                <Link href="/online/admissions/apply">
                   <button className="px-4 xs:px-5 py-1.5 xs:py-2 rounded-full border-2 border-purple-600 text-purple-600 font-black text-[10px] xs:text-xs uppercase tracking-wider hover:bg-purple-50 dark:hover:bg-purple-950/20 transition-all">
                     Apply Now
                   </button>

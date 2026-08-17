@@ -2591,17 +2591,17 @@ export function Header() {
             aria-label="AL-MAYSAROH Institute - Home"
           >
             <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-amber-500 rounded-2xl blur-md opacity-50 group-hover:opacity-100 transition-opacity" />
+              <div className="absolute inset-0 bg-linear-to-r from-purple-600 to-amber-500 rounded-2xl blur-md opacity-50 group-hover:opacity-100 transition-opacity" />
               <Image
                 src={Logo}
                 width={100}
                 height={100}
                 alt="Al-Maysaroh Institute Logo"
-                className="relative w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-purple-600 to-amber-500 rounded-2xl flex items-center justify-center shadow-2xl group-hover:scale-105 group-hover:rotate-3 transition-all duration-300"
+                className="relative w-10 h-10 md:w-12 md:h-12 bg-linear-to-br from-purple-600 to-amber-500 rounded-2xl flex items-center justify-center shadow-2xl group-hover:scale-105 group-hover:rotate-3 transition-all duration-300"
               />
             </div>
             <div className="hidden lg:flex flex-col">
-              <h1 className="text-lg md:text-xl lg:text-2xl font-black tracking-tighter leading-none bg-gradient-to-r from-white to-purple-300 bg-clip-text text-transparent">
+              <h1 className="text-lg md:text-xl lg:text-2xl font-black tracking-tighter leading-none bg-linear-to-r from-white to-purple-300 bg-clip-text text-transparent">
                 AL-MAYSAROH
               </h1>
               <p className="text-[8px] md:text-[10px] text-amber-500 font-bold tracking-[0.3em] md:tracking-[0.4em] uppercase">
@@ -2673,10 +2673,10 @@ export function Header() {
                             </div>
                             <Link
                               href={MEGA_MENU.featured.href}
-                              className="block p-5 rounded-xl bg-gradient-to-br from-purple-600/10 to-amber-500/10 border border-purple-700/30 hover:border-amber-500/50 transition-all group"
+                              className="block p-5 rounded-xl bg-linear-to-br from-purple-600/10 to-amber-500/10 border border-purple-700/30 hover:border-amber-500/50 transition-all group"
                             >
                               <div className="flex items-center gap-4">
-                                <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-purple-600/20 to-amber-500/20 flex items-center justify-center">
+                                <div className="w-12 h-12 rounded-lg bg-linear-to-br from-purple-600/20 to-amber-500/20 flex items-center justify-center">
                                   <MEGA_MENU.featured.icon className="w-6 h-6 text-amber-500" />
                                 </div>
                                 <div>
@@ -2821,13 +2821,13 @@ export function Header() {
             <div className="hidden md:flex items-center gap-2 lg:gap-3">
               {session ? (
                 <Link href="/dashboard">
-                  <Button className="rounded-xl font-black px-5 lg:px-6 bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white shadow-lg relative overflow-hidden group min-h-11">
+                  <Button className="rounded-xl font-black px-5 lg:px-6 bg-linear-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white shadow-lg relative overflow-hidden group min-h-11">
                     <span className="relative z-10 flex items-center gap-2 text-[11px] tracking-widest">
                       <LayoutDashboard className="w-4 h-4" aria-hidden="true" />
                       DASHBOARD
                     </span>
                     <motion.div
-                      className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12"
+                      className="absolute inset-0 bg-linear-to-r from-transparent via-white/20 to-transparent -skew-x-12"
                       animate={{ x: ["-100%", "200%"] }}
                       transition={{
                         duration: 3,
@@ -2848,10 +2848,10 @@ export function Header() {
                     </Button>
                   </Link>
                   <Link href="/register">
-                    <Button className="rounded-xl font-black px-6 lg:px-8 bg-gradient-to-r from-purple-600 to-amber-500 hover:from-purple-700 hover:to-amber-600 text-white shadow-lg text-[11px] tracking-widest relative overflow-hidden group min-h-11">
+                    <Button className="rounded-xl font-black px-6 lg:px-8 bg-linear-to-r from-purple-600 to-amber-500 hover:from-purple-700 hover:to-amber-600 text-white shadow-lg text-[11px] tracking-widest relative overflow-hidden group min-h-11">
                       <span className="relative z-10">REGISTER</span>
                       <motion.div
-                        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12"
+                        className="absolute inset-0 bg-linear-to-r from-transparent via-white/20 to-transparent -skew-x-12"
                         animate={{ x: ["-100%", "200%"] }}
                         transition={{
                           duration: 4,
@@ -2965,7 +2965,7 @@ export function Header() {
                                 <Link
                                   href={MEGA_MENU.featured.href}
                                   onClick={() => setMobileMenuOpen(false)}
-                                  className="block p-4 rounded-xl bg-gradient-to-r from-purple-600/10 to-amber-500/10 border border-purple-700/30"
+                                  className="block p-4 rounded-xl bg-linear-to-r from-purple-600/10 to-amber-500/10 border border-purple-700/30"
                                 >
                                   <div className="font-black text-sm text-amber-500">
                                     {MEGA_MENU.featured.name}
@@ -3082,7 +3082,7 @@ export function Header() {
                       href="/dashboard"
                       onClick={() => setMobileMenuOpen(false)}
                     >
-                      <Button className="w-full h-14 rounded-2xl font-black bg-gradient-to-r from-purple-600 to-purple-700 text-white">
+                      <Button className="w-full h-14 rounded-2xl font-black bg-linear-to-r from-purple-600 to-purple-700 text-white">
                         GO TO DASHBOARD
                       </Button>
                     </Link>
@@ -3103,7 +3103,7 @@ export function Header() {
                       href="/register"
                       onClick={() => setMobileMenuOpen(false)}
                     >
-                      <Button className="w-full h-14 rounded-2xl font-black bg-gradient-to-r from-purple-600 to-amber-500 text-white">
+                      <Button className="w-full h-14 rounded-2xl font-black bg-linear-to-r from-purple-600 to-amber-500 text-white">
                         REGISTER
                       </Button>
                     </Link>

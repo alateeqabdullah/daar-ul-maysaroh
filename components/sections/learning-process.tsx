@@ -185,7 +185,7 @@ export function LearningProcess() {
                 Ready to begin your scholarly journey?
               </p>
 
-              <Link href="/assessment">
+              <Link href="/online/assessment">
                 <button className="inline-flex items-center gap-2 px-4 xs:px-5 py-2 xs:py-2.5 rounded-full bg-linear-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white font-black text-[10px] xs:text-xs transition-all group">
                   Start Your Assessment
                   <ArrowRight className="w-3 h-3 xs:w-3.5 xs:h-3.5 group-hover:translate-x-1 transition-transform" />

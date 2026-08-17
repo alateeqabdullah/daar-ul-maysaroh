@@ -236,7 +236,7 @@ const PILLARS = [
     desc: "Connect your voice to a lineage of scholars reaching back 1,400 years to the Prophet (ﷺ).",
     icon: ShieldCheck,
     tag: "Traditional",
-    href: "/methodology#sanad",
+    href: "/online/methodology#sanad",
     color: "purple",
   },
   {
@@ -244,7 +244,7 @@ const PILLARS = [
     desc: "Personalized sessions with Ijazah-certified scholars. Undivided attention to your phonetics.",
     icon: Users,
     tag: "Exclusive",
-    href: "/methodology#rigor",
+    href: "/online/methodology#rigor",
     color: "amber",
   },
   {
@@ -252,7 +252,7 @@ const PILLARS = [
     desc: "A proprietary portal designed for scholarly focus. Track every surah, ayah, and mistake live.",
     icon: Globe,
     tag: "Modern",
-    href: "/methodology#portal",
+    href: "/online/methodology#portal",
     color: "purple",
   },
   {
@@ -260,7 +260,7 @@ const PILLARS = [
     desc: "Access scholars across multiple timezones. Structure your path around your professional life.",
     icon: Clock,
     tag: "Flexible",
-    href: "/methodology#scheduling",
+    href: "/online/methodology#scheduling",
     color: "amber",
   },
 ];

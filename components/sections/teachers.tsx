@@ -252,7 +252,7 @@ export function Teachers() {
             </Reveal>
           </div>
           <Reveal delay={0.2}>
-            <Link href="/teachers" className="w-full lg:w-auto">
+            <Link href="/online/teachers" className="w-full lg:w-auto">
               <Button
                 variant="outline"
                 className="w-full lg:w-auto h-11 xs:h-12 sm:h-12 md:h-14 px-5 xs:px-6 sm:px-6 md:px-8 rounded-xl border-2 border-purple-300 text-purple-600 font-black text-[10px] xs:text-xs tracking-widest uppercase hover:bg-purple-600 hover:text-white hover:border-purple-600 transition-all duration-300"
@@ -269,7 +269,7 @@ export function Teachers() {
           {PREVIEW_TEACHERS.map((teacher, index) => (
             <Reveal key={teacher.id} delay={index * 0.1}>
               <Link
-                href={`/teachers/${createSlug(teacher.name)}`}
+                href={`/online/teachers/${createSlug(teacher.name)}`}
                 className="block group focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-purple-500 rounded-xl xs:rounded-2xl"
               >
                 <div className="bg-card rounded-xl xs:rounded-2xl border border-border hover:border-purple-300 transition-all duration-500 p-5 xs:p-6 sm:p-6 md:p-7 lg:p-8 xl:p-10 relative cursor-pointer h-full shadow-sm hover:shadow-xl">
