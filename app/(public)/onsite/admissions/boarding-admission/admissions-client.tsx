@@ -192,7 +192,7 @@ export default function AdmissionsClient() {
   const [submitError, setSubmitError] = useState("");
 
   // SnapItForms Access Key - REPLACE WITH YOUR ACTUAL KEY
-  const SNAPIT_ACCESS_KEY = "sf_154d98b73e50288b5327caec3d844896";
+  const SNAPIT_ACCESS_KEY = process.env.SNAPIT_ACCESS_KEY;
 
   // Detect mobile
   useEffect(() => {
