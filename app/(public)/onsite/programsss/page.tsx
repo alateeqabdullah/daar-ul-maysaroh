@@ -1,11 +1,11 @@
 // app/(marketing)/onsite/programs/page.tsx
 import { Metadata } from "next";
-import ProgramsClient from "./programs-client";
+import OnsiteProgramsClient from "./onsite-programs-client";
 
 export const metadata: Metadata = {
-  title: "Programs | Daar-ul-Maysaroh - Quran Memorization Institute",
+  title: "Programs | Daar-ul-Maysaroh - Full-Time Quran Memorization",
   description:
-    "Explore our comprehensive Quran memorization programs at Daar-ul-Maysaroh. Day and boarding options available.",
+    "Explore our full-time Quran memorization programs at Daar-ul-Maysaroh in Ibadan. Day and boarding options available.",
   keywords:
     "Quran memorization, Tahfeedh, Ibadan, boarding school, day programme, Islamic education",
   authors: [{ name: "Daar-ul-Maysaroh" }],
@@ -18,5 +18,5 @@ export const metadata: Metadata = {
 };
 
 export default function ProgramsPage() {
-  return <ProgramsClient />;
+  return <OnsiteProgramsClient />;
 }
