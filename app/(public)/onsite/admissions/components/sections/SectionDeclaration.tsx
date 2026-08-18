@@ -3,6 +3,7 @@
 
 import { cn } from "@/lib/utils";
 import { SectionProps } from "../../types";
+import { FileCheck } from "lucide-react";
 
 export function SectionDeclaration({
   formData,
@@ -69,13 +70,13 @@ export function SectionDeclaration({
             onBlur={handleChange as any}
             className={cn(
               "w-full h-12 px-4 rounded-xl border bg-slate-900/50 focus:border-purple-500 outline-none text-slate-200 text-sm transition-all",
-              errors.parentFullName && touched?.parentFullName
+              errors?.parentFullName && touched?.parentFullName
                 ? "border-red-500"
                 : "border-slate-800",
             )}
             placeholder="Full name"
           />
-          {errors.parentFullName && touched?.parentFullName && (
+          {errors?.parentFullName && touched?.parentFullName && (
             <p className="text-xs text-red-400 mt-1 error-message">
               {errors.parentFullName}
             </p>
@@ -93,12 +94,12 @@ export function SectionDeclaration({
             onBlur={handleChange as any}
             className={cn(
               "w-full h-12 px-4 rounded-xl border bg-slate-900/50 focus:border-purple-500 outline-none text-slate-200 text-sm transition-all",
-              errors.declarationDate && touched?.declarationDate
+              errors?.declarationDate && touched?.declarationDate
                 ? "border-red-500"
                 : "border-slate-800",
             )}
           />
-          {errors.declarationDate && touched?.declarationDate && (
+          {errors?.declarationDate && touched?.declarationDate && (
             <p className="text-xs text-red-400 mt-1 error-message">
               {errors.declarationDate}
             </p>
@@ -120,7 +121,7 @@ export function SectionDeclaration({
           <span className="text-amber-500"> *</span>
         </label>
       </div>
-      {errors.agreeDeclaration && touched?.agreeDeclaration && (
+      {errors?.agreeDeclaration && touched?.agreeDeclaration && (
         <p className="text-xs text-red-400 mt-1 error-message">
           {errors.agreeDeclaration}
         </p>
