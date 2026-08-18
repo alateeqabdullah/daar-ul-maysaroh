@@ -33,13 +33,13 @@ export function SectionDeclaration({
           </p>
           <p className="flex items-start gap-2">
             <span className="text-amber-500">•</span>
-            The student may be placed according to their Qur'ān and Islamic
-            learning level.
+           {` The student may be placed according to their Qur'ān and Islamic
+            learning level.`}
           </p>
           <p className="flex items-start gap-2">
-            <span className="text-amber-500">•</span>I am responsible for
+            <span className="text-amber-500">•</span>{`I am responsible for
             providing accurate information about the student's health, welfare
-            and educational background.
+            and educational background.`}
           </p>
           <p className="flex items-start gap-2">
             <span className="text-amber-500">•</span>I will inform the Madrasah
