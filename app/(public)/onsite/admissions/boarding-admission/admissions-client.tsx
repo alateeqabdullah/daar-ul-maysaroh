@@ -29,24 +29,24 @@ import { cn } from "@/lib/utils";
 import { FormData, Section, FormErrors } from "./types";
 
 // Components
-import { ProgressIndicator } from "./components/ProgressIndicator";
-import { NavigationButtons } from "./components/NavigationButtons";
+import { ProgressIndicator } from "../components/ProgressIndicator";
+import { NavigationButtons } from "../components/NavigationButtons";
 
 // Section Components
-import { SectionProgramme } from "./components/sections/SectionProgramme";
-import { SectionStudent } from "./components/sections/SectionStudent";
-import { SectionParent } from "./components/sections/SectionParent";
-import { SectionQuran } from "./components/sections/SectionQuran";
-import { SectionIslamic } from "./components/sections/SectionIslamic";
-import { SectionLearning } from "./components/sections/SectionLearning";
-import { SectionTarbiyah } from "./components/sections/SectionTarbiyah";
-import { SectionHealth } from "./components/sections/SectionHealth";
-import { SectionCommunication } from "./components/sections/SectionCommunication";
-import { SectionVisitation } from "./components/sections/SectionVisitation";
-import { SectionDeclaration } from "./components/sections/SectionDeclaration";
+import { SectionProgramme } from "../components/sections/SectionProgramme";
+import { SectionStudent } from "../components/sections/SectionStudent";
+import { SectionParent } from "../components/sections/SectionParent";
+import { SectionQuran } from "../components/sections/SectionQuran";
+import { SectionIslamic } from "../components/sections/SectionIslamic";
+import { SectionLearning } from "../components/sections/SectionLearning";
+import { SectionTarbiyah } from "../components/sections/SectionTarbiyah";
+import { SectionHealth } from "../components/sections/SectionHealth";
+import { SectionCommunication } from "../components/sections/SectionCommunication";
+import { SectionVisitation } from "../components/sections/SectionVisitation";
+import { SectionDeclaration } from "../components/sections/SectionDeclaration";
 
 // Validation
-import { validateSection, isSectionValid } from "./utils/formValidation";
+import { validateSection, isSectionValid } from "../utils/formValidation";
 
 // ============================================================
 // SECTIONS DEFINITION
