@@ -29,7 +29,7 @@ export function NavigationButtons({
         type="button"
         onClick={prevSection}
         disabled={currentSection === 0}
-        className="rounded-xl py-2.5 md:py-3 font-black text-xs md:text-sm bg-slate-800 hover:bg-slate-700 text-white disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] px-4 flex-1 md:flex-none"
+        className="rounded-xl py-2.5 md:py-3 font-black text-xs md:text-sm bg-slate-800 hover:bg-slate-700 text-white disabled:opacity-50 disabled:cursor-not-allowed min-h-11 px-4 flex-1 md:flex-none"
       >
         <ChevronLeft className="w-4 h-4 mr-1 md:mr-2" />
         <span className="hidden xs:inline">Previous</span>
@@ -40,7 +40,7 @@ export function NavigationButtons({
         <Button
           type="submit"
           disabled={!canSubmit || isSubmitting}
-          className="rounded-xl py-2.5 md:py-3 font-black text-xs md:text-sm bg-gradient-to-r from-purple-600 to-amber-500 hover:from-purple-700 hover:to-amber-600 text-white shadow-lg shadow-purple-500/20 transition-all group disabled:opacity-50 disabled:cursor-not-allowed min-h-[44px] px-4 flex-1 md:flex-none"
+          className="rounded-xl py-2.5 md:py-3 font-black text-xs md:text-sm bg-linear-to-r from-purple-600 to-amber-500 hover:from-purple-700 hover:to-amber-600 text-white shadow-lg shadow-purple-500/20 transition-all group disabled:opacity-50 disabled:cursor-not-allowed min-h-11 px-4 flex-1 md:flex-none"
         >
           {isSubmitting ? (
             <>
@@ -58,7 +58,7 @@ export function NavigationButtons({
         <Button
           type="button"
           onClick={nextSection}
-          className="rounded-xl py-2.5 md:py-3 font-black text-xs md:text-sm bg-gradient-to-r from-purple-600 to-amber-500 hover:from-purple-700 hover:to-amber-600 text-white shadow-lg shadow-purple-500/20 transition-all group min-h-[44px] px-4 flex-1 md:flex-none"
+          className="rounded-xl py-2.5 md:py-3 font-black text-xs md:text-sm bg-linear-to-r from-purple-600 to-amber-500 hover:from-purple-700 hover:to-amber-600 text-white shadow-lg shadow-purple-500/20 transition-all group min-h-11 px-4 flex-1 md:flex-none"
         >
           <span className="hidden xs:inline">Next</span>
           <span className="xs:hidden">Next</span>

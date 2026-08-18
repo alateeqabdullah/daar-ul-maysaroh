@@ -3,6 +3,9 @@
 
 import { SectionProps } from "../../types";
 
+import {cn} from "@/lib/utils"
+
+
 export function SectionTarbiyah({ formData, handleChange }: SectionProps) {
   return (
     <div className="space-y-5">
