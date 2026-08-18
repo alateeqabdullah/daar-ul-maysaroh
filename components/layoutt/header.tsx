@@ -2412,60 +2412,60 @@ import { usePathname } from "next/navigation";
 import Image from "next/image";
 
 const navigation = [
-  { name: "Home", href: "/online" },
-  { name: "About", href: "/online/about" },
+  { name: "Home", href: "/" },
+  { name: "About", href: "/about" },
   {
     name: "Programs",
-    href: "/online/courses",
+    href: "/courses",
     dropdown: true,
   },
-  { name: "Faculty", href: "/online/teachers" },
-  { name: "Pricing", href: "/online/pricing" },
-  { name: "Contact", href: "/online/contact" },
+  { name: "Faculty", href: "/teachers" },
+  { name: "Pricing", href: "/pricing" },
+  { name: "Contact", href: "/contact" },
 ];
 
 // Mega menu data - UPDATED with Gold/Purple theme
 const MEGA_MENU = {
   featured: {
     name: "ALL PROGRAMS",
-    href: "/online/courses",
+    href: "/courses",
     desc: "Browse our complete catalog",
     icon: BookOpen,
   },
   oneOnOne: [
     {
       name: "Hifz Program",
-      href: "/online/courses/hifz",
+      href: "/courses/hifz",
       icon: BookMarked,
       desc: "Complete Quran memorization with Ijazah",
     },
     {
       name: "Qiro'ah Program",
-      href: "/online/courses/qiroah",
+      href: "/courses/qiroah",
       icon: Users,
       desc: "Master Quran reading and recitation",
     },
     {
       name: "Tajweed Mastery",
-      href: "/online/courses/tajweed",
+      href: "/courses/tajweed",
       icon: Mic,
       desc: "Scientific recitation rules",
     },
     {
       name: "Arabic Language",
-      href: "/online/courses/arabic",
+      href: "/courses/arabic",
       icon: Globe,
       desc: "Unlock the Quranic language",
     },
     {
       name: "Tafsir Studies",
-      href: "/online/courses/tafsir",
+      href: "/courses/tafsir",
       icon: BookOpen,
       desc: "Deep Quranic understanding",
     },
     {
       name: "Muroja'ah Program",
-      href: "/online/courses/murojaah",
+      href: "/courses/murojaah",
       icon: RefreshCw,
       desc: "Preserve & perfect your memorization",
     },
@@ -2473,28 +2473,28 @@ const MEGA_MENU = {
   groupPrograms: [
     {
       name: "Group Qiro'ah",
-      href: "/online/courses/group-qiroah",
+      href: "/courses/group-qiroah",
       icon: Users,
       desc: "All Ages • Learn to read with joy",
       badge: "Popular",
     },
     {
       name: "Group Tajweed",
-      href: "/online/courses/group-tajweed",
+      href: "/courses/group-tajweed",
       icon: Mic,
       desc: "All Ages • Master Tajweed together",
       badge: "New",
     },
     {
       name: "Juz Amma Group",
-      href: "/online/courses/juz-amma",
+      href: "/courses/juz-amma",
       icon: Star,
       desc: "All Ages • Memorize the last Juz",
       badge: "Popular",
     },
     {
       name: "Juz Tabarak Group",
-      href: "/online/courses/juz-tabarak",
+      href: "/courses/juz-tabarak",
       icon: Star,
       desc: "All Ages • Next step after Juz Amma",
       badge: "New",
@@ -2585,27 +2585,27 @@ export function Header() {
         <nav className="container mx-auto px-4 md:px-6 flex items-center justify-between">
           {/* --- LOGO SECTION - ENHANCED --- */}
           <Link
-            href="/online"
+            href="/"
             className="flex items-center space-x-3 md:space-x-4 relative z-60 group outline-none min-h-11 min-w-11"
             onClick={() => setMobileMenuOpen(false)}
             aria-label="AL-MAYSAROH Institute - Home"
           >
             <div className="relative">
-              <div className="absolute inset-0 bg-linear-to-r from-purple-600 to-amber-500 rounded-2xl blur-md opacity-50 group-hover:opacity-100 transition-opacity" />
+              <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-amber-500 rounded-2xl blur-md opacity-50 group-hover:opacity-100 transition-opacity" />
               <Image
                 src={Logo}
                 width={100}
                 height={100}
                 alt="Al-Maysaroh Institute Logo"
-                className="relative w-10 h-10 md:w-12 md:h-12 bg-linear-to-br from-purple-600 to-amber-500 rounded-2xl flex items-center justify-center shadow-2xl group-hover:scale-105 group-hover:rotate-3 transition-all duration-300"
+                className="relative w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-purple-600 to-amber-500 rounded-2xl flex items-center justify-center shadow-2xl group-hover:scale-105 group-hover:rotate-3 transition-all duration-300"
               />
             </div>
             <div className="hidden lg:flex flex-col">
-              <h1 className="text-lg md:text-xl lg:text-2xl font-black tracking-tighter leading-none bg-linear-to-r from-white to-purple-300 bg-clip-text text-transparent">
+              <h1 className="text-lg md:text-xl lg:text-2xl font-black tracking-tighter leading-none bg-gradient-to-r from-white to-purple-300 bg-clip-text text-transparent">
                 AL-MAYSAROH
               </h1>
               <p className="text-[8px] md:text-[10px] text-amber-500 font-bold tracking-[0.3em] md:tracking-[0.4em] uppercase">
-                Institute
+                Institute (online).
               </p>
             </div>
           </Link>
@@ -2673,10 +2673,10 @@ export function Header() {
                             </div>
                             <Link
                               href={MEGA_MENU.featured.href}
-                              className="block p-5 rounded-xl bg-linear-to-br from-purple-600/10 to-amber-500/10 border border-purple-700/30 hover:border-amber-500/50 transition-all group"
+                              className="block p-5 rounded-xl bg-gradient-to-br from-purple-600/10 to-amber-500/10 border border-purple-700/30 hover:border-amber-500/50 transition-all group"
                             >
                               <div className="flex items-center gap-4">
-                                <div className="w-12 h-12 rounded-lg bg-linear-to-br from-purple-600/20 to-amber-500/20 flex items-center justify-center">
+                                <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-purple-600/20 to-amber-500/20 flex items-center justify-center">
                                   <MEGA_MENU.featured.icon className="w-6 h-6 text-amber-500" />
                                 </div>
                                 <div>
@@ -2775,7 +2775,7 @@ export function Header() {
                             • For all ages
                           </p>
                           <Link
-                            href="/online/courses"
+                            href="/courses"
                             className="text-xs font-black text-amber-500 hover:text-amber-400 transition flex items-center gap-2"
                           >
                             VIEW ALL PROGRAMS
@@ -2821,13 +2821,13 @@ export function Header() {
             <div className="hidden md:flex items-center gap-2 lg:gap-3">
               {session ? (
                 <Link href="/dashboard">
-                  <Button className="rounded-xl font-black px-5 lg:px-6 bg-linear-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white shadow-lg relative overflow-hidden group min-h-11">
+                  <Button className="rounded-xl font-black px-5 lg:px-6 bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white shadow-lg relative overflow-hidden group min-h-11">
                     <span className="relative z-10 flex items-center gap-2 text-[11px] tracking-widest">
                       <LayoutDashboard className="w-4 h-4" aria-hidden="true" />
                       DASHBOARD
                     </span>
                     <motion.div
-                      className="absolute inset-0 bg-linear-to-r from-transparent via-white/20 to-transparent -skew-x-12"
+                      className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12"
                       animate={{ x: ["-100%", "200%"] }}
                       transition={{
                         duration: 3,
@@ -2848,10 +2848,10 @@ export function Header() {
                     </Button>
                   </Link>
                   <Link href="/register">
-                    <Button className="rounded-xl font-black px-6 lg:px-8 bg-linear-to-r from-purple-600 to-amber-500 hover:from-purple-700 hover:to-amber-600 text-white shadow-lg text-[11px] tracking-widest relative overflow-hidden group min-h-11">
+                    <Button className="rounded-xl font-black px-6 lg:px-8 bg-gradient-to-r from-purple-600 to-amber-500 hover:from-purple-700 hover:to-amber-600 text-white shadow-lg text-[11px] tracking-widest relative overflow-hidden group min-h-11">
                       <span className="relative z-10">REGISTER</span>
                       <motion.div
-                        className="absolute inset-0 bg-linear-to-r from-transparent via-white/20 to-transparent -skew-x-12"
+                        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12"
                         animate={{ x: ["-100%", "200%"] }}
                         transition={{
                           duration: 4,
@@ -2965,7 +2965,7 @@ export function Header() {
                                 <Link
                                   href={MEGA_MENU.featured.href}
                                   onClick={() => setMobileMenuOpen(false)}
-                                  className="block p-4 rounded-xl bg-linear-to-r from-purple-600/10 to-amber-500/10 border border-purple-700/30"
+                                  className="block p-4 rounded-xl bg-gradient-to-r from-purple-600/10 to-amber-500/10 border border-purple-700/30"
                                 >
                                   <div className="font-black text-sm text-amber-500">
                                     {MEGA_MENU.featured.name}
@@ -3082,7 +3082,7 @@ export function Header() {
                       href="/dashboard"
                       onClick={() => setMobileMenuOpen(false)}
                     >
-                      <Button className="w-full h-14 rounded-2xl font-black bg-linear-to-r from-purple-600 to-purple-700 text-white">
+                      <Button className="w-full h-14 rounded-2xl font-black bg-gradient-to-r from-purple-600 to-purple-700 text-white">
                         GO TO DASHBOARD
                       </Button>
                     </Link>
@@ -3103,7 +3103,7 @@ export function Header() {
                       href="/register"
                       onClick={() => setMobileMenuOpen(false)}
                     >
-                      <Button className="w-full h-14 rounded-2xl font-black bg-linear-to-r from-purple-600 to-amber-500 text-white">
+                      <Button className="w-full h-14 rounded-2xl font-black bg-gradient-to-r from-purple-600 to-amber-500 text-white">
                         REGISTER
                       </Button>
                     </Link>
