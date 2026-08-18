@@ -1,6 +1,7 @@
 // app/(marketing)/onsite/admissions/components/sections/SectionLearning.tsx
 "use client";
 
+import { cn } from "@/lib/utils";
 import { SectionProps } from "../../types";
 
 export function SectionLearning({ formData, handleChange }: SectionProps) {
