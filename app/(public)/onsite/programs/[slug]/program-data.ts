@@ -116,7 +116,7 @@ This programme is ideal for students who want to dedicate themselves fully to Qu
       },
       {
         q: "What is the teacher-student ratio?",
-        a: "Our ratio is 1:4, ensuring personalized attention and guidance for each student.",
+        a: "Our ratio is 1:1, ensuring personalized attention and guidance for each student.",
       },
     ],
     relatedPrograms: [
@@ -154,7 +154,7 @@ This programme is perfect for out-of-town students or those who have weekday com
     duration: "Ongoing",
     level: "All Levels",
     attendance: "Fri - Sun",
-    ratio: "1:4",
+    ratio: "1:1",
     schedule: [
       "4:00 AM - Tahajjud Preparation",
       "4:30 AM - Tahajjud Prayer",
@@ -219,10 +219,16 @@ This programme is perfect for out-of-town students or those who have weekday com
     ],
     testimonials: [
       {
-        name: "Shaykh Umar",
-        role: "Part-Time Boarding Student",
+        name: "Abdulrahman",
+        role: "Day Programme",
         content:
-          "The weekend programme gave me the structure I needed while allowing me to work during the week. The best of both worlds.",
+          "The structured environment transformed my memorization. In 18 months, Ustaz's guidance was invaluable.",
+      },
+      {
+        name: "Hafidh",
+        role: "Day Programme",
+        content:
+          "Balancing school and memorization seemed impossible until we joined. The revision system kept me consistent.",
       },
     ],
     faqs: [
@@ -232,11 +238,11 @@ This programme is perfect for out-of-town students or those who have weekday com
       },
       {
         q: "What is included in the accommodation?",
-        a: "On-campus accommodation includes a comfortable room, three meals, and access to all campus facilities.",
+        a: "On-campus accommodation includes a comfortable room, balanced meals, and access to all campus facilities.",
       },
       {
         q: "Is there supervision on weekends?",
-        a: "Yes, qualified staff provide full supervision throughout the weekend stay.",
+        a: "Yes, we provide full supervision throughout the weekend stay.",
       },
     ],
     relatedPrograms: [
@@ -274,7 +280,7 @@ This programme is ideal for students who want the structure and depth of a full-
     duration: "Ongoing",
     level: "All Levels",
     attendance: "Sat-Sun (9-4:30) • Mon-Wed (4:30-6:30)",
-    ratio: "1:6",
+    ratio: "1:1",
     schedule: [
       "Saturday & Sunday: 9:00 AM - 4:30 PM",
       "Full academic program",
@@ -329,10 +335,16 @@ This programme is ideal for students who want the structure and depth of a full-
     ],
     testimonials: [
       {
-        name: "Ustadhah Aisha",
-        role: "Full-Time Day Student",
+        name: "Abdulrahman",
+        role: "Day Programme",
         content:
-          "The extended hours made a huge difference. I could memorize during the day and review in the evening sessions.",
+          "The structured environment transformed my memorization. In 18 months, Ustaz's guidance was invaluable.",
+      },
+      {
+        name: "Hafidh",
+        role: "Day Programme",
+        content:
+          "Balancing school and memorization seemed impossible until we joined. The revision system kept me consistent.",
       },
     ],
     faqs: [
@@ -346,7 +358,7 @@ This programme is ideal for students who want the structure and depth of a full-
       },
       {
         q: "What is the teacher-student ratio?",
-        a: "The ratio is 1:6, allowing for individual attention and guidance.",
+        a: "The ratio is 1:1, allowing for individual attention and guidance.",
       },
     ],
     relatedPrograms: [
@@ -383,7 +395,7 @@ This programme is perfect for students who are in regular school during the week
     duration: "Ongoing",
     level: "All Levels",
     attendance: "Sat - Sun (9:00 AM - 4:30 PM)",
-    ratio: "1:6",
+    ratio: "1:1",
     schedule: [
       "Saturday & Sunday: 9:00 AM - 4:30 PM",
       "Tahfeedh Sessions",
@@ -433,24 +445,26 @@ This programme is perfect for students who are in regular school during the week
     ],
     testimonials: [
       {
-        name: "Zainab",
-        role: "Part-Time Day Student",
+        name: "Abdulrahman",
+        role: "Day Programme",
         content:
-          "I could continue my regular school during the week and focus on Quran on weekends. The perfect balance for my family.",
+          "The structured environment transformed my memorization. In 18 months, Ustaz's guidance was invaluable.",
+      },
+      {
+        name: "Hafidh",
+        role: "Day Programme",
+        content:
+          "Balancing school and memorization seemed impossible until we joined. The revision system kept me consistent.",
       },
     ],
     faqs: [
       {
-        q: "Can I join if I have no prior Quran knowledge?",
+        q: "Can we join if we have no prior Quran knowledge?",
         a: "Absolutely! This programme is designed for beginners and students of all levels. We start from the basics.",
       },
       {
-        q: "What if I miss a weekend session?",
-        a: "We understand that weekends can be busy. Makeup sessions can be arranged with prior notice.",
-      },
-      {
         q: "How is progress measured?",
-        a: "Progress is measured through regular assessments and milestone tracking. Teachers provide personalized feedback.",
+        a: "Progress is measured through regular assessments and milestone tracking. we provide personalized feedback.",
       },
     ],
     relatedPrograms: [
