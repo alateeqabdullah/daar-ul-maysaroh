@@ -4,100 +4,127 @@
 import { Reveal } from "@/components/shared/section-animation";
 import { Button } from "@/components/ui/button";
 import {
+  Activity,
   ArrowRight,
-  Sun,
-  Moon,
+  Award,
+  Bed,
   BookOpen,
-  Users,
-  Heart,
+  Calendar,
   Clock,
   Coffee,
-  Sparkles,
-  Activity,
-  Shield,
-  Globe,
-  Award,
-  Check,
   Crown,
-  Utensils,
-  Bed,
+  Droplet,
+  Globe,
   GraduationCap,
-  Music,
-  Calendar,
+  Heart,
+  Moon,
+  RefreshCw,
+  Shield,
+  Sparkles,
   Star,
+  Sun,
+  Users,
+  Utensils
 } from "lucide-react";
 import Link from "next/link";
-import { motion } from "framer-motion";
 
 const DAILY_ROUTINE = [
   {
     icon: Moon,
-    title: "Fajr & Tahajjud",
-    description: "Begin the day with spiritual connection and night prayer",
+    title: "Tahajjud Preparation",
+    description: "Begin the day with spiritual preparation and night prayer",
     time: "4:00 AM",
     color: "purple",
   },
   {
-    icon: BookOpen,
-    title: "Morning Tahfeedh",
-    description: "Focused memorization session with teacher guidance",
-    time: "5:00 AM",
+    icon: Star,
+    title: "Tahajjud Prayer",
+    description: "Voluntary night prayer for spiritual elevation",
+    time: "4:30 AM",
     color: "amber",
   },
   {
-    icon: Utensils,
-    title: "Breakfast",
-    description: "Nutritious meal to fuel the day's learning",
-    time: "7:00 AM",
+    icon: Droplet,
+    title: "Personal Hygiene",
+    description: "Purification and preparation for the day",
+    time: "5:00 AM",
     color: "purple",
   },
   {
     icon: Sun,
-    title: "Tajweed & Qira'ah",
-    description: "Master recitation rules and pronunciation",
+    title: "Fajr Prayer",
+    description: "Begin the day with dawn prayer and remembrance",
+    time: "5:30 AM",
+    color: "amber",
+  },
+  {
+    icon: BookOpen,
+    title: "Adhkaar & Qur'an Classes",
+    description: "Morning supplications and focused Qur'an learning",
+    time: "6:00 AM",
+    color: "purple",
+  },
+  {
+    icon: Coffee,
+    title: "Prep, Breakfast & Rest",
+    description: "Nutritious meal to fuel the day's learning",
     time: "8:00 AM",
     color: "amber",
   },
   {
-    icon: Clock,
-    title: "Islamic Studies",
-    description: "Aqeedah, Fiqh, Seerah, and Hadith",
+    icon: BookOpen,
+    title: "Qur'an Classes",
+    description: "Deep dive into Qur'anic studies and guidance",
     time: "10:00 AM",
     color: "purple",
+  },
+  {
+    icon: Sun,
+    title: "Dhuhr Prayer",
+    description: "Midday prayer and spiritual reset",
+    time: "1:00 PM",
+    color: "amber",
   },
   {
     icon: Utensils,
     title: "Lunch & Rest",
     description: "Recharge for the afternoon sessions",
-    time: "12:30 PM",
-    color: "amber",
-  },
-  {
-    icon: Crown,
-    title: "Revision & Muraja'ah",
-    description: "Reinforce memorized portions with practice",
     time: "2:00 PM",
     color: "purple",
   },
   {
-    icon: BookOpen,
-    title: "Afternoon Tahfeedh",
-    description: "Second memorization session of the day",
-    time: "4:30 PM",
+    icon: Sun,
+    title: "Asr Prayer",
+    description: "Afternoon prayer and reflection",
+    time: "4:00 PM",
     color: "amber",
   },
   {
-    icon: Utensils,
-    title: "Dinner",
-    description: "Evening meal and community time",
-    time: "6:30 PM",
+    icon: BookOpen,
+    title: "Afternoon Session",
+    description: "Focused memorization and review",
+    time: "4:30 PM",
     color: "purple",
   },
   {
+    icon: Utensils,
+    title: "Maghrib, Adhkaar & Dinner",
+    description: "Evening prayer, remembrance, and meal",
+    time: "7:00 PM",
+    color: "amber",
+  },
+  {
     icon: Moon,
-    title: "Isha & Night Review",
-    description: "End the day with prayer and revision",
-    time: "8:30 PM",
+    title: "Isha Prayer & Night Revision",
+    description: "Night prayer and evening review",
+    time: "8:00 PM",
+    color: "purple",
+  },
+  {
+    icon: RefreshCw,
+    title: "Evening Revision & Review",
+    description: "Reinforce memorized portions with practice",
+    time: "8:20 PM",
     color: "amber",
   },
   {
@@ -153,14 +180,14 @@ const getColorStyles = (color: string) => {
       text: "text-purple-400",
       border: "border-purple-800/30",
       bg: "bg-purple-600/20",
-      gradient: "from-purple-500 to-purple-600",
+      linear: "from-purple-500 to-purple-600",
       glow: "shadow-purple-500/30",
     },
     amber: {
       text: "text-amber-400",
       border: "border-amber-800/30",
       bg: "bg-amber-500/20",
-      gradient: "from-amber-500 to-amber-600",
+      linear: "from-amber-500 to-amber-600",
       glow: "shadow-amber-500/30",
     },
   }[color];
@@ -202,7 +229,7 @@ export default function OnsiteStudentLifeClient() {
               </div>
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tighter font-heading leading-[1.1] text-white">
                 A Day in the{" "}
-                <span className="bg-gradient-to-r from-purple-400 to-amber-400 bg-clip-text text-transparent">
+                <span className="bg-linear-to-r from-purple-400 to-amber-400 bg-clip-text text-transparent">
                   Life
                 </span>
               </h1>
@@ -219,12 +246,12 @@ export default function OnsiteStudentLifeClient() {
           <div className="text-center max-w-2xl mx-auto mb-10">
             <Reveal>
               <div className="flex items-center justify-center gap-3 mb-3">
-                <div className="w-12 h-0.5 bg-gradient-to-r from-transparent to-amber-500" />
+                <div className="w-12 h-0.5 bg-linear-to-r from-transparent to-amber-500" />
                 <span className="text-amber-500 font-black text-xs uppercase tracking-wider flex items-center gap-2">
                   <Clock className="w-3 h-3" />
                   Daily Rhythm
                 </span>
-                <div className="w-12 h-0.5 bg-gradient-to-l from-transparent to-amber-500" />
+                <div className="w-12 h-0.5 bg-linear-to-l from-transparent to-amber-500" />
               </div>
               <h2 className="text-2xl md:text-3xl font-black text-white">
                 From Fajr to Isha
@@ -236,7 +263,8 @@ export default function OnsiteStudentLifeClient() {
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3 max-w-5xl mx-auto">
             {DAILY_ROUTINE.map((item, idx) => {
               const Icon = item.icon;
-              const colors = getColorStyles(item.color);
+              const colors =
+                getColorStyles(item.color) || { bg: "bg-purple-600/20", text: "text-purple-400" };
               const isPurple = item.color === "purple";
               return (
                 <Reveal key={idx} delay={idx * 0.03}>
@@ -272,12 +300,12 @@ export default function OnsiteStudentLifeClient() {
           <div className="text-center max-w-2xl mx-auto mb-10">
             <Reveal>
               <div className="flex items-center justify-center gap-3 mb-3">
-                <div className="w-12 h-0.5 bg-gradient-to-r from-transparent to-purple-500" />
+                <div className="w-12 h-0.5 bg-linear-to-r from-transparent to-purple-500" />
                 <span className="text-purple-400 font-black text-xs uppercase tracking-wider flex items-center gap-2">
                   <Shield className="w-3 h-3" />
                   Campus Life
                 </span>
-                <div className="w-12 h-0.5 bg-gradient-to-l from-transparent to-purple-500" />
+                <div className="w-12 h-0.5 bg-linear-to-l from-transparent to-purple-500" />
               </div>
               <h2 className="text-2xl md:text-3xl font-black text-white">
                 More Than Just Memorization
@@ -291,7 +319,8 @@ export default function OnsiteStudentLifeClient() {
           <div className="grid sm:grid-cols-2 gap-5 max-w-4xl mx-auto">
             {CAMPUS_LIFE.map((feature, idx) => {
               const Icon = feature.icon;
-              const colors = getColorStyles(feature.color);
+              const colors =
+                getColorStyles(feature.color) || { bg: "bg-purple-600/20", text: "text-purple-400" };
               return (
                 <Reveal key={idx} delay={idx * 0.1}>
                   <div className="flex items-start gap-4 p-5 rounded-2xl hover:bg-slate-900/30 transition-all group">
@@ -320,12 +349,12 @@ export default function OnsiteStudentLifeClient() {
           <div className="text-center max-w-2xl mx-auto mb-10">
             <Reveal>
               <div className="flex items-center justify-center gap-3 mb-3">
-                <div className="w-12 h-0.5 bg-gradient-to-r from-transparent to-amber-500" />
+                <div className="w-12 h-0.5 bg-linear-to-r from-transparent to-amber-500" />
                 <span className="text-amber-500 font-black text-xs uppercase tracking-wider flex items-center gap-2">
                   <Sparkles className="w-3 h-3" />
                   Activities & Events
                 </span>
-                <div className="w-12 h-0.5 bg-gradient-to-l from-transparent to-amber-500" />
+                <div className="w-12 h-0.5 bg-linear-to-l from-transparent to-amber-500" />
               </div>
               <h2 className="text-2xl md:text-3xl font-black text-white">
                 Beyond the Classroom
@@ -339,7 +368,7 @@ export default function OnsiteStudentLifeClient() {
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3 max-w-4xl mx-auto">
             {ACTIVITIES.map((activity, idx) => {
               const Icon = activity.icon;
-              const colors = getColorStyles(activity.color);
+              const colors = getColorStyles(activity.color) || { bg: "bg-purple-600/20", text: "text-purple-400" };
               return (
                 <Reveal key={idx} delay={idx * 0.05}>
                   <div className="flex items-center gap-3 p-3 rounded-xl hover:bg-slate-900/30 transition-all group">
@@ -379,8 +408,8 @@ export default function OnsiteStudentLifeClient() {
         {/* ===== CTA ===== */}
         <section className="py-12 md:py-16">
           <Reveal>
-            <div className="max-w-3xl mx-auto text-center p-8 md:p-10 rounded-3xl bg-gradient-to-br from-purple-600/10 to-amber-500/10">
-              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-600 to-amber-500 flex items-center justify-center mx-auto mb-4 shadow-xl shadow-purple-500/30">
+            <div className="max-w-3xl mx-auto text-center p-8 md:p-10 rounded-3xl bg-linear-to-br from-purple-600/10 to-amber-500/10">
+              <div className="w-16 h-16 rounded-2xl bg-linear-to-br from-purple-600 to-amber-500 flex items-center justify-center mx-auto mb-4 shadow-xl shadow-purple-500/30">
                 <GraduationCap className="w-8 h-8 text-white" />
               </div>
               <h2 className="text-2xl font-black text-white mb-3">
@@ -391,7 +420,7 @@ export default function OnsiteStudentLifeClient() {
                 memorization.
               </p>
               <Link href="/onsite/admissions">
-                <Button className="rounded-full px-8 py-4 font-black bg-gradient-to-r from-purple-600 to-amber-500 text-white shadow-lg shadow-purple-500/20 hover:shadow-xl transition-all">
+                <Button className="rounded-full px-8 py-4 font-black bg-linear-to-r from-purple-600 to-amber-500 text-white shadow-lg shadow-purple-500/20 hover:shadow-xl transition-all">
                   Apply Now
                   <ArrowRight className="w-4 h-4 ml-2 inline" />
                 </Button>
