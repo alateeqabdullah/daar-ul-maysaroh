@@ -143,25 +143,25 @@ const FEATURES = [
 
 const TESTIMONIALS = [
   {
-    name: "Zainab Bint Abdullah",
-    role: "Hifz Graduate",
+    name: "Isa",
+    role: "Online",
     content:
-      "Alhamdulillah, I completed my Hifz in just 2 years. The teachers were patient, supportive, and the revision system made all the difference.",
-    initials: "ZB",
+      "I am grateful for the comprehensive curriculum and dedicated teachers at Al-Maysaroh.",
+    initials: "I",
   },
   {
-    name: "Shaykh Dr. Ahmed",
-    role: "Al-Azhar Scholar",
+    name: "Yusuf",
+    role: "Boarding Student",
     content:
-      "Al-Maysaroh represents the highest standard of Quranic education. Their commitment to authentic Sanad is exemplary and truly inspiring.",
-    initials: "أ",
+      "The boarding program at Al-Maysaroh has been a transformative experience for my spiritual growth.",
+    initials: "Y",
   },
 ];
 
 const STATS = [
-  { value: "500+", label: "Active Students", icon: Users, color: "purple" },
+  { value: "100+", label: "Active Students", icon: Users, color: "purple" },
   { value: "94%", label: "Success Rate", icon: Award, color: "amber" },
-  { value: "15+", label: "Countries", icon: Globe, color: "purple" },
+  { value: "5+", label: "Countries", icon: Globe, color: "purple" },
   {
     value: "1400+",
     label: "Years of Sanad",
