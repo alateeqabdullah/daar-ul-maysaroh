@@ -3,37 +3,32 @@
 
 import { Reveal } from "@/components/shared/section-animation";
 import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import {
   ArrowRight,
-  Home,
-  Sun,
-  Moon,
-  Clock,
-  Users,
-  Heart,
-  Shield,
   Bed,
-  Utensils,
   BookOpen,
-  Sparkles,
-  Check,
-  Crown,
-  Wifi,
-  Coffee,
-  Star,
-  Award,
   Calendar,
-  Zap,
+  Clock,
+  Coffee,
   Compass,
-  GraduationCap,
-  Target,
+  Crown,
   Droplet,
+  GraduationCap,
+  Heart,
+  Home,
+  Moon,
   RefreshCw,
+  Shield,
+  Star,
+  Sun,
+  Target,
+  Users,
+  Utensils,
+  Zap
 } from "lucide-react";
 import Link from "next/link";
-import { motion } from "framer-motion";
 import { useState } from "react";
-import { cn } from "@/lib/utils";
 
 const BOARDING_FEATURES = [
   {
@@ -124,98 +119,26 @@ const DAY_FEATURES = [
     color: "purple",
   },
 ];
-
-const DAILY_RHYTHM = [
-  {
-    time: "4:00 AM",
-    activity: "Tahajjud Preparation",
-    icon: Moon,
-    color: "purple",
-  },
-  {
-    time: "4:30 AM",
-    activity: "Tahajjud Prayer",
-    icon: Star,
-    color: "amber",
-  },
-  {
-    time: "5:00 AM",
-    activity: "Personal Hygiene",
-    icon: Droplet,
-    color: "purple",
-  },
-  {
-    time: "5:30 AM",
-    activity: "Fajr Prayer",
-    icon: Sun,
-    color: "amber",
-  },
-  {
-    time: "6:00 AM",
-    activity: "Adhkaar & Qur'an Classes",
-    icon: BookOpen,
-    color: "purple",
-  },
-  {
-    time: "8:00 AM",
-    activity: "Morning Prep, Breakfast & Rest",
-    icon: Coffee,
-    color: "amber",
-  },
-  {
-    time: "10:00 AM",
-    activity: "Qur'an Classes",
-    icon: BookOpen,
-    color: "purple",
-  },
-  {
-    time: "1:00 PM",
-    activity: "Dhuhr Prayer",
-    icon: Sun,
-    color: "amber",
-  },
-  {
-    time: "2:00 PM",
-    activity: "Lunch & Rest",
-    icon: Utensils,
-    color: "purple",
-  },
-  {
-    time: "4:00 PM",
-    activity: "Asr Prayer",
-    icon: Sun,
-    color: "amber",
-  },
-  {
-    time: "4:30 PM",
-    activity: "Afternoon Session",
-    icon: BookOpen,
-    color: "purple",
-  },
+const BOARDING_SCHEDULE = [
+  { time: "4:00 AM", activity: "Tahajjud Preparation", icon: Moon },
+  { time: "4:30 AM", activity: "Tahajjud Prayer", icon: Star },
+  { time: "5:00 AM", activity: "Personal Hygiene", icon: Droplet },
+  { time: "5:30 AM", activity: "Fajr Prayer", icon: Sun },
+  { time: "6:00 AM", activity: "Adhkaar & Qur'an Classes", icon: BookOpen },
+  { time: "8:00 AM", activity: "Morning Prep, Breakfast & Rest", icon: Coffee },
+  { time: "10:00 AM", activity: "Qur'an Classes", icon: BookOpen },
+  { time: "1:00 PM", activity: "Dhuhr Prayer", icon: Sun },
+  { time: "2:00 PM", activity: "Lunch & Rest", icon: Utensils },
+  { time: "4:00 PM", activity: "Asr Prayer", icon: Sun },
+  { time: "4:30 PM", activity: "Afternoon Session", icon: BookOpen },
   {
     time: "7:00 PM",
     activity: "Maghrib Prayer, Adhkaar & Dinner",
     icon: Utensils,
-    color: "amber",
   },
-  {
-    time: "8:00 PM",
-    activity: "Isha Prayer & Night Revision",
-    icon: Moon,
-    color: "purple",
-  },
-  {
-    time: "8:20 PM",
-    activity: "Evening Revision & Review",
-    icon: RefreshCw,
-    color: "amber",
-  },
-  {
-    time: "9:00 PM",
-    activity: "Rest & Sleep",
-    icon: Bed,
-    color: "purple",
-  },
+  { time: "8:00 PM", activity: "Isha Prayer & Night Revision", icon: Moon },
+  { time: "8:20 PM", activity: "Evening Revision & Review", icon: RefreshCw },
+  { time: "9:00 PM", activity: "Rest & Sleep", icon: Bed },
 ];
 
 const DAY_SCHEDULE = [
