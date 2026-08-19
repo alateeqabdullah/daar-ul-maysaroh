@@ -2585,7 +2585,7 @@ export function Header() {
         <nav className="container mx-auto px-4 md:px-6 flex items-center justify-between">
           {/* --- LOGO SECTION - ENHANCED --- */}
           <Link
-            href="/"
+            href="/online"
             className="flex items-center space-x-3 md:space-x-4 relative z-60 group outline-none min-h-11 min-w-11"
             onClick={() => setMobileMenuOpen(false)}
             aria-label="AL-MAYSAROH Institute - Home"
