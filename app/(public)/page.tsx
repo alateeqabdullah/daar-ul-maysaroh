@@ -519,9 +519,9 @@ export default function LandingPage() {
                       ))}
                     </div>
 
-                    <div className="text-xs text-muted-foreground">
+                    {/* <div className="text-xs text-muted-foreground">
                       🎯 {program.audience}
-                    </div>
+                    </div> */}
                   </motion.div>
                 </Reveal>
               );
