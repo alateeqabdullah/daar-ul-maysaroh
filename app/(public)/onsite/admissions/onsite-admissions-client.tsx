@@ -5,36 +5,21 @@ import { Reveal } from "@/components/shared/section-animation";
 import { Button } from "@/components/ui/button";
 import {
   ArrowRight,
-  FileText,
-  Users,
-  GraduationCap,
-  Sparkles,
   CheckCircle2,
   Clock,
-  Calendar,
-  MapPin,
+  Crown,
+  FileText,
+  GraduationCap,
+  Loader2,
   Mail,
   Phone,
-  Shield,
   Rocket,
-  BookOpen,
-  Heart,
-  Star,
-  Crown,
-  Target,
-  Compass,
-  Home,
-  Sun,
-  Moon,
-  User,
-  Mail as MailIcon,
-  MessageCircle,
   Send,
-  Loader2,
+  Shield,
+  Users
 } from "lucide-react";
 import Link from "next/link";
-import { motion } from "framer-motion";
-import { useState, FormEvent } from "react";
+import { FormEvent, useState } from "react";
 
 const STEPS = [
   {
@@ -65,25 +50,27 @@ const STEPS = [
     icon: Rocket,
     color: "amber",
   },
-];
+] as const;
 
-const getColorStyles = (color: string) => {
-  return {
-    purple: {
-      text: "text-purple-400",
-      border: "border-purple-800/30",
-      bg: "bg-purple-600/20",
-      gradient: "from-purple-500 to-purple-600",
-      glow: "shadow-purple-500/30",
-    },
-    amber: {
-      text: "text-amber-400",
-      border: "border-amber-800/30",
-      bg: "bg-amber-500/20",
-      gradient: "from-amber-500 to-amber-600",
-      glow: "shadow-amber-500/30",
-    },
-  }[color];
+const COLOR_STYLES = {
+  purple: {
+    text: "text-purple-400",
+    border: "border-purple-800/30",
+    bg: "bg-purple-600/20",
+    gradient: "from-purple-500 to-purple-600",
+    glow: "shadow-purple-500/30",
+  },
+  amber: {
+    text: "text-amber-400",
+    border: "border-amber-800/30",
+    bg: "bg-amber-500/20",
+    gradient: "from-amber-500 to-amber-600",
+    glow: "shadow-amber-500/30",
+  },
+} as const;
+
+const getColorStyles = (color: keyof typeof COLOR_STYLES) => {
+  return COLOR_STYLES[color];
 };
 
 export default function OnsiteAdmissionsClient() {
