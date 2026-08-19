@@ -25,6 +25,7 @@ This programme is ideal for students who want to dedicate themselves fully to Qu
     duration: "2-5 Years",
     level: "All Levels",
     attendance: "Daily",
+    ratio: "1:4",
     schedule: [
       "4:00 AM - Tahajjud & Morning Preparation",
       "4:30 AM - Fajr Prayer & Quran Recitation",
@@ -50,6 +51,29 @@ This programme is ideal for students who want to dedicate themselves fully to Qu
       "Arabic",
       "Tarbiyah",
     ],
+    highlights: [
+      "24/7 Supervision",
+      "Full Immersion",
+      "Accelerated Memorization",
+      "Complete Curriculum",
+      "Ijazah Track",
+      "Community Living",
+    ],
+    milestones: [
+      {
+        phase: "Foundation",
+        description: "Build strong Quranic foundation with proper Makharij",
+      },
+      {
+        phase: "Progression",
+        description: "Advance through structured memorization levels",
+      },
+      { phase: "Mastery", description: "Achieve fluency and retention goals" },
+      {
+        phase: "Ijazah",
+        description: "Earn Ijazah certification with Sanad chain",
+      },
+    ],
     whoIsItFor: [
       "Students seeking full-time memorization",
       "Those who need structured supervision",
@@ -62,6 +86,50 @@ This programme is ideal for students who want to dedicate themselves fully to Qu
       "Strong Tajweed foundation",
       "Deep Islamic knowledge",
       "Disciplined character",
+    ],
+    testimonials: [
+      {
+        name: "Ustadh Abdulrahman",
+        role: "Boarding Student",
+        content:
+          "The structured environment transformed my memorization. In 18 months, I completed Juz Amma to Juz Tabarak.",
+      },
+      {
+        name: "Hafidhah Fatimah",
+        role: "Boarding Student",
+        content:
+          "Living on campus kept me focused. The teachers were always available for extra help and the community was incredibly supportive.",
+      },
+    ],
+    faqs: [
+      {
+        q: "What is the duration of the Full-Time Boarding programme?",
+        a: "The programme typically takes 2-5 years, depending on individual pace, commitment, and memorization goals.",
+      },
+      {
+        q: "What level of Quran knowledge is required?",
+        a: "This programme is suitable for all levels. Students are placed according to their current ability through an initial assessment.",
+      },
+      {
+        q: "Is Ijazah certification included?",
+        a: "Yes, students who complete the memorization with proper Tajweed and pass the final examination receive Ijazah certification.",
+      },
+      {
+        q: "What is the teacher-student ratio?",
+        a: "Our ratio is 1:4, ensuring personalized attention and guidance for each student.",
+      },
+    ],
+    relatedPrograms: [
+      {
+        title: "Part-Time Boarding",
+        slug: "part-time-boarding",
+        description: "Weekend immersion option",
+      },
+      {
+        title: "Full-Time Day",
+        slug: "full-time-day",
+        description: "Comprehensive day learning",
+      },
     ],
   },
   {
@@ -86,6 +154,7 @@ This programme is perfect for out-of-town students or those who have weekday com
     duration: "Ongoing",
     level: "All Levels",
     attendance: "Fri - Sun",
+    ratio: "1:4",
     schedule: [
       "Friday 4:30 PM - Arrival & Registration",
       "5:00 PM - Evening Tahfeedh Session",
@@ -107,6 +176,32 @@ This programme is perfect for out-of-town students or those who have weekday com
       "Arabic",
       "Tarbiyah",
     ],
+    highlights: [
+      "Weekend Immersion",
+      "On-Campus Stay",
+      "Full Supervision",
+      "Community Experience",
+      "Accelerated Progress",
+      "Flexible Commitment",
+    ],
+    milestones: [
+      {
+        phase: "Weekend Foundation",
+        description: "Establish consistent weekend routine",
+      },
+      {
+        phase: "Memorization Growth",
+        description: "Build memorization through weekend sessions",
+      },
+      {
+        phase: "Revision Mastery",
+        description: "Strengthen existing memorization",
+      },
+      {
+        phase: "Community Connection",
+        description: "Become part of the boarding community",
+      },
+    ],
     whoIsItFor: [
       "Out-of-town students",
       "Those with weekday commitments",
@@ -118,6 +213,40 @@ This programme is perfect for out-of-town students or those who have weekday com
       "Community connection",
       "Structured revision",
       "Spiritual recharge",
+    ],
+    testimonials: [
+      {
+        name: "Shaykh Umar",
+        role: "Part-Time Boarding Student",
+        content:
+          "The weekend programme gave me the structure I needed while allowing me to work during the week. The best of both worlds.",
+      },
+    ],
+    faqs: [
+      {
+        q: "Can I switch from Part-Time to Full-Time Boarding?",
+        a: "Yes, students can transition between programmes based on their needs and availability.",
+      },
+      {
+        q: "What is included in the accommodation?",
+        a: "On-campus accommodation includes a comfortable room, three meals, and access to all campus facilities.",
+      },
+      {
+        q: "Is there supervision on weekends?",
+        a: "Yes, qualified staff provide full supervision throughout the weekend stay.",
+      },
+    ],
+    relatedPrograms: [
+      {
+        title: "Full-Time Boarding",
+        slug: "full-time-boarding",
+        description: "Complete immersion option",
+      },
+      {
+        title: "Part-Time Day",
+        slug: "part-time-day",
+        description: "Weekend day learning",
+      },
     ],
   },
   {
@@ -142,12 +271,15 @@ This programme is ideal for students who want the structure and depth of a full-
     duration: "Ongoing",
     level: "All Levels",
     attendance: "Sat-Sun (9-4:30) • Mon-Wed (4:30-6:30)",
+    ratio: "1:6",
     schedule: [
       "Saturday & Sunday: 9:00 AM - 4:30 PM",
-      "Monday - Wednesday: 4:30 PM - 6:30 PM",
       "Full academic program",
       "Tahfeedh & Tajweed focus",
       "Islamic Studies & Arabic",
+      "Monday - Wednesday: 4:30 PM - 6:30 PM",
+      "Evening Tahfeedh sessions",
+      "Revision & Muraja'ah",
       "Regular assessments",
     ],
     curriculum: [
@@ -156,6 +288,29 @@ This programme is ideal for students who want the structure and depth of a full-
       "Islamic Studies",
       "Arabic",
       "Tarbiyah",
+    ],
+    highlights: [
+      "5 Days Per Week",
+      "Extended Hours",
+      "Complete Curriculum",
+      "Accelerated Progress",
+      "Regular Assessments",
+      "Return Home Daily",
+    ],
+    milestones: [
+      {
+        phase: "Daily Consistency",
+        description: "Build consistent daily learning habit",
+      },
+      {
+        phase: "Memorization Build",
+        description: "Progress through structured memorization",
+      },
+      { phase: "Tajweed Mastery", description: "Perfect recitation rules" },
+      {
+        phase: "Comprehensive Knowledge",
+        description: "Gain deep Islamic understanding",
+      },
     ],
     whoIsItFor: [
       "Students who want comprehensive learning",
@@ -168,6 +323,40 @@ This programme is ideal for students who want the structure and depth of a full-
       "Strong Tajweed foundation",
       "Comprehensive Islamic knowledge",
       "Consistent progress",
+    ],
+    testimonials: [
+      {
+        name: "Ustadhah Aisha",
+        role: "Full-Time Day Student",
+        content:
+          "The extended hours made a huge difference. I could memorize during the day and review in the evening sessions.",
+      },
+    ],
+    faqs: [
+      {
+        q: "What are the timings for the Full-Time Day programme?",
+        a: "Saturday and Sunday: 9:00 AM - 4:30 PM. Monday to Wednesday: 4:30 PM - 6:30 PM.",
+      },
+      {
+        q: "Can I join if I have other commitments?",
+        a: "This programme is designed for students who can commit to 5 days. For those with limited availability, we recommend the Part-Time Day programme.",
+      },
+      {
+        q: "What is the teacher-student ratio?",
+        a: "The ratio is 1:6, allowing for individual attention and guidance.",
+      },
+    ],
+    relatedPrograms: [
+      {
+        title: "Part-Time Day",
+        slug: "part-time-day",
+        description: "Weekend learning option",
+      },
+      {
+        title: "Full-Time Boarding",
+        slug: "full-time-boarding",
+        description: "Complete immersion option",
+      },
     ],
   },
   {
@@ -191,14 +380,42 @@ This programme is perfect for students who are in regular school during the week
     duration: "Ongoing",
     level: "All Levels",
     attendance: "Sat - Sun (9:00 AM - 4:30 PM)",
+    ratio: "1:6",
     schedule: [
       "Saturday & Sunday: 9:00 AM - 4:30 PM",
       "Tahfeedh Sessions",
       "Tajweed & Recitation",
       "Islamic Studies",
       "Group Learning",
+      "Progress Assessments",
     ],
     curriculum: ["Tahfeedh", "Tajweed", "Islamic Studies", "Arabic"],
+    highlights: [
+      "2 Days Per Week",
+      "Full Academic Program",
+      "Tahfeedh & Tajweed",
+      "Islamic Studies",
+      "Flexible Commitment",
+      "Return Home Daily",
+    ],
+    milestones: [
+      {
+        phase: "Weekend Foundation",
+        description: "Establish consistent weekend learning",
+      },
+      {
+        phase: "Basic Memorization",
+        description: "Begin Quran memorization journey",
+      },
+      {
+        phase: "Tajweed Introduction",
+        description: "Learn foundational recitation rules",
+      },
+      {
+        phase: "Islamic Knowledge",
+        description: "Build basic Islamic understanding",
+      },
+    ],
     whoIsItFor: [
       "Students in regular school",
       "Those with weekday commitments",
@@ -210,6 +427,40 @@ This programme is perfect for students who are in regular school during the week
       "Foundational Tajweed",
       "Basic memorization",
       "Islamic knowledge",
+    ],
+    testimonials: [
+      {
+        name: "Zainab",
+        role: "Part-Time Day Student",
+        content:
+          "I could continue my regular school during the week and focus on Quran on weekends. The perfect balance for my family.",
+      },
+    ],
+    faqs: [
+      {
+        q: "Can I join if I have no prior Quran knowledge?",
+        a: "Absolutely! This programme is designed for beginners and students of all levels. We start from the basics.",
+      },
+      {
+        q: "What if I miss a weekend session?",
+        a: "We understand that weekends can be busy. Makeup sessions can be arranged with prior notice.",
+      },
+      {
+        q: "How is progress measured?",
+        a: "Progress is measured through regular assessments and milestone tracking. Teachers provide personalized feedback.",
+      },
+    ],
+    relatedPrograms: [
+      {
+        title: "Full-Time Day",
+        slug: "full-time-day",
+        description: "Extended learning option",
+      },
+      {
+        title: "Part-Time Boarding",
+        slug: "part-time-boarding",
+        description: "Weekend immersion option",
+      },
     ],
   },
 ];
