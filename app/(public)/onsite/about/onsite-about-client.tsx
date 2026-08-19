@@ -250,9 +250,7 @@ export default function OnsiteAboutClient() {
                   </span>
                 </h1>
                 <p className="text-lg text-slate-300 max-w-lg leading-relaxed">
-                  Daar-ul-Maysaroh is a full-time residential Quran memorization
-                  institute where students immerse themselves in the divine
-                  word, living and breathing the Quran daily.
+                  Daar-ul-Maysaroh is a premier Islamic boarding school in Ibadan, Nigeria, dedicated to nurturing the next generation of Quranic scholars. Our holistic approach combines rigorous memorization, spiritual growth, and character development in a supportive environment.
                 </p>
                 <div className="flex flex-wrap gap-4">
                   <Link href="/onsite/admissions">
