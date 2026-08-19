@@ -124,20 +124,28 @@ const DAY_FEATURES = [
 ];
 
 const BOARDING_SCHEDULE = [
-  { time: "4:00 AM", activity: "Tahajjud & Morning Preparation", icon: Moon },
-  { time: "4:30 AM", activity: "Fajr Prayer & Quran Recitation", icon: Moon },
-  { time: "5:00 AM", activity: "Morning Tahfeedh Session", icon: BookOpen },
-  { time: "7:00 AM", activity: "Breakfast & Personal Study", icon: Utensils },
-  { time: "8:00 AM", activity: "Tajweed & Qira'ah Classes", icon: Sun },
-  { time: "10:00 AM", activity: "Islamic Studies / Arabic", icon: BookOpen },
-  { time: "12:00 PM", activity: "Dhuhr Prayer", icon: Sun },
-  { time: "12:30 PM", activity: "Lunch & Rest", icon: Utensils },
-  { time: "2:00 PM", activity: "Revision & Muraja'ah", icon: Crown },
-  { time: "4:00 PM", activity: "Asr Prayer & Break", icon: Sun },
-  { time: "4:30 PM", activity: "Afternoon Tahfeedh Session", icon: BookOpen },
-  { time: "6:30 PM", activity: "Maghrib Prayer & Dinner", icon: Utensils },
-  { time: "7:30 PM", activity: "Evening Revision & Review", icon: BookOpen },
-  { time: "8:30 PM", activity: "Isha Prayer & Night Revision", icon: Moon },
+  { time: "4:00 AM", activity: "Tahajjud Preparation", icon: Moon },
+  { time: "4:30 AM", activity: "Tahajjud Prayer", icon: Moon },
+  { time: "5:00 AM", activity: "Personal Hygiene", icon: Bath },
+  { time: "5:30 AM", activity: "Fajr Prayer", icon: Moon },
+  { time: "6:00 AM", activity: "Adhkaar & Qir'an Classes", icon: Sun },
+  {
+    time: "8:00 AM",
+    activity: "Morning Prep, Breakfast & Rest",
+    icon: Utensils,
+  },
+  { time: "10:00 AM", activity: "Qur'an Classes", icon: BookOpen },
+  { time: "1:00 PM", activity: "Dhuhr Prayer", icon: Sun },
+  { time: "2:00 PM", activity: "Lunch & Rest", icon: Utensils },
+  { time: "4:00 PM", activity: "Asr Prayer", icon: Sun },
+  { time: "4:30 PM", activity: "Afternoon Session", icon: BookOpen },
+  {
+    time: "7:00 PM",
+    activity: "Maghrib Prayer, Adhkaar & Dinner",
+    icon: Utensils,
+  },
+  { time: "8:00 PM", activity: "Isha Prayer & Night Revision", icon: Moon },
+  { time: "8:20 PM", activity: "Evening Revision & Review", icon: BookOpen },
   { time: "9:00 PM", activity: "Rest & Sleep", icon: Bed },
 ];
 

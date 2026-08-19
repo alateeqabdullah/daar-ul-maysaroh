@@ -27,6 +27,8 @@ import {
   Target,
   Compass,
   Bath,
+  RefreshCw,
+  Droplet,
 } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -126,19 +128,23 @@ const DAY_FEATURES = [
 // ACCURATE BOARDING SCHEDULE - 4AM - 9PM DAILY
 const BOARDING_SCHEDULE = [
   { time: "4:00 AM", activity: "Tahajjud Preparation", icon: Moon },
-  { time: "4:30 AM", activity: "Tahajjud Prayer", icon: Moon },
-  { time: "5:00 AM", activity: "Personal Hygiene", icon: Bath },
-  { time: "5:30 AM", activity: "Fajr Prayer", icon: Moon },
-  { time: "6:00 AM", activity: "Adhkaar & Qir'an Classes", icon: Sun },
-  { time: "8:00 AM", activity: "Morning Prep, Breakfast & Rest", icon: Utensils },
+  { time: "4:30 AM", activity: "Tahajjud Prayer", icon: Star },
+  { time: "5:00 AM", activity: "Personal Hygiene", icon: Droplet },
+  { time: "5:30 AM", activity: "Fajr Prayer", icon: Sun },
+  { time: "6:00 AM", activity: "Adhkaar & Qur'an Classes", icon: BookOpen },
+  { time: "8:00 AM", activity: "Morning Prep, Breakfast & Rest", icon: Coffee },
   { time: "10:00 AM", activity: "Qur'an Classes", icon: BookOpen },
   { time: "1:00 PM", activity: "Dhuhr Prayer", icon: Sun },
   { time: "2:00 PM", activity: "Lunch & Rest", icon: Utensils },
   { time: "4:00 PM", activity: "Asr Prayer", icon: Sun },
   { time: "4:30 PM", activity: "Afternoon Session", icon: BookOpen },
-  { time: "7:00 PM", activity: "Maghrib Prayer, Adhkaar & Dinner", icon: Utensils },
+  {
+    time: "7:00 PM",
+    activity: "Maghrib Prayer, Adhkaar & Dinner",
+    icon: Utensils,
+  },
   { time: "8:00 PM", activity: "Isha Prayer & Night Revision", icon: Moon },
-  { time: "8:20 PM", activity: "Evening Revision & Review", icon: BookOpen },
+  { time: "8:20 PM", activity: "Evening Revision & Review", icon: RefreshCw },
   { time: "9:00 PM", activity: "Rest & Sleep", icon: Bed },
 ];
 
