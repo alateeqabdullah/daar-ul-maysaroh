@@ -30,10 +30,11 @@ import {
   Mail as MailIcon,
   MessageCircle,
   Send,
+  Loader2,
 } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import { useState } from "react";
+import { useState, FormEvent } from "react";
 
 const STEPS = [
   {
@@ -96,12 +97,73 @@ export default function OnsiteAdmissionsClient() {
     message: "",
   });
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitStatus, setSubmitStatus] = useState<{
+    type: "success" | "error" | null;
+    message: string;
+  }>({ type: null, message: "" });
+
   const handleChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
     >,
   ) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setSubmitStatus({ type: null, message: "" });
+
+    try {
+      const response = await fetch("https://formspree.io/f/mdenyaln", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          studentName: formData.studentName,
+          parentName: formData.parentName,
+          email: formData.email,
+          phone: formData.phone,
+          age: formData.age,
+          programme: formData.programme,
+          message: formData.message,
+        }),
+      });
+
+      if (response.ok) {
+        setSubmitStatus({
+          type: "success",
+          message:
+            "✅ Application submitted successfully! We'll contact you within 24 hours.",
+        });
+        setFormData({
+          studentName: "",
+          parentName: "",
+          email: "",
+          phone: "",
+          age: "",
+          programme: "",
+          message: "",
+        });
+      } else {
+        setSubmitStatus({
+          type: "error",
+          message:
+            "❌ Something went wrong. Please try again or contact us directly.",
+        });
+      }
+    } catch (error) {
+      setSubmitStatus({
+        type: "error",
+        message:
+          "❌ Network error. Please check your connection and try again.",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -196,7 +258,21 @@ export default function OnsiteAdmissionsClient() {
             </Reveal>
 
             <div className="p-6 md:p-8 rounded-3xl bg-slate-900/30 hover:bg-slate-900/50 transition-all">
-              <form className="space-y-5">
+              {/* Status Messages */}
+              {submitStatus.type === "success" && (
+                <div className="mb-6 p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-sm flex items-center gap-2">
+                  <CheckCircle2 className="w-5 h-5 flex-shrink-0" />
+                  {submitStatus.message}
+                </div>
+              )}
+              {submitStatus.type === "error" && (
+                <div className="mb-6 p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm flex items-center gap-2">
+                  <Shield className="w-5 h-5 flex-shrink-0" />
+                  {submitStatus.message}
+                </div>
+              )}
+
+              <form onSubmit={handleSubmit} className="space-y-5">
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div className="space-y-1.5">
                     <label className="text-xs font-black uppercase tracking-wider text-slate-400">
@@ -314,9 +390,22 @@ export default function OnsiteAdmissionsClient() {
                   />
                 </div>
 
-                <Button className="w-full h-12 rounded-xl font-black bg-gradient-to-r from-purple-600 to-amber-500 hover:from-purple-700 hover:to-amber-600 text-white shadow-lg shadow-purple-500/20 transition-all group">
-                  Submit Application
-                  <Send className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                <Button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="w-full h-12 rounded-xl font-black bg-gradient-to-r from-purple-600 to-amber-500 hover:from-purple-700 hover:to-amber-600 text-white shadow-lg shadow-purple-500/20 transition-all group disabled:opacity-70 disabled:cursor-not-allowed"
+                >
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                      Submitting...
+                    </>
+                  ) : (
+                    <>
+                      Submit Application
+                      <Send className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                    </>
+                  )}
                 </Button>
 
                 <p className="text-center text-xs text-slate-500 flex items-center justify-center gap-1">

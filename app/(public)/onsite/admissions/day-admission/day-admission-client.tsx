@@ -195,7 +195,7 @@
 //       <main className="relative bg-slate-950 overflow-hidden min-h-screen pt-24 md:pt-28">
 //         <div className="container mx-auto px-4 xs:px-5 sm:px-6">
 //           <div className="max-w-2xl mx-auto text-center py-20">
-//             <div className="w-20 h-20 rounded-full bg-gradient-to-br from-purple-600 to-amber-500 flex items-center justify-center mx-auto mb-6 shadow-2xl">
+//             <div className="w-20 h-20 rounded-full bg-linear-to-br from-purple-600 to-amber-500 flex items-center justify-center mx-auto mb-6 shadow-2xl">
 //               <CheckCircle2 className="w-10 h-10 text-white" />
 //             </div>
 //             <h2 className="text-3xl md:text-4xl font-black text-white mb-4">
@@ -214,7 +214,7 @@
 //               </ul>
 //             </div>
 //             <Link href="/onsite">
-//               <Button className="rounded-full px-8 py-3 font-black bg-gradient-to-r from-purple-600 to-amber-500 text-white">
+//               <Button className="rounded-full px-8 py-3 font-black bg-linear-to-r from-purple-600 to-amber-500 text-white">
 //                 Return to Home
 //               </Button>
 //             </Link>
@@ -260,7 +260,7 @@
 //               </div>
 //               <h1 className="text-3xl md:text-4xl lg:text-5xl font-black tracking-tighter font-heading leading-[1.1] text-white">
 //                 Day{" "}
-//                 <span className="bg-gradient-to-r from-purple-400 to-amber-400 bg-clip-text text-transparent">
+//                 <span className="bg-linear-to-r from-purple-400 to-amber-400 bg-clip-text text-transparent">
 //                   Admission
 //                 </span>
 //               </h1>
@@ -288,7 +288,7 @@
 //                     className={cn(
 //                       "w-8 h-8 rounded-full flex items-center justify-center transition-all",
 //                       isActive
-//                         ? "bg-gradient-to-r from-purple-600 to-amber-500 text-white shadow-lg"
+//                         ? "bg-linear-to-r from-purple-600 to-amber-500 text-white shadow-lg"
 //                         : isCompleted
 //                           ? "bg-purple-600/40 text-purple-300"
 //                           : "bg-slate-800/50 text-slate-500",
@@ -310,7 +310,7 @@
 //           </div>
 //           <div className="w-full h-1 bg-slate-800/50 rounded-full overflow-hidden mt-1">
 //             <div
-//               className="h-full bg-gradient-to-r from-purple-600 to-amber-500 rounded-full transition-all duration-300"
+//               className="h-full bg-linear-to-r from-purple-600 to-amber-500 rounded-full transition-all duration-300"
 //               style={{
 //                 width: `${((currentSection + 1) / DAY_SECTIONS.length) * 100}%`,
 //               }}
@@ -324,7 +324,7 @@
 //             <div className="p-4 md:p-8 rounded-3xl bg-slate-900/30 hover:bg-slate-900/50 transition-all">
 //               {/* Section Header */}
 //               <div className="flex items-center gap-3 mb-6">
-//                 <div className="w-10 h-10 rounded-xl bg-gradient-to-r from-purple-600 to-amber-500 flex items-center justify-center shrink-0">
+//                 <div className="w-10 h-10 rounded-xl bg-linear-to-r from-purple-600 to-amber-500 flex items-center justify-center shrink-0">
 //                   <currentSectionData.icon className="w-5 h-5 text-white" />
 //                 </div>
 //                 <div>
@@ -392,7 +392,7 @@
 //                     <Button
 //                       type="submit"
 //                       disabled={!formData.agreeDeclaration || isSubmitting}
-//                       className="rounded-xl py-3 font-black text-sm bg-gradient-to-r from-purple-600 to-amber-500 hover:from-purple-700 hover:to-amber-600 text-white shadow-lg shadow-purple-500/20 transition-all group disabled:opacity-50 disabled:cursor-not-allowed min-h-[48px] px-8 w-full sm:w-auto order-1 sm:order-2"
+//                       className="rounded-xl py-3 font-black text-sm bg-linear-to-r from-purple-600 to-amber-500 hover:from-purple-700 hover:to-amber-600 text-white shadow-lg shadow-purple-500/20 transition-all group disabled:opacity-50 disabled:cursor-not-allowed min-h-[48px] px-8 w-full sm:w-auto order-1 sm:order-2"
 //                     >
 //                       {isSubmitting ? (
 //                         <>
@@ -410,7 +410,7 @@
 //                     <Button
 //                       type="button"
 //                       onClick={nextSection}
-//                       className="rounded-xl py-3 font-black text-sm bg-gradient-to-r from-purple-600 to-amber-500 hover:from-purple-700 hover:to-amber-600 text-white shadow-lg shadow-purple-500/20 transition-all group min-h-[48px] px-8 w-full sm:w-auto order-1 sm:order-2"
+//                       className="rounded-xl py-3 font-black text-sm bg-linear-to-r from-purple-600 to-amber-500 hover:from-purple-700 hover:to-amber-600 text-white shadow-lg shadow-purple-500/20 transition-all group min-h-[48px] px-8 w-full sm:w-auto order-1 sm:order-2"
 //                     >
 //                       Next
 //                       <ChevronRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
@@ -1083,7 +1083,6 @@ import {
   CheckCircle2,
   Shield,
   Crown,
-  Sparkles,
   Sun,
   Camera,
   Heart,
@@ -1093,7 +1092,6 @@ import {
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Reveal } from "@/components/shared/section-animation";
-import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
 // Types
@@ -1426,7 +1424,7 @@ export default function DayAdmissionClient() {
       <main className="relative bg-slate-950 overflow-hidden min-h-screen pt-24 md:pt-28">
         <div className="container mx-auto px-4 xs:px-5 sm:px-6">
           <div className="max-w-2xl mx-auto text-center py-20">
-            <div className="w-20 h-20 rounded-full bg-gradient-to-br from-purple-600 to-amber-500 flex items-center justify-center mx-auto mb-6 shadow-2xl">
+            <div className="w-20 h-20 rounded-full bg-linear-to-br from-purple-600 to-amber-500 flex items-center justify-center mx-auto mb-6 shadow-2xl">
               <CheckCircle2 className="w-10 h-10 text-white" />
             </div>
             <h2 className="text-3xl md:text-4xl font-black text-white mb-4">
@@ -1444,7 +1442,7 @@ export default function DayAdmissionClient() {
               </ul>
             </div>
             <Link href="/onsite">
-              <Button className="rounded-full px-8 py-3 font-black bg-gradient-to-r from-purple-600 to-amber-500 text-white shadow-lg shadow-purple-500/20 hover:shadow-xl transition-all">
+              <Button className="rounded-full px-8 py-3 font-black bg-linear-to-r from-purple-600 to-amber-500 text-white shadow-lg shadow-purple-500/20 hover:shadow-xl transition-all">
                 Return to Home
               </Button>
             </Link>
@@ -1519,7 +1517,7 @@ export default function DayAdmissionClient() {
               </div>
               <h1 className="text-3xl md:text-4xl lg:text-5xl font-black tracking-tighter font-heading leading-[1.1] text-white">
                 Day{" "}
-                <span className="bg-gradient-to-r from-purple-400 to-amber-400 bg-clip-text text-transparent">
+                <span className="bg-linear-to-r from-purple-400 to-amber-400 bg-clip-text text-transparent">
                   Admission
                 </span>
               </h1>
@@ -1555,7 +1553,7 @@ export default function DayAdmissionClient() {
                   transition={{ duration: 0.3 }}
                 >
                   <div className="flex items-center gap-3 mb-6">
-                    <div className="w-10 h-10 rounded-xl bg-gradient-to-r from-purple-600 to-amber-500 flex items-center justify-center shrink-0">
+                    <div className="w-10 h-10 rounded-xl bg-linear-to-r from-purple-600 to-amber-500 flex items-center justify-center shrink-0">
                       <currentSectionData.icon className="w-5 h-5 text-white" />
                     </div>
                     <div>

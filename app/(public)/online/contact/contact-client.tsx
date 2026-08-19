@@ -431,9 +431,9 @@ export default function ContactClient() {
               </h1>
 
               <p className="text-base xs:text-lg sm:text-xl md:text-2xl text-muted-foreground font-light max-w-3xl mx-auto leading-relaxed px-4">
-                Connect directly with our scholarly council. Whether you seek
+            {`    Connect directly with our scholarly council. Whether you seek
                 knowledge, need guidance, or wish to begin your journey - we're
-                here.
+                here.`}
               </p>
             </Reveal>
           </div>
@@ -953,7 +953,7 @@ export default function ContactClient() {
               وَقُل رَّبِّ زِدْنِي عِلْمًا
             </p>
             <p className="text-[9px] xs:text-[10px] sm:text-xs text-muted-foreground">
-              "My Lord, increase me in knowledge." - Surah Ta-Ha 20:114
+              {`"My Lord, increase me in knowledge." - Surah Ta-Ha 20:114`}
             </p>
           </div>
       
