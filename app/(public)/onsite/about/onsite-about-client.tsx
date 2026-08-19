@@ -240,7 +240,7 @@ export default function OnsiteAboutClient() {
                   <div className="w-12 h-0.5 bg-gradient-to-r from-purple-500 to-amber-500" />
                   <span className="text-amber-500 font-black text-xs uppercase tracking-wider flex items-center gap-2">
                     <MapPin className="w-3 h-3" />
-                    Ibadan, Nigeria • Est. 2018
+                    Ibadan, Nigeria • Residential & Day
                   </span>
                 </div>
                 <h1 className="text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black tracking-tighter font-heading leading-[1.1] text-white">
