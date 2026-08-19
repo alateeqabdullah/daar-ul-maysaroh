@@ -330,7 +330,7 @@ export default function LandingPage() {
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-purple-100 dark:bg-purple-600/20 border border-purple-200 dark:border-purple-600/30 mb-6">
                 <Sparkles className="w-4 h-4 text-amber-600 dark:text-amber-500" />
                 <span className="text-xs font-black uppercase tracking-wider text-purple-700 dark:text-amber-500">
-                  Al-Maysaroh Institute • Established 2018
+                  {`Al-Maysaroh Institute • Ijazah Certified`}
                 </span>
               </div>
 
