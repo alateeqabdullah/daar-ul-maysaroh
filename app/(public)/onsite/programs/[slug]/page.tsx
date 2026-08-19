@@ -2,22 +2,22 @@
 import { Metadata } from "next";
 import { notFound } from "next/navigation";
 import ProgramClient from "./program-client";
-import { getAllProgramSlugs, getProgramBySlug } from "./program-data";
+import { getProgramBySlug, getAllProgramSlugs } from "./program-data";
 
-// Generate static params for all programs
+// Generate static params for all programs (Stays the same)
 export async function generateStaticParams() {
   const slugs = getAllProgramSlugs();
   return slugs.map((slug) => ({ slug }));
 }
 
-// Generate dynamic metadata
-export async function generateMetadata({
-  params,
-}: {
-  params: { slug: string };
-}): Promise<Metadata> {
-  const program = getProgramBySlug(params.slug);
+type RouteParams = {
+  params: Promise<{ slug: string }>;
+};
 
+export async function generateMetadata({ params }: RouteParams): Promise<Metadata> {
+  const { slug } = await params;
+  const program = getProgramBySlug(slug);
+  
   if (!program) {
     return {
       title: "Program Not Found | Daar-ul-Maysaroh",
@@ -37,9 +37,11 @@ export async function generateMetadata({
   };
 }
 
-export default function ProgramPage({ params }: { params: { slug: string } }) {
-  const program = getProgramBySlug(params.slug);
-
+// Fix 2: Turn the page component into an async function and await params
+export default async function ProgramPage({ params }: RouteParams) {
+  const { slug } = await params;
+  const program = getProgramBySlug(slug);
+  
   if (!program) {
     notFound();
   }
