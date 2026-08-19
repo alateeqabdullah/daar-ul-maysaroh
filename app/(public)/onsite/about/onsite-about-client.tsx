@@ -150,17 +150,17 @@ const LEADERSHIP = [
 
 const TESTIMONIALS = [
   {
-    name: "Ustadh Abdulrahman",
-    role: "Boarding Student",
+    name: "Abdulrahman",
+    role: "Day Programme",
     content:
-      "The structured environment transformed my memorization. In 18 months, I completed Juz Amma to Juz Tabarak.",
+      "The structured environment transformed my memorization. In 18 months. Ustaz's guidance was invaluable.",
     initials: "ع",
   },
   {
-    name: "Hafidhah Fatimah",
-    role: "Day Programme Graduate",
+    name: "Hafidh",
+    role: "Day Programme",
     content:
-      "Balancing school and memorization seemed impossible until I joined. The teachers were patient and the revision system kept me consistent.",
+      "Balancing school and memorization seemed impossible until we joined. The revision system kept me consistent.",
     initials: "ف",
   },
 ];
