@@ -59,7 +59,13 @@ export const validateSection = (
       }
       break;
 
-    case 3: // Qur'an Background
+    case 3: // Passport Photo
+      if (!formData.passportPhoto) {
+        errors.passportPhoto = "Passport photograph is required";
+      }
+      break;
+
+    case 4: // Qur'an Background
       if (!formData.startedQuran)
         errors.startedQuran = "Please indicate if student has started reading";
       if (!formData.quranReadingLevel)
@@ -73,7 +79,7 @@ export const validateSection = (
         errors.murajaahFrequency = "Muraja'ah frequency is required";
       break;
 
-    case 4: // Islamic Education
+    case 5: // Islamic Education
       if (!formData.studiedIslamicStudies) {
         errors.studiedIslamicStudies =
           "Please indicate if student has studied Islamic Studies";
@@ -86,7 +92,7 @@ export const validateSection = (
       }
       break;
 
-    case 10: // Declaration
+    case 11: // Declaration
       if (!formData.parentFullName)
         errors.parentFullName = "Parent/Guardian full name is required";
       if (!formData.declarationDate)

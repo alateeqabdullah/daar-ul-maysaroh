@@ -43,7 +43,11 @@ export type FormData = {
   emergencyContactPhone: string;
   emergencyContactWhatsApp: string;
 
-  // Section 4: Qur'an Background
+  // Section 4: Passport Photo
+  passportPhoto: File | null;
+  passportPhotoUrl: string;
+
+  // Section 5: Qur'an Background
   startedQuran: string;
   quranReadingLevel: string;
   studiedNoorAlBayan: string;
@@ -66,7 +70,7 @@ export type FormData = {
   parentQuranGoals: string[];
   quranJourneyNotes: string;
 
-  // Section 5: Islamic Education
+  // Section 6: Islamic Education
   studiedIslamicStudies: string;
   islamicStudiesAreas: string[];
   islamicKnowledgeLevel: string;
@@ -74,7 +78,7 @@ export type FormData = {
   arabicLevel: string;
   islamicEducationGoals: string;
 
-  // Section 6: Learning Profile
+  // Section 7: Learning Profile
   motivation: string;
   desiredAchievement: string;
   enjoysMemorization: string;
@@ -85,7 +89,7 @@ export type FormData = {
   greatestStrength: string;
   needsImprovement: string;
 
-  // Section 7: Boarding & Tarbiyah
+  // Section 8: Boarding & Tarbiyah
   whyBoarding: string;
   livedAwayFromParents: string;
   awayFromHomeResponse: string;
@@ -96,7 +100,7 @@ export type FormData = {
   personalityNotes: string;
   tarbiyahGoals: string;
 
-  // Section 8: Health & Welfare
+  // Section 9: Health & Welfare
   medicalCondition: string;
   medicalConditionDetails: string;
   allergies: string;
@@ -110,19 +114,19 @@ export type FormData = {
   specialNeedsDetails: string;
   healthNotes: string;
 
-  // Section 9: Communication
+  // Section 10: Communication
   updatePreference: string;
   updateFrequency: string;
   comfortableContact: string;
   communicationNotes: string;
 
-  // Section 10: Visitation
+  // Section 11: Visitation
   authorisedVisitors: string;
   authorisedCollectors: string;
   restrictedPersons: string;
   restrictedPersonsDetails: string;
 
-  // Section 11: Declaration
+  // Section 12: Declaration
   parentFullName: string;
   declarationDate: string;
   agreeDeclaration: boolean;

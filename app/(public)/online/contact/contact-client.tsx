@@ -17,7 +17,6 @@ import {
   Phone,
   Globe,
   Heart,
-  Star,
   BookOpen,
   AlertCircle,
   AlertTriangle,
@@ -26,7 +25,6 @@ import {
   Facebook,
   Twitter,
   Youtube,
-  FileText,
   Shield,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -159,7 +157,7 @@ const getColorStyles = (color: string) => {
       text: "text-purple-600 dark:text-purple-400",
       border: "border-purple-200 dark:border-purple-800",
       bg: "bg-purple-100 dark:bg-purple-950/40",
-      gradient: "from-purple-600 to-purple-700",
+      linear: "from-purple-600 to-purple-700",
       light: "bg-purple-50/30 dark:bg-purple-950/20",
       ring: "ring-purple-500/20",
     },
@@ -167,7 +165,7 @@ const getColorStyles = (color: string) => {
       text: "text-amber-600 dark:text-amber-400",
       border: "border-amber-200 dark:border-amber-800",
       bg: "bg-amber-100 dark:bg-amber-950/40",
-      gradient: "from-amber-500 to-amber-600",
+      linear: "from-amber-500 to-amber-600",
       light: "bg-amber-50/30 dark:bg-amber-950/20",
       ring: "ring-amber-500/20",
     },
@@ -175,7 +173,7 @@ const getColorStyles = (color: string) => {
       text: "text-red-600 dark:text-red-400",
       border: "border-red-200 dark:border-red-800",
       bg: "bg-red-100 dark:bg-red-950/40",
-      gradient: "from-red-500 to-red-600",
+      linear: "from-red-500 to-red-600",
       light: "bg-red-50/30 dark:bg-red-950/20",
       ring: "ring-red-500/20",
     },
@@ -183,7 +181,7 @@ const getColorStyles = (color: string) => {
       text: "text-green-600 dark:text-green-400",
       border: "border-green-200 dark:border-green-800",
       bg: "bg-green-100 dark:bg-green-950/40",
-      gradient: "from-green-500 to-green-600",
+      linear: "from-green-500 to-green-600",
       light: "bg-green-50/30 dark:bg-green-950/20",
       ring: "ring-green-500/20",
     },
@@ -401,7 +399,7 @@ export default function ContactClient() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData) }}
       />
 
-      <main className="pt-24 md:pt-28 lg:pt-32 pb-16 xs:pb-20 sm:pb-24 md:pb-28 lg:pb-32 bg-gradient-to-b from-background via-purple-50/5 to-amber-50/5 relative overflow-hidden">
+      <main className="pt-24 md:pt-28 lg:pt-32 pb-16 xs:pb-20 sm:pb-24 md:pb-28 lg:pb-32 bg-linear-to-b from-background via-purple-50/5 to-amber-50/5 relative overflow-hidden">
         {/* Islamic Pattern Background */}
         <div
           className="absolute inset-0 opacity-[0.03] bg-[url('/islamic-pattern.svg')] bg-center bg-repeat pointer-events-none"
@@ -427,7 +425,7 @@ export default function ContactClient() {
 
               <h1 className="text-4xl xs:text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-black tracking-tighter font-heading leading-[1.1] mb-4 xs:mb-5 sm:mb-6 md:mb-8">
                 Reach the{" "}
-                <span className="bg-gradient-to-r from-purple-600 via-purple-700 to-amber-600 bg-clip-text text-transparent">
+                <span className="bg-linear-to-r from-purple-600 via-purple-700 to-amber-600 bg-clip-text text-transparent">
                   Scholars.
                 </span>
               </h1>
@@ -534,11 +532,11 @@ export default function ContactClient() {
             <div className="lg:col-span-5">
               <div className="space-y-3 xs:space-y-4 sticky top-24 sm:top-28">
                 <div className="flex items-center gap-3 xs:gap-4 mb-5 xs:mb-6 sm:mb-8">
-                  <div className="h-px flex-1 bg-gradient-to-r from-transparent to-purple-600/40" />
+                  <div className="h-px flex-1 bg-linear-to-r from-transparent to-purple-600/40" />
                   <p className="text-[9px] xs:text-[10px] sm:text-xs font-arabic font-black uppercase tracking-wider text-purple-600">
                     الأقسام
                   </p>
-                  <div className="h-px flex-1 bg-gradient-to-l from-transparent to-purple-600/40" />
+                  <div className="h-px flex-1 bg-linear-to-l from-transparent to-purple-600/40" />
                 </div>
 
                 {DEPARTMENTS.map((dept) => {
@@ -562,7 +560,7 @@ export default function ContactClient() {
                           className={cn(
                             "w-10 h-10 xs:w-11 xs:h-11 sm:w-12 sm:h-12 rounded-xl flex items-center justify-center transition-all",
                             isSelected
-                              ? `bg-gradient-to-r ${colors.gradient} text-white scale-105 shadow-md`
+                              ? `bg-linear-to-r ${colors.linear} text-white scale-105 shadow-md`
                               : "bg-muted text-muted-foreground",
                           )}
                         >
@@ -878,7 +876,7 @@ export default function ContactClient() {
                         <Button
                           type="submit"
                           disabled={isSubmitting}
-                          className={`w-full h-12 xs:h-13 rounded-lg bg-gradient-to-r ${selectedColors.gradient} hover:from-purple-700 hover:to-purple-800 text-white font-black text-xs sm:text-sm tracking-wider uppercase transition-all duration-300 group shadow-md hover:shadow-lg`}
+                          className={`w-full h-12 xs:h-13 rounded-lg bg-linear-to-r ${selectedColors.linear} hover:from-purple-700 hover:to-purple-800 text-white font-black text-xs sm:text-sm tracking-wider uppercase transition-all duration-300 group shadow-md hover:shadow-lg`}
                         >
                           {isSubmitting ? (
                             <Loader2 className="w-4 h-4 xs:w-5 xs:h-5 animate-spin mx-auto" />
