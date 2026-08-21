@@ -996,11 +996,11 @@ export default function OnsiteAboutClient() {
               <p className="text-lg text-muted-foreground max-w-lg leading-relaxed">
                 Daar-ul-Maysaroh is a premier Islamic boarding school in Ibadan, Nigeria, dedicated to nurturing the next generation of Quranic scholars. Our holistic approach combines rigorous memorization, spiritual growth, and character development in a supportive environment.
               </p>
-              <div className="flex flex-wrap gap-4">
+              {/* <div className="flex flex-wrap gap-4"> */}
                 <Link href="/onsite/admissions">
-                  <Button className="rounded-full px-8 py-4 font-black bg-gradient-to-r from-purple-600 to-purple-700 dark:from-purple-600 dark:to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white shadow-2xl shadow-purple-500/30 hover:shadow-purple-500/50 transition-all duration-300 group">
+                  <Button className="rounded-full w-full h-16 px-8 py-4 font-black bg-gradient-to-r from-purple-600 to-purple-700 dark:from-purple-600 dark:to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white shadow-2xl shadow-purple-500/30 hover:shadow-purple-500/50 transition-all duration-300 group">
                     Apply Now
-                    <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                    <ArrowRight className="w- h-4 ml-2 group-hover:translate-x-1 transition-transform" />
                   </Button>
                 </Link>
                 {/* <Link href="/onsite/visit">
@@ -1009,7 +1009,7 @@ export default function OnsiteAboutClient() {
                     <ChevronRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
                   </Button>
                 </Link> */}
-              </div>
+              {/* </div> */}
             </div>
 
             {/* Feature Icons with Glow */}
