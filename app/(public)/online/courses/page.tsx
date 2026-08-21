@@ -1872,7 +1872,7 @@ export const metadata: Metadata = {
     description: "Explore our comprehensive Quran courses including Hifz, Tajweed, Arabic, Tafsir, and children's programs.",
     type: "website",
     locale: "en_US",
-    url: "https://almaysaroh.com/courses",
+    url: "https://almaysaroh.com/online/courses",
     images: [
       {
         url: "/og/courses.jpg",
@@ -1900,7 +1900,7 @@ export const metadata: Metadata = {
     },
   },
   alternates: {
-    canonical: "https://almaysaroh.com/courses",
+    canonical: "https://almaysaroh.com/online/courses",
   },
 };
 
