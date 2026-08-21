@@ -489,19 +489,19 @@ Thank you for choosing Al-Maysaroh!
             </p>
             <div className="flex flex-wrap justify-center gap-3">
               <Link
-                href="/faq"
+                href="/online/faq"
                 className="inline-flex items-center gap-1 text-[10px] font-black text-purple-600 hover:underline"
               >
                 FAQ <ChevronRight className="w-3 h-3" />
               </Link>
               <Link
-                href="/courses"
+                href="/online/courses"
                 className="inline-flex items-center gap-1 text-[10px] font-black text-purple-600 hover:underline"
               >
                 Explore Courses
               </Link>
               <Link
-                href="/contact"
+                href="/online/contact"
                 className="inline-flex items-center gap-1 text-[10px] font-black text-purple-600 hover:underline"
               >
                 Contact Support <Send className="w-3 h-3" />
@@ -527,7 +527,7 @@ Thank you for choosing Al-Maysaroh!
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.55 }}
           >
-            <Link href="/">
+            <Link href="/online">
               <Button
                 variant="outline"
                 className="rounded-full px-6 sm:px-8 py-2.5 sm:py-3 font-black text-sm border-purple-300 text-purple-600 hover:bg-purple-50 transition-all group"

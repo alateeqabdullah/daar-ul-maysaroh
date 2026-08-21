@@ -69,11 +69,7 @@ const HEAR_OPTIONS = [
 // Languages
 const LANGUAGES = [
   { value: "english", label: "English", fluency: "Native/Professional" },
-  { value: "arabic", label: "Arabic", fluency: "Native/Professional" },
-  { value: "urdu", label: "Urdu", fluency: "Fluent" },
-  { value: "hindi", label: "Hindi", fluency: "Fluent" },
-  { value: "bengali", label: "Bengali", fluency: "Fluent" },
-  { value: "french", label: "French", fluency: "Fluent" },
+  // { value: "arabic", label: "Arabic", fluency: "Native/Professional" },
   { value: "hausa", label: "Hausa", fluency: "Fluent" },
   { value: "yoruba", label: "Yoruba", fluency: "Fluent" },
 ];
@@ -932,11 +928,11 @@ export default function ApplyPage() {
                         />
                         <Label htmlFor="agreeTerms" className="text-xs sm:text-sm font-medium cursor-pointer leading-relaxed">
                           I agree to the{" "}
-                          <Link href="/legal" className="text-purple-600 font-black hover:underline">
+                          <Link href="/online/legal" className="text-purple-600 font-black hover:underline">
                             Terms & Conditions
                           </Link>{" "}
                           and{" "}
-                          <Link href="/privacy" className="text-purple-600 font-black hover:underline">
+                          <Link href="/online/privacy" className="text-purple-600 font-black hover:underline">
                             Privacy Policy
                           </Link>{" "}
                           <span className="text-red-500">*</span>

@@ -1040,16 +1040,16 @@ const COLORS = {
 
 // Program data for pre-selection
 const PROGRAMS = {
-  hifz: { name: "Hifz Al-Quran", color: "purple", path: "/courses/hifz" },
-  tajweed: { name: "Tajweed Al-Itqan", color: "purple", path: "/courses/tajweed" },
-  "group-tajweed": { name: "Group Tajweed", color: "purple", path: "/courses/group-tajweed" },
-  arabic: { name: "Al-Lughah Al-Arabiyyah", color: "purple", path: "/courses/arabic" },
-  tafsir: { name: "Tafsir Al-Mubin", color: "purple", path: "/courses/tafsir" },
-  qiroah: { name: "Qiro'ah Program", color: "purple", path: "/courses/qiroah" },
-  "group-qiroah": { name: "Group Qiro'ah", color: "purple", path: "/courses/group-qiroah" },
-  "juz-amma": { name: "Juz Amma", color: "purple", path: "/courses/juz-amma" },
-  "juz-tabarak": { name: "Juz Tabarak", color: "purple", path: "/courses/juz-tabarak" },
-  murojaah: { name: "Muroja'ah Program", color: "purple", path: "/courses/murojaah" },
+  hifz: { name: "Hifz Al-Quran", color: "purple", path: "/online/courses/hifz" },
+  tajweed: { name: "Tajweed Al-Itqan", color: "purple", path: "/online/courses/tajweed" },
+  "group-tajweed": { name: "Group Tajweed", color: "purple", path: "/online/courses/group-tajweed" },
+  arabic: { name: "Al-Lughah Al-Arabiyyah", color: "purple", path: "/online/courses/arabic" },
+  tafsir: { name: "Tafsir Al-Mubin", color: "purple", path: "/online/courses/tafsir" },
+  qiroah: { name: "Qiro'ah Program", color: "purple", path: "/online/courses/qiroah" },
+  "group-qiroah": { name: "Group Qiro'ah", color: "purple", path: "/online/courses/group-qiroah" },
+  "juz-amma": { name: "Juz Amma", color: "purple", path: "/online/courses/juz-amma" },
+  "juz-tabarak": { name: "Juz Tabarak", color: "purple", path: "/online/courses/juz-tabarak" },
+  murojaah: { name: "Muroja'ah Program", color: "purple", path: "/online/courses/murojaah" },
 };
 
 export default function AdmissionsPage() {
@@ -1115,7 +1115,7 @@ export default function AdmissionsPage() {
             )}
 
             <div className="flex flex-col xs:flex-row gap-3 sm:gap-4 justify-center px-4">
-              <Link href="/admissions/apply" className="w-full xs:w-auto">
+              <Link href="/online/admissions/apply" className="w-full xs:w-auto">
                 <Button className="w-full rounded-full px-6 sm:px-8 py-3.5 sm:py-4 font-black bg-linear-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white text-sm sm:text-base shadow-xl transition-all duration-300">
                   <span className="flex items-center justify-center gap-2">
                     START YOUR APPLICATION
@@ -1123,7 +1123,7 @@ export default function AdmissionsPage() {
                   </span>
                 </Button>
               </Link>
-              <Link href="/assessment" className="w-full xs:w-auto">
+              <Link href="/online/assessment" className="w-full xs:w-auto">
                 <Button variant="outline" className="w-full rounded-full px-6 sm:px-8 py-3.5 sm:py-4 font-black text-sm sm:text-base border-amber-500 text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-950/20 transition-all duration-300">
                   FREE ASSESSMENT
                 </Button>
@@ -1369,13 +1369,13 @@ export default function AdmissionsPage() {
               Join hundreds of students who have chosen Al-Maysaroh for their Quranic education.
             </p>
             <div className="flex flex-col xs:flex-row gap-3 sm:gap-4 justify-center px-4">
-              <Link href="/admissions/apply" className="w-full xs:w-auto">
+              <Link href="/online/admissions/apply" className="w-full xs:w-auto">
                 <Button className="w-full rounded-full px-6 sm:px-8 py-3 sm:py-4 font-black bg-linear-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white text-sm sm:text-base transition-all duration-300 shadow-lg hover:shadow-xl">
                   APPLY NOW
                   <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 ml-1.5 sm:ml-2" />
                 </Button>
               </Link>
-              <Link href="/contact" className="w-full xs:w-auto">
+              <Link href="/online/contact" className="w-full xs:w-auto">
                 <Button variant="outline" className="w-full rounded-full px-6 sm:px-8 py-3 sm:py-4 font-black text-sm sm:text-base border-purple-500 text-purple-600 hover:bg-purple-50 dark:hover:bg-purple-950/20 transition-all duration-300">
                   CONTACT ADMISSIONS
                 </Button>
