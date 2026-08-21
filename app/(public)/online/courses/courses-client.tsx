@@ -332,7 +332,7 @@ export default function CoursesClient() {
                   </p>
                 </div>
               </div>
-              <Link href="/assessment">
+              <Link href="/online/assessment">
                 <Button
                   variant="outline"
                   className="rounded-full px-5 sm:px-6 md:px-8 py-2.5 sm:py-3 md:py-4 font-black text-[10px] xs:text-xs tracking-widest uppercase border-2 border-purple-300 text-purple-600 hover:bg-purple-600 hover:text-white transition-all duration-300"
@@ -562,13 +562,13 @@ export default function CoursesClient() {
                 level and goals. Our scholars will guide you to the right path.
               </p>
               <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                <Link href="/assessment">
+                <Link href="/online/assessment">
                   <Button className="rounded-full px-6 sm:px-8 py-2.5 sm:py-3 font-black text-sm bg-linear-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white shadow-md hover:shadow-lg transition-all duration-300">
                     Start Free Assessment
                     <ArrowRight className="w-4 h-4 ml-2" />
                   </Button>
                 </Link>
-                <Link href="/contact">
+                <Link href="/online/contact">
                   <Button
                     variant="outline"
                     className="rounded-full px-6 sm:px-8 py-2.5 sm:py-3 font-black text-sm border-purple-300 text-purple-600 hover:bg-purple-50 transition-all duration-300"
