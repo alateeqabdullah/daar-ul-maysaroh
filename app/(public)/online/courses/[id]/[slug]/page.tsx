@@ -82,10 +82,10 @@ export async function generateMetadata({
       title: `${course.name} | Al-Maysaroh`,
       description: course.description,
       type: "website",
-      url: `https://almaysaroh.org/courses/${params.slug}`,
+      url: `https://almaysaroh.org/online/courses/${params.slug}`,
     },
     alternates: {
-      canonical: `https://almaysaroh.org/courses/${params.slug}`,
+      canonical: `https://almaysaroh.org/online/courses/${params.slug}`,
     },
   };
 }
