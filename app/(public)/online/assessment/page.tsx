@@ -1919,11 +1919,11 @@ export default function AssessmentPage() {
                     />
                     <label htmlFor="agreeTerms" className="text-xs sm:text-sm font-medium cursor-pointer leading-relaxed">
                       I agree to the{" "}
-                      <Link href="/legal" className="text-purple-600 font-black hover:underline">
+                      <Link href="/online/legal" className="text-purple-600 font-black hover:underline">
                         Terms & Conditions
                       </Link>{" "}
                       and{" "}
-                      <Link href="/privacy" className="text-purple-600 font-black hover:underline">
+                      <Link href="/online/privacy" className="text-purple-600 font-black hover:underline">
                         Privacy Policy
                       </Link>{" "}
                       <span className="text-red-500">*</span>
