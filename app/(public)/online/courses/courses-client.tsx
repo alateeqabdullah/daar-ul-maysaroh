@@ -35,7 +35,7 @@ const COURSES = [
     students: "100+",
     icon: Crown,
     color: "purple",
-    href: "/courses/hifz",
+    href: "/online/courses/hifz",
     features: ["Ijazah Certification", "Daily Revision", "Sanad Chain"],
   },
   {
@@ -49,7 +49,7 @@ const COURSES = [
     students: "100+",
     icon: BookOpen,
     color: "purple",
-    href: "/courses/qiroah",
+    href: "/online/courses/qiroah",
     features: ["Live Correction", "Fluent Reading", "Certificate"],
   },
   {
@@ -63,7 +63,7 @@ const COURSES = [
     students: "100+",
     icon: Mic,
     color: "amber",
-    href: "/courses/tajweed",
+    href: "/online/courses/tajweed",
     features: ["Live Correction", "Audio Analysis", "Certificate"],
   },
   {
@@ -77,7 +77,7 @@ const COURSES = [
     students: "100+",
     icon: CheckCircle2,
     color: "purple",
-    href: "/courses/muroja'ah",
+    href: "/online/courses/muroja'ah",
     features: ["Regular Revision", "Personalized Feedback", "Certificate"],
   },
   {
@@ -91,7 +91,7 @@ const COURSES = [
     students: "20+",
     icon: Globe,
     color: "purple",
-    href: "/courses/arabic",
+    href: "/onlinecourses/arabic",
     features: ["Grammar Mastery", "Vocabulary", "Tafsir Reading"],
   },
   {
@@ -105,7 +105,7 @@ const COURSES = [
     students: "100+",
     icon: Heart,
     color: "amber",
-    href: "/courses/group-qiroah",
+    href: "/online/courses/group-qiroah",
     features: ["Fun Activities", "Parent Portal", "Certificate"],
   },
   {
@@ -118,7 +118,7 @@ const COURSES = [
     students: "80+",
     icon: Star,
     color: "purple",
-    href: "/courses/juz-amma",
+    href: "/online/courses/juz-amma",
     features: ["Fun Memorization", "Reward System", "Certificate"],
   },
   {
@@ -132,7 +132,7 @@ const COURSES = [
     students: "50+",
     icon: Star,
     color: "purple",
-    href: "/courses/juz-tabarak",
+    href: "/online/courses/juz-tabarak",
     features: ["Structured Memorization", "Interactive Sessions", "Certificate"],
   },
   {
@@ -146,7 +146,7 @@ const COURSES = [
     students: "80+",
     icon: Mic,
     color: "amber",
-    href: "/courses/group-tajweed",
+    href: "/online/courses/group-tajweed",
     features: ["Interactive Learning", "Peer Feedback", "Certificate"],
   },
   {
@@ -160,7 +160,7 @@ const COURSES = [
     students: "80+",
     icon: BookOpen,
     color: "amber",
-    href: "/courses/tafsir",
+    href: "/online/courses/tafsir",
     features: ["Classical Sources", "Scholar Mentorship", "Certificate"],
   },
   {
@@ -174,7 +174,7 @@ const COURSES = [
     students: "5+",
     icon: Globe,
     color: "amber",
-    href: "/courses/qiraat",
+    href: "/online/courses/qiraat",
     features: ["Ten Qira'at", "Ijazah Certification", "Sanad Chain"],
   },
   {
@@ -188,7 +188,7 @@ const COURSES = [
     students: "Varies",
     icon: Sparkles,
     color: "purple",
-    href: "/contact",
+    href: "/online/contact",
     features: ["Personalized Curriculum", "Flexible Scheduling", "Scholar Support"],
   }
 ];
@@ -247,7 +247,7 @@ export default function CoursesClient() {
           <div className="pt-30 xs:pt-24 sm:pt-28 md:pt-32 lg:pt-36">
             <nav className="text-[10px] font-black uppercase tracking-[0.3em] text-muted-foreground flex items-center gap-2 mb-6 xs:mb-8 flex-wrap">
               <Link
-                href="/"
+                href="/online"
                 className="hover:text-purple-600 transition-colors"
               >
                 Home
