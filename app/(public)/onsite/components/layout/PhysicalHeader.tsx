@@ -696,7 +696,6 @@
 
 
 
-
 // app/(marketing)/onsite/components/layout/OnsiteHeader.tsx
 "use client";
 
@@ -716,10 +715,9 @@ import {
   Mail,
   Home,
   Info,
-  Users,
   Calendar,
+  Users,
   GraduationCap,
-  Building2,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -728,22 +726,22 @@ import { usePathname } from "next/navigation";
 import Image from "next/image";
 import Logo from "@/public/logo.png";
 
-// Navigation
+// Navigation - Same structure as online
 const NAVIGATION = [
   { name: "Home", href: "/onsite", icon: Home },
   { name: "About", href: "/onsite/about", icon: Info },
   {
     name: "Programs",
     href: "/onsite/programs",
-    dropdown: true,
     icon: BookOpen,
+    dropdown: true,
   },
-  { name: "Boarding", href: "/onsite/boarding", icon: Building2 },
-  { name: "Student Life", href: "/onsite/student-life", icon: Users },
+  { name: "Boarding", href: "/onsite/boarding", icon: Users },
+  { name: "Student Life", href: "/onsite/student-life", icon: Calendar },
   { name: "Admissions", href: "/onsite/admissions", icon: GraduationCap },
 ];
 
-// Mega menu data
+// Mega menu data - Onsite specific
 const MEGA_MENU = {
   featured: {
     name: "ALL PROGRAMS",
@@ -804,7 +802,7 @@ const MEGA_MENU = {
 // Throttle function
 function throttle<T extends (...args: unknown[]) => unknown>(
   func: T,
-  limit: number,
+  limit: number
 ): (...args: Parameters<T>) => void {
   let inThrottle: boolean;
   return function (this: unknown, ...args: Parameters<T>) {
@@ -816,32 +814,16 @@ function throttle<T extends (...args: unknown[]) => unknown>(
   };
 }
 
-// Color styles for light/dark mode
-const getThemeColors = () => {
-  return {
-    headerBg: "bg-background/95 dark:bg-slate-950/95",
-    border: "border-border/50 dark:border-white/10",
-    text: "text-foreground dark:text-slate-300",
-    textHover: "hover:text-purple-600 dark:hover:text-amber-500",
-    activeText: "text-purple-600 dark:text-amber-500",
-    activeBg: "bg-purple-50/50 dark:bg-white/5",
-    dropdownBg: "bg-card dark:bg-slate-950",
-    dropdownBorder: "border-purple-200 dark:border-purple-800/30",
-    mobileBg: "bg-background dark:bg-slate-950",
-  };
-};
-
 export function OnsiteHeader() {
   const { theme, setTheme } = useTheme();
   const [isScrolled, setIsScrolled] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mobileDropdownOpen, setMobileDropdownOpen] = useState<string | null>(
-    null,
+    null
   );
   const [mounted, setMounted] = useState(false);
   const pathname = usePathname();
-  const colors = getThemeColors();
 
   useEffect(() => {
     setMounted(true);
@@ -886,20 +868,15 @@ export function OnsiteHeader() {
     setMobileDropdownOpen(mobileDropdownOpen === name ? null : name);
   };
 
-  const isActive = (href: string) => {
-    if (href === "/onsite") return pathname === "/onsite";
-    return pathname?.startsWith(href);
-  };
-
   return (
     <>
       <header
         className={cn(
           "fixed top-0 left-0 right-0 z-50 w-full transition-all duration-500 flex items-center",
           isScrolled
-            ? `${colors.headerBg} backdrop-blur-md border-b ${colors.border} py-2 h-20 shadow-lg`
+            ? "bg-background/95 backdrop-blur-md border-b border-border/50 py-2 h-20 dark:bg-slate-950/95 dark:border-white/10"
             : "bg-transparent py-4 h-24",
-          "pt-safe",
+          "pt-safe"
         )}
       >
         <nav className="container mx-auto px-4 md:px-6 flex items-center justify-between">
@@ -933,7 +910,7 @@ export function OnsiteHeader() {
           {/* --- DESKTOP NAVIGATION --- */}
           <ul className="hidden xl:flex items-center space-x-1">
             {NAVIGATION.map((item) => {
-              const isActivePage = isActive(item.href);
+              const isActive = pathname === item.href;
 
               return (
                 <li
@@ -954,13 +931,13 @@ export function OnsiteHeader() {
                     href={item.href}
                     aria-expanded={activeDropdown === item.name}
                     aria-haspopup={item.dropdown ? "true" : "false"}
-                    aria-current={isActivePage ? "page" : undefined}
+                    aria-current={isActive ? "page" : undefined}
                     className={cn(
                       "px-4 py-3 text-[13px] font-black flex items-center gap-1 transition-all uppercase tracking-wider outline-none min-h-11 rounded-lg",
                       "focus-visible:ring-2 focus-visible:ring-purple-500 focus-visible:ring-offset-2 focus-visible:outline-none",
-                      activeDropdown === item.name || isActivePage
-                        ? `${colors.activeText} ${colors.activeBg}`
-                        : `${colors.text} ${colors.textHover}`,
+                      activeDropdown === item.name || isActive
+                        ? "text-amber-600 dark:text-amber-500 bg-muted/20 dark:bg-white/5"
+                        : "text-muted-foreground dark:text-slate-300 hover:text-foreground dark:hover:text-white hover:bg-muted/10 dark:hover:bg-white/5"
                     )}
                   >
                     {item.name}
@@ -968,7 +945,7 @@ export function OnsiteHeader() {
                       <ChevronDown
                         className={cn(
                           "w-3 h-3 md:w-4 md:h-4 opacity-70 transition-transform",
-                          activeDropdown === item.name && "rotate-180",
+                          activeDropdown === item.name && "rotate-180"
                         )}
                         aria-hidden="true"
                       />
@@ -982,12 +959,7 @@ export function OnsiteHeader() {
                         initial={{ opacity: 0, y: 10, scale: 0.95 }}
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                        className={cn(
-                          "absolute top-full left-1/2 -translate-x-1/2 w-[90vw] max-w-[1000px] p-8 rounded-2xl shadow-2xl mt-2 z-50 max-h-[85vh] overflow-y-auto custom-scrollbar",
-                          colors.dropdownBg,
-                          colors.dropdownBorder,
-                          "border"
-                        )}
+                        className="absolute top-full left-1/2 -translate-x-1/2 w-[90vw] max-w-[1000px] p-8 bg-card dark:bg-slate-950 border border-purple-200 dark:border-purple-800/30 rounded-2xl shadow-2xl mt-2 z-50 max-h-[85vh] overflow-y-auto custom-scrollbar"
                         role="menu"
                       >
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -998,10 +970,10 @@ export function OnsiteHeader() {
                             </div>
                             <Link
                               href={MEGA_MENU.featured.href}
-                              className="block p-5 rounded-xl bg-gradient-to-br from-purple-100/30 to-amber-100/30 dark:from-purple-600/10 dark:to-amber-500/10 border border-purple-200 dark:border-purple-700/30 hover:border-amber-500/50 transition-all group"
+                              className="block p-5 rounded-xl bg-gradient-to-br from-purple-50/30 to-amber-50/30 dark:from-purple-600/10 dark:to-amber-500/10 border border-purple-200 dark:border-purple-700/30 hover:border-purple-300 dark:hover:border-amber-500/50 transition-all group"
                             >
                               <div className="flex items-center gap-4">
-                                <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-purple-200/50 to-amber-200/50 dark:from-purple-600/20 dark:to-amber-500/20 flex items-center justify-center">
+                                <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-purple-100 to-amber-100 dark:from-purple-600/20 dark:to-amber-500/20 flex items-center justify-center">
                                   <MEGA_MENU.featured.icon className="w-6 h-6 text-purple-600 dark:text-amber-500" />
                                 </div>
                                 <div>
@@ -1029,9 +1001,9 @@ export function OnsiteHeader() {
                                   <Link
                                     key={prog.name}
                                     href={prog.href}
-                                    className="flex items-center gap-4 p-3 rounded-xl hover:bg-purple-100/30 dark:hover:bg-purple-600/10 transition-colors group"
+                                    className="flex items-center gap-4 p-3 rounded-xl hover:bg-purple-50 dark:hover:bg-purple-600/10 transition-colors group"
                                   >
-                                    <div className="w-10 h-10 rounded-lg bg-purple-100/50 dark:bg-purple-600/20 flex items-center justify-center">
+                                    <div className="w-10 h-10 rounded-lg bg-purple-100 dark:bg-purple-600/20 flex items-center justify-center">
                                       <Icon className="w-5 h-5 text-purple-600 dark:text-purple-400" />
                                     </div>
                                     <div className="flex-1">
@@ -1060,9 +1032,9 @@ export function OnsiteHeader() {
                                   <Link
                                     key={prog.name}
                                     href={prog.href}
-                                    className="flex items-center gap-4 p-3 rounded-xl hover:bg-purple-100/30 dark:hover:bg-purple-600/10 transition-colors group"
+                                    className="flex items-center gap-4 p-3 rounded-xl hover:bg-purple-50 dark:hover:bg-purple-600/10 transition-colors group"
                                   >
-                                    <div className="w-10 h-10 rounded-lg bg-purple-100/50 dark:bg-purple-600/20 flex items-center justify-center">
+                                    <div className="w-10 h-10 rounded-lg bg-purple-100 dark:bg-purple-600/20 flex items-center justify-center">
                                       <Icon className="w-5 h-5 text-purple-600 dark:text-purple-400" />
                                     </div>
                                     <div className="flex-1">
@@ -1071,7 +1043,7 @@ export function OnsiteHeader() {
                                           {prog.name}
                                         </div>
                                         {prog.badge && (
-                                          <span className="text-[9px] font-black px-2 py-0.5 rounded-full bg-amber-100 dark:bg-amber-500/20 text-amber-700 dark:text-amber-400">
+                                          <span className="text-[9px] font-black px-2 py-0.5 rounded-full bg-amber-100 dark:bg-amber-500/20 text-amber-600 dark:text-amber-400">
                                             {prog.badge}
                                           </span>
                                         )}
@@ -1088,7 +1060,7 @@ export function OnsiteHeader() {
                         </div>
 
                         {/* Footer */}
-                        <div className="mt-8 pt-5 border-t border-purple-200/50 dark:border-purple-800/30 flex justify-between items-center">
+                        <div className="mt-8 pt-5 border-t border-purple-200 dark:border-purple-800/30 flex justify-between items-center">
                           <p className="text-xs text-muted-foreground dark:text-slate-400">
                             <span className="font-black text-amber-600 dark:text-amber-500">
                               Day
@@ -1117,18 +1089,12 @@ export function OnsiteHeader() {
 
           {/* --- COMMAND ACTIONS --- */}
           <div className="flex items-center space-x-2 md:space-x-3 lg:space-x-4 relative z-60">
-            {/* Theme Toggle */}
+            {/* Theme Toggle - Enhanced */}
             <Button
               variant="ghost"
               size="icon"
               onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-              className={cn(
-                "rounded-full w-10 h-10 md:w-11 md:h-11 touch-target-lg transition-all duration-300",
-                isScrolled
-                  ? "bg-muted/30 hover:bg-purple-100/30 dark:bg-white/5 dark:hover:bg-purple-600/20"
-                  : "bg-white/10 hover:bg-purple-600/20",
-                "text-foreground dark:text-slate-300 hover:text-amber-600 dark:hover:text-amber-500"
-              )}
+              className="rounded-full bg-muted/20 hover:bg-purple-50 dark:bg-white/5 dark:hover:bg-purple-600/20 w-10 h-10 md:w-11 md:h-11 touch-target-lg text-muted-foreground dark:text-slate-300 hover:text-purple-600 dark:hover:text-amber-500"
               aria-label="Toggle theme"
               disabled={!mounted}
             >
@@ -1161,32 +1127,45 @@ export function OnsiteHeader() {
               </Link>
             </div>
 
-            {/* Mobile Menu Toggle */}
+            {/* Mobile Menu Toggle - Enhanced */}
             <Button
               variant="ghost"
               size="icon"
-              className={cn(
-                "xl:hidden rounded-xl w-11 h-11 border touch-target-lg transition-all duration-300",
-                isScrolled
-                  ? "bg-purple-100/30 dark:bg-purple-600/10 text-purple-600 dark:text-amber-500 border-purple-200 dark:border-purple-600/30 hover:bg-purple-200/30 dark:hover:bg-purple-600/20"
-                  : "bg-white/10 text-white border-white/20 hover:bg-white/20"
-              )}
+              className="xl:hidden rounded-xl bg-purple-100/20 dark:bg-purple-600/10 text-purple-600 dark:text-amber-500 w-11 h-11 border border-purple-200 dark:border-purple-600/30 touch-target-lg hover:bg-purple-100 dark:hover:bg-purple-600/20 transition-all duration-300"
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               aria-expanded={mobileMenuOpen}
               aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
               aria-controls="mobile-navigation-drawer"
             >
-              {mobileMenuOpen ? (
-                <X className="h-5 w-5 md:h-6 md:w-6" aria-hidden="true" />
-              ) : (
-                <Menu className="h-5 w-5 md:h-6 md:w-6" aria-hidden="true" />
-              )}
+              <AnimatePresence mode="wait">
+                {mobileMenuOpen ? (
+                  <motion.div
+                    key="close"
+                    initial={{ rotate: -90, opacity: 0 }}
+                    animate={{ rotate: 0, opacity: 1 }}
+                    exit={{ rotate: 90, opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <X className="h-5 w-5 md:h-6 md:w-6" aria-hidden="true" />
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="menu"
+                    initial={{ rotate: 90, opacity: 0 }}
+                    animate={{ rotate: 0, opacity: 1 }}
+                    exit={{ rotate: -90, opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <Menu className="h-5 w-5 md:h-6 md:w-6" aria-hidden="true" />
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </Button>
           </div>
         </nav>
       </header>
 
-      {/* --- MOBILE DRAWER --- */}
+      {/* --- MOBILE DRAWER - Enhanced --- */}
       <AnimatePresence>
         {mobileMenuOpen && (
           <>
@@ -1204,11 +1183,7 @@ export function OnsiteHeader() {
               animate={{ x: 0 }}
               exit={{ x: "100%" }}
               transition={{ type: "spring", damping: 25, stiffness: 200 }}
-              className={cn(
-                "fixed inset-y-0 right-0 z-100 w-full max-w-full sm:max-w-sm shadow-2xl xl:hidden flex flex-col p-4 sm:p-6 md:p-8 pt-24 sm:pt-28 md:pt-32 min-h-dvh overflow-y-auto border-l",
-                colors.mobileBg,
-                "border-purple-200/50 dark:border-purple-800/30"
-              )}
+              className="fixed inset-y-0 right-0 z-100 w-full max-w-full sm:max-w-sm bg-background dark:bg-slate-950 shadow-2xl xl:hidden flex flex-col p-4 sm:p-6 md:p-8 pt-24 sm:pt-28 md:pt-32 min-h-dvh overflow-y-auto border-l border-purple-200 dark:border-purple-800/30"
               style={{
                 paddingBottom: "calc(2rem + env(safe-area-inset-bottom))",
               }}
@@ -1219,10 +1194,10 @@ export function OnsiteHeader() {
             >
               <button
                 onClick={() => setMobileMenuOpen(false)}
-                className="absolute top-6 right-4 sm:right-6 p-2 rounded-full bg-muted/30 hover:bg-muted/50 touch-target-lg transition-colors"
+                className="absolute top-6 right-4 sm:right-6 p-2 rounded-full bg-muted/20 dark:bg-white/5 hover:bg-purple-100 dark:hover:bg-purple-600/20 touch-target-lg transition-colors"
                 aria-label="Close menu"
               >
-                <X className="h-5 w-5 text-foreground dark:text-slate-300" />
+                <X className="h-5 w-5 text-muted-foreground dark:text-slate-300" />
               </button>
 
               <div className="flex-1 overflow-y-auto hide-scrollbar">
@@ -1233,7 +1208,7 @@ export function OnsiteHeader() {
                   {NAVIGATION.map((item) => (
                     <div
                       key={item.name}
-                      className="border-b border-border/50 dark:border-purple-800/30 pb-4"
+                      className="border-b border-purple-200 dark:border-purple-800/30 pb-4"
                     >
                       {item.dropdown ? (
                         <div className="space-y-3">
@@ -1270,9 +1245,9 @@ export function OnsiteHeader() {
                                 <Link
                                   href={MEGA_MENU.featured.href}
                                   onClick={() => setMobileMenuOpen(false)}
-                                  className="block p-4 rounded-xl bg-gradient-to-r from-purple-100/30 to-amber-100/30 dark:from-purple-600/10 dark:to-amber-500/10 border border-purple-200 dark:border-purple-700/30"
+                                  className="block p-4 rounded-xl bg-gradient-to-r from-purple-50/30 to-amber-50/30 dark:from-purple-600/10 dark:to-amber-500/10 border border-purple-200 dark:border-purple-700/30"
                                 >
-                                  <div className="font-black text-sm text-amber-600 dark:text-amber-500">
+                                  <div className="font-black text-sm text-purple-600 dark:text-amber-500">
                                     {MEGA_MENU.featured.name}
                                   </div>
                                   <div className="text-xs text-muted-foreground dark:text-slate-400">
@@ -1294,9 +1269,9 @@ export function OnsiteHeader() {
                                           onClick={() =>
                                             setMobileMenuOpen(false)
                                           }
-                                          className="flex items-start gap-3 p-3 rounded-xl bg-muted/30 dark:bg-slate-800/50 hover:bg-purple-100/30 dark:hover:bg-purple-600/10 transition-colors"
+                                          className="flex items-start gap-3 p-3 rounded-xl bg-muted/20 dark:bg-slate-800/50 hover:bg-purple-50 dark:hover:bg-purple-600/10 transition-colors"
                                         >
-                                          <div className="w-8 h-8 rounded-lg bg-purple-100/50 dark:bg-purple-600/20 flex items-center justify-center">
+                                          <div className="w-8 h-8 rounded-lg bg-purple-100 dark:bg-purple-600/20 flex items-center justify-center">
                                             <Icon className="w-4 h-4 text-purple-600 dark:text-purple-400" />
                                           </div>
                                           <div>
@@ -1327,9 +1302,9 @@ export function OnsiteHeader() {
                                           onClick={() =>
                                             setMobileMenuOpen(false)
                                           }
-                                          className="flex items-start gap-3 p-3 rounded-xl bg-muted/30 dark:bg-slate-800/50 hover:bg-purple-100/30 dark:hover:bg-purple-600/10 transition-colors"
+                                          className="flex items-start gap-3 p-3 rounded-xl bg-muted/20 dark:bg-slate-800/50 hover:bg-purple-50 dark:hover:bg-purple-600/10 transition-colors"
                                         >
-                                          <div className="w-8 h-8 rounded-lg bg-purple-100/50 dark:bg-purple-600/20 flex items-center justify-center">
+                                          <div className="w-8 h-8 rounded-lg bg-purple-100 dark:bg-purple-600/20 flex items-center justify-center">
                                             <Icon className="w-4 h-4 text-purple-600 dark:text-purple-400" />
                                           </div>
                                           <div>
@@ -1338,7 +1313,7 @@ export function OnsiteHeader() {
                                                 {prog.name}
                                               </div>
                                               {prog.badge && (
-                                                <span className="text-[8px] font-black px-1.5 py-0.5 rounded-full bg-amber-100 dark:bg-amber-500/20 text-amber-700 dark:text-amber-400">
+                                                <span className="text-[8px] font-black px-1.5 py-0.5 rounded-full bg-amber-100 dark:bg-amber-500/20 text-amber-600 dark:text-amber-400">
                                                   {prog.badge}
                                                 </span>
                                               )}
@@ -1360,8 +1335,9 @@ export function OnsiteHeader() {
                         <Link
                           href={item.href}
                           onClick={() => setMobileMenuOpen(false)}
-                          className="block text-lg font-black uppercase tracking-tighter py-2 px-3 text-foreground dark:text-slate-200 hover:text-amber-600 dark:hover:text-amber-500 transition"
+                          className="flex items-center gap-3 text-lg font-black uppercase tracking-tighter py-2 px-3 text-foreground dark:text-slate-200 hover:text-purple-600 dark:hover:text-amber-500 transition"
                         >
+                          <item.icon className="w-5 h-5 text-muted-foreground dark:text-slate-400" />
                           {item.name}
                         </Link>
                       )}
@@ -1377,15 +1353,19 @@ export function OnsiteHeader() {
                   <p className="quran-monumental text-base text-muted-foreground/50 dark:text-slate-600">
                     وَقُل رَّبِّ زِدْنِي عِلْمًا
                   </p>
-                  <p className="text-[8px] text-muted-foreground/40 dark:text-slate-600 mt-1 italic">
+                  <p className="text-[8px] text-muted-foreground/50 dark:text-slate-600 mt-1 italic">
                     "My Lord, increase me in knowledge"
                   </p>
                 </div>
 
                 <div className="grid grid-cols-1 gap-4">
-                  <Link href="/onsite/admissions" onClick={() => setMobileMenuOpen(false)}>
-                    <Button className="w-full h-14 rounded-2xl font-black bg-gradient-to-r from-purple-600 to-amber-500 hover:from-purple-700 hover:to-amber-600 text-white shadow-lg shadow-purple-500/30">
+                  <Link
+                    href="/onsite/admissions"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    <Button className="w-full h-14 rounded-2xl font-black bg-gradient-to-r from-purple-600 to-amber-500 hover:from-purple-700 hover:to-amber-600 text-white shadow-lg shadow-purple-500/30 hover:shadow-purple-500/50 transition-all duration-300">
                       APPLY NOW
+                      <Sparkles className="w-4 h-4 ml-2" />
                     </Button>
                   </Link>
                   <div className="flex items-center justify-center gap-4 text-[10px] text-muted-foreground dark:text-slate-400">
