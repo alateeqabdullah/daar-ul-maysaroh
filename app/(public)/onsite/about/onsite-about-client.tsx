@@ -1098,7 +1098,7 @@ export default function OnsiteAboutClient() {
               <div className="flex items-start gap-3">
                 <Quote className="w-5 h-5 text-amber-600 dark:text-amber-500 mt-1" />
                 <p className="text-sm italic text-muted-foreground">
-                  "We don't just teach the Quran; we nurture carriers of the Quran."
+                {`  "We don't just teach the Quran; we nurture carriers of the Quran."`}
                 </p>
               </div>
             </motion.div>
@@ -1115,7 +1115,7 @@ export default function OnsiteAboutClient() {
               </div>
               <h3 className="text-2xl font-black text-foreground">Our Vision</h3>
               <p className="text-muted-foreground leading-relaxed">
-                To become the world's most trusted institution for authentic Quranic education, producing scholars who carry the light of revelation.
+               {` To become the world's most trusted institution for authentic Quranic education, producing scholars who carry the light of revelation.`}
               </p>
               <div className="flex items-start gap-3">
                 <Quote className="w-5 h-5 text-amber-600 dark:text-amber-500 mt-1" />

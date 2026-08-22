@@ -37,7 +37,7 @@ export async function generateMetadata({ params }: RouteParams): Promise<Metadat
   };
 }
 
-// Fix 2: Turn the page component into an async function and await params
+// Fix 2: Turn the page component into an async function and await param
 export default async function ProgramPage({ params }: RouteParams) {
   const { slug } = await params;
   const program = getProgramBySlug(slug);
