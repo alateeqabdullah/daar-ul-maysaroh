@@ -447,7 +447,6 @@
 // app/(marketing)/onsite/student-life/student-life-client.tsx
 "use client";
 
-import { Reveal } from "@/components/shared/section-animation";
 import { Button } from "@/components/ui/button";
 import {
   ArrowRight,
@@ -463,27 +462,21 @@ import {
   Shield,
   Globe,
   Award,
-  Check,
-  Crown,
   Utensils,
   Bed,
   GraduationCap,
   Calendar,
   Star,
   Quote,
-  Compass,
   Target,
-  Zap,
   Infinity,
-  TrendingUp,
   ChevronRight,
   Droplet,
   RefreshCw,
 } from "lucide-react";
 import Link from "next/link";
-import { motion, useInView, useScroll, useTransform } from "framer-motion";
-import { useRef, useState } from "react";
-import { cn } from "@/lib/utils";
+import { motion, useScroll, useTransform } from "framer-motion";
+import { useRef } from "react";
 
 // ============================================================
 // DATA
@@ -638,25 +631,18 @@ const ACTIVITIES = [
 
 const TESTIMONIALS = [
   {
-    name: "Ustadh Abdulrahman",
-    role: "Boarding Student",
-    content: "The structured environment transformed my memorization. In 18 months, I completed Juz Amma to Juz Tabarak.",
+    name: "Abdulrahman",
+    role: "Day Programme",
+    content:
+      "The structured environment transformed my memorization. In 18 months. Ustaz's guidance was invaluable.",
     initials: "ع",
-    color: "purple",
   },
   {
-    name: "Hafidhah Fatimah",
-    role: "Day Programme Graduate",
-    content: "Balancing school and memorization seemed impossible until I joined. The teachers were patient and the revision system kept me consistent.",
+    name: "Hafidh",
+    role: "Day Programme",
+    content:
+      "Balancing school and memorization seemed impossible until we joined. The revision system kept me consistent.",
     initials: "ف",
-    color: "amber",
-  },
-  {
-    name: "Ustadh Yusuf",
-    role: "Boarding Student",
-    content: "The community here is like family. We support each other through every challenge and celebrate every milestone together.",
-    initials: "ي",
-    color: "purple",
   },
 ];
 
