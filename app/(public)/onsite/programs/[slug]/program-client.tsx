@@ -8,13 +8,8 @@ import {
   Calendar,
   CheckCircle2,
   Clock,
-  Crown,
-  Globe,
-  GraduationCap,
-  Heart,
-  Moon,
-  Shield,
-  Star,
+
+  Moon,  Star,
   Sun,
   Target,
   Users,
@@ -24,11 +19,6 @@ import {
   Quote,
   ChevronDown,
   Check,
-  Zap,
-  Compass,
-  BarChart3,
-  MessageCircle,
-  TrendingUp,
 } from "lucide-react";
 import Link from "next/link";
 import { useState, useRef, useEffect } from "react";
