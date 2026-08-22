@@ -701,15 +701,17 @@ const FLEXIBLE_OPTIONS = [
 
 const TESTIMONIALS = [
   {
-    name: "Ustadh Abdulrahman",
-    role: "Boarding Student",
-    content: "The structured environment transformed my memorization. In 18 months, I completed Juz Amma to Juz Tabarak.",
+    name: "Abdulrahman",
+    role: "Day Programme",
+    content:
+      "The structured environment transformed my memorization. In 18 months. Ustaz's guidance was invaluable.",
     initials: "ع",
   },
   {
-    name: "Ustadhah Fatimah",
-    role: "Day Programme Graduate",
-    content: "Balancing school and memorization seemed impossible until I joined. The teachers were patient and kept me consistent.",
+    name: "Hafidh",
+    role: "Day Programme",
+    content:
+      "Balancing school and memorization seemed impossible until we joined. The revision system kept me consistent.",
     initials: "ف",
   },
 ];
