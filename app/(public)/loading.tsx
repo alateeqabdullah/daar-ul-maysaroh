@@ -104,6 +104,7 @@
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import Image from "next/image";
+import Logo from "@/public/logo.png";
 
 export default function Loading() {
   const [progress, setProgress] = useState(0);
@@ -132,7 +133,7 @@ export default function Loading() {
             <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-amber-500 blur-2xl opacity-20" />
             <div className="relative w-16 h-16 sm:w-20 sm:h-20 mx-auto">
               <Image
-                src="/logo.svg"
+                src={Logo}
                 alt="Al-Maysaroh"
                 fill
                 className="object-contain"
