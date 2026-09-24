@@ -34,7 +34,7 @@ const PROGRAMS = [
       "1-on-1 Sessions",
     ],
     duration: "2-5 Years",
-    href: "/physical/programs/tahfeedh",
+    href: "/onsite/programs/tahfeedh",
   },
   {
     id: "tajweed",
@@ -46,7 +46,7 @@ const PROGRAMS = [
       "Master Makharij, Sifaat, and rules of recitation with practical application.",
     features: ["Makharij & Sifaat", "Applied Practice", "Audio Analysis"],
     duration: "1-2 Years",
-    href: "/physical/programs/tajweed",
+    href: "/onsite/programs/tajweed",
   },
   {
     id: "qiraat",
@@ -58,7 +58,7 @@ const PROGRAMS = [
       "Study the ten authentic Qira'at with Sanad verification and Ijazah preparation.",
     features: ["Ten Qira'at", "Sanad Verification", "Ijazah Track"],
     duration: "2-3 Years",
-    href: "/physical/programs/qiraat",
+    href: "/onsite/programs/qiraat",
   },
   {
     id: "islamic-studies",
@@ -70,7 +70,7 @@ const PROGRAMS = [
       "Study Aqeedah, Fiqh, Seerah, and Hadith with authentic sources.",
     features: ["Aqeedah & Fiqh", "Seerah", "Hadith Studies"],
     duration: "Ongoing",
-    href: "/physical/programs/islamic-studies",
+    href: "/onsite/programs/islamic-studies",
   },
   {
     id: "arabic",
@@ -82,7 +82,7 @@ const PROGRAMS = [
       "Learn classical Arabic grammar and vocabulary to understand the Quran directly.",
     features: ["Grammar (Nahw)", "Morphology (Sarf)", "Tafsir Reading"],
     duration: "1-3 Years",
-    href: "/physical/programs/arabic",
+    href: "/onsite/programs/arabic",
   },
   {
     id: "tarbiyah",
@@ -94,7 +94,7 @@ const PROGRAMS = [
       "Cultivate Islamic manners, responsibility, and spiritual growth.",
     features: ["Akhlaq & Manners", "Discipline", "Spiritual Development"],
     duration: "Ongoing",
-    href: "/physical/programs/tarbiyah",
+    href: "/onsite/programs/tarbiyah",
   },
 ];
 
