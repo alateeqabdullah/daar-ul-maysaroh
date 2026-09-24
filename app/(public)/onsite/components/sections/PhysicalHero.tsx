@@ -297,7 +297,7 @@ export function PhysicalHero({ className }: PhysicalHeroProps) {
 
           {/* Premium CTA */}
           <div className="flex flex-col xs:flex-row flex-wrap gap-3 xs:gap-4 sm:gap-5 md:gap-6 pt-2 xs:pt-3 sm:pt-4 pb-6 xs:pb-7 sm:pb-8">
-            <Link href="/physical/admissions" className="w-full xs:w-auto">
+            <Link href="/onsite/admissions" className="w-full xs:w-auto">
               <motion.div
                 whileHover={!isMobile ? { scale: 1.02 } : {}}
                 whileTap={{ scale: 0.98 }}
@@ -443,7 +443,7 @@ export function PhysicalHero({ className }: PhysicalHeroProps) {
                                               width={100}
                                               height={100}
                                               alt="Al-Maysaroh Institute Logo"
-                                              className="w-20 h-20 md:w-24 md:h-24 bg-gradient-to-br from-purple-600 to-amber-500 rounded-full items-center justify-center shadow-2xl group-hover:scale-105 group-hover:rotate-3 transition-all duration-300"
+                                              className="w-20 h-20 md:w-24 md:h-24 bg-linear-to-br from-purple-600 to-amber-500 rounded-full items-center justify-center shadow-2xl group-hover:scale-105 group-hover:rotate-3 transition-all duration-300"
                                             />
                 {/* <Building2 className="w-10 h-10 md:w-12 md:h-12 text-white" /> */}
               </div>

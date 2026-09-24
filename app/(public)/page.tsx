@@ -21,8 +21,6 @@ import {
   Infinity,
   Quote,
   GraduationCap,
-  Star,
-  TrendingUp,
   Zap,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -159,7 +157,7 @@ const TESTIMONIALS = [
 ];
 
 const STATS = [
-  { value: "100+", label: "Active Students", icon: Users, color: "purple" },
+  { value: "50+", label: "Active Students", icon: Users, color: "purple" },
   { value: "94%", label: "Success Rate", icon: Award, color: "amber" },
   { value: "5+", label: "Countries", icon: Globe, color: "purple" },
   {
@@ -181,7 +179,7 @@ const getColorStyles = (color: string) => {
       border: "border-purple-200 dark:border-purple-800/30",
       bg: "bg-purple-100 dark:bg-purple-600/20",
       lightBg: "bg-purple-50 dark:bg-purple-950/40",
-      gradient:
+      linear:
         "from-purple-600 to-purple-700 dark:from-purple-500 dark:to-purple-600",
       glow: "shadow-purple-500/30 dark:shadow-purple-500/30",
       hover: "hover:bg-purple-50 dark:hover:bg-purple-600/10",
@@ -191,7 +189,7 @@ const getColorStyles = (color: string) => {
       border: "border-amber-200 dark:border-amber-800/30",
       bg: "bg-amber-100 dark:bg-amber-500/20",
       lightBg: "bg-amber-50 dark:bg-amber-950/40",
-      gradient:
+      linear:
         "from-amber-500 to-amber-600 dark:from-amber-500 dark:to-amber-600",
       glow: "shadow-amber-500/30 dark:shadow-amber-500/30",
       hover: "hover:bg-amber-50 dark:hover:bg-amber-500/10",
@@ -283,7 +281,7 @@ function PremiumCampusCard({
           <Button
             className={cn(
               "w-full font-black group/btn rounded-xl py-3 text-white",
-              `bg-gradient-to-r ${colors.gradient} shadow-lg ${colors.glow} hover:shadow-xl transition-all`,
+              `bg-linear-to-r ${colors.linear} shadow-lg ${colors.glow} hover:shadow-xl transition-all`,
             )}
           >
             {buttonText}
@@ -336,7 +334,7 @@ export default function LandingPage() {
 
               <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-black tracking-tighter leading-[1.1] mb-6 text-foreground">
                 Your Journey to
-                <span className="block bg-gradient-to-r from-purple-600 via-amber-600 to-purple-600 dark:from-purple-400 dark:via-amber-500 dark:to-purple-400 bg-clip-text text-transparent">
+                <span className="block bg-linear-to-r from-purple-600 via-amber-600 to-purple-600 dark:from-purple-400 dark:via-amber-500 dark:to-purple-400 bg-clip-text text-transparent">
                   Quranic Excellence
                 </span>
               </h1>
@@ -449,22 +447,22 @@ export default function LandingPage() {
           <Reveal>
             <div className="text-center max-w-2xl mx-auto mb-12 md:mb-16">
               <div className="flex items-center justify-center gap-3 mb-4">
-                <div className="w-12 h-0.5 bg-gradient-to-r from-transparent to-amber-500" />
+                <div className="w-12 h-0.5 bg-linear-to-r from-transparent to-amber-500" />
                 <span className="text-amber-600 dark:text-amber-500 font-black text-xs uppercase tracking-wider flex items-center gap-2">
                   <Compass className="w-4 h-4" />
                   Our Programs
                 </span>
-                <div className="w-12 h-0.5 bg-gradient-to-l from-transparent to-amber-500" />
+                <div className="w-12 h-0.5 bg-linear-to-l from-transparent to-amber-500" />
               </div>
               <h2 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tighter font-heading text-foreground mb-4">
                 Comprehensive{" "}
-                <span className="bg-gradient-to-r from-purple-600 to-amber-600 dark:from-purple-400 dark:to-amber-400 bg-clip-text text-transparent italic">
+                <span className="bg-linear-to-r from-purple-600 to-amber-600 dark:from-purple-400 dark:to-amber-400 bg-clip-text text-transparent italic">
                   Quranic Education
                 </span>
               </h2>
               <p className="text-lg text-muted-foreground">
-                Whether you're beginning your journey or seeking advanced
-                certification, we have a program tailored for you.
+              {`  Whether you're beginning your journey or seeking advanced
+                certification, we have a program tailored for you.`}
               </p>
             </div>
           </Reveal>
@@ -531,7 +529,7 @@ export default function LandingPage() {
           <Reveal delay={0.3}>
             <div className="text-center mt-12">
               <Link href="/online/courses">
-                <Button className="rounded-full px-8 py-4 font-black bg-gradient-to-r from-purple-600 to-purple-700 dark:from-purple-600 dark:to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white shadow-lg hover:shadow-xl transition-all duration-300 group">
+                <Button className="rounded-full px-8 py-4 font-black bg-linear-to-r from-purple-600 to-purple-700 dark:from-purple-600 dark:to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white shadow-lg hover:shadow-xl transition-all duration-300 group">
                   View All Programs
                   <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
                 </Button>
@@ -544,21 +542,21 @@ export default function LandingPage() {
       {/* ============================================================
            FEATURES SECTION
            ============================================================ */}
-      <section className="py-16 md:py-24 bg-gradient-to-b from-transparent via-purple-50/50 to-amber-50/50 dark:via-purple-600/5 dark:to-amber-600/5">
+      <section className="py-16 md:py-24 bg-linear-to-b from-transparent via-purple-50/50 to-amber-50/50 dark:via-purple-600/5 dark:to-amber-600/5">
         <div className="container mx-auto px-4 xs:px-5 sm:px-6">
           <Reveal>
             <div className="text-center max-w-2xl mx-auto mb-12 md:mb-16">
               <div className="flex items-center justify-center gap-3 mb-4">
-                <div className="w-12 h-0.5 bg-gradient-to-r from-transparent to-purple-500" />
+                <div className="w-12 h-0.5 bg-linear-to-r from-transparent to-purple-500" />
                 <span className="text-purple-700 dark:text-purple-400 font-black text-xs uppercase tracking-wider flex items-center gap-2">
                   <Target className="w-4 h-4" />
                   Why Choose Us
                 </span>
-                <div className="w-12 h-0.5 bg-gradient-to-l from-transparent to-purple-500" />
+                <div className="w-12 h-0.5 bg-linear-to-l from-transparent to-purple-500" />
               </div>
               <h2 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tighter font-heading text-foreground mb-4">
                 The{" "}
-                <span className="bg-gradient-to-r from-purple-600 to-amber-600 dark:from-purple-400 dark:to-amber-400 bg-clip-text text-transparent italic">
+                <span className="bg-linear-to-r from-purple-600 to-amber-600 dark:from-purple-400 dark:to-amber-400 bg-clip-text text-transparent italic">
                   Al-Maysaroh
                 </span>{" "}
                 Advantage
@@ -611,16 +609,16 @@ export default function LandingPage() {
           <Reveal>
             <div className="text-center max-w-2xl mx-auto mb-12 md:mb-16">
               <div className="flex items-center justify-center gap-3 mb-4">
-                <div className="w-12 h-0.5 bg-gradient-to-r from-transparent to-amber-500" />
+                <div className="w-12 h-0.5 bg-linear-to-r from-transparent to-amber-500" />
                 <span className="text-amber-600 dark:text-amber-500 font-black text-xs uppercase tracking-wider flex items-center gap-2">
                   <Quote className="w-4 h-4" />
                   Testimonials
                 </span>
-                <div className="w-12 h-0.5 bg-gradient-to-l from-transparent to-amber-500" />
+                <div className="w-12 h-0.5 bg-linear-to-l from-transparent to-amber-500" />
               </div>
               <h2 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tighter font-heading text-foreground mb-4">
                 What Our{" "}
-                <span className="bg-gradient-to-r from-purple-600 to-amber-600 dark:from-purple-400 dark:to-amber-400 bg-clip-text text-transparent italic">
+                <span className="bg-linear-to-r from-purple-600 to-amber-600 dark:from-purple-400 dark:to-amber-400 bg-clip-text text-transparent italic">
                   Students
                 </span>{" "}
                 Say
@@ -637,7 +635,7 @@ export default function LandingPage() {
                     {`"${testimonial.content}"`}
                   </p>
                   <div className="flex items-center gap-3 pt-3 border-t border-border">
-                    <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-600 to-amber-500 flex items-center justify-center text-white font-black text-sm">
+                    <div className="w-10 h-10 rounded-full bg-linear-to-br from-purple-600 to-amber-500 flex items-center justify-center text-white font-black text-sm">
                       {testimonial.initials}
                     </div>
                     <div>
@@ -659,25 +657,25 @@ export default function LandingPage() {
       {/* ============================================================
            ADDITIONAL DETAILS SECTION - NEW
            ============================================================ */}
-      <section className="py-16 md:py-24 bg-gradient-to-b from-transparent via-purple-50/50 to-amber-50/50 dark:via-purple-600/5 dark:to-amber-600/5">
+      <section className="py-16 md:py-24 bg-linear-to-b from-transparent via-purple-50/50 to-amber-50/50 dark:via-purple-600/5 dark:to-amber-600/5">
         <div className="container mx-auto px-4 xs:px-5 sm:px-6">
           <Reveal>
             <div className="text-center max-w-2xl mx-auto mb-12 md:mb-16">
               <div className="flex items-center justify-center gap-3 mb-4">
-                <div className="w-12 h-0.5 bg-gradient-to-r from-transparent to-purple-500" />
+                <div className="w-12 h-0.5 bg-linear-to-r from-transparent to-purple-500" />
                 <span className="text-purple-700 dark:text-purple-400 font-black text-xs uppercase tracking-wider flex items-center gap-2">
                   <Zap className="w-4 h-4" />
                   Why Al-Maysaroh
                 </span>
-                <div className="w-12 h-0.5 bg-gradient-to-l from-transparent to-purple-500" />
+                <div className="w-12 h-0.5 bg-linear-to-l from-transparent to-purple-500" />
               </div>
               <h2 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tighter font-heading text-foreground mb-4">
                 Built on{" "}
-                <span className="bg-gradient-to-r from-purple-600 to-amber-600 dark:from-purple-400 dark:to-amber-400 bg-clip-text text-transparent italic">
+                <span className="bg-linear-to-r from-purple-600 to-amber-600 dark:from-purple-400 dark:to-amber-400 bg-clip-text text-transparent italic">
                   Tradition
                 </span>
                 , Powered by{" "}
-                <span className="bg-gradient-to-r from-amber-600 to-purple-600 dark:from-amber-400 dark:to-purple-400 bg-clip-text text-transparent italic">
+                <span className="bg-linear-to-r from-amber-600 to-purple-600 dark:from-amber-400 dark:to-purple-400 bg-clip-text text-transparent italic">
                   Innovation
                 </span>
               </h2>
@@ -742,7 +740,7 @@ export default function LandingPage() {
       {/* ============================================================
            CTA SECTION
            ============================================================ */}
-      <section className="py-16 md:py-24 bg-gradient-to-br from-purple-600/10 via-purple-700/10 to-amber-600/10 dark:from-purple-600/20 dark:via-purple-700/20 dark:to-amber-600/20">
+      <section className="py-16 md:py-24 bg-linear-to-br from-purple-600/10 via-purple-700/10 to-amber-600/10 dark:from-purple-600/20 dark:via-purple-700/20 dark:to-amber-600/20">
         <div className="container mx-auto px-4 xs:px-5 sm:px-6">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -750,7 +748,7 @@ export default function LandingPage() {
             viewport={{ once: true }}
             className="max-w-3xl mx-auto text-center"
           >
-            <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br from-purple-600 to-amber-500 mb-6 shadow-xl shadow-purple-500/30">
+            <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-linear-to-br from-purple-600 to-amber-500 mb-6 shadow-xl shadow-purple-500/30">
               <Sparkles className="w-10 h-10 text-white" />
             </div>
 
@@ -765,7 +763,7 @@ export default function LandingPage() {
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Link href="/online">
-                <Button className="rounded-full px-8 py-4 font-black bg-gradient-to-r from-purple-600 to-purple-700 dark:from-purple-600 dark:to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white shadow-lg hover:shadow-xl transition-all group">
+                <Button className="rounded-full px-8 py-4 font-black bg-linear-to-r from-purple-600 to-purple-700 dark:from-purple-600 dark:to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white shadow-lg hover:shadow-xl transition-all group">
                   Start Online
                   <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
                 </Button>
@@ -804,7 +802,7 @@ export default function LandingPage() {
             </span>
             <span className="flex items-center gap-1.5">
               <Users className="w-3.5 h-3.5 text-purple-600 dark:text-purple-400" />
-              500+ Students
+              50+ Students
             </span>
             <span className="flex items-center gap-1.5">
               <Globe className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
