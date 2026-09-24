@@ -14,7 +14,7 @@ import {
   Sparkles,
   Award,
   ChevronRight,
-  Star,
+
 } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -104,14 +104,14 @@ const getColorStyles = (color: string) => {
       text: "text-purple-600 dark:text-purple-400",
       border: "border-purple-200 dark:border-purple-800",
       bg: "bg-purple-100 dark:bg-purple-950/40",
-      gradient: "from-purple-600 to-purple-700",
+      linear: "from-purple-600 to-purple-700",
       glow: "shadow-purple-500/20",
     },
     amber: {
       text: "text-amber-600 dark:text-amber-400",
       border: "border-amber-200 dark:border-amber-800",
       bg: "bg-amber-100 dark:bg-amber-950/40",
-      gradient: "from-amber-500 to-amber-600",
+      linear: "from-amber-500 to-amber-600",
       glow: "shadow-amber-500/20",
     },
   };
@@ -132,7 +132,7 @@ export function PhysicalPrograms() {
         {/* Premium Header */}
         <Reveal>
           <div className="text-center max-w-3xl mx-auto mb-14 md:mb-18">
-            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-gradient-to-r from-purple-100 to-amber-100 dark:from-purple-900/30 dark:to-amber-900/30 border border-purple-200 dark:border-purple-800 mb-5">
+            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-linear-to-r from-purple-100 to-amber-100 dark:from-purple-900/30 dark:to-amber-900/30 border border-purple-200 dark:border-purple-800 mb-5">
               <Award className="w-4 h-4 text-amber-500" />
               <span className="text-[10px] font-black uppercase tracking-wider text-purple-700 dark:text-purple-400">
                 Academic Excellence
@@ -140,7 +140,7 @@ export function PhysicalPrograms() {
             </div>
             <h2 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tighter font-heading leading-[1.1] mb-4">
               Our{" "}
-              <span className="bg-gradient-to-r from-purple-600 via-purple-700 to-amber-600 bg-clip-text text-transparent">
+              <span className="bg-linear-to-r from-purple-600 via-purple-700 to-amber-600 bg-clip-text text-transparent">
                 Curriculum
               </span>
             </h2>
@@ -164,9 +164,9 @@ export function PhysicalPrograms() {
                     transition={{ type: "spring", stiffness: 400, damping: 25 }}
                     className={`group relative bg-card rounded-2xl border-2 ${colors.border} hover:border-${program.color === "purple" ? "purple" : "amber"}-400 transition-all duration-500 p-7 h-full flex flex-col shadow-lg hover:shadow-2xl cursor-pointer overflow-hidden`}
                   >
-                    {/* Premium Gradient Overlay */}
+                    {/* Premium linear Overlay */}
                     <div
-                      className={`absolute inset-0 bg-gradient-to-br ${colors.gradient} opacity-0 group-hover:opacity-[0.04] transition-opacity duration-700`}
+                      className={`absolute inset-0 bg-linear-to-br ${colors.linear} opacity-0 group-hover:opacity-[0.04] transition-opacity duration-700`}
                     />
 
                     {/* Premium Glow */}
@@ -176,7 +176,7 @@ export function PhysicalPrograms() {
 
                     {/* Premium Corner Accent */}
                     <div
-                      className={`absolute top-0 right-0 w-20 h-20 bg-gradient-to-bl ${colors.gradient} opacity-0 group-hover:opacity-5 transition-opacity duration-500 rounded-bl-full`}
+                      className={`absolute top-0 right-0 w-20 h-20 bg-linear-to-bl ${colors.linear} opacity-0 group-hover:opacity-5 transition-opacity duration-500 rounded-bl-full`}
                     />
 
                     {/* Number Badge - Premium */}
@@ -242,7 +242,7 @@ export function PhysicalPrograms() {
 
                     {/* Premium Decorative Line */}
                     <div
-                      className={`absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r ${colors.gradient} scale-x-0 group-hover:scale-x-100 transition-transform duration-700 origin-left`}
+                      className={`absolute bottom-0 left-0 right-0 h-0.5 bg-linear-to-r ${colors.linear} scale-x-0 group-hover:scale-x-100 transition-transform duration-700 origin-left`}
                     />
                   </motion.div>
                 </Link>
@@ -254,15 +254,15 @@ export function PhysicalPrograms() {
         {/* Premium Bottom CTA */}
         <Reveal delay={0.3}>
           <div className="mt-14 text-center">
-            <div className="inline-flex flex-col sm:flex-row items-center gap-4 px-6 py-4 rounded-2xl bg-gradient-to-r from-purple-50/30 to-amber-50/30 dark:from-purple-950/20 dark:to-amber-950/20 border border-purple-200 dark:border-purple-800 shadow-sm">
+            <div className="inline-flex flex-col sm:flex-row items-center gap-4 px-6 py-4 rounded-2xl bg-linear-to-r from-purple-50/30 to-amber-50/30 dark:from-purple-950/20 dark:to-amber-950/20 border border-purple-200 dark:border-purple-800 shadow-sm">
               <div className="flex items-center gap-2">
                 <Sparkles className="w-5 h-5 text-amber-500" />
                 <span className="text-sm font-medium text-muted-foreground">
                   All programs include Ijazah certification and authentic Sanad
                 </span>
               </div>
-              <Link href="/physical/admissions">
-                <Button className="rounded-full px-6 py-2 font-black text-xs bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white shadow-md hover:shadow-lg transition-all">
+              <Link href="/onsite/admissions">
+                <Button className="rounded-full px-6 py-2 font-black text-xs bg-linear-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white shadow-md hover:shadow-lg transition-all">
                   Start Your Journey
                   <ChevronRight className="w-3.5 h-3.5 ml-1.5" />
                 </Button>

@@ -5,17 +5,12 @@ import { Reveal } from "@/components/shared/section-animation";
 import { motion } from "framer-motion";
 import {
   Calendar,
-  Clock,
   Sun,
   Moon,
-  Users,
   Sparkles,
   Check,
   ArrowRight,
-  Building2,
-  Home,
   Zap,
-  Award,
   Crown,
 } from "lucide-react";
 import Link from "next/link";
@@ -117,7 +112,7 @@ const getColorStyles = (color: string) => {
       text: "text-purple-600 dark:text-purple-400",
       border: "border-purple-200 dark:border-purple-800",
       bg: "bg-purple-100 dark:bg-purple-950/40",
-      gradient: "from-purple-600 to-purple-700",
+      linear: "from-purple-600 to-purple-700",
       light: "bg-purple-50/30 dark:bg-purple-950/20",
       glow: "shadow-purple-500/20",
     },
@@ -125,7 +120,7 @@ const getColorStyles = (color: string) => {
       text: "text-amber-600 dark:text-amber-400",
       border: "border-amber-200 dark:border-amber-800",
       bg: "bg-amber-100 dark:bg-amber-950/40",
-      gradient: "from-amber-500 to-amber-600",
+      linear: "from-amber-500 to-amber-600",
       light: "bg-amber-50/30 dark:bg-amber-950/20",
       glow: "shadow-amber-500/20",
     },
@@ -141,7 +136,7 @@ export function PhysicalAttendance() {
   );
 
   return (
-    <section className="py-16 sm:py-20 md:py-24 lg:py-28 bg-gradient-to-b from-background via-purple-50/5 to-amber-50/5 relative overflow-hidden">
+    <section className="py-16 sm:py-20 md:py-24 lg:py-28 bg-linear-to-b from-background via-purple-50/5 to-amber-50/5 relative overflow-hidden">
       {/* Background */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-purple-600/5 rounded-full blur-3xl" />
@@ -160,7 +155,7 @@ export function PhysicalAttendance() {
             </div>
             <h2 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tighter font-heading leading-[1.1] mb-4">
               Choose Your{" "}
-              <span className="bg-gradient-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent italic">
+              <span className="bg-linear-to-r from-purple-600 to-amber-600 bg-clip-text text-transparent italic">
                 Schedule
               </span>
             </h2>
@@ -179,7 +174,7 @@ export function PhysicalAttendance() {
               className={cn(
                 "px-6 py-2.5 rounded-lg font-black text-sm transition-all",
                 activeType === "all"
-                  ? "bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-lg"
+                  ? "bg-linear-to-r from-purple-600 to-purple-700 text-white shadow-lg"
                   : "text-muted-foreground hover:text-purple-600"
               )}
             >
@@ -190,7 +185,7 @@ export function PhysicalAttendance() {
               className={cn(
                 "px-6 py-2.5 rounded-lg font-black text-sm transition-all",
                 activeType === "day"
-                  ? "bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-lg"
+                  ? "bg-linear-to-r from-purple-600 to-purple-700 text-white shadow-lg"
                   : "text-muted-foreground hover:text-purple-600"
               )}
             >
@@ -202,7 +197,7 @@ export function PhysicalAttendance() {
               className={cn(
                 "px-6 py-2.5 rounded-lg font-black text-sm transition-all",
                 activeType === "boarding"
-                  ? "bg-gradient-to-r from-purple-600 to-purple-700 text-white shadow-lg"
+                  ? "bg-linear-to-r from-purple-600 to-purple-700 text-white shadow-lg"
                   : "text-muted-foreground hover:text-purple-600"
               )}
             >
@@ -226,8 +221,8 @@ export function PhysicalAttendance() {
                   whileHover={{ y: -6 }}
                   className={`group relative bg-card rounded-2xl border-2 ${colors.border} hover:border-${option.color === 'purple' ? 'purple' : 'amber'}-400 transition-all duration-500 p-6 md:p-8 shadow-lg hover:shadow-2xl overflow-hidden`}
                 >
-                  {/* Gradient Overlay */}
-                  <div className={`absolute inset-0 bg-gradient-to-br ${colors.gradient} opacity-0 group-hover:opacity-[0.04] transition-opacity duration-700`} />
+                  {/* linear Overlay */}
+                  <div className={`absolute inset-0 bg-linear-to-br ${colors.linear} opacity-0 group-hover:opacity-[0.04] transition-opacity duration-700`} />
                   
                   {/* Glow */}
                   <div className={`absolute -inset-2 ${colors.glow} opacity-0 group-hover:opacity-100 blur-xl transition-opacity duration-700`} />
@@ -235,22 +230,22 @@ export function PhysicalAttendance() {
                   {/* Badge */}
                   <div className="absolute top-4 right-4">
                     {isPopular && (
-                      <span className="px-3 py-1 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 text-white text-[8px] font-black uppercase tracking-wider shadow-md">
+                      <span className="px-3 py-1 rounded-full bg-linear-to-r from-amber-500 to-amber-600 text-white text-[8px] font-black uppercase tracking-wider shadow-md">
                         Most Popular
                       </span>
                     )}
                     {isPremium && (
-                      <span className="px-3 py-1 rounded-full bg-gradient-to-r from-purple-600 to-purple-700 text-white text-[8px] font-black uppercase tracking-wider shadow-md">
+                      <span className="px-3 py-1 rounded-full bg-linear-to-r from-purple-600 to-purple-700 text-white text-[8px] font-black uppercase tracking-wider shadow-md">
                         Premium
                       </span>
                     )}
                     {option.badge === "Weekend Only" && (
-                      <span className="px-3 py-1 rounded-full bg-gradient-to-r from-amber-500 to-amber-600 text-white text-[8px] font-black uppercase tracking-wider shadow-md">
+                      <span className="px-3 py-1 rounded-full bg-linear-to-r from-amber-500 to-amber-600 text-white text-[8px] font-black uppercase tracking-wider shadow-md">
                         Weekend Only
                       </span>
                     )}
                     {option.badge === "Weekend Intensive" && (
-                      <span className="px-3 py-1 rounded-full bg-gradient-to-r from-purple-600 to-purple-700 text-white text-[8px] font-black uppercase tracking-wider shadow-md">
+                      <span className="px-3 py-1 rounded-full bg-linear-to-r from-purple-600 to-purple-700 text-white text-[8px] font-black uppercase tracking-wider shadow-md">
                         Weekend Intensive
                       </span>
                     )}
@@ -286,15 +281,15 @@ export function PhysicalAttendance() {
                   </div>
 
                   {/* CTA */}
-                  <Link href="/physical/admissions">
-                    <Button className={`w-full rounded-xl py-3 font-black text-sm bg-gradient-to-r ${colors.gradient} hover:from-${option.color === 'purple' ? 'purple-700' : 'amber-600'} hover:to-${option.color === 'purple' ? 'purple-800' : 'amber-700'} text-white shadow-md hover:shadow-lg transition-all group/btn`}>
+                  <Link href="/onsite/admissions">
+                    <Button className={`w-full rounded-xl py-3 font-black text-sm bg-linear-to-r ${colors.linear} hover:from-${option.color === 'purple' ? 'purple-700' : 'amber-600'} hover:to-${option.color === 'purple' ? 'purple-800' : 'amber-700'} text-white shadow-md hover:shadow-lg transition-all group/btn`}>
                       Apply Now
                       <ArrowRight className="w-4 h-4 ml-2 group-hover/btn:translate-x-1 transition-transform" />
                     </Button>
                   </Link>
 
                   {/* Decorative Line */}
-                  <div className={`absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r ${colors.gradient} scale-x-0 group-hover:scale-x-100 transition-transform duration-700 origin-left`} />
+                  <div className={`absolute bottom-0 left-0 right-0 h-0.5 bg-linear-to-r ${colors.linear} scale-x-0 group-hover:scale-x-100 transition-transform duration-700 origin-left`} />
                 </motion.div>
               </Reveal>
             );
@@ -335,7 +330,7 @@ export function PhysicalAttendance() {
         {/* Bottom CTA */}
         <Reveal delay={0.4}>
           <div className="mt-12 text-center">
-            <div className="inline-flex items-center gap-3 px-5 py-3 rounded-full bg-gradient-to-r from-purple-50/30 to-amber-50/30 dark:from-purple-950/20 dark:to-amber-950/20 border border-purple-200 dark:border-purple-800">
+            <div className="inline-flex items-center gap-3 px-5 py-3 rounded-full bg-linear-to-r from-purple-50/30 to-amber-50/30 dark:from-purple-950/20 dark:to-amber-950/20 border border-purple-200 dark:border-purple-800">
               <Sparkles className="w-4 h-4 text-amber-500" />
               <span className="text-xs font-medium text-muted-foreground">
                 Need a custom schedule? Contact us to discuss your needs
