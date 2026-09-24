@@ -1,7 +1,6 @@
 // app/(marketing)/onsite/admissions/onsite-admissions-client.tsx
 "use client";
 
-import { Reveal } from "@/components/shared/section-animation";
 import { Button } from "@/components/ui/button";
 import {
   ArrowRight,
@@ -17,12 +16,7 @@ import {
   Send,
   Shield,
   Users,
-  Sparkles,
-  ChevronRight,
-  Building2,
-  Calendar,
-  Target,
-  Award,
+
 } from "lucide-react";
 import Link from "next/link";
 import { FormEvent, useState, useRef } from "react";
@@ -69,7 +63,7 @@ const COLOR_STYLES = {
     border: "border-purple-200 dark:border-purple-800/30",
     bg: "bg-purple-100 dark:bg-purple-600/20",
     lightBg: "bg-purple-50 dark:bg-purple-950/40",
-    gradient:
+    linear:
       "from-purple-600 to-purple-700 dark:from-purple-500 dark:to-purple-600",
     glow: "shadow-purple-500/30 dark:shadow-purple-500/30",
     hover: "hover:bg-purple-50 dark:hover:bg-purple-600/10",
@@ -79,7 +73,7 @@ const COLOR_STYLES = {
     border: "border-amber-200 dark:border-amber-800/30",
     bg: "bg-amber-100 dark:bg-amber-500/20",
     lightBg: "bg-amber-50 dark:bg-amber-950/40",
-    gradient:
+    linear:
       "from-amber-500 to-amber-600 dark:from-amber-500 dark:to-amber-600",
     glow: "shadow-amber-500/30 dark:shadow-amber-500/30",
     hover: "hover:bg-amber-50 dark:hover:bg-amber-500/10",
@@ -251,7 +245,7 @@ export default function OnsiteAdmissionsClient() {
             </div>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tighter font-heading leading-[1.1] text-foreground">
               Join{" "}
-              <span className="bg-gradient-to-r from-purple-600 to-amber-600 dark:from-purple-400 dark:to-amber-400 bg-clip-text text-transparent">
+              <span className="bg-linear-to-r from-purple-600 to-amber-600 dark:from-purple-400 dark:to-amber-400 bg-clip-text text-transparent">
                 Daar-ul-Maysaroh
               </span>
             </h1>
@@ -306,12 +300,12 @@ export default function OnsiteAdmissionsClient() {
               transition={{ duration: 0.6 }}
               className="flex items-center justify-center gap-3 mb-8"
             >
-              <div className="w-12 h-0.5 bg-gradient-to-r from-transparent to-purple-500" />
+              <div className="w-12 h-0.5 bg-linear-to-r from-transparent to-purple-500" />
               <span className="text-purple-700 dark:text-purple-400 font-black text-xs uppercase tracking-wider flex items-center gap-2">
                 <FileText className="w-3 h-3" />
                 Application Form
               </span>
-              <div className="w-12 h-0.5 bg-gradient-to-l from-transparent to-purple-500" />
+              <div className="w-12 h-0.5 bg-linear-to-l from-transparent to-purple-500" />
             </motion.div>
 
             <motion.div
@@ -327,7 +321,7 @@ export default function OnsiteAdmissionsClient() {
                   animate={{ opacity: 1, scale: 1 }}
                   className="mb-6 p-4 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400 text-sm flex items-center gap-3"
                 >
-                  <CheckCircle2 className="w-5 h-5 flex-shrink-0" />
+                  <CheckCircle2 className="w-5 h-5 shrink-0" />
                   {submitStatus.message}
                 </motion.div>
               )}
@@ -337,7 +331,7 @@ export default function OnsiteAdmissionsClient() {
                   animate={{ opacity: 1, scale: 1 }}
                   className="mb-6 p-4 rounded-xl bg-red-500/10 border border-red-500/20 text-red-600 dark:text-red-400 text-sm flex items-center gap-3"
                 >
-                  <Shield className="w-5 h-5 flex-shrink-0" />
+                  <Shield className="w-5 h-5 shrink-0" />
                   {submitStatus.message}
                 </motion.div>
               )}
@@ -346,7 +340,7 @@ export default function OnsiteAdmissionsClient() {
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div className="space-y-1.5">
                     <label className="text-xs font-black uppercase tracking-wider text-muted-foreground">
-                      Student's Full Name{" "}
+                     {`Student's Full Name`}{" "}
                       <span className="text-amber-500">*</span>
                     </label>
                     <input
@@ -408,7 +402,7 @@ export default function OnsiteAdmissionsClient() {
                 <div className="grid sm:grid-cols-2 gap-4">
                   <div className="space-y-1.5">
                     <label className="text-xs font-black uppercase tracking-wider text-muted-foreground">
-                      Student's Age <span className="text-amber-500">*</span>
+                      {`Student's Age `}<span className="text-amber-500">*</span>
                     </label>
                     <input
                       name="age"
@@ -463,7 +457,7 @@ export default function OnsiteAdmissionsClient() {
                 <Button
                   type="submit"
                   disabled={isSubmitting}
-                  className="w-full h-12 rounded-xl font-black bg-gradient-to-r from-purple-600 to-amber-500 hover:from-purple-700 hover:to-amber-600 text-white shadow-2xl shadow-purple-500/30 hover:shadow-purple-500/50 transition-all duration-300 group disabled:opacity-70 disabled:cursor-not-allowed relative overflow-hidden"
+                  className="w-full h-12 rounded-xl font-black bg-linear-to-r from-purple-600 to-amber-500 hover:from-purple-700 hover:to-amber-600 text-white shadow-2xl shadow-purple-500/30 hover:shadow-purple-500/50 transition-all duration-300 group disabled:opacity-70 disabled:cursor-not-allowed relative overflow-hidden"
                 >
                   {isSubmitting ? (
                     <>
@@ -477,7 +471,7 @@ export default function OnsiteAdmissionsClient() {
                         <Send className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
                       </span>
                       <motion.div
-                        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -skew-x-12"
+                        className="absolute inset-0 bg-linear-to-r from-transparent via-white/20 to-transparent -skew-x-12"
                         animate={{ x: ["-100%", "200%"] }}
                         transition={{
                           duration: 3,
@@ -491,7 +485,7 @@ export default function OnsiteAdmissionsClient() {
 
                 <p className="text-center text-xs text-muted-foreground flex items-center justify-center gap-1">
                   <Shield className="w-3 h-3 text-purple-600 dark:text-purple-400" />
-                  Your information is secure. We'll contact you within 24 hours.
+                  {`Your information is secure. We'll contact you within 24 hours.`}
                 </p>
               </form>
             </motion.div>
@@ -549,14 +543,14 @@ export default function OnsiteAdmissionsClient() {
             whileInView={{ opacity: 1, scale: 1 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8 }}
-            className="max-w-3xl mx-auto text-center p-8 md:p-10 rounded-3xl bg-gradient-to-br from-purple-50/30 to-amber-50/30 dark:from-purple-600/10 dark:to-amber-500/10 border border-purple-200 dark:border-purple-800/30"
+            className="max-w-3xl mx-auto text-center p-8 md:p-10 rounded-3xl bg-linear-to-br from-purple-50/30 to-amber-50/30 dark:from-purple-600/10 dark:to-amber-500/10 border border-purple-200 dark:border-purple-800/30"
           >
             <motion.div
               initial={{ scale: 0 }}
               whileInView={{ scale: 1 }}
               viewport={{ once: true }}
               transition={{ type: "spring", stiffness: 200, delay: 0.2 }}
-              className="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-600 to-amber-500 flex items-center justify-center mx-auto mb-4 shadow-xl shadow-purple-500/30"
+              className="w-16 h-16 rounded-2xl bg-linear-to-br from-purple-600 to-amber-500 flex items-center justify-center mx-auto mb-4 shadow-xl shadow-purple-500/30"
             >
               <Rocket className="w-8 h-8 text-white" />
             </motion.div>
@@ -567,7 +561,7 @@ export default function OnsiteAdmissionsClient() {
               Join Daar-ul-Maysaroh and begin your path to Quranic excellence.
             </p>
             <Link href="/onsite/visit">
-              <Button className="rounded-full px-8 py-4 font-black bg-gradient-to-r from-purple-600 to-amber-500 hover:from-purple-700 hover:to-amber-600 text-white shadow-2xl shadow-purple-500/30 hover:shadow-purple-500/50 transition-all duration-300 group">
+              <Button className="rounded-full px-8 py-4 font-black bg-linear-to-r from-purple-600 to-amber-500 hover:from-purple-700 hover:to-amber-600 text-white shadow-2xl shadow-purple-500/30 hover:shadow-purple-500/50 transition-all duration-300 group">
                 Visit Our Campus
                 <ArrowRight className="w-4 h-4 ml-2 inline group-hover:translate-x-1 transition-transform" />
               </Button>

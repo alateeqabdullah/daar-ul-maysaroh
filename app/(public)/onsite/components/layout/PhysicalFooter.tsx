@@ -16,12 +16,9 @@ import {
   Clock,
   Users,
   Globe,
-  Sparkles,
   ChevronRight,
   Building2,
 } from "lucide-react";
-import Image from "next/image";
-import Logo from "@/public/logo.png";
 import { motion } from "framer-motion";
 
 const FOOTER_LINKS = {
@@ -108,8 +105,8 @@ export function OnsiteFooter() {
             <div className="lg:col-span-2 space-y-5">
               <Link href="/onsite" className="flex items-center gap-3 group">
                 <div className="relative">
-                  <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-amber-500 rounded-2xl blur-md opacity-50 group-hover:opacity-100 transition-opacity" />
-                  <div className="relative w-10 h-10 md:w-12 md:h-12 bg-gradient-to-br from-purple-600 to-amber-500 rounded-2xl flex items-center justify-center shadow-2xl group-hover:scale-105 group-hover:rotate-3 transition-all duration-300">
+                  <div className="absolute inset-0 bg-linear-to-r from-purple-600 to-amber-500 rounded-2xl blur-md opacity-50 group-hover:opacity-100 transition-opacity" />
+                  <div className="relative w-10 h-10 md:w-12 md:h-12 bg-linear-to-br from-purple-600 to-amber-500 rounded-2xl flex items-center justify-center shadow-2xl group-hover:scale-105 group-hover:rotate-3 transition-all duration-300">
                     <Building2 className="h-5 w-5 md:h-6 md:w-6 text-white" />
                   </div>
                 </div>
@@ -298,7 +295,7 @@ export function OnsiteFooter() {
         </div>
 
         {/* Decorative Line */}
-        <div className="h-0.5 bg-gradient-to-r from-transparent via-amber-500/30 to-transparent w-1/2 mx-auto" />
+        <div className="h-0.5 bg-linear-to-r from-transparent via-amber-500/30 to-transparent w-1/2 mx-auto" />
       </div>
     </footer>
   );

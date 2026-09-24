@@ -678,6 +678,46 @@ const DAY_SCHEDULE = [
   { day: "Friday", activity: "Jumu'ah Prep & Review", time: "Flexible", icon: Heart },
 ];
 
+
+const DAY_FEATURES = [
+  {
+    icon: Sun,
+    label: "Weekend Intensive",
+    description: "Sat-Sun: 9:00 AM - 4:30 PM",
+    color: "amber",
+  },
+  {
+    icon: Clock,
+    label: "Weekday Evening",
+    description: "Mon-Wed: 4:30 PM - 6:30 PM",
+    color: "purple",
+  },
+  {
+    icon: Users,
+    label: "Community Learning",
+    description: "Study alongside boarding students",
+    color: "amber",
+  },
+  {
+    icon: BookOpen,
+    label: "All Core Subjects",
+    description: "Tahfeedh, Tajweed, Islamic Studies, Arabic",
+    color: "purple",
+  },
+  {
+    icon: Zap,
+    label: "Flexible Options",
+    description: "Custom schedules available upon request",
+    color: "amber",
+  },
+  {
+    icon: Target,
+    label: "Progress Tracking",
+    description: "Regular assessments and feedback",
+    color: "purple",
+  },
+];
+
 const FLEXIBLE_OPTIONS = [
   {
     icon: Compass,
