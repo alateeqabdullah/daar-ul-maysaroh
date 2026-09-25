@@ -1,113 +1,14 @@
-// "use client";
-
-// import { motion } from "framer-motion";
-// import { BookOpen, Sparkles } from "lucide-react";
-
-// export default function LoadingPage() {
-//   return (
-//     <div className="min-h-screen bg-background flex items-center justify-center">
-//       <div className="text-center space-y-8">
-//         {/* Animated Logo */}
-//         <motion.div
-//           initial={{ scale: 0.8, opacity: 0 }}
-//           animate={{ scale: 1, opacity: 1 }}
-//           transition={{ duration: 0.5 }}
-//           className="relative"
-//         >
-//           <div className="w-20 h-20 sm:w-24 sm:h-24 mx-auto rounded-2xl bg-gradient-to-br from-primary-700 to-primary-800 flex items-center justify-center shadow-2xl">
-//             <BookOpen className="w-10 h-10 sm:w-12 sm:h-12 text-white" />
-//           </div>
-
-//           {/* Sparkle Animation */}
-//           <motion.div
-//             animate={{
-//               scale: [1, 1.2, 1],
-//               rotate: [0, 180, 360],
-//               opacity: [0.5, 1, 0.5],
-//             }}
-//             transition={{ duration: 2, repeat: Infinity }}
-//             className="absolute -top-4 -right-4"
-//           >
-//             <Sparkles className="w-6 h-6 text-primary-700" />
-//           </motion.div>
-//         </motion.div>
-
-//         {/* Loading Text */}
-//         <div className="space-y-4">
-//           <motion.h2
-//             initial={{ opacity: 0, y: 20 }}
-//             animate={{ opacity: 1, y: 0 }}
-//             transition={{ delay: 0.2 }}
-//             className="text-2xl sm:text-3xl font-black tracking-tighter font-heading"
-//           >
-//             <span className="text-primary-700 italic">Loading</span> Sacred
-//             Knowledge
-//           </motion.h2>
-
-//           {/* Progress Bar */}
-//           <div className="w-48 sm:w-64 mx-auto">
-//             <div className="h-1 bg-muted rounded-full overflow-hidden">
-//               <motion.div
-//                 initial={{ x: "-100%" }}
-//                 animate={{ x: "100%" }}
-//                 transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
-//                 className="h-full w-1/2 bg-gradient-to-r from-primary-700 to-primary-500 rounded-full"
-//               />
-//             </div>
-//           </div>
-
-//           {/* Loading Dots */}
-//           <div className="flex justify-center gap-2 pt-4">
-//             {[0, 1, 2].map((i) => (
-//               <motion.div
-//                 key={i}
-//                 animate={{ y: [0, -10, 0] }}
-//                 transition={{ duration: 0.6, delay: i * 0.2, repeat: Infinity }}
-//                 className="w-2 h-2 rounded-full bg-primary-700"
-//               />
-//             ))}
-//           </div>
-//         </div>
-
-//         {/* Quranic Quote */}
-//         <motion.p
-//           initial={{ opacity: 0 }}
-//           animate={{ opacity: 1 }}
-//           transition={{ delay: 0.4 }}
-//           className="text-xs sm:text-sm text-muted-foreground max-w-xs mx-auto pt-8"
-//         >
-//          {` "And We have certainly made the Quran easy for remembrance, so is
-//           there any who will remember?"`}
-//           <br />
-//           <span className="text-primary-700 font-black text-[10px] mt-2 block">
-//             Surah Al-Qamar (54:17)
-//           </span>
-//         </motion.p>
-//       </div>
-//     </div>
-//   );
-// }
-
-
-
-
-
-
-
-
-
-
-
 // app/loading.tsx
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import Logo from "@/public/logo.png";
 
 export default function Loading() {
   const [progress, setProgress] = useState(0);
+  const reduceMotion = useReducedMotion();
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -120,21 +21,57 @@ export default function Loading() {
     return () => clearInterval(interval);
   }, []);
 
+  const isReady = progress === 100;
+
   return (
-    <div className="fixed inset-0 bg-white dark:bg-black z-50 flex flex-col items-center justify-center">
-      <div className="text-center space-y-6 px-4">
-        {/* Logo */}
+    <div
+      className="fixed inset-0 z-50 flex flex-col items-center justify-center overflow-hidden"
+      style={{
+        // Warm material — ivory in light, deep warm ink in dark
+        background:
+          "radial-gradient(120% 100% at 50% 50%, hsl(40 30% 99%) 0%, hsl(40 25% 97%) 60%, hsl(40 20% 95%) 100%)",
+      }}
+    >
+      {/* Warm vignette — the material detail */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            "radial-gradient(80% 60% at 50% 50%, transparent 40%, rgba(212,175,55,0.06) 100%)",
+        }}
+      />
+
+      {/* Dark mode override — deep warm ink */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 hidden dark:block"
+        style={{
+          background:
+            "radial-gradient(120% 100% at 50% 50%, hsl(260 25% 8%) 0%, hsl(260 22% 6%) 60%, hsl(260 20% 5%) 100%)",
+        }}
+      />
+
+      <div className="relative space-y-8 px-6 text-center">
+        {/* ---------- Logo ---------- */}
         <motion.div
-          initial={{ opacity: 0, scale: 0.96 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.5, ease: [0.23, 1, 0.32, 1] }}
+          initial={reduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.96 }}
+          animate={reduceMotion ? { opacity: 1 } : { opacity: 1, scale: 1 }}
+          transition={{ duration: 0.6, ease: [0.23, 1, 0.32, 1] }}
         >
           <div className="relative inline-block">
-            <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-amber-500 blur-2xl opacity-20" />
-            <div className="relative w-16 h-16 sm:w-20 sm:h-20 mx-auto">
+            {/* Soft warm halo — gold, not purple */}
+            <div
+              className="absolute inset-0 opacity-25 blur-2xl"
+              style={{
+                background:
+                  "radial-gradient(circle at 50% 50%, rgba(212,175,55,0.5), transparent 70%)",
+              }}
+            />
+            <div className="relative mx-auto h-16 w-16 sm:h-20 sm:w-20">
               <Image
                 src={Logo}
-                alt="Al-Maysaroh"
+                alt="Al-Maysaroh Institute"
                 fill
                 className="object-contain"
                 priority
@@ -143,38 +80,100 @@ export default function Loading() {
           </div>
         </motion.div>
 
-        {/* Wordmark - optional, only if your logo doesn't have text */}
+        {/* ---------- Wordmark: Arabic hero + English footnote ---------- */}
         <motion.div
-          initial={{ opacity: 0, y: 8 }}
+          initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.15, duration: 0.5 }}
+          transition={{ delay: 0.2, duration: 0.7, ease: [0.23, 1, 0.32, 1] }}
+          className="flex flex-col items-center gap-5"
         >
-          <span className="text-base sm:text-lg font-light tracking-[0.3em] text-muted-foreground uppercase">
-            Al-Maysaroh
+          {/* The Arabic wordmark — hero of the screen */}
+          <h1
+            dir="rtl"
+            lang="ar"
+            className="font-quran text-[52px] font-bold leading-[1.15] tracking-tight sm:text-[64px]"
+            style={{
+              // Warm gold fill — like foil on paper
+              backgroundImage:
+                "linear-gradient(180deg, #e5c464 0%, #d4af37 45%, #b8942a 100%)",
+              WebkitBackgroundClip: "text",
+              backgroundClip: "text",
+              color: "transparent",
+            }}
+          >
+            دار الميسرة
+          </h1>
+
+          {/* Single ornament — a short gold rule */}
+          <motion.span
+            aria-hidden
+            initial={{ scaleX: 0 }}
+            animate={{ scaleX: 1 }}
+            transition={{ delay: 0.5, duration: 0.9, ease: [0.23, 1, 0.32, 1] }}
+            className="block h-px w-10 origin-center rounded-full"
+            style={{
+              background:
+                "linear-gradient(90deg, transparent, #d4af37 50%, transparent)",
+            }}
+          />
+
+          {/* English as footnote */}
+          <span className="text-[10px] font-medium uppercase tracking-[0.4em] text-foreground/50">
+            Al-Maysaroh Institute
           </span>
         </motion.div>
 
-        {/* Progress Bar */}
-        <div className="w-32 mx-auto mt-6">
-          <div className="h-[1px] w-full bg-muted/30 rounded-full overflow-hidden">
+        {/* ---------- Progress device: gold hairline drawing outward ---------- */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.4, duration: 0.6 }}
+          className="mx-auto mt-4 flex flex-col items-center gap-4"
+        >
+          <div className="relative h-px w-40">
+            {/* Faint track */}
+            <div className="absolute inset-0 rounded-full bg-foreground/[0.06]" />
+            {/* Gold draw — expands symmetrically from center */}
             <motion.div
-              className="h-full bg-gradient-to-r from-purple-600 to-amber-500 rounded-full"
-              initial={{ width: "0%" }}
-              animate={{ width: `${progress}%` }}
-              transition={{ duration: 0.1, ease: "linear" }}
+              className="absolute top-0 h-px rounded-full"
+              style={{
+                background:
+                  "linear-gradient(90deg, transparent, #d4af37 50%, transparent)",
+                left: "50%",
+              }}
+              initial={{ width: "0%", x: "0%" }}
+              animate={{
+                width: `${progress}%`,
+                x: "-50%",
+              }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
             />
           </div>
-        </div>
 
-        {/* Status */}
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 0.4 }}
-          transition={{ delay: 0.3, duration: 0.5 }}
-          className="text-[9px] text-muted-foreground tracking-[0.3em] uppercase font-medium"
-        >
-          {progress === 100 ? "Ready" : "Loading"}
-        </motion.p>
+          {/* Bilingual status — Arabic first, English beneath */}
+          <div className="flex flex-col items-center gap-1.5">
+            <motion.span
+              key={isReady ? "ready" : "loading"}
+              initial={{ opacity: 0, y: 4 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, ease: [0.23, 1, 0.32, 1] }}
+              dir="rtl"
+              lang="ar"
+              className="font-quran text-[14px] leading-none text-foreground/60"
+            >
+              {isReady ? "أهلاً وسهلاً" : "جار التحميل"}
+            </motion.span>
+
+            <span
+              role="status"
+              aria-live="polite"
+              aria-label={isReady ? "Ready" : "Loading"}
+              className="text-[9px] font-medium uppercase tracking-[0.4em] text-foreground/40"
+            >
+              {isReady ? "Welcome" : "Loading"}
+            </span>
+          </div>
+        </motion.div>
       </div>
     </div>
   );
