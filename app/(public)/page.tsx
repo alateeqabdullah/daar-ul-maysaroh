@@ -1684,7 +1684,7 @@ export default function LandingPage() {
                   />
                 </Link>
                 <Link
-                  href="/physical/contact"
+                  href="/onsite/contact"
                   className={cn(
                     "group relative inline-flex items-center gap-2 rounded-full p-[1.5px] shadow-sm transition-all duration-300",
                     BRAND.gradientFill
