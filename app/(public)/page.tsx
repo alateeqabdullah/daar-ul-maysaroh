@@ -1,3 +1,828 @@
+// // app/(marketing)/page.tsx
+// "use client";
+
+// import { motion } from "framer-motion";
+// import Link from "next/link";
+// import {
+//   ArrowRight,
+//   Globe,
+//   Building2,
+//   ShieldCheck,
+//   Users,
+//   Award,
+//   Sparkles,
+//   BookOpen,
+//   Crown,
+//   Mic,
+//   Heart,
+//   CheckCircle2,
+//   Compass,
+//   Target,
+//   Infinity,
+//   Quote,
+//   GraduationCap,
+//   Zap,
+// } from "lucide-react";
+// import { Button } from "@/components/ui/button";
+// import { cn } from "@/lib/utils";
+// import { Reveal } from "@/components/shared/section-animation";
+
+// // ============================================================
+// // DATA
+// // ============================================================
+
+// const TRUST_SEALS = [
+//   { label: "Ijazah Authenticated", icon: ShieldCheck, color: "purple" },
+//   { label: "Authentic Sanad Chain", icon: Crown, color: "amber" },
+//   { label: "1-on-1 Instruction", icon: Users, color: "purple" },
+//   { label: "Global Reach", icon: Globe, color: "amber" },
+// ];
+
+// const PROGRAMS = [
+//   {
+//     id: "tahfeedh",
+//     title: "Tahfeedh",
+//     subtitle: "Quran Memorization",
+//     description:
+//       "Complete memorization of the Quran with proper Tajweed and revision system.",
+//     icon: BookOpen,
+//     color: "purple",
+//     features: ["Personalized Plan", "Daily Revision", "Ijazah Track"],
+//     audience: "All Ages",
+//   },
+//   {
+//     id: "tajweed",
+//     title: "Tajweed",
+//     subtitle: "Scientific Recitation",
+//     description:
+//       "Master the rules of Quranic recitation with precision and proper pronunciation.",
+//     icon: Mic,
+//     color: "amber",
+//     features: ["Makharij Mastery", "Sifaat Practice", "Audio Analysis"],
+//     audience: "All Levels",
+//   },
+//   {
+//     id: "qiraat",
+//     title: "Qira'aat",
+//     subtitle: "The Ten Recitations",
+//     description:
+//       "Study the ten authentic Qira'at with certified scholars and Sanad chains.",
+//     icon: Crown,
+//     color: "purple",
+//     features: ["Ten Qira'at", "Sanad Verification", "Advanced Study"],
+//     audience: "Advanced",
+//   },
+//   {
+//     id: "arabic",
+//     title: "Arabic Language",
+//     subtitle: "Quranic Arabic",
+//     description:
+//       "Learn classical Arabic to understand the Quran in its original language.",
+//     icon: Globe,
+//     color: "amber",
+//     features: ["Grammar", "Vocabulary", "Tafsir Reading"],
+//     audience: "Beginner+",
+//   },
+//   {
+//     id: "tafsir",
+//     title: "Tafsir",
+//     subtitle: "Quranic Exegesis",
+//     description:
+//       "Deep dive into Quranic meaning with classical and contemporary scholarship.",
+//     icon: BookOpen,
+//     color: "purple",
+//     features: [
+//       "Classical Sources",
+//       "Scholarly Analysis",
+//       "Practical Application",
+//     ],
+//     audience: "Intermediate+",
+//   },
+//   {
+//     id: "children",
+//     title: "Children's Program",
+//     subtitle: "Foundation & Juz Amma",
+//     description:
+//       "Fun, engaging Quran learning for children aged 5-12 with structured progression.",
+//     icon: Heart,
+//     color: "amber",
+//     features: ["Juz Amma", "Fun Activities", "Parent Portal"],
+//     audience: "Ages 5-12",
+//   },
+// ];
+
+// const FEATURES = [
+//   {
+//     icon: ShieldCheck,
+//     title: "Authentic Sanad",
+//     description: "Unbroken chain of transmission to Prophet Muhammad (ﷺ)",
+//     color: "purple",
+//   },
+//   {
+//     icon: Award,
+//     title: "Ijazah Certification",
+//     description:
+//       "Formal certification recognized by Islamic scholarly councils",
+//     color: "amber",
+//   },
+//   {
+//     icon: Users,
+//     title: "1-on-1 Instruction",
+//     description: "Personalized attention from certified teachers",
+//     color: "purple",
+//   },
+//   {
+//     icon: Globe,
+//     title: "Flexible Learning",
+//     description: "Online or in-person, at your own pace",
+//     color: "amber",
+//   },
+// ];
+
+// const TESTIMONIALS = [
+//   {
+//     name: "Isa",
+//     role: "Online",
+//     content:
+//       "I am grateful for the comprehensive curriculum and dedicated teachers at Al-Maysaroh.",
+//     initials: "I",
+//   },
+//   {
+//     name: "Yusuf",
+//     role: "Boarding Student",
+//     content:
+//       "The boarding program at Al-Maysaroh has been a transformative experience for my spiritual growth.",
+//     initials: "Y",
+//   },
+// ];
+
+// const STATS = [
+//   { value: "50+", label: "Active Students", icon: Users, color: "purple" },
+//   { value: "94%", label: "Success Rate", icon: Award, color: "amber" },
+//   { value: "5+", label: "Countries", icon: Globe, color: "purple" },
+//   {
+//     value: "1400+",
+//     label: "Years of Sanad",
+//     icon: ShieldCheck,
+//     color: "amber",
+//   },
+// ];
+
+// // ============================================================
+// // COLOR STYLES - SUPPORTS BOTH LIGHT & DARK
+// // ============================================================
+
+// const getColorStyles = (color: string) => {
+//   const styles = {
+//     purple: {
+//       text: "text-purple-700 dark:text-purple-400",
+//       border: "border-purple-200 dark:border-purple-800/30",
+//       bg: "bg-purple-100 dark:bg-purple-600/20",
+//       lightBg: "bg-purple-50 dark:bg-purple-950/40",
+//       linear:
+//         "from-purple-600 to-purple-700 dark:from-purple-500 dark:to-purple-600",
+//       glow: "shadow-purple-500/30 dark:shadow-purple-500/30",
+//       hover: "hover:bg-purple-50 dark:hover:bg-purple-600/10",
+//     },
+//     amber: {
+//       text: "text-amber-700 dark:text-amber-400",
+//       border: "border-amber-200 dark:border-amber-800/30",
+//       bg: "bg-amber-100 dark:bg-amber-500/20",
+//       lightBg: "bg-amber-50 dark:bg-amber-950/40",
+//       linear:
+//         "from-amber-500 to-amber-600 dark:from-amber-500 dark:to-amber-600",
+//       glow: "shadow-amber-500/30 dark:shadow-amber-500/30",
+//       hover: "hover:bg-amber-50 dark:hover:bg-amber-500/10",
+//     },
+//   };
+//   return styles[color as keyof typeof styles] || styles.purple;
+// };
+
+// // ============================================================
+// // COMPONENTS
+// // ============================================================
+
+// function PremiumStatCard({ value, label, icon, delay, color }: any) {
+//   const Icon = icon;
+//   const colors = getColorStyles(color);
+//   return (
+//     <motion.div
+//       initial={{ opacity: 0, y: 20 }}
+//       animate={{ opacity: 1, y: 0 }}
+//       transition={{ delay: delay || 0 }}
+//       className="text-center group"
+//     >
+//       <div
+//         className={`w-14 h-14 rounded-2xl ${colors.bg} flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform`}
+//       >
+//         <Icon className={`w-7 h-7 ${colors.text}`} />
+//       </div>
+//       <div className={`text-2xl md:text-3xl font-black ${colors.text}`}>
+//         {value}
+//       </div>
+//       <div className="text-xs text-muted-foreground">{label}</div>
+//     </motion.div>
+//   );
+// }
+
+// function PremiumCampusCard({
+//   href,
+//   title,
+//   description,
+//   features,
+//   icon,
+//   color,
+//   buttonText,
+// }: any) {
+//   const colors = getColorStyles(color);
+
+//   return (
+//     <motion.div
+//       whileHover={{ y: -8 }}
+//       transition={{ type: "spring", stiffness: 300 }}
+//       className="h-full"
+//     >
+//       <Link href={href} className="block h-full">
+//         <div
+//           className={cn(
+//             "group relative p-6 md:p-8 rounded-2xl border-2 transition-all duration-300 hover:shadow-2xl h-full flex flex-col bg-card hover:bg-muted/30 dark:bg-slate-900/50 dark:hover:bg-slate-900/70",
+//             colors.border,
+//           )}
+//         >
+//           {/* Glow Effect */}
+//           <div
+//             className={`absolute -inset-0.5 ${colors.glow} opacity-0 group-hover:opacity-100 blur-xl transition-opacity duration-500 rounded-2xl`}
+//           />
+
+//           {/* Icon */}
+//           <div
+//             className={`relative w-14 h-14 md:w-16 md:h-16 rounded-2xl flex items-center justify-center mb-4 ${colors.bg}`}
+//           >
+//             <div className={colors.text}>{icon}</div>
+//           </div>
+
+//           <h3 className="text-xl md:text-2xl font-black text-foreground mb-2">
+//             {title}
+//           </h3>
+//           <p className="text-muted-foreground text-sm mb-4">{description}</p>
+
+//           <ul className="space-y-2 mb-6 flex-1">
+//             {features.map((feature: string, i: number) => (
+//               <li
+//                 key={i}
+//                 className="flex items-center gap-2 text-sm text-muted-foreground"
+//               >
+//                 <CheckCircle2 className={cn("w-4 h-4", colors.text)} />
+//                 {feature}
+//               </li>
+//             ))}
+//           </ul>
+
+//           <Button
+//             className={cn(
+//               "w-full font-black group/btn rounded-xl py-3 text-white",
+//               `bg-linear-to-r ${colors.linear} shadow-lg ${colors.glow} hover:shadow-xl transition-all`,
+//             )}
+//           >
+//             {buttonText}
+//             <ArrowRight className="w-4 h-4 ml-2 group-hover/btn:translate-x-1 transition-transform" />
+//           </Button>
+//         </div>
+//       </Link>
+//     </motion.div>
+//   );
+// }
+
+// // ============================================================
+// // PAGE
+// // ============================================================
+
+// export default function LandingPage() {
+//   return (
+//     <main className="min-h-screen bg-background overflow-hidden">
+//       {/* ============================================================
+//            HERO SECTION
+//            ============================================================ */}
+//       <section className="relative min-h-screen flex items-center overflow-hidden">
+//         {/* Background Effects - Light/Dark aware */}
+//         <div className="absolute inset-0">
+//           <div className="absolute top-1/4 left-1/2 w-[800px] h-[800px] bg-purple-600/10 dark:bg-purple-600/10 rounded-full blur-3xl animate-pulse" />
+//           <div className="absolute bottom-1/4 right-1/2 w-[800px] h-[800px] bg-amber-500/10 dark:bg-amber-500/10 rounded-full blur-3xl animate-pulse delay-1000" />
+//           <div
+//             className="absolute inset-0 bg-[url('/islamic-pattern.svg')] opacity-[0.02] dark:opacity-[0.02] bg-center bg-repeat"
+//             style={{ backgroundSize: "300px" }}
+//           />
+//           <div className="absolute top-0 right-0 w-96 h-96 bg-purple-600/5 dark:bg-purple-600/5 rounded-full blur-3xl" />
+//           <div className="absolute bottom-0 left-0 w-96 h-96 bg-amber-500/5 dark:bg-amber-500/5 rounded-full blur-3xl" />
+//         </div>
+
+//         <div className="container mx-auto px-4 xs:px-5 sm:px-6 relative z-10 py-20">
+//           <motion.div
+//             initial={{ opacity: 0, y: 30 }}
+//             animate={{ opacity: 1, y: 0 }}
+//             transition={{ duration: 0.8 }}
+//             className="max-w-5xl mx-auto"
+//           >
+//             <div className="text-center">
+//               {/* Badge - Light/Dark aware */}
+//               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-purple-100 dark:bg-purple-600/20 border border-purple-200 dark:border-purple-600/30 mb-6">
+//                 <Sparkles className="w-4 h-4 text-amber-600 dark:text-amber-500" />
+//                 <span className="text-xs font-black uppercase tracking-wider text-purple-700 dark:text-amber-500">
+//                   {`Al-Maysaroh Institute • Ijazah Certified`}
+//                 </span>
+//               </div>
+
+//               <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-black tracking-tighter leading-[1.1] mb-6 text-foreground">
+//                 Your Journey to
+//                 <span className="block bg-linear-to-r from-purple-600 via-amber-600 to-purple-600 dark:from-purple-400 dark:via-amber-500 dark:to-purple-400 bg-clip-text text-transparent">
+//                   Quranic Excellence
+//                 </span>
+//               </h1>
+
+//               <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10">
+//                 Choose your learning path. Whether online from anywhere or
+//                 in-person at our physical campus, start your Sanad today.
+//               </p>
+
+//               {/* Stats Row */}
+//               <div className="flex flex-wrap justify-center gap-8 md:gap-12 mb-12">
+//                 {STATS.map((stat, i) => (
+//                   <PremiumStatCard
+//                     key={i}
+//                     value={stat.value}
+//                     label={stat.label}
+//                     icon={stat.icon}
+//                     color={stat.color}
+//                     delay={0.2 + i * 0.1}
+//                   />
+//                 ))}
+//               </div>
+//             </div>
+
+//             {/* Campus Cards */}
+//             <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+//               <PremiumCampusCard
+//                 href="/online"
+//                 title="Online Campus"
+//                 description="Learn from anywhere with 1-on-1 sessions"
+//                 features={[
+//                   "Flexible Scheduling",
+//                   "Global Access",
+//                   "Certified Teachers",
+//                 ]}
+//                 icon={<Globe className="w-8 h-8" />}
+//                 color="purple"
+//                 buttonText="Explore Online"
+//               />
+//               <PremiumCampusCard
+//                 href="/onsite"
+//                 title="Physical Campus"
+//                 description="Full-time residential Quran memorization"
+//                 features={[
+//                   "Boarding Available",
+//                   "Structured Routine",
+//                   "Community",
+//                 ]}
+//                 icon={<Building2 className="w-8 h-8" />}
+//                 color="amber"
+//                 buttonText="Explore Physical"
+//               />
+//             </div>
+//           </motion.div>
+//         </div>
+
+//         {/* Scroll Indicator */}
+//         <motion.div
+//           animate={{ y: [0, 10, 0] }}
+//           transition={{ duration: 1.5, repeat: Infinity }}
+//           className="absolute bottom-8 left-1/2 -translate-x-1/2"
+//         >
+//           <div className="w-6 h-10 rounded-full border-2 border-purple-300 dark:border-purple-600/30 flex items-start justify-center p-1">
+//             <div className="w-1.5 h-1.5 rounded-full bg-purple-600 dark:bg-purple-400 animate-bounce" />
+//           </div>
+//         </motion.div>
+//       </section>
+
+//       {/* ============================================================
+//            TRUST SEALS
+//            ============================================================ */}
+//       <section className="py-12 md:py-16 border-y border-border bg-muted/20 dark:bg-slate-900/30">
+//         <div className="container mx-auto px-4 xs:px-5 sm:px-6">
+//           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-3xl mx-auto">
+//             {TRUST_SEALS.map((item, i) => {
+//               const Icon = item.icon;
+//               const colors = getColorStyles(item.color);
+//               return (
+//                 <motion.div
+//                   key={i}
+//                   initial={{ opacity: 0, y: 20 }}
+//                   whileInView={{ opacity: 1, y: 0 }}
+//                   viewport={{ once: true }}
+//                   transition={{ delay: i * 0.1 }}
+//                   className="text-center group"
+//                 >
+//                   <div
+//                     className={cn(
+//                       "w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform",
+//                       colors.lightBg,
+//                     )}
+//                   >
+//                     <Icon className={cn("w-7 h-7", colors.text)} />
+//                   </div>
+//                   <p className={cn("text-xs font-black", colors.text)}>
+//                     {item.label}
+//                   </p>
+//                 </motion.div>
+//               );
+//             })}
+//           </div>
+//         </div>
+//       </section>
+
+//       {/* ============================================================
+//            PROGRAMS SECTION
+//            ============================================================ */}
+//       <section className="py-16 md:py-24">
+//         <div className="container mx-auto px-4 xs:px-5 sm:px-6">
+//           <Reveal>
+//             <div className="text-center max-w-2xl mx-auto mb-12 md:mb-16">
+//               <div className="flex items-center justify-center gap-3 mb-4">
+//                 <div className="w-12 h-0.5 bg-linear-to-r from-transparent to-amber-500" />
+//                 <span className="text-amber-600 dark:text-amber-500 font-black text-xs uppercase tracking-wider flex items-center gap-2">
+//                   <Compass className="w-4 h-4" />
+//                   Our Programs
+//                 </span>
+//                 <div className="w-12 h-0.5 bg-linear-to-l from-transparent to-amber-500" />
+//               </div>
+//               <h2 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tighter font-heading text-foreground mb-4">
+//                 Comprehensive{" "}
+//                 <span className="bg-linear-to-r from-purple-600 to-amber-600 dark:from-purple-400 dark:to-amber-400 bg-clip-text text-transparent italic">
+//                   Quranic Education
+//                 </span>
+//               </h2>
+//               <p className="text-lg text-muted-foreground">
+//               {`  Whether you're beginning your journey or seeking advanced
+//                 certification, we have a program tailored for you.`}
+//               </p>
+//             </div>
+//           </Reveal>
+
+//           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+//             {PROGRAMS.map((program, index) => {
+//               const Icon = program.icon;
+//               const colors = getColorStyles(program.color);
+//               return (
+//                 <Reveal key={program.id} delay={index * 0.05}>
+//                   <motion.div
+//                     whileHover={{ y: -6 }}
+//                     className="bg-card rounded-2xl border border-border hover:border-primary/30 dark:border-slate-800/50 dark:hover:border-purple-600/50 transition-all p-6 h-full flex flex-col group"
+//                   >
+//                     <div
+//                       className={cn(
+//                         "w-14 h-14 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform",
+//                         colors.lightBg,
+//                       )}
+//                     >
+//                       <Icon className={cn("w-7 h-7", colors.text)} />
+//                     </div>
+
+//                     <h3 className="font-black text-lg text-foreground mb-0.5">
+//                       {program.title}
+//                     </h3>
+//                     <p
+//                       className={cn(
+//                         "text-xs font-black uppercase tracking-wider mb-2",
+//                         colors.text,
+//                       )}
+//                     >
+//                       {program.subtitle}
+//                     </p>
+
+//                     <p className="text-sm text-muted-foreground mb-4 flex-1">
+//                       {program.description}
+//                     </p>
+
+//                     <div className="flex flex-wrap gap-2 mb-3">
+//                       {program.features.map((feature, idx) => (
+//                         <span
+//                           key={idx}
+//                           className={cn(
+//                             "text-[10px] font-black px-2.5 py-1 rounded-full",
+//                             colors.lightBg,
+//                             colors.text,
+//                           )}
+//                         >
+//                           {feature}
+//                         </span>
+//                       ))}
+//                     </div>
+
+//                     {/* <div className="text-xs text-muted-foreground">
+//                       🎯 {program.audience}
+//                     </div> */}
+//                   </motion.div>
+//                 </Reveal>
+//               );
+//             })}
+//           </div>
+
+//           <Reveal delay={0.3}>
+//             <div className="text-center mt-12">
+//               <Link href="/online/courses">
+//                 <Button className="rounded-full px-8 py-4 font-black bg-linear-to-r from-purple-600 to-purple-700 dark:from-purple-600 dark:to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white shadow-lg hover:shadow-xl transition-all duration-300 group">
+//                   View All Programs
+//                   <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+//                 </Button>
+//               </Link>
+//             </div>
+//           </Reveal>
+//         </div>
+//       </section>
+
+//       {/* ============================================================
+//            FEATURES SECTION
+//            ============================================================ */}
+//       <section className="py-16 md:py-24 bg-linear-to-b from-transparent via-purple-50/50 to-amber-50/50 dark:via-purple-600/5 dark:to-amber-600/5">
+//         <div className="container mx-auto px-4 xs:px-5 sm:px-6">
+//           <Reveal>
+//             <div className="text-center max-w-2xl mx-auto mb-12 md:mb-16">
+//               <div className="flex items-center justify-center gap-3 mb-4">
+//                 <div className="w-12 h-0.5 bg-linear-to-r from-transparent to-purple-500" />
+//                 <span className="text-purple-700 dark:text-purple-400 font-black text-xs uppercase tracking-wider flex items-center gap-2">
+//                   <Target className="w-4 h-4" />
+//                   Why Choose Us
+//                 </span>
+//                 <div className="w-12 h-0.5 bg-linear-to-l from-transparent to-purple-500" />
+//               </div>
+//               <h2 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tighter font-heading text-foreground mb-4">
+//                 The{" "}
+//                 <span className="bg-linear-to-r from-purple-600 to-amber-600 dark:from-purple-400 dark:to-amber-400 bg-clip-text text-transparent italic">
+//                   Al-Maysaroh
+//                 </span>{" "}
+//                 Advantage
+//               </h2>
+//               <p className="text-lg text-muted-foreground">
+//                 What sets our Quranic education apart
+//               </p>
+//             </div>
+//           </Reveal>
+
+//           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto">
+//             {FEATURES.map((feature, index) => {
+//               const Icon = feature.icon;
+//               const colors = getColorStyles(feature.color);
+//               return (
+//                 <Reveal key={index} delay={index * 0.1}>
+//                   <div className="text-center p-6 rounded-2xl bg-card border border-border hover:border-primary/30 dark:border-slate-800/50 dark:hover:border-purple-600/50 transition-all group">
+//                     <div
+//                       className={cn(
+//                         "w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform",
+//                         colors.lightBg,
+//                       )}
+//                     >
+//                       <Icon className={cn("w-8 h-8", colors.text)} />
+//                     </div>
+//                     <h3
+//                       className={cn(
+//                         "font-black text-base text-foreground mb-2",
+//                         colors.text,
+//                       )}
+//                     >
+//                       {feature.title}
+//                     </h3>
+//                     <p className="text-sm text-muted-foreground">
+//                       {feature.description}
+//                     </p>
+//                   </div>
+//                 </Reveal>
+//               );
+//             })}
+//           </div>
+//         </div>
+//       </section>
+
+//       {/* ============================================================
+//            TESTIMONIALS SECTION
+//            ============================================================ */}
+//       <section className="py-16 md:py-24">
+//         <div className="container mx-auto px-4 xs:px-5 sm:px-6">
+//           <Reveal>
+//             <div className="text-center max-w-2xl mx-auto mb-12 md:mb-16">
+//               <div className="flex items-center justify-center gap-3 mb-4">
+//                 <div className="w-12 h-0.5 bg-linear-to-r from-transparent to-amber-500" />
+//                 <span className="text-amber-600 dark:text-amber-500 font-black text-xs uppercase tracking-wider flex items-center gap-2">
+//                   <Quote className="w-4 h-4" />
+//                   Testimonials
+//                 </span>
+//                 <div className="w-12 h-0.5 bg-linear-to-l from-transparent to-amber-500" />
+//               </div>
+//               <h2 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tighter font-heading text-foreground mb-4">
+//                 What Our{" "}
+//                 <span className="bg-linear-to-r from-purple-600 to-amber-600 dark:from-purple-400 dark:to-amber-400 bg-clip-text text-transparent italic">
+//                   Students
+//                 </span>{" "}
+//                 Say
+//               </h2>
+//             </div>
+//           </Reveal>
+
+//           <div className="grid sm:grid-cols-2 gap-6 max-w-4xl mx-auto">
+//             {TESTIMONIALS.map((testimonial, index) => (
+//               <Reveal key={index} delay={index * 0.1}>
+//                 <div className="bg-card rounded-2xl border border-border hover:border-primary/30 dark:border-slate-800/50 dark:hover:border-purple-600/50 transition-all p-6 h-full flex flex-col">
+//                   <Quote className="w-8 h-8 text-amber-300 dark:text-amber-500/30 mb-3" />
+//                   <p className="text-sm text-muted-foreground italic mb-4 flex-1 leading-relaxed">
+//                     {`"${testimonial.content}"`}
+//                   </p>
+//                   <div className="flex items-center gap-3 pt-3 border-t border-border">
+//                     <div className="w-10 h-10 rounded-full bg-linear-to-br from-purple-600 to-amber-500 flex items-center justify-center text-white font-black text-sm">
+//                       {testimonial.initials}
+//                     </div>
+//                     <div>
+//                       <p className="font-black text-sm text-foreground">
+//                         {testimonial.name}
+//                       </p>
+//                       <p className="text-xs text-muted-foreground">
+//                         {testimonial.role}
+//                       </p>
+//                     </div>
+//                   </div>
+//                 </div>
+//               </Reveal>
+//             ))}
+//           </div>
+//         </div>
+//       </section>
+
+//       {/* ============================================================
+//            ADDITIONAL DETAILS SECTION - NEW
+//            ============================================================ */}
+//       <section className="py-16 md:py-24 bg-linear-to-b from-transparent via-purple-50/50 to-amber-50/50 dark:via-purple-600/5 dark:to-amber-600/5">
+//         <div className="container mx-auto px-4 xs:px-5 sm:px-6">
+//           <Reveal>
+//             <div className="text-center max-w-2xl mx-auto mb-12 md:mb-16">
+//               <div className="flex items-center justify-center gap-3 mb-4">
+//                 <div className="w-12 h-0.5 bg-linear-to-r from-transparent to-purple-500" />
+//                 <span className="text-purple-700 dark:text-purple-400 font-black text-xs uppercase tracking-wider flex items-center gap-2">
+//                   <Zap className="w-4 h-4" />
+//                   Why Al-Maysaroh
+//                 </span>
+//                 <div className="w-12 h-0.5 bg-linear-to-l from-transparent to-purple-500" />
+//               </div>
+//               <h2 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tighter font-heading text-foreground mb-4">
+//                 Built on{" "}
+//                 <span className="bg-linear-to-r from-purple-600 to-amber-600 dark:from-purple-400 dark:to-amber-400 bg-clip-text text-transparent italic">
+//                   Tradition
+//                 </span>
+//                 , Powered by{" "}
+//                 <span className="bg-linear-to-r from-amber-600 to-purple-600 dark:from-amber-400 dark:to-purple-400 bg-clip-text text-transparent italic">
+//                   Innovation
+//                 </span>
+//               </h2>
+//               <p className="text-lg text-muted-foreground">
+//                 Combining 1,400 years of scholarly tradition with modern
+//                 pedagogy for optimal learning.
+//               </p>
+//             </div>
+//           </Reveal>
+
+//           <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+//             {[
+//               {
+//                 icon: ShieldCheck,
+//                 title: "Authentic Sanad",
+//                 desc: "Unbroken chain of transmission to Prophet Muhammad (ﷺ)",
+//                 color: "purple",
+//               },
+//               {
+//                 icon: Users,
+//                 title: "Personalized Learning",
+//                 desc: "1-on-1 instruction tailored to each student's pace",
+//                 color: "amber",
+//               },
+//               {
+//                 icon: GraduationCap,
+//                 title: "Ijazah Certification",
+//                 desc: "Formal certification recognized by scholarly councils",
+//                 color: "purple",
+//               },
+//             ].map((item, index) => {
+//               const Icon = item.icon;
+//               const colors = getColorStyles(item.color);
+//               return (
+//                 <Reveal key={index} delay={index * 0.1}>
+//                   <div className="text-center p-8 rounded-2xl bg-card border border-border hover:border-primary/30 dark:border-slate-800/50 dark:hover:border-purple-600/50 transition-all group">
+//                     <div
+//                       className={cn(
+//                         "w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform",
+//                         colors.lightBg,
+//                       )}
+//                     >
+//                       <Icon className={cn("w-8 h-8", colors.text)} />
+//                     </div>
+//                     <h3
+//                       className={cn(
+//                         "font-black text-lg text-foreground mb-2",
+//                         colors.text,
+//                       )}
+//                     >
+//                       {item.title}
+//                     </h3>
+//                     <p className="text-sm text-muted-foreground">{item.desc}</p>
+//                   </div>
+//                 </Reveal>
+//               );
+//             })}
+//           </div>
+//         </div>
+//       </section>
+
+//       {/* ============================================================
+//            CTA SECTION
+//            ============================================================ */}
+//       <section className="py-16 md:py-24 bg-linear-to-br from-purple-600/10 via-purple-700/10 to-amber-600/10 dark:from-purple-600/20 dark:via-purple-700/20 dark:to-amber-600/20">
+//         <div className="container mx-auto px-4 xs:px-5 sm:px-6">
+//           <motion.div
+//             initial={{ opacity: 0, y: 20 }}
+//             whileInView={{ opacity: 1, y: 0 }}
+//             viewport={{ once: true }}
+//             className="max-w-3xl mx-auto text-center"
+//           >
+//             <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-linear-to-br from-purple-600 to-amber-500 mb-6 shadow-xl shadow-purple-500/30">
+//               <Sparkles className="w-10 h-10 text-white" />
+//             </div>
+
+//             <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-foreground mb-4">
+//               Ready to Begin Your Journey?
+//             </h2>
+
+//             <p className="text-muted-foreground text-lg mb-8 max-w-md mx-auto">
+//               Choose your learning path and start your Sanad today. Your journey
+//               to Quranic excellence begins here.
+//             </p>
+
+//             <div className="flex flex-col sm:flex-row gap-4 justify-center">
+//               <Link href="/online">
+//                 <Button className="rounded-full px-8 py-4 font-black bg-linear-to-r from-purple-600 to-purple-700 dark:from-purple-600 dark:to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white shadow-lg hover:shadow-xl transition-all group">
+//                   Start Online
+//                   <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+//                 </Button>
+//               </Link>
+//               <Link href="/onsite">
+//                 <Button
+//                   variant="outline"
+//                   className="rounded-full px-8 py-4 font-black border-amber-500 text-amber-600 dark:text-amber-500 hover:bg-amber-50 dark:hover:bg-amber-500/10 transition-all"
+//                 >
+//                   Visit Physical Campus
+//                   <ArrowRight className="w-4 h-4 ml-2" />
+//                 </Button>
+//               </Link>
+//             </div>
+
+//             <p className="text-muted-foreground text-sm mt-6">
+//               Free assessment • No commitment • All ages welcome
+//             </p>
+//           </motion.div>
+//         </div>
+//       </section>
+
+//       {/* ============================================================
+//            FOOTER TRUST BADGE
+//            ============================================================ */}
+//       <div className="py-4 border-t border-border bg-muted/20 dark:bg-slate-900/30">
+//         <div className="container mx-auto px-4 xs:px-5 sm:px-6">
+//           <div className="flex flex-wrap justify-center gap-6 text-xs text-muted-foreground">
+//             <span className="flex items-center gap-1.5">
+//               <ShieldCheck className="w-3.5 h-3.5 text-purple-600 dark:text-purple-400" />
+//               Ijazah Certified
+//             </span>
+//             <span className="flex items-center gap-1.5">
+//               <Crown className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
+//               Authentic Sanad
+//             </span>
+//             <span className="flex items-center gap-1.5">
+//               <Users className="w-3.5 h-3.5 text-purple-600 dark:text-purple-400" />
+//               50+ Students
+//             </span>
+//             <span className="flex items-center gap-1.5">
+//               <Globe className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
+//               5+ Countries
+//             </span>
+//           </div>
+//         </div>
+//       </div>
+//     </main>
+//   );
+// }
+
+
+
+
+
+
+
+
+
 // app/(marketing)/page.tsx
 "use client";
 
@@ -10,643 +835,324 @@ import {
   ShieldCheck,
   Users,
   Award,
-  Sparkles,
   BookOpen,
   Crown,
   Mic,
   Heart,
   CheckCircle2,
-  Compass,
-  Target,
-  Infinity,
-  Quote,
   GraduationCap,
-  Zap,
+  Compass,
+  Quote,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Reveal } from "@/components/shared/section-animation";
 
-// ============================================================
-// DATA
-// ============================================================
+/* ------------------------------------------------------------------ */
+/*  BRAND TOKENS — single source of truth                              */
+/* ------------------------------------------------------------------ */
+
+const BRAND = {
+  purple: "text-primary-700 dark:text-primary-300",
+  purpleSoft: "text-primary-700/80 dark:text-primary-300/80",
+  gold: "text-[--color-gold]",
+
+  purpleWash: "bg-primary-50/50 dark:bg-primary-950/20",
+  purpleWashHover: "hover:bg-primary-50/40 dark:hover:bg-primary-950/15",
+
+  gradientText:
+    "bg-gradient-to-r from-primary-700 via-primary-600 to-[--color-gold] bg-clip-text text-transparent dark:from-primary-300 dark:via-primary-300 dark:to-[--color-gold]",
+  gradientRule: "bg-gradient-to-r from-primary-600 to-[--color-gold]",
+  gradientHairline:
+    "bg-gradient-to-r from-primary-600/60 via-[--color-gold]/50 to-transparent",
+  gradientButton:
+    "bg-gradient-to-r from-primary-700 via-primary-700 to-[--color-gold] dark:from-primary-600 dark:via-primary-600 dark:to-[--color-gold]",
+  gradientButtonHover:
+    "hover:from-primary-800 hover:via-primary-800 hover:to-[--color-gold] dark:hover:from-primary-500 dark:hover:via-primary-500",
+};
+
+/* ------------------------------------------------------------------ */
+/*  DATA                                                               */
+/* ------------------------------------------------------------------ */
+
+const STATS = [
+  { value: "50+", label: "Students in residence", arabic: "بِحَمْدِ اللَّه" },
+  { value: "5", label: "Countries represented", arabic: "عَالَمِيًّا" },
+  { value: "1,400", label: "Years of Sanad", arabic: "سَنَد مُتَّصِل" },
+  { value: "94%", label: "Completion rate", arabic: "نِسْبَة الإِتْمَام" },
+] as const;
 
 const TRUST_SEALS = [
-  { label: "Ijazah Authenticated", icon: ShieldCheck, color: "purple" },
-  { label: "Authentic Sanad Chain", icon: Crown, color: "amber" },
-  { label: "1-on-1 Instruction", icon: Users, color: "purple" },
-  { label: "Global Reach", icon: Globe, color: "amber" },
-];
+  { label: "Ijazah Authenticated", arabic: "إِجَازَة", icon: ShieldCheck },
+  { label: "Authentic Sanad", arabic: "سَنَد", icon: Crown },
+  { label: "One-to-One Instruction", arabic: "فَرْدِي", icon: Users },
+  { label: "Global Reach", arabic: "عَالَمِي", icon: Globe },
+] as const;
+
+const CAMPUSES = [
+  {
+    href: "/onsite",
+    title: "Physical Campus",
+    arabic: "الحَرَم",
+    subtitle: "Residential study",
+    description:
+      "Full-time memorisation and recitation at our residential campus, with boarding, daily routine, and community life.",
+    features: [
+      "Boarding available",
+      "Structured daily routine",
+      "Community and brotherhood",
+      "Supervised study",
+    ],
+    icon: Building2,
+    primary: true,
+    cta: "Enter the campus",
+  },
+  {
+    href: "/online",
+    title: "Online Campus",
+    arabic: "عَنْ بُعْد",
+    subtitle: "Study from anywhere",
+    description:
+      "One-to-one instruction from certified teachers, scheduled around your life, delivered from anywhere in the world.",
+    features: [
+      "Flexible scheduling",
+      "One-to-one sessions",
+      "Certified teachers",
+      "Global access",
+    ],
+    icon: Globe,
+    primary: false,
+    cta: "Study online",
+  },
+] as const;
 
 const PROGRAMS = [
   {
     id: "tahfeedh",
     title: "Tahfeedh",
-    subtitle: "Quran Memorization",
-    description:
-      "Complete memorization of the Quran with proper Tajweed and revision system.",
+    arabic: "التحفيظ",
+    subtitle: "Qur'an Memorisation",
     icon: BookOpen,
-    color: "purple",
-    features: ["Personalized Plan", "Daily Revision", "Ijazah Track"],
-    audience: "All Ages",
+    description:
+      "Complete memorisation of the Qur'an with structured daily revision and personal pacing.",
+    teacher: "Under scholars of Ijazah",
+    meta: ["Sabq", "Muraja'ah", "One-to-one"],
   },
   {
     id: "tajweed",
     title: "Tajweed",
-    subtitle: "Scientific Recitation",
-    description:
-      "Master the rules of Quranic recitation with precision and proper pronunciation.",
+    arabic: "التجويد",
+    subtitle: "The Science of Recitation",
     icon: Mic,
-    color: "amber",
-    features: ["Makharij Mastery", "Sifaat Practice", "Audio Analysis"],
-    audience: "All Levels",
+    description:
+      "The articulation points, the attributes of letters, and the rules of recitation — studied and applied.",
+    teacher: "Under certified reciters",
+    meta: ["Makharij", "Sifaat", "Applied"],
   },
   {
     id: "qiraat",
     title: "Qira'aat",
+    arabic: "القراءات",
     subtitle: "The Ten Recitations",
-    description:
-      "Study the ten authentic Qira'at with certified scholars and Sanad chains.",
     icon: Crown,
-    color: "purple",
-    features: ["Ten Qira'at", "Sanad Verification", "Advanced Study"],
-    audience: "Advanced",
+    description:
+      "The ten authentic Qira'at, studied with verified Sanad and preparation for Ijazah.",
+    teacher: "Under scholars of transmission",
+    meta: ["Ten Qira'at", "Sanad", "Ijazah"],
   },
   {
     id: "arabic",
     title: "Arabic Language",
-    subtitle: "Quranic Arabic",
-    description:
-      "Learn classical Arabic to understand the Quran in its original language.",
+    arabic: "اللغة العربية",
+    subtitle: "Qur'anic Arabic",
     icon: Globe,
-    color: "amber",
-    features: ["Grammar", "Vocabulary", "Tafsir Reading"],
-    audience: "Beginner+",
+    description:
+      "Classical Arabic grammar and morphology — the tools to read the Qur'an and its sciences.",
+    teacher: "Under scholars of the Arabic tongue",
+    meta: ["Nahw", "Sarf", "Reading"],
   },
   {
     id: "tafsir",
     title: "Tafsir",
-    subtitle: "Quranic Exegesis",
+    arabic: "التفسير",
+    subtitle: "Qur'anic Exegesis",
+    icon: Compass,
     description:
-      "Deep dive into Quranic meaning with classical and contemporary scholarship.",
-    icon: BookOpen,
-    color: "purple",
-    features: [
-      "Classical Sources",
-      "Scholarly Analysis",
-      "Practical Application",
-    ],
-    audience: "Intermediate+",
+      "Classical and contemporary exegesis of the Qur'an, studied from the primary sources.",
+    teacher: "Under scholars of Tafsir",
+    meta: ["Classical", "Analysis", "Applied"],
   },
   {
     id: "children",
-    title: "Children's Program",
-    subtitle: "Foundation & Juz Amma",
-    description:
-      "Fun, engaging Quran learning for children aged 5-12 with structured progression.",
+    title: "Children's Programme",
+    arabic: "برنامج الأطفال",
+    subtitle: "Foundation & Juz 'Amma",
     icon: Heart,
-    color: "amber",
-    features: ["Juz Amma", "Fun Activities", "Parent Portal"],
-    audience: "Ages 5-12",
+    description:
+      "Careful, unhurried grounding in Qur'anic recitation and character for children aged five to twelve.",
+    teacher: "Under primary-stage teachers",
+    meta: ["Juz 'Amma", "Manners", "Family portal"],
   },
-];
+] as const;
 
-const FEATURES = [
+const PRINCIPLES = [
   {
     icon: ShieldCheck,
     title: "Authentic Sanad",
-    description: "Unbroken chain of transmission to Prophet Muhammad (ﷺ)",
-    color: "purple",
-  },
-  {
-    icon: Award,
-    title: "Ijazah Certification",
+    arabic: "سَنَد",
     description:
-      "Formal certification recognized by Islamic scholarly councils",
-    color: "amber",
+      "An unbroken chain of transmission to the Prophet ﷺ, preserved teacher to student for fourteen centuries.",
   },
   {
     icon: Users,
-    title: "1-on-1 Instruction",
-    description: "Personalized attention from certified teachers",
-    color: "purple",
+    title: "One-to-One Instruction",
+    arabic: "فَرْدِي",
+    description:
+      "Every student is taught individually — paced, corrected, and encouraged by a qualified teacher.",
   },
   {
-    icon: Globe,
-    title: "Flexible Learning",
-    description: "Online or in-person, at your own pace",
-    color: "amber",
+    icon: GraduationCap,
+    title: "Ijazah Certification",
+    arabic: "إِجَازَة",
+    description:
+      "Formal certification in recitation and memorisation, recognised by scholarly councils.",
   },
-];
+] as const;
 
 const TESTIMONIALS = [
   {
-    name: "Isa",
-    role: "Online",
+    name: "Isā",
+    role: "Online student",
+    arabic: "عَنْ بُعْد",
     content:
-      "I am grateful for the comprehensive curriculum and dedicated teachers at Al-Maysaroh.",
-    initials: "I",
+      "I am grateful for the comprehensive curriculum and the dedication of the teachers at Al-Maysaroh.",
   },
   {
-    name: "Yusuf",
-    role: "Boarding Student",
+    name: "Yūsuf",
+    role: "Boarding student",
+    arabic: "الحَرَم",
     content:
-      "The boarding program at Al-Maysaroh has been a transformative experience for my spiritual growth.",
-    initials: "Y",
+      "The boarding programme has been a transformative experience for my spiritual growth and my memorisation.",
   },
-];
+] as const;
 
-const STATS = [
-  { value: "50+", label: "Active Students", icon: Users, color: "purple" },
-  { value: "94%", label: "Success Rate", icon: Award, color: "amber" },
-  { value: "5+", label: "Countries", icon: Globe, color: "purple" },
-  {
-    value: "1400+",
-    label: "Years of Sanad",
-    icon: ShieldCheck,
-    color: "amber",
-  },
-];
-
-// ============================================================
-// COLOR STYLES - SUPPORTS BOTH LIGHT & DARK
-// ============================================================
-
-const getColorStyles = (color: string) => {
-  const styles = {
-    purple: {
-      text: "text-purple-700 dark:text-purple-400",
-      border: "border-purple-200 dark:border-purple-800/30",
-      bg: "bg-purple-100 dark:bg-purple-600/20",
-      lightBg: "bg-purple-50 dark:bg-purple-950/40",
-      linear:
-        "from-purple-600 to-purple-700 dark:from-purple-500 dark:to-purple-600",
-      glow: "shadow-purple-500/30 dark:shadow-purple-500/30",
-      hover: "hover:bg-purple-50 dark:hover:bg-purple-600/10",
-    },
-    amber: {
-      text: "text-amber-700 dark:text-amber-400",
-      border: "border-amber-200 dark:border-amber-800/30",
-      bg: "bg-amber-100 dark:bg-amber-500/20",
-      lightBg: "bg-amber-50 dark:bg-amber-950/40",
-      linear:
-        "from-amber-500 to-amber-600 dark:from-amber-500 dark:to-amber-600",
-      glow: "shadow-amber-500/30 dark:shadow-amber-500/30",
-      hover: "hover:bg-amber-50 dark:hover:bg-amber-500/10",
-    },
-  };
-  return styles[color as keyof typeof styles] || styles.purple;
-};
-
-// ============================================================
-// COMPONENTS
-// ============================================================
-
-function PremiumStatCard({ value, label, icon, delay, color }: any) {
-  const Icon = icon;
-  const colors = getColorStyles(color);
-  return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: delay || 0 }}
-      className="text-center group"
-    >
-      <div
-        className={`w-14 h-14 rounded-2xl ${colors.bg} flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform`}
-      >
-        <Icon className={`w-7 h-7 ${colors.text}`} />
-      </div>
-      <div className={`text-2xl md:text-3xl font-black ${colors.text}`}>
-        {value}
-      </div>
-      <div className="text-xs text-muted-foreground">{label}</div>
-    </motion.div>
-  );
-}
-
-function PremiumCampusCard({
-  href,
-  title,
-  description,
-  features,
-  icon,
-  color,
-  buttonText,
-}: any) {
-  const colors = getColorStyles(color);
-
-  return (
-    <motion.div
-      whileHover={{ y: -8 }}
-      transition={{ type: "spring", stiffness: 300 }}
-      className="h-full"
-    >
-      <Link href={href} className="block h-full">
-        <div
-          className={cn(
-            "group relative p-6 md:p-8 rounded-2xl border-2 transition-all duration-300 hover:shadow-2xl h-full flex flex-col bg-card hover:bg-muted/30 dark:bg-slate-900/50 dark:hover:bg-slate-900/70",
-            colors.border,
-          )}
-        >
-          {/* Glow Effect */}
-          <div
-            className={`absolute -inset-0.5 ${colors.glow} opacity-0 group-hover:opacity-100 blur-xl transition-opacity duration-500 rounded-2xl`}
-          />
-
-          {/* Icon */}
-          <div
-            className={`relative w-14 h-14 md:w-16 md:h-16 rounded-2xl flex items-center justify-center mb-4 ${colors.bg}`}
-          >
-            <div className={colors.text}>{icon}</div>
-          </div>
-
-          <h3 className="text-xl md:text-2xl font-black text-foreground mb-2">
-            {title}
-          </h3>
-          <p className="text-muted-foreground text-sm mb-4">{description}</p>
-
-          <ul className="space-y-2 mb-6 flex-1">
-            {features.map((feature: string, i: number) => (
-              <li
-                key={i}
-                className="flex items-center gap-2 text-sm text-muted-foreground"
-              >
-                <CheckCircle2 className={cn("w-4 h-4", colors.text)} />
-                {feature}
-              </li>
-            ))}
-          </ul>
-
-          <Button
-            className={cn(
-              "w-full font-black group/btn rounded-xl py-3 text-white",
-              `bg-linear-to-r ${colors.linear} shadow-lg ${colors.glow} hover:shadow-xl transition-all`,
-            )}
-          >
-            {buttonText}
-            <ArrowRight className="w-4 h-4 ml-2 group-hover/btn:translate-x-1 transition-transform" />
-          </Button>
-        </div>
-      </Link>
-    </motion.div>
-  );
-}
-
-// ============================================================
-// PAGE
-// ============================================================
+/* ------------------------------------------------------------------ */
+/*  PAGE                                                               */
+/* ------------------------------------------------------------------ */
 
 export default function LandingPage() {
   return (
-    <main className="min-h-screen bg-background overflow-hidden">
+    <main className="min-h-screen overflow-hidden bg-background">
       {/* ============================================================
-           HERO SECTION
-           ============================================================ */}
-      <section className="relative min-h-screen flex items-center overflow-hidden">
-        {/* Background Effects - Light/Dark aware */}
-        <div className="absolute inset-0">
-          <div className="absolute top-1/4 left-1/2 w-[800px] h-[800px] bg-purple-600/10 dark:bg-purple-600/10 rounded-full blur-3xl animate-pulse" />
-          <div className="absolute bottom-1/4 right-1/2 w-[800px] h-[800px] bg-amber-500/10 dark:bg-amber-500/10 rounded-full blur-3xl animate-pulse delay-1000" />
-          <div
-            className="absolute inset-0 bg-[url('/islamic-pattern.svg')] opacity-[0.02] dark:opacity-[0.02] bg-center bg-repeat"
-            style={{ backgroundSize: "300px" }}
-          />
-          <div className="absolute top-0 right-0 w-96 h-96 bg-purple-600/5 dark:bg-purple-600/5 rounded-full blur-3xl" />
-          <div className="absolute bottom-0 left-0 w-96 h-96 bg-amber-500/5 dark:bg-amber-500/5 rounded-full blur-3xl" />
-        </div>
+          HERO
+          ============================================================ */}
+      <section className="relative overflow-hidden">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0"
+          style={{
+            background:
+              "radial-gradient(900px 500px at 85% -10%, hsl(262 83% 58% / 0.06), transparent 60%), radial-gradient(700px 400px at 10% 100%, #d4af37 / 0.05, transparent 60%)",
+          }}
+        />
 
-        <div className="container mx-auto px-4 xs:px-5 sm:px-6 relative z-10 py-20">
+        <div className="container relative z-10 mx-auto px-6 py-24 sm:py-28 md:py-32 lg:px-8 lg:py-40">
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-            className="max-w-5xl mx-auto"
+            transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+            className="mx-auto max-w-5xl"
           >
-            <div className="text-center">
-              {/* Badge - Light/Dark aware */}
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-purple-100 dark:bg-purple-600/20 border border-purple-200 dark:border-purple-600/30 mb-6">
-                <Sparkles className="w-4 h-4 text-amber-600 dark:text-amber-500" />
-                <span className="text-xs font-black uppercase tracking-wider text-purple-700 dark:text-amber-500">
-                  {`Al-Maysaroh Institute • Ijazah Certified`}
-                </span>
-              </div>
-
-              <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl xl:text-9xl font-black tracking-tighter leading-[1.1] mb-6 text-foreground">
-                Your Journey to
-                <span className="block bg-linear-to-r from-purple-600 via-amber-600 to-purple-600 dark:from-purple-400 dark:via-amber-500 dark:to-purple-400 bg-clip-text text-transparent">
-                  Quranic Excellence
-                </span>
-              </h1>
-
-              <p className="text-lg md:text-xl text-muted-foreground max-w-2xl mx-auto mb-10">
-                Choose your learning path. Whether online from anywhere or
-                in-person at our physical campus, start your Sanad today.
-              </p>
-
-              {/* Stats Row */}
-              <div className="flex flex-wrap justify-center gap-8 md:gap-12 mb-12">
-                {STATS.map((stat, i) => (
-                  <PremiumStatCard
-                    key={i}
-                    value={stat.value}
-                    label={stat.label}
-                    icon={stat.icon}
-                    color={stat.color}
-                    delay={0.2 + i * 0.1}
-                  />
-                ))}
-              </div>
+            {/* Colophon — label · rule · Arabic name */}
+            <div className="mb-10 flex items-center gap-4">
+              <span aria-hidden className={cn("h-px w-10", BRAND.gradientRule)} />
+              <span className="text-[11px] font-medium uppercase tracking-[0.22em] text-foreground/60">
+                Al-Maysaroh Institute
+              </span>
+              <span aria-hidden className="h-px flex-1 bg-foreground/10" />
+              <span
+                dir="rtl"
+                lang="ar"
+                className="font-arabic text-[13px] leading-none text-foreground/45"
+              >
+                معهد الميسرة
+              </span>
             </div>
 
-            {/* Campus Cards */}
-            <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-              <PremiumCampusCard
-                href="/online"
-                title="Online Campus"
-                description="Learn from anywhere with 1-on-1 sessions"
-                features={[
-                  "Flexible Scheduling",
-                  "Global Access",
-                  "Certified Teachers",
-                ]}
-                icon={<Globe className="w-8 h-8" />}
-                color="purple"
-                buttonText="Explore Online"
-              />
-              <PremiumCampusCard
+            {/* H1 */}
+            <h1 className="font-heading text-[2.75rem] font-medium leading-[1.05] tracking-[-0.025em] text-foreground sm:text-6xl md:text-7xl lg:text-[5.25rem]">
+              Your journey to
+              <br />
+              <span className="text-foreground/40">Qur&apos;anic</span>{" "}
+              <span className={BRAND.gradientText}>excellence</span>,
+              <br />
+              <span className="text-foreground/40">
+                transmitted as it was{" "}
+              </span>
+              <span className={BRAND.purple}>received</span>.
+            </h1>
+
+            {/* Lead */}
+            <p className="mt-8 max-w-2xl text-base leading-relaxed text-foreground/60 sm:text-[17px]">
+              A traditional madrasah for the memorisation and recitation of the
+              Qur&apos;an — grounded in authentic Sanad, taught one student at
+              a time, and offered both online and at our residential campus.
+            </p>
+
+            {/* CTAs */}
+            <div className="mt-12 flex flex-col items-start gap-3 sm:flex-row sm:items-center">
+              <Link
                 href="/onsite"
-                title="Physical Campus"
-                description="Full-time residential Quran memorization"
-                features={[
-                  "Boarding Available",
-                  "Structured Routine",
-                  "Community",
-                ]}
-                icon={<Building2 className="w-8 h-8" />}
-                color="amber"
-                buttonText="Explore Physical"
-              />
+                className={cn(
+                  "group inline-flex items-center gap-2 rounded-full px-6 py-3 text-[13px] font-medium tracking-wide text-white shadow-sm transition-all duration-300",
+                  BRAND.gradientButton,
+                  BRAND.gradientButtonHover
+                )}
+              >
+                Enter the Physical Campus
+                <ArrowRight
+                  className="h-[14px] w-[14px] transition-transform duration-300 group-hover:translate-x-1"
+                  strokeWidth={1.5}
+                />
+              </Link>
+
+              <Link
+                href="/online"
+                className="group inline-flex items-center gap-2 rounded-full border border-foreground/15 px-6 py-3 text-[13px] font-medium tracking-wide text-foreground/75 transition-colors duration-300 hover:border-primary-700/40 hover:text-primary-700 dark:hover:border-primary-300/40 dark:hover:text-primary-300"
+              >
+                Study Online
+                <ArrowRight
+                  className="h-[14px] w-[14px] transition-transform duration-300 group-hover:translate-x-1"
+                  strokeWidth={1.5}
+                />
+              </Link>
             </div>
           </motion.div>
         </div>
-
-        {/* Scroll Indicator */}
-        <motion.div
-          animate={{ y: [0, 10, 0] }}
-          transition={{ duration: 1.5, repeat: Infinity }}
-          className="absolute bottom-8 left-1/2 -translate-x-1/2"
-        >
-          <div className="w-6 h-10 rounded-full border-2 border-purple-300 dark:border-purple-600/30 flex items-start justify-center p-1">
-            <div className="w-1.5 h-1.5 rounded-full bg-purple-600 dark:bg-purple-400 animate-bounce" />
-          </div>
-        </motion.div>
       </section>
 
       {/* ============================================================
-           TRUST SEALS
-           ============================================================ */}
-      <section className="py-12 md:py-16 border-y border-border bg-muted/20 dark:bg-slate-900/30">
-        <div className="container mx-auto px-4 xs:px-5 sm:px-6">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-3xl mx-auto">
-            {TRUST_SEALS.map((item, i) => {
-              const Icon = item.icon;
-              const colors = getColorStyles(item.color);
-              return (
-                <motion.div
-                  key={i}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.1 }}
-                  className="text-center group"
-                >
-                  <div
-                    className={cn(
-                      "w-14 h-14 rounded-2xl flex items-center justify-center mx-auto mb-3 group-hover:scale-110 transition-transform",
-                      colors.lightBg,
-                    )}
+          STATS — hairline grid, bilingual captions
+          ============================================================ */}
+      <section className="border-y border-foreground/10">
+        <div className="container mx-auto px-6 lg:px-8">
+          <div className="grid grid-cols-2 gap-px overflow-hidden bg-foreground/10 md:grid-cols-4">
+            {STATS.map((stat, i) => (
+              <Reveal key={stat.label} delay={i * 0.06}>
+                <div className="flex flex-col bg-background px-6 py-10 sm:px-8">
+                  <span
+                    dir="rtl"
+                    lang="ar"
+                    className="mb-4 font-arabic text-[13px] leading-none text-foreground/35"
                   >
-                    <Icon className={cn("w-7 h-7", colors.text)} />
-                  </div>
-                  <p className={cn("text-xs font-black", colors.text)}>
-                    {item.label}
-                  </p>
-                </motion.div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* ============================================================
-           PROGRAMS SECTION
-           ============================================================ */}
-      <section className="py-16 md:py-24">
-        <div className="container mx-auto px-4 xs:px-5 sm:px-6">
-          <Reveal>
-            <div className="text-center max-w-2xl mx-auto mb-12 md:mb-16">
-              <div className="flex items-center justify-center gap-3 mb-4">
-                <div className="w-12 h-0.5 bg-linear-to-r from-transparent to-amber-500" />
-                <span className="text-amber-600 dark:text-amber-500 font-black text-xs uppercase tracking-wider flex items-center gap-2">
-                  <Compass className="w-4 h-4" />
-                  Our Programs
-                </span>
-                <div className="w-12 h-0.5 bg-linear-to-l from-transparent to-amber-500" />
-              </div>
-              <h2 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tighter font-heading text-foreground mb-4">
-                Comprehensive{" "}
-                <span className="bg-linear-to-r from-purple-600 to-amber-600 dark:from-purple-400 dark:to-amber-400 bg-clip-text text-transparent italic">
-                  Quranic Education
-                </span>
-              </h2>
-              <p className="text-lg text-muted-foreground">
-              {`  Whether you're beginning your journey or seeking advanced
-                certification, we have a program tailored for you.`}
-              </p>
-            </div>
-          </Reveal>
-
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
-            {PROGRAMS.map((program, index) => {
-              const Icon = program.icon;
-              const colors = getColorStyles(program.color);
-              return (
-                <Reveal key={program.id} delay={index * 0.05}>
-                  <motion.div
-                    whileHover={{ y: -6 }}
-                    className="bg-card rounded-2xl border border-border hover:border-primary/30 dark:border-slate-800/50 dark:hover:border-purple-600/50 transition-all p-6 h-full flex flex-col group"
-                  >
-                    <div
-                      className={cn(
-                        "w-14 h-14 rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform",
-                        colors.lightBg,
-                      )}
-                    >
-                      <Icon className={cn("w-7 h-7", colors.text)} />
-                    </div>
-
-                    <h3 className="font-black text-lg text-foreground mb-0.5">
-                      {program.title}
-                    </h3>
-                    <p
-                      className={cn(
-                        "text-xs font-black uppercase tracking-wider mb-2",
-                        colors.text,
-                      )}
-                    >
-                      {program.subtitle}
-                    </p>
-
-                    <p className="text-sm text-muted-foreground mb-4 flex-1">
-                      {program.description}
-                    </p>
-
-                    <div className="flex flex-wrap gap-2 mb-3">
-                      {program.features.map((feature, idx) => (
-                        <span
-                          key={idx}
-                          className={cn(
-                            "text-[10px] font-black px-2.5 py-1 rounded-full",
-                            colors.lightBg,
-                            colors.text,
-                          )}
-                        >
-                          {feature}
-                        </span>
-                      ))}
-                    </div>
-
-                    {/* <div className="text-xs text-muted-foreground">
-                      🎯 {program.audience}
-                    </div> */}
-                  </motion.div>
-                </Reveal>
-              );
-            })}
-          </div>
-
-          <Reveal delay={0.3}>
-            <div className="text-center mt-12">
-              <Link href="/online/courses">
-                <Button className="rounded-full px-8 py-4 font-black bg-linear-to-r from-purple-600 to-purple-700 dark:from-purple-600 dark:to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white shadow-lg hover:shadow-xl transition-all duration-300 group">
-                  View All Programs
-                  <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-                </Button>
-              </Link>
-            </div>
-          </Reveal>
-        </div>
-      </section>
-
-      {/* ============================================================
-           FEATURES SECTION
-           ============================================================ */}
-      <section className="py-16 md:py-24 bg-linear-to-b from-transparent via-purple-50/50 to-amber-50/50 dark:via-purple-600/5 dark:to-amber-600/5">
-        <div className="container mx-auto px-4 xs:px-5 sm:px-6">
-          <Reveal>
-            <div className="text-center max-w-2xl mx-auto mb-12 md:mb-16">
-              <div className="flex items-center justify-center gap-3 mb-4">
-                <div className="w-12 h-0.5 bg-linear-to-r from-transparent to-purple-500" />
-                <span className="text-purple-700 dark:text-purple-400 font-black text-xs uppercase tracking-wider flex items-center gap-2">
-                  <Target className="w-4 h-4" />
-                  Why Choose Us
-                </span>
-                <div className="w-12 h-0.5 bg-linear-to-l from-transparent to-purple-500" />
-              </div>
-              <h2 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tighter font-heading text-foreground mb-4">
-                The{" "}
-                <span className="bg-linear-to-r from-purple-600 to-amber-600 dark:from-purple-400 dark:to-amber-400 bg-clip-text text-transparent italic">
-                  Al-Maysaroh
-                </span>{" "}
-                Advantage
-              </h2>
-              <p className="text-lg text-muted-foreground">
-                What sets our Quranic education apart
-              </p>
-            </div>
-          </Reveal>
-
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto">
-            {FEATURES.map((feature, index) => {
-              const Icon = feature.icon;
-              const colors = getColorStyles(feature.color);
-              return (
-                <Reveal key={index} delay={index * 0.1}>
-                  <div className="text-center p-6 rounded-2xl bg-card border border-border hover:border-primary/30 dark:border-slate-800/50 dark:hover:border-purple-600/50 transition-all group">
-                    <div
-                      className={cn(
-                        "w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform",
-                        colors.lightBg,
-                      )}
-                    >
-                      <Icon className={cn("w-8 h-8", colors.text)} />
-                    </div>
-                    <h3
-                      className={cn(
-                        "font-black text-base text-foreground mb-2",
-                        colors.text,
-                      )}
-                    >
-                      {feature.title}
-                    </h3>
-                    <p className="text-sm text-muted-foreground">
-                      {feature.description}
-                    </p>
-                  </div>
-                </Reveal>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* ============================================================
-           TESTIMONIALS SECTION
-           ============================================================ */}
-      <section className="py-16 md:py-24">
-        <div className="container mx-auto px-4 xs:px-5 sm:px-6">
-          <Reveal>
-            <div className="text-center max-w-2xl mx-auto mb-12 md:mb-16">
-              <div className="flex items-center justify-center gap-3 mb-4">
-                <div className="w-12 h-0.5 bg-linear-to-r from-transparent to-amber-500" />
-                <span className="text-amber-600 dark:text-amber-500 font-black text-xs uppercase tracking-wider flex items-center gap-2">
-                  <Quote className="w-4 h-4" />
-                  Testimonials
-                </span>
-                <div className="w-12 h-0.5 bg-linear-to-l from-transparent to-amber-500" />
-              </div>
-              <h2 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tighter font-heading text-foreground mb-4">
-                What Our{" "}
-                <span className="bg-linear-to-r from-purple-600 to-amber-600 dark:from-purple-400 dark:to-amber-400 bg-clip-text text-transparent italic">
-                  Students
-                </span>{" "}
-                Say
-              </h2>
-            </div>
-          </Reveal>
-
-          <div className="grid sm:grid-cols-2 gap-6 max-w-4xl mx-auto">
-            {TESTIMONIALS.map((testimonial, index) => (
-              <Reveal key={index} delay={index * 0.1}>
-                <div className="bg-card rounded-2xl border border-border hover:border-primary/30 dark:border-slate-800/50 dark:hover:border-purple-600/50 transition-all p-6 h-full flex flex-col">
-                  <Quote className="w-8 h-8 text-amber-300 dark:text-amber-500/30 mb-3" />
-                  <p className="text-sm text-muted-foreground italic mb-4 flex-1 leading-relaxed">
-                    {`"${testimonial.content}"`}
-                  </p>
-                  <div className="flex items-center gap-3 pt-3 border-t border-border">
-                    <div className="w-10 h-10 rounded-full bg-linear-to-br from-purple-600 to-amber-500 flex items-center justify-center text-white font-black text-sm">
-                      {testimonial.initials}
-                    </div>
-                    <div>
-                      <p className="font-black text-sm text-foreground">
-                        {testimonial.name}
-                      </p>
-                      <p className="text-xs text-muted-foreground">
-                        {testimonial.role}
-                      </p>
-                    </div>
-                  </div>
+                    {stat.arabic}
+                  </span>
+                  <span className="font-heading text-4xl font-medium tabular-nums tracking-[-0.02em] text-foreground sm:text-5xl">
+                    {stat.value}
+                  </span>
+                  <span className="mt-2 text-[12px] leading-relaxed text-foreground/55">
+                    {stat.label}
+                  </span>
                 </div>
               </Reveal>
             ))}
@@ -655,80 +1161,39 @@ export default function LandingPage() {
       </section>
 
       {/* ============================================================
-           ADDITIONAL DETAILS SECTION - NEW
-           ============================================================ */}
-      <section className="py-16 md:py-24 bg-linear-to-b from-transparent via-purple-50/50 to-amber-50/50 dark:via-purple-600/5 dark:to-amber-600/5">
-        <div className="container mx-auto px-4 xs:px-5 sm:px-6">
-          <Reveal>
-            <div className="text-center max-w-2xl mx-auto mb-12 md:mb-16">
-              <div className="flex items-center justify-center gap-3 mb-4">
-                <div className="w-12 h-0.5 bg-linear-to-r from-transparent to-purple-500" />
-                <span className="text-purple-700 dark:text-purple-400 font-black text-xs uppercase tracking-wider flex items-center gap-2">
-                  <Zap className="w-4 h-4" />
-                  Why Al-Maysaroh
-                </span>
-                <div className="w-12 h-0.5 bg-linear-to-l from-transparent to-purple-500" />
-              </div>
-              <h2 className="text-4xl md:text-5xl lg:text-6xl font-black tracking-tighter font-heading text-foreground mb-4">
-                Built on{" "}
-                <span className="bg-linear-to-r from-purple-600 to-amber-600 dark:from-purple-400 dark:to-amber-400 bg-clip-text text-transparent italic">
-                  Tradition
-                </span>
-                , Powered by{" "}
-                <span className="bg-linear-to-r from-amber-600 to-purple-600 dark:from-amber-400 dark:to-purple-400 bg-clip-text text-transparent italic">
-                  Innovation
-                </span>
-              </h2>
-              <p className="text-lg text-muted-foreground">
-                Combining 1,400 years of scholarly tradition with modern
-                pedagogy for optimal learning.
-              </p>
-            </div>
-          </Reveal>
-
-          <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-            {[
-              {
-                icon: ShieldCheck,
-                title: "Authentic Sanad",
-                desc: "Unbroken chain of transmission to Prophet Muhammad (ﷺ)",
-                color: "purple",
-              },
-              {
-                icon: Users,
-                title: "Personalized Learning",
-                desc: "1-on-1 instruction tailored to each student's pace",
-                color: "amber",
-              },
-              {
-                icon: GraduationCap,
-                title: "Ijazah Certification",
-                desc: "Formal certification recognized by scholarly councils",
-                color: "purple",
-              },
-            ].map((item, index) => {
+          TRUST SEALS
+          ============================================================ */}
+      <section className="border-b border-foreground/10 bg-background py-16 md:py-20">
+        <div className="container mx-auto px-6 lg:px-8">
+          <div className="grid grid-cols-2 gap-10 md:grid-cols-4 md:gap-6">
+            {TRUST_SEALS.map((item, i) => {
               const Icon = item.icon;
-              const colors = getColorStyles(item.color);
               return (
-                <Reveal key={index} delay={index * 0.1}>
-                  <div className="text-center p-8 rounded-2xl bg-card border border-border hover:border-primary/30 dark:border-slate-800/50 dark:hover:border-purple-600/50 transition-all group">
-                    <div
-                      className={cn(
-                        "w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform",
-                        colors.lightBg,
-                      )}
-                    >
-                      <Icon className={cn("w-8 h-8", colors.text)} />
+                <Reveal key={item.label} delay={i * 0.06}>
+                  <div className="flex flex-col items-start">
+                    <div className="mb-5 flex items-center gap-3">
+                      <Icon
+                        className="h-[18px] w-[18px] text-primary-700/80 dark:text-primary-300/80"
+                        strokeWidth={1.5}
+                      />
+                      <span
+                        dir="rtl"
+                        lang="ar"
+                        className="font-arabic text-[14px] leading-none text-foreground/40"
+                      >
+                        {item.arabic}
+                      </span>
                     </div>
-                    <h3
+                    <span className="text-[13px] font-medium leading-snug text-foreground/75">
+                      {item.label}
+                    </span>
+                    <span
+                      aria-hidden
                       className={cn(
-                        "font-black text-lg text-foreground mb-2",
-                        colors.text,
+                        "mt-4 h-px w-6 origin-left scale-x-100 transition-transform duration-500",
+                        BRAND.gradientRule
                       )}
-                    >
-                      {item.title}
-                    </h3>
-                    <p className="text-sm text-muted-foreground">{item.desc}</p>
+                    />
                   </div>
                 </Reveal>
               );
@@ -738,74 +1203,566 @@ export default function LandingPage() {
       </section>
 
       {/* ============================================================
-           CTA SECTION
-           ============================================================ */}
-      <section className="py-16 md:py-24 bg-linear-to-br from-purple-600/10 via-purple-700/10 to-amber-600/10 dark:from-purple-600/20 dark:via-purple-700/20 dark:to-amber-600/20">
-        <div className="container mx-auto px-4 xs:px-5 sm:px-6">
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            className="max-w-3xl mx-auto text-center"
-          >
-            <div className="inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-linear-to-br from-purple-600 to-amber-500 mb-6 shadow-xl shadow-purple-500/30">
-              <Sparkles className="w-10 h-10 text-white" />
-            </div>
-
-            <h2 className="text-3xl md:text-4xl lg:text-5xl font-black text-foreground mb-4">
-              Ready to Begin Your Journey?
-            </h2>
-
-            <p className="text-muted-foreground text-lg mb-8 max-w-md mx-auto">
-              Choose your learning path and start your Sanad today. Your journey
-              to Quranic excellence begins here.
-            </p>
-
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Link href="/online">
-                <Button className="rounded-full px-8 py-4 font-black bg-linear-to-r from-purple-600 to-purple-700 dark:from-purple-600 dark:to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white shadow-lg hover:shadow-xl transition-all group">
-                  Start Online
-                  <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-                </Button>
-              </Link>
-              <Link href="/onsite">
-                <Button
-                  variant="outline"
-                  className="rounded-full px-8 py-4 font-black border-amber-500 text-amber-600 dark:text-amber-500 hover:bg-amber-50 dark:hover:bg-amber-500/10 transition-all"
+          TWO CAMPUSES
+          ============================================================ */}
+      <section className="bg-background py-24 sm:py-28 md:py-32 lg:py-40">
+        <div className="container mx-auto px-6 lg:px-8">
+          <Reveal>
+            <div className="mx-auto mb-16 max-w-4xl md:mb-20">
+              <div className="mb-10 flex items-center gap-4">
+                <span
+                  aria-hidden
+                  className={cn("h-px w-10", BRAND.gradientRule)}
+                />
+                <span className="text-[11px] font-medium uppercase tracking-[0.22em] text-foreground/60">
+                  Two Campuses
+                </span>
+                <span aria-hidden className="h-px flex-1 bg-foreground/10" />
+                <span
+                  dir="rtl"
+                  lang="ar"
+                  className="font-arabic text-[13px] leading-none text-foreground/45"
                 >
-                  Visit Physical Campus
-                  <ArrowRight className="w-4 h-4 ml-2" />
-                </Button>
-              </Link>
-            </div>
+                  الحَرَمَان
+                </span>
+              </div>
 
-            <p className="text-muted-foreground text-sm mt-6">
-              Free assessment • No commitment • All ages welcome
-            </p>
-          </motion.div>
+              <h2 className="font-heading text-4xl font-medium leading-[1.08] tracking-[-0.02em] text-foreground sm:text-5xl md:text-[3.5rem]">
+                The same curriculum,
+                <br />
+                <span className="text-foreground/40">wherever you</span>{" "}
+                <span className={BRAND.gradientText}>study</span>.
+              </h2>
+
+              <p className="mt-8 max-w-2xl text-base leading-relaxed text-foreground/60 sm:text-[17px]">
+                Study with us in residence at the campus, or one-to-one from
+                wherever you are. The teaching, the Sanad, and the standards
+                are the same.
+              </p>
+            </div>
+          </Reveal>
+
+          <div className="grid gap-px overflow-hidden rounded-lg border border-foreground/10 bg-foreground/10 md:grid-cols-2">
+            {CAMPUSES.map((campus, index) => {
+              const Icon = campus.icon;
+              return (
+                <Reveal key={campus.href} delay={index * 0.06}>
+                  <Link
+                    href={campus.href}
+                    className={cn(
+                      "group relative flex h-full flex-col p-8 transition-colors duration-300 focus:outline-none sm:p-12",
+                      campus.primary
+                        ? BRAND.purpleWash
+                        : cn("bg-background", BRAND.purpleWashHover)
+                    )}
+                  >
+                    {campus.primary && (
+                      <span
+                        aria-hidden
+                        className={cn(
+                          "absolute inset-y-0 left-0 w-px",
+                          "bg-gradient-to-b from-primary-700 via-primary-600 to-[--color-gold]"
+                        )}
+                      />
+                    )}
+
+                    {/* top row */}
+                    <div className="mb-10 flex items-start justify-between">
+                      <Icon
+                        className={cn(
+                          "h-[20px] w-[20px] transition-colors duration-300",
+                          campus.primary
+                            ? BRAND.purple
+                            : BRAND.purpleSoft
+                        )}
+                        strokeWidth={1.5}
+                      />
+                      <span
+                        dir="rtl"
+                        lang="ar"
+                        className="font-arabic text-[15px] leading-none text-foreground/40"
+                      >
+                        {campus.arabic}
+                      </span>
+                    </div>
+
+                    <h3 className="font-heading text-2xl font-medium tracking-[-0.01em] text-foreground sm:text-[28px]">
+                      {campus.title}
+                    </h3>
+                    <p className="mt-2 text-[13px] text-foreground/50">
+                      {campus.subtitle}
+                    </p>
+
+                    <p className="mt-6 mb-8 flex-1 text-[14px] leading-[1.75] text-foreground/65">
+                      {campus.description}
+                    </p>
+
+                    <ul className="mb-8 space-y-2.5">
+                      {campus.features.map((feature) => (
+                        <li
+                          key={feature}
+                          className="flex items-start gap-3 text-[13px] leading-relaxed text-foreground/65"
+                        >
+                          <CheckCircle2
+                            className="mt-[3px] h-[13px] w-[13px] shrink-0 text-primary-700/80 dark:text-primary-300/80"
+                            strokeWidth={1.75}
+                          />
+                          <span>{feature}</span>
+                        </li>
+                      ))}
+                    </ul>
+
+                    <div className="flex items-center justify-between border-t border-foreground/10 pt-5">
+                      <span
+                        className={cn(
+                          "text-[12px] font-medium tracking-wide transition-colors duration-300",
+                          campus.primary
+                            ? BRAND.purple
+                            : "text-foreground/60 group-hover:text-primary-700 dark:group-hover:text-primary-300"
+                        )}
+                      >
+                        {campus.cta}
+                      </span>
+                      <ArrowRight
+                        className={cn(
+                          "h-[14px] w-[14px] transition-transform duration-300 group-hover:translate-x-1",
+                          campus.primary
+                            ? BRAND.purple
+                            : "text-foreground/50 group-hover:text-primary-700 dark:group-hover:text-primary-300"
+                        )}
+                        strokeWidth={1.5}
+                      />
+                    </div>
+
+                    <span
+                      aria-hidden
+                      className={cn(
+                        "pointer-events-none absolute inset-x-0 bottom-0 h-px origin-left scale-x-0 transition-transform duration-500 group-hover:scale-x-100",
+                        BRAND.gradientHairline
+                      )}
+                    />
+                  </Link>
+                </Reveal>
+              );
+            })}
+          </div>
         </div>
       </section>
 
       {/* ============================================================
-           FOOTER TRUST BADGE
-           ============================================================ */}
-      <div className="py-4 border-t border-border bg-muted/20 dark:bg-slate-900/30">
-        <div className="container mx-auto px-4 xs:px-5 sm:px-6">
-          <div className="flex flex-wrap justify-center gap-6 text-xs text-muted-foreground">
-            <span className="flex items-center gap-1.5">
-              <ShieldCheck className="w-3.5 h-3.5 text-purple-600 dark:text-purple-400" />
+          PROGRAMS
+          ============================================================ */}
+      <section className="bg-background pb-24 sm:pb-28 md:pb-32 lg:pb-40">
+        <div className="container mx-auto px-6 lg:px-8">
+          <Reveal>
+            <div className="mx-auto mb-16 max-w-4xl md:mb-20">
+              <div className="mb-10 flex items-center gap-4">
+                <span
+                  aria-hidden
+                  className={cn("h-px w-10", BRAND.gradientRule)}
+                />
+                <span className="text-[11px] font-medium uppercase tracking-[0.22em] text-foreground/60">
+                  The Curriculum
+                </span>
+                <span aria-hidden className="h-px flex-1 bg-foreground/10" />
+                <span
+                  dir="rtl"
+                  lang="ar"
+                  className="font-arabic text-[13px] leading-none text-foreground/45"
+                >
+                  المنهج الدراسي
+                </span>
+              </div>
+
+              <h2 className="font-heading text-4xl font-medium leading-[1.08] tracking-[-0.02em] text-foreground sm:text-5xl md:text-[3.5rem]">
+                A complete course of study,
+                <br />
+                <span className="text-foreground/40">
+                  taught the way it was{" "}
+                </span>
+                <span className={BRAND.gradientText}>meant to be taught</span>.
+              </h2>
+
+              <p className="mt-8 max-w-2xl text-base leading-relaxed text-foreground/60 sm:text-[17px]">
+                Six disciplines, each grounded in authentic transmission and
+                taught in the classical manner — with patience, precision, and
+                the companionship of a teacher.
+              </p>
+            </div>
+          </Reveal>
+
+          <div className="grid gap-px overflow-hidden rounded-lg border border-foreground/10 bg-foreground/10 sm:grid-cols-2 lg:grid-cols-3">
+            {PROGRAMS.map((program, index) => {
+              const Icon = program.icon;
+              return (
+                <Reveal key={program.id} delay={index * 0.05}>
+                  <Link
+                    href={`/onsite/programs/${program.id}`}
+                    className={cn(
+                      "group relative flex h-full flex-col bg-background p-8 transition-colors duration-300 focus:outline-none sm:p-10",
+                      BRAND.purpleWashHover
+                    )}
+                  >
+                    <span
+                      aria-hidden
+                      className={cn(
+                        "absolute left-1/2 top-0 h-px w-8 -translate-x-1/2 opacity-0 transition-opacity duration-500 group-hover:opacity-100",
+                        BRAND.gradientRule
+                      )}
+                    />
+
+                    <div className="mb-10 flex items-start justify-between">
+                      <span
+                        className={cn(
+                          "bg-clip-text text-[11px] font-medium tabular-nums tracking-[0.2em]",
+                          "bg-gradient-to-br from-primary-600/50 to-[--color-gold]/40 text-transparent"
+                        )}
+                      >
+                        {String(index + 1).padStart(2, "0")}
+                      </span>
+
+                      <div className="flex items-center gap-4">
+                        <span
+                          dir="rtl"
+                          lang="ar"
+                          className="font-arabic text-[18px] leading-none text-foreground/35 transition-colors duration-300 group-hover:text-foreground/55"
+                        >
+                          {program.arabic}
+                        </span>
+                        <Icon
+                          className={cn(
+                            "h-[18px] w-[18px] transition-colors duration-300",
+                            BRAND.purpleSoft,
+                            "group-hover:text-primary-700 dark:group-hover:text-primary-300"
+                          )}
+                          strokeWidth={1.5}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="mb-6">
+                      <h3 className="font-heading text-[22px] font-medium tracking-[-0.01em] text-foreground transition-colors duration-300 group-hover:text-primary-700 dark:group-hover:text-primary-300">
+                        {program.title}
+                      </h3>
+                      <p className="mt-1 text-[13px] text-foreground/50">
+                        {program.subtitle}
+                      </p>
+                    </div>
+
+                    <p className="mb-6 flex-1 text-[14px] leading-[1.7] text-foreground/65">
+                      {program.description}
+                    </p>
+
+                    <p className="mb-6 border-l border-foreground/10 pl-3 text-[11px] font-medium uppercase tracking-[0.14em] text-foreground/45">
+                      {program.teacher}
+                    </p>
+
+                    <div className="mb-8 flex flex-wrap items-center gap-x-3 gap-y-1 text-[12px] leading-relaxed text-foreground/55">
+                      {program.meta.map((item, i) => (
+                        <span key={item} className="flex items-center gap-3">
+                          {i > 0 && (
+                            <span
+                              aria-hidden
+                              className="h-1 w-1 rounded-full bg-gradient-to-br from-primary-500/70 to-[--color-gold]/70"
+                            />
+                          )}
+                          {item}
+                        </span>
+                      ))}
+                    </div>
+
+                    <div className="flex items-center justify-between border-t border-foreground/10 pt-5">
+                      <span className="text-[12px] font-medium tracking-wide text-foreground/60 transition-colors duration-300 group-hover:text-primary-700 dark:group-hover:text-primary-300">
+                        Read more
+                      </span>
+                      <ArrowRight
+                        className="h-[13px] w-[13px] text-foreground/50 transition-transform duration-300 group-hover:translate-x-1 group-hover:text-primary-700 dark:group-hover:text-primary-300"
+                        strokeWidth={1.5}
+                      />
+                    </div>
+
+                    <span
+                      aria-hidden
+                      className={cn(
+                        "pointer-events-none absolute inset-x-0 bottom-0 h-px origin-left scale-x-0 transition-transform duration-500 group-hover:scale-x-100",
+                        BRAND.gradientHairline
+                      )}
+                    />
+                  </Link>
+                </Reveal>
+              );
+            })}
+          </div>
+
+          <Reveal delay={0.2}>
+            <div className="mt-16 flex flex-col items-start justify-between gap-6 border-t border-foreground/10 pt-10 sm:flex-row sm:items-center">
+              <p className="max-w-xl text-[13px] leading-relaxed text-foreground/50">
+                Every programme is delivered under scholars holding Ijazah, and
+                prepares students for certification where applicable.
+              </p>
+              <Link
+                href="/onsite/programs"
+                className="group inline-flex items-center gap-2 text-[13px] font-medium tracking-wide text-foreground transition-opacity hover:opacity-70"
+              >
+                See all programmes
+                <ArrowRight
+                  className="h-[14px] w-[14px] transition-transform duration-300 group-hover:translate-x-1"
+                  strokeWidth={1.5}
+                />
+              </Link>
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* ============================================================
+          PRINCIPLES — the three claims
+          ============================================================ */}
+      <section className="border-y border-foreground/10 bg-background py-24 sm:py-28 md:py-32">
+        <div className="container mx-auto px-6 lg:px-8">
+          <Reveal>
+            <div className="mx-auto mb-16 max-w-4xl md:mb-20">
+              <div className="mb-10 flex items-center gap-4">
+                <span
+                  aria-hidden
+                  className={cn("h-px w-10", BRAND.gradientRule)}
+                />
+                <span className="text-[11px] font-medium uppercase tracking-[0.22em] text-foreground/60">
+                  Why Al-Maysaroh
+                </span>
+                <span aria-hidden className="h-px flex-1 bg-foreground/10" />
+                <span
+                  dir="rtl"
+                  lang="ar"
+                  className="font-arabic text-[13px] leading-none text-foreground/45"
+                >
+                  لماذا الميسرة
+                </span>
+              </div>
+
+              <h2 className="font-heading text-4xl font-medium leading-[1.08] tracking-[-0.02em] text-foreground sm:text-5xl md:text-[3.5rem]">
+                Built on tradition,
+                <br />
+                <span className="text-foreground/40">
+                  held to the{" "}
+                </span>
+                <span className={BRAND.gradientText}>standards of it</span>.
+              </h2>
+            </div>
+          </Reveal>
+
+          <div className="grid gap-px overflow-hidden rounded-lg border border-foreground/10 bg-foreground/10 md:grid-cols-3">
+            {PRINCIPLES.map((principle, i) => {
+              const Icon = principle.icon;
+              return (
+                <Reveal key={principle.title} delay={i * 0.06}>
+                  <div className="group flex h-full flex-col bg-background p-8 transition-colors duration-300 sm:p-10 hover:bg-primary-50/40 dark:hover:bg-primary-950/15">
+                    <div className="mb-10 flex items-center gap-4">
+                      <Icon
+                        className={cn("h-[20px] w-[20px]", BRAND.purpleSoft)}
+                        strokeWidth={1.5}
+                      />
+                      <span
+                        dir="rtl"
+                        lang="ar"
+                        className="font-arabic text-[15px] leading-none text-foreground/40"
+                      >
+                        {principle.arabic}
+                      </span>
+                    </div>
+
+                    <h3 className="font-heading text-[20px] font-medium tracking-[-0.01em] text-foreground">
+                      {principle.title}
+                    </h3>
+
+                    <p className="mt-4 text-[14px] leading-[1.75] text-foreground/65">
+                      {principle.description}
+                    </p>
+                  </div>
+                </Reveal>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* ============================================================
+          TESTIMONIALS
+          ============================================================ */}
+      <section className="bg-background py-24 sm:py-28 md:py-32">
+        <div className="container mx-auto px-6 lg:px-8">
+          <Reveal>
+            <div className="mx-auto mb-16 max-w-4xl md:mb-20">
+              <div className="mb-10 flex items-center gap-4">
+                <span
+                  aria-hidden
+                  className={cn("h-px w-10", BRAND.gradientRule)}
+                />
+                <span className="text-[11px] font-medium uppercase tracking-[0.22em] text-foreground/60">
+                  From the Students
+                </span>
+                <span aria-hidden className="h-px flex-1 bg-foreground/10" />
+                <span
+                  dir="rtl"
+                  lang="ar"
+                  className="font-arabic text-[13px] leading-none text-foreground/45"
+                >
+                  كلام الطلبة
+                </span>
+              </div>
+
+              <h2 className="font-heading text-4xl font-medium leading-[1.08] tracking-[-0.02em] text-foreground sm:text-5xl md:text-[3.5rem]">
+                In their own words.
+              </h2>
+            </div>
+          </Reveal>
+
+          <div className="grid gap-px overflow-hidden rounded-lg border border-foreground/10 bg-foreground/10 md:grid-cols-2">
+            {TESTIMONIALS.map((t, i) => (
+              <Reveal key={t.name} delay={i * 0.06}>
+                <figure className="flex h-full flex-col bg-background p-8 sm:p-12">
+                  <Quote
+                    className="mb-8 h-5 w-5 text-primary-700/30 dark:text-primary-300/30"
+                    strokeWidth={1.5}
+                  />
+                  <blockquote className="flex-1 font-heading text-[19px] font-normal leading-[1.55] tracking-[-0.005em] text-foreground/85 sm:text-[21px]">
+                    {t.content}
+                  </blockquote>
+                  <figcaption className="mt-10 border-t border-foreground/10 pt-6">
+                    <div className="flex items-baseline justify-between">
+                      <div>
+                        <p className="text-[13px] font-medium text-foreground">
+                          {t.name}
+                        </p>
+                        <p className="mt-0.5 text-[12px] text-foreground/50">
+                          {t.role}
+                        </p>
+                      </div>
+                      <span
+                        dir="rtl"
+                        lang="ar"
+                        className="font-arabic text-[13px] leading-none text-foreground/40"
+                      >
+                        {t.arabic}
+                      </span>
+                    </div>
+                  </figcaption>
+                </figure>
+              </Reveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ============================================================
+          CLOSING CTA
+          ============================================================ */}
+      <section className="relative overflow-hidden border-t border-foreground/10 bg-background py-24 sm:py-28 md:py-32 lg:py-40">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0"
+          style={{
+            background:
+              "radial-gradient(900px 500px at 50% -10%, hsl(262 83% 58% / 0.06), transparent 60%), radial-gradient(700px 400px at 50% 110%, #d4af37 / 0.05, transparent 60%)",
+          }}
+        />
+
+        <div className="container relative mx-auto px-6 lg:px-8">
+          <Reveal>
+            <div className="mx-auto max-w-3xl text-center">
+              <div className="mb-10 flex items-center justify-center gap-4">
+                <span
+                  aria-hidden
+                  className="h-px w-10 bg-gradient-to-r from-transparent to-primary-600/60"
+                />
+                <span className="text-[11px] font-medium uppercase tracking-[0.22em] text-foreground/60">
+                  Admissions
+                </span>
+                <span
+                  aria-hidden
+                  className="h-px w-10 bg-gradient-to-l from-transparent to-[--color-gold]/60"
+                />
+              </div>
+
+              <h2 className="font-heading text-4xl font-medium leading-[1.05] tracking-[-0.025em] text-foreground sm:text-5xl md:text-6xl">
+                The next step is
+                <br />
+                <span className={BRAND.gradientText}>a conversation</span>.
+              </h2>
+
+              <p className="mx-auto mt-8 max-w-xl text-base leading-relaxed text-foreground/60 sm:text-[17px]">
+                Every admission begins with a short conversation — so we can
+                place you with the right teacher, on the right path, at the
+                right pace.
+              </p>
+
+              <div className="mt-12 flex flex-col items-center justify-center gap-3 sm:flex-row">
+                <Link
+                  href="/onsite/admissions"
+                  className={cn(
+                    "group inline-flex items-center gap-2 rounded-full px-6 py-3 text-[13px] font-medium tracking-wide text-white shadow-sm transition-all duration-300",
+                    BRAND.gradientButton,
+                    BRAND.gradientButtonHover
+                  )}
+                >
+                  Begin admissions
+                  <ArrowRight
+                    className="h-[14px] w-[14px] transition-transform duration-300 group-hover:translate-x-1"
+                    strokeWidth={1.5}
+                  />
+                </Link>
+                <Link
+                  href="/physical/contact"
+                  className="group inline-flex items-center gap-2 rounded-full border border-foreground/15 px-6 py-3 text-[13px] font-medium tracking-wide text-foreground/75 transition-colors duration-300 hover:border-primary-700/40 hover:text-primary-700 dark:hover:border-primary-300/40 dark:hover:text-primary-300"
+                >
+                  Speak with the administration
+                  <ArrowRight
+                    className="h-[14px] w-[14px] transition-transform duration-300 group-hover:translate-x-1"
+                    strokeWidth={1.5}
+                  />
+                </Link>
+              </div>
+
+              <p className="mt-8 text-[12px] text-foreground/45">
+                Free assessment · No commitment · All ages welcome
+              </p>
+            </div>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* ============================================================
+          FOOTNOTE STRIP — the final colophon
+          ============================================================ */}
+      <div className="border-t border-foreground/10 bg-background py-6">
+        <div className="container mx-auto px-6 lg:px-8">
+          <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-[11px] text-foreground/50">
+            <span className="flex items-center gap-2">
+              <ShieldCheck
+                className="h-3.5 w-3.5 text-primary-700/70 dark:text-primary-300/70"
+                strokeWidth={1.5}
+              />
               Ijazah Certified
             </span>
-            <span className="flex items-center gap-1.5">
-              <Crown className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
+            <span className="flex items-center gap-2">
+              <Crown
+                className="h-3.5 w-3.5 text-[--color-gold]"
+                strokeWidth={1.5}
+              />
               Authentic Sanad
             </span>
-            <span className="flex items-center gap-1.5">
-              <Users className="w-3.5 h-3.5 text-purple-600 dark:text-purple-400" />
+            <span className="flex items-center gap-2">
+              <Users
+                className="h-3.5 w-3.5 text-primary-700/70 dark:text-primary-300/70"
+                strokeWidth={1.5}
+              />
               50+ Students
             </span>
-            <span className="flex items-center gap-1.5">
-              <Globe className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" />
+            <span className="flex items-center gap-2">
+              <Globe
+                className="h-3.5 w-3.5 text-[--color-gold]"
+                strokeWidth={1.5}
+              />
               5+ Countries
             </span>
           </div>
