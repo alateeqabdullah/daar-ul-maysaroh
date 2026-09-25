@@ -1,6 +1,6 @@
-// app/maintenance/page.tsx
+// app/forbidden.tsx
 import Link from "next/link";
-import { ArrowRight, MessageCircle, Wrench } from "lucide-react";
+import { ArrowRight, ShieldX, Home, MessageCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const BRAND = {
@@ -12,16 +12,10 @@ const BRAND = {
 };
 
 export const metadata = {
-  title: "Scheduled maintenance — Al-Maysaroh Institute",
-  description:
-    "The Al-Maysaroh Institute website is currently undergoing scheduled maintenance.",
+  title: "Access restricted — Al-Maysaroh Institute",
 };
 
-// Static — the maintenance page must be cacheable so it can be
-// served even when the app itself is misbehaving.
-export const dynamic = "force-static";
-
-export default function MaintenancePage() {
+export default function Forbidden() {
   return (
     <main className="relative overflow-hidden bg-background">
       <div
@@ -38,7 +32,7 @@ export default function MaintenancePage() {
           <div className="mb-12 flex items-center gap-4">
             <span aria-hidden className={cn("h-px w-12", BRAND.gradientRule)} />
             <span className="text-[11px] font-semibold uppercase tracking-[0.24em] text-foreground/60">
-              Scheduled maintenance
+              Access restricted
             </span>
             <span aria-hidden className="h-px flex-1 bg-foreground/10" />
             <span
@@ -46,7 +40,7 @@ export default function MaintenancePage() {
               lang="ar"
               className="font-arabic text-[13px] leading-none text-foreground/45"
             >
-              صيانة مجدولة
+              الوصول مقيّد
             </span>
           </div>
 
@@ -56,52 +50,44 @@ export default function MaintenancePage() {
               BRAND.gradientFill,
             )}
           >
-            <Wrench className="h-6 w-6 text-white" strokeWidth={1.75} />
+            <ShieldX className="h-6 w-6 text-white" strokeWidth={1.75} />
           </span>
 
           <h1 className="font-heading text-3xl font-bold leading-[1.15] tracking-[-0.02em] text-foreground sm:text-4xl md:text-[2.75rem]">
-            The site is temporarily unavailable.
+            You do not have permission to view this page.
           </h1>
 
           <p className="mt-6 max-w-xl text-base leading-relaxed text-foreground/65 sm:text-[17px]">
-            We are performing scheduled maintenance to improve the site. We
-            expect to be back shortly, In shā’ Allāh. Please check back in a few
-            minutes.
+            This page is restricted to a specific role or group. If you believe
+            you should have access, please contact the administration — your
+            account may need to be updated.
           </p>
 
-          <p className="mt-4 max-w-xl text-[13px] leading-relaxed text-foreground/50">
-            If you need urgent assistance, please reach us at{" "}
-            <a
-              href="mailto:admin@almaysaroh.com"
-              className="font-medium text-foreground/75 underline decoration-foreground/20 underline-offset-4 transition-colors hover:text-purple-700 hover:decoration-purple-700/40 dark:hover:text-purple-300"
-            >
-              admin@almaysaroh.com
-            </a>
-            .
-          </p>
-
-          <div className="mt-10">
+          <div className="mt-10 flex flex-col gap-3 sm:flex-row">
             <Link
-              href="/onsite/contact"
+              href="/"
               className={cn(
                 "group inline-flex items-center gap-2 rounded-full px-6 py-3 text-[13px] font-semibold tracking-wide text-white shadow-lg shadow-purple-700/20 transition-all duration-300",
                 BRAND.gradientFill,
                 BRAND.gradientFillHover,
               )}
             >
-              <MessageCircle className="h-[14px] w-[14px]" strokeWidth={1.75} />
-              Contact the administration
+              <Home className="h-[14px] w-[14px]" strokeWidth={1.75} />
+              Return home
               <ArrowRight
                 className="h-[14px] w-[14px] transition-transform duration-300 group-hover:translate-x-1"
                 strokeWidth={1.75}
               />
             </Link>
-          </div>
 
-          <p className="mt-16 text-[12px] leading-relaxed text-foreground/45">
-            We apologise for the inconvenience. Jazākum Allāhu khayran for your
-            patience.
-          </p>
+            <Link
+              href="/physical/contact"
+              className="group inline-flex items-center gap-2 rounded-full border border-foreground/15 bg-background px-6 py-3 text-[13px] font-semibold tracking-wide text-foreground/80 transition-colors duration-300 hover:border-purple-700/40 hover:text-purple-700 dark:hover:border-purple-300/40 dark:hover:text-purple-300"
+            >
+              <MessageCircle className="h-[14px] w-[14px]" strokeWidth={1.75} />
+              Contact administration
+            </Link>
+          </div>
         </div>
       </div>
     </main>

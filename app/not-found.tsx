@@ -1,16 +1,20 @@
 // app/not-found.tsx
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import {
   ArrowRight,
   Home,
   Compass,
   BookOpen,
   MessageCircle,
+  Globe,
+  Building2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const BRAND = {
-  purple: "text-purple-700 dark:text-purple-300",
   gradientText:
     "bg-gradient-to-r from-purple-700 via-purple-600 to-amber-500 bg-clip-text text-transparent dark:from-purple-300 dark:via-purple-300 dark:to-amber-400",
   gradientRule: "bg-gradient-to-r from-purple-600 to-amber-500",
@@ -20,31 +24,103 @@ const BRAND = {
     "hover:from-purple-800 hover:via-purple-700 hover:to-amber-600 dark:hover:from-purple-500 dark:hover:via-purple-500 dark:hover:to-amber-300",
 };
 
-const SUGGESTIONS = [
-  {
-    href: "/onsite/programs",
-    label: "The Curriculum",
-    description: "Six disciplines taught under scholars of Ijazah",
-    icon: BookOpen,
-  },
-  {
-    href: "/onsite/admissions",
-    label: "Admissions",
-    description: "Begin with a short conversation about your path",
-    icon: Compass,
-  },
-  {
-    href: "/physical/contact",
-    label: "Speak with the Administration",
-    description: "If you need guidance, we are here",
-    icon: MessageCircle,
-  },
-] as const;
+/**
+ * Detect which campus the user was on so the suggestions match.
+ * Falls back to a neutral set when we can't tell.
+ */
+function getContext(pathname: string | null) {
+  const p = pathname ?? "";
+
+  if (p.startsWith("/online")) {
+    return {
+      campus: "online" as const,
+      label: "Online Campus",
+      arabic: "عَنْ بُعْد",
+      suggestions: [
+        {
+          href: "/online/courses",
+          label: "Online Courses",
+          description: "One-to-one instruction from certified teachers",
+          icon: BookOpen,
+        },
+        {
+          href: "/online/admissions",
+          label: "Online Admissions",
+          description: "Begin with a short conversation about your path",
+          icon: Compass,
+        },
+        {
+          href: "/physical/contact",
+          label: "Speak with the Administration",
+          description: "If you need guidance, we are here",
+          icon: MessageCircle,
+        },
+      ],
+    };
+  }
+
+  if (p.startsWith("/onsite") || p.startsWith("/physical")) {
+    return {
+      campus: "onsite" as const,
+      label: "Physical Campus",
+      arabic: "الحَرَم",
+      suggestions: [
+        {
+          href: "/onsite/programs",
+          label: "The Curriculum",
+          description: "Six disciplines taught under scholars of Ijazah",
+          icon: BookOpen,
+        },
+        {
+          href: "/onsite/admissions",
+          label: "Admissions",
+          description: "Begin with a short conversation about your path",
+          icon: Compass,
+        },
+        {
+          href: "/physical/contact",
+          label: "Speak with the Administration",
+          description: "If you need guidance, we are here",
+          icon: MessageCircle,
+        },
+      ],
+    };
+  }
+
+  // Neutral fallback — for the marketing site or unknown routes
+  return {
+    campus: "neutral" as const,
+    label: "Al-Maysaroh Institute",
+    arabic: "دار الميسرة",
+    suggestions: [
+      {
+        href: "/onsite",
+        label: "Physical Campus",
+        description: "Residential study at the campus",
+        icon: Building2,
+      },
+      {
+        href: "/online",
+        label: "Online Campus",
+        description: "One-to-one instruction from anywhere",
+        icon: Globe,
+      },
+      {
+        href: "/physical/contact",
+        label: "Speak with the Administration",
+        description: "If you need guidance, we are here",
+        icon: MessageCircle,
+      },
+    ],
+  };
+}
 
 export default function NotFound() {
+  const pathname = usePathname();
+  const ctx = getContext(pathname);
+
   return (
     <main className="relative overflow-hidden bg-background">
-      {/* The one quiet brand wash — same as the rest of the site */}
       <div
         aria-hidden
         className="pointer-events-none absolute inset-0"
@@ -56,7 +132,7 @@ export default function NotFound() {
 
       <div className="container relative mx-auto flex min-h-screen items-center px-6 py-24 lg:px-8">
         <div className="mx-auto w-full max-w-3xl">
-          {/* ---------- Colophon: label · rule · Arabic ---------- */}
+          {/* Colophon */}
           <div className="mb-12 flex items-center gap-4">
             <span aria-hidden className={cn("h-px w-12", BRAND.gradientRule)} />
             <span className="text-[11px] font-semibold uppercase tracking-[0.24em] text-foreground/60">
@@ -72,7 +148,7 @@ export default function NotFound() {
             </span>
           </div>
 
-          {/* ---------- The 404, typographic — no rotating zeros ---------- */}
+          {/* 404 */}
           <div className="mb-10">
             <span
               className={cn(
@@ -84,7 +160,7 @@ export default function NotFound() {
             </span>
           </div>
 
-          {/* ---------- The message ---------- */}
+          {/* Message — aware of campus */}
           <h1 className="font-heading text-3xl font-bold leading-[1.15] tracking-[-0.02em] text-foreground sm:text-4xl md:text-[2.75rem]">
             This page does not exist —
             <br />
@@ -94,15 +170,24 @@ export default function NotFound() {
           </h1>
 
           <p className="mt-6 max-w-xl text-base leading-relaxed text-foreground/65 sm:text-[17px]">
-            The address you followed may have changed, or the page may no longer
-            be published. The links below will take you to the places visitors
-            most often need.
+            {ctx.campus === "online" &&
+              "The address you followed within the online campus may have changed, or the page may no longer be published. The links below will take you where you most likely need to go."}
+            {ctx.campus === "onsite" &&
+              "The address you followed within the physical campus may have changed, or the page may no longer be published. The links below will take you where you most likely need to go."}
+            {ctx.campus === "neutral" &&
+              "The address you followed may have changed, or the page may no longer be published. The links below will take you to the places visitors most often need."}
           </p>
 
-          {/* ---------- Primary return CTA ---------- */}
+          {/* Return home — adaptive */}
           <div className="mt-10">
             <Link
-              href="/"
+              href={
+                ctx.campus === "online"
+                  ? "/online"
+                  : ctx.campus === "onsite"
+                    ? "/onsite"
+                    : "/"
+              }
               className={cn(
                 "group inline-flex items-center gap-2 rounded-full px-6 py-3 text-[13px] font-semibold tracking-wide text-white shadow-lg shadow-purple-700/20 transition-all duration-300",
                 BRAND.gradientFill,
@@ -110,7 +195,7 @@ export default function NotFound() {
               )}
             >
               <Home className="h-[14px] w-[14px]" strokeWidth={1.75} />
-              Return to the home page
+              Return to the {ctx.label}
               <ArrowRight
                 className="h-[14px] w-[14px] transition-transform duration-300 group-hover:translate-x-1"
                 strokeWidth={1.75}
@@ -118,20 +203,20 @@ export default function NotFound() {
             </Link>
           </div>
 
-          {/* ---------- Suggestions — three, in a hairline grid ---------- */}
+          {/* Suggestions — adaptive */}
           <div className="mt-16 border-t border-foreground/10 pt-10">
             <span className="text-[11px] font-semibold uppercase tracking-[0.24em] text-foreground/45">
               Perhaps you were looking for
             </span>
 
             <div className="mt-6 grid gap-px overflow-hidden rounded-lg border border-foreground/10 bg-foreground/10 sm:grid-cols-3">
-              {SUGGESTIONS.map((item) => {
+              {ctx.suggestions.map((item) => {
                 const Icon = item.icon;
                 return (
                   <Link
                     key={item.href}
                     href={item.href}
-                    className="group flex flex-col bg-background p-6 transition-colors duration-300 hover:bg-purple-50/40 dark:hover:bg-purple-950/15"
+                    className="group relative flex flex-col bg-background p-6 transition-colors duration-300 hover:bg-purple-50/40 dark:hover:bg-purple-950/15"
                   >
                     <Icon
                       className="mb-5 h-[18px] w-[18px] text-purple-700/80 dark:text-purple-300/80"
@@ -156,7 +241,7 @@ export default function NotFound() {
             </div>
           </div>
 
-          {/* ---------- Quiet closing line ---------- */}
+          {/* Closing line — adaptive */}
           <p className="mt-16 text-[12px] leading-relaxed text-foreground/45">
             If you believe this is an error, please{" "}
             <Link

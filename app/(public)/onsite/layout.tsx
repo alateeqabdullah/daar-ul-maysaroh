@@ -55,7 +55,7 @@ export default function PhysicalLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="physical-campus min-h-screen flex flex-col bg-gradient-to-b from-background via-purple-50/5 to-amber-50/5">
+    <div className="physical-campus min-h-screen flex flex-col bg-linear-to-b from-background via-purple-50/5 to-amber-50/5">
       <OnsiteHeader />
       <main className="flex-1 pt-[--header-height]">{children}</main>
       <OnsiteFooter />

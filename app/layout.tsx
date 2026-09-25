@@ -9,9 +9,10 @@ import {
 } from "next/font/google";
 import { Toaster } from "sonner";
 import "./globals.css";
-import { OfflineProvider } from "@/components/providers/offline-detector";
+
 import { GlobalScrollProgress } from "@/components/layoutt/globallScroll";
 import { WhatsAppButton } from "@/components/shared/whatsapp-button";
+import { OfflineProvider } from "@/components/providers/offline-detector";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const noto = Noto_Sans_Arabic({ subsets: ["arabic"], variable: "--font-noto" });
