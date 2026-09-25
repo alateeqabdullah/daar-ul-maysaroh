@@ -843,33 +843,65 @@ import {
   GraduationCap,
   Compass,
   Quote,
+  Sparkles,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Reveal } from "@/components/shared/section-animation";
 
 /* ------------------------------------------------------------------ */
-/*  BRAND TOKENS — single source of truth                              */
+/*  BRAND TOKENS                                                       */
 /* ------------------------------------------------------------------ */
 
 const BRAND = {
+  // Solid
   purple: "text-primary-700 dark:text-primary-300",
   purpleSoft: "text-primary-700/80 dark:text-primary-300/80",
   gold: "text-[--color-gold]",
+  purpleBg: "bg-primary-700 dark:bg-primary-600",
+  purpleWash: "bg-primary-50/60 dark:bg-primary-950/25",
+  purpleWashHover: "hover:bg-primary-50/60 dark:hover:bg-primary-950/25",
 
-  purpleWash: "bg-primary-50/50 dark:bg-primary-950/20",
-  purpleWashHover: "hover:bg-primary-50/40 dark:hover:bg-primary-950/15",
-
+  // Brand gradient — appears liberally but calibrated
   gradientText:
     "bg-gradient-to-r from-primary-700 via-primary-600 to-[--color-gold] bg-clip-text text-transparent dark:from-primary-300 dark:via-primary-300 dark:to-[--color-gold]",
+  gradientTextReverse:
+    "bg-gradient-to-l from-primary-700 via-primary-600 to-[--color-gold] bg-clip-text text-transparent dark:from-primary-300 dark:via-primary-300 dark:to-[--color-gold]",
   gradientRule: "bg-gradient-to-r from-primary-600 to-[--color-gold]",
+  gradientRuleVert:
+    "bg-gradient-to-b from-primary-700 via-primary-600 to-[--color-gold]",
   gradientHairline:
     "bg-gradient-to-r from-primary-600/60 via-[--color-gold]/50 to-transparent",
   gradientButton:
     "bg-gradient-to-r from-primary-700 via-primary-700 to-[--color-gold] dark:from-primary-600 dark:via-primary-600 dark:to-[--color-gold]",
   gradientButtonHover:
     "hover:from-primary-800 hover:via-primary-800 hover:to-[--color-gold] dark:hover:from-primary-500 dark:hover:via-primary-500",
+  gradientIcon:
+    "bg-gradient-to-br from-primary-600 to-[--color-gold] text-white",
+  gradientIconSoft:
+    "bg-gradient-to-br from-primary-100 to-amber-100 dark:from-primary-950/60 dark:to-amber-950/40",
+  gradientAvatar:
+    "bg-gradient-to-br from-primary-600 via-primary-500 to-[--color-gold] text-white",
 };
+
+/* ------------------------------------------------------------------ */
+/*  MOTION PRESETS — slow, calm, dignified                             */
+/* ------------------------------------------------------------------ */
+
+const EASE = [0.22, 1, 0.36, 1] as const;
+
+const fadeUp = {
+  initial: { opacity: 0, y: 20 },
+  animate: { opacity: 1, y: 0 },
+  transition: { duration: 0.9, ease: EASE },
+};
+
+const stagger = (i: number) => ({
+  initial: { opacity: 0, y: 20 },
+  whileInView: { opacity: 1, y: 0 },
+  viewport: { once: true, margin: "-80px" },
+  transition: { duration: 0.7, delay: i * 0.08, ease: EASE },
+});
 
 /* ------------------------------------------------------------------ */
 /*  DATA                                                               */
@@ -896,7 +928,7 @@ const CAMPUSES = [
     arabic: "الحَرَم",
     subtitle: "Residential study",
     description:
-      "Full-time memorisation and recitation at our residential campus, with boarding, daily routine, and community life.",
+      "Full-time memorisation and recitation at our residential campus — with boarding, a structured daily routine, and community life.",
     features: [
       "Boarding available",
       "Structured daily routine",
@@ -1047,53 +1079,68 @@ export default function LandingPage() {
           HERO
           ============================================================ */}
       <section className="relative overflow-hidden">
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0"
-          style={{
-            background:
-              "radial-gradient(900px 500px at 85% -10%, hsl(262 83% 58% / 0.06), transparent 60%), radial-gradient(700px 400px at 10% 100%, #d4af37 / 0.05, transparent 60%)",
-          }}
-        />
+        {/* Layered brand wash — purple + gold, alive but calm */}
+        <div aria-hidden className="pointer-events-none absolute inset-0">
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                "radial-gradient(1000px 600px at 85% -10%, hsl(262 83% 58% / 0.10), transparent 60%), radial-gradient(800px 500px at 10% 110%, #d4af37 / 0.08, transparent 60%)",
+            }}
+          />
+          <div
+            className="absolute inset-0 opacity-[0.04] dark:opacity-[0.06]"
+            style={{
+              backgroundImage:
+                "linear-gradient(to right, currentColor 1px, transparent 1px), linear-gradient(to bottom, currentColor 1px, transparent 1px)",
+              backgroundSize: "56px 56px",
+              maskImage:
+                "radial-gradient(ellipse at center, black 30%, transparent 75%)",
+              WebkitMaskImage:
+                "radial-gradient(ellipse at center, black 30%, transparent 75%)",
+            }}
+          />
+        </div>
 
         <div className="container relative z-10 mx-auto px-6 py-24 sm:py-28 md:py-32 lg:px-8 lg:py-40">
-          <motion.div
-            initial={{ opacity: 0, y: 24 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
-            className="mx-auto max-w-5xl"
-          >
-            {/* Colophon — label · rule · Arabic name */}
+          <motion.div {...fadeUp} className="mx-auto max-w-5xl">
+            {/* Colophon */}
             <div className="mb-10 flex items-center gap-4">
-              <span aria-hidden className={cn("h-px w-10", BRAND.gradientRule)} />
-              <span className="text-[11px] font-medium uppercase tracking-[0.22em] text-foreground/60">
+              <span
+                aria-hidden
+                className={cn("h-px w-12", BRAND.gradientRule)}
+              />
+              <span className="text-[11px] font-semibold uppercase tracking-[0.22em] text-foreground/70">
                 Al-Maysaroh Institute
               </span>
               <span aria-hidden className="h-px flex-1 bg-foreground/10" />
               <span
                 dir="rtl"
                 lang="ar"
-                className="font-arabic text-[13px] leading-none text-foreground/45"
+                className={cn(
+                  "font-quran text-[16px] leading-none",
+                  BRAND.gradientText
+                )}
               >
-                معهد الميسرة
+                دار الميسرة
               </span>
             </div>
 
             {/* H1 */}
-            <h1 className="font-heading text-[2.75rem] font-medium leading-[1.05] tracking-[-0.025em] text-foreground sm:text-6xl md:text-7xl lg:text-[5.25rem]">
+            <h1 className="font-heading text-[2.75rem] font-bold leading-[1.05] tracking-[-0.025em] text-foreground sm:text-6xl md:text-7xl lg:text-[5.25rem]">
               Your journey to
               <br />
-              <span className="text-foreground/40">Qur&apos;anic</span>{" "}
+              <span className="text-foreground/45">Qur&apos;anic</span>{" "}
               <span className={BRAND.gradientText}>excellence</span>,
               <br />
-              <span className="text-foreground/40">
+              <span className="text-foreground/45">
                 transmitted as it was{" "}
               </span>
               <span className={BRAND.purple}>received</span>.
             </h1>
 
             {/* Lead */}
-            <p className="mt-8 max-w-2xl text-base leading-relaxed text-foreground/60 sm:text-[17px]">
+            <p className="mt-8 max-w-2xl text-base leading-relaxed text-foreground/65 sm:text-[17px]">
               A traditional madrasah for the memorisation and recitation of the
               Qur&apos;an — grounded in authentic Sanad, taught one student at
               a time, and offered both online and at our residential campus.
@@ -1104,26 +1151,26 @@ export default function LandingPage() {
               <Link
                 href="/onsite"
                 className={cn(
-                  "group inline-flex items-center gap-2 rounded-full px-6 py-3 text-[13px] font-medium tracking-wide text-white shadow-sm transition-all duration-300",
+                  "group inline-flex items-center gap-2 rounded-full px-6 py-3 text-[13px] font-semibold tracking-wide text-white shadow-lg shadow-primary-700/20 transition-all duration-500",
                   BRAND.gradientButton,
                   BRAND.gradientButtonHover
                 )}
               >
                 Enter the Physical Campus
                 <ArrowRight
-                  className="h-[14px] w-[14px] transition-transform duration-300 group-hover:translate-x-1"
-                  strokeWidth={1.5}
+                  className="h-[14px] w-[14px] transition-transform duration-500 group-hover:translate-x-1"
+                  strokeWidth={1.75}
                 />
               </Link>
 
               <Link
                 href="/online"
-                className="group inline-flex items-center gap-2 rounded-full border border-foreground/15 px-6 py-3 text-[13px] font-medium tracking-wide text-foreground/75 transition-colors duration-300 hover:border-primary-700/40 hover:text-primary-700 dark:hover:border-primary-300/40 dark:hover:text-primary-300"
+                className="group inline-flex items-center gap-2 rounded-full border border-foreground/15 bg-background/60 px-6 py-3 text-[13px] font-semibold tracking-wide text-foreground/80 backdrop-blur transition-all duration-500 hover:border-primary-700/40 hover:bg-primary-50/40 hover:text-primary-700 dark:hover:border-primary-300/40 dark:hover:bg-primary-950/20 dark:hover:text-primary-300"
               >
                 Study Online
                 <ArrowRight
-                  className="h-[14px] w-[14px] transition-transform duration-300 group-hover:translate-x-1"
-                  strokeWidth={1.5}
+                  className="h-[14px] w-[14px] transition-transform duration-500 group-hover:translate-x-1"
+                  strokeWidth={1.75}
                 />
               </Link>
             </div>
@@ -1132,36 +1179,48 @@ export default function LandingPage() {
       </section>
 
       {/* ============================================================
-          STATS — hairline grid, bilingual captions
+          STATS — gradient numbers, bilingual captions
           ============================================================ */}
-      <section className="border-y border-foreground/10">
+      <section className="border-y border-foreground/10 bg-gradient-to-r from-primary-50/40 via-background to-amber-50/30 dark:from-primary-950/20 dark:via-background dark:to-amber-950/10">
         <div className="container mx-auto px-6 lg:px-8">
           <div className="grid grid-cols-2 gap-px overflow-hidden bg-foreground/10 md:grid-cols-4">
             {STATS.map((stat, i) => (
-              <Reveal key={stat.label} delay={i * 0.06}>
-                <div className="flex flex-col bg-background px-6 py-10 sm:px-8">
+              <motion.div key={stat.label} {...stagger(i)}>
+                <div className="group flex flex-col bg-background px-6 py-10 transition-colors duration-700 hover:bg-primary-50/30 dark:hover:bg-primary-950/15 sm:px-8">
                   <span
                     dir="rtl"
                     lang="ar"
-                    className="mb-4 font-arabic text-[13px] leading-none text-foreground/35"
+                    className="mb-4 font-arabic text-[13px] leading-none text-foreground/40"
                   >
                     {stat.arabic}
                   </span>
-                  <span className="font-heading text-4xl font-medium tabular-nums tracking-[-0.02em] text-foreground sm:text-5xl">
+                  <span
+                    className={cn(
+                      "bg-clip-text font-heading text-4xl font-bold tabular-nums tracking-[-0.02em] text-transparent sm:text-5xl",
+                      "bg-gradient-to-br from-primary-700 to-[--color-gold] dark:from-primary-300 dark:to-[--color-gold]"
+                    )}
+                  >
                     {stat.value}
                   </span>
-                  <span className="mt-2 text-[12px] leading-relaxed text-foreground/55">
+                  <span className="mt-2 text-[12px] leading-relaxed text-foreground/60">
                     {stat.label}
                   </span>
+                  <span
+                    aria-hidden
+                    className={cn(
+                      "mt-5 h-px w-8 origin-left scale-x-0 transition-transform duration-700 group-hover:scale-x-100",
+                      BRAND.gradientRule
+                    )}
+                  />
                 </div>
-              </Reveal>
+              </motion.div>
             ))}
           </div>
         </div>
       </section>
 
       {/* ============================================================
-          TRUST SEALS
+          TRUST SEALS — gradient icon tiles
           ============================================================ */}
       <section className="border-b border-foreground/10 bg-background py-16 md:py-20">
         <div className="container mx-auto px-6 lg:px-8">
@@ -1169,33 +1228,37 @@ export default function LandingPage() {
             {TRUST_SEALS.map((item, i) => {
               const Icon = item.icon;
               return (
-                <Reveal key={item.label} delay={i * 0.06}>
-                  <div className="flex flex-col items-start">
-                    <div className="mb-5 flex items-center gap-3">
-                      <Icon
-                        className="h-[18px] w-[18px] text-primary-700/80 dark:text-primary-300/80"
-                        strokeWidth={1.5}
-                      />
+                <motion.div key={item.label} {...stagger(i)}>
+                  <div className="group flex flex-col items-start">
+                    <div className="mb-5 flex items-center gap-4">
+                      <span
+                        className={cn(
+                          "flex h-11 w-11 items-center justify-center rounded-xl shadow-md transition-transform duration-700 group-hover:-rotate-3",
+                          BRAND.gradientIcon
+                        )}
+                      >
+                        <Icon className="h-[18px] w-[18px]" strokeWidth={1.75} />
+                      </span>
                       <span
                         dir="rtl"
                         lang="ar"
-                        className="font-arabic text-[14px] leading-none text-foreground/40"
+                        className="font-arabic text-[15px] leading-none text-foreground/50"
                       >
                         {item.arabic}
                       </span>
                     </div>
-                    <span className="text-[13px] font-medium leading-snug text-foreground/75">
+                    <span className="text-[13px] font-semibold leading-snug text-foreground/80">
                       {item.label}
                     </span>
                     <span
                       aria-hidden
                       className={cn(
-                        "mt-4 h-px w-6 origin-left scale-x-100 transition-transform duration-500",
+                        "mt-4 h-px w-6 origin-left",
                         BRAND.gradientRule
                       )}
                     />
                   </div>
-                </Reveal>
+                </motion.div>
               );
             })}
           </div>
@@ -1205,36 +1268,45 @@ export default function LandingPage() {
       {/* ============================================================
           TWO CAMPUSES
           ============================================================ */}
-      <section className="bg-background py-24 sm:py-28 md:py-32 lg:py-40">
-        <div className="container mx-auto px-6 lg:px-8">
+      <section className="relative bg-background py-24 sm:py-28 md:py-32 lg:py-40">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0"
+          style={{
+            background:
+              "radial-gradient(800px 400px at 15% -10%, hsl(262 83% 58% / 0.05), transparent 60%)",
+          }}
+        />
+
+        <div className="container relative mx-auto px-6 lg:px-8">
           <Reveal>
             <div className="mx-auto mb-16 max-w-4xl md:mb-20">
               <div className="mb-10 flex items-center gap-4">
                 <span
                   aria-hidden
-                  className={cn("h-px w-10", BRAND.gradientRule)}
+                  className={cn("h-px w-12", BRAND.gradientRule)}
                 />
-                <span className="text-[11px] font-medium uppercase tracking-[0.22em] text-foreground/60">
+                <span className="text-[11px] font-semibold uppercase tracking-[0.22em] text-foreground/70">
                   Two Campuses
                 </span>
                 <span aria-hidden className="h-px flex-1 bg-foreground/10" />
                 <span
                   dir="rtl"
                   lang="ar"
-                  className="font-arabic text-[13px] leading-none text-foreground/45"
+                  className="font-arabic text-[13px] leading-none text-foreground/50"
                 >
                   الحَرَمَان
                 </span>
               </div>
 
-              <h2 className="font-heading text-4xl font-medium leading-[1.08] tracking-[-0.02em] text-foreground sm:text-5xl md:text-[3.5rem]">
+              <h2 className="font-heading text-4xl font-bold leading-[1.08] tracking-[-0.02em] text-foreground sm:text-5xl md:text-[3.5rem]">
                 The same curriculum,
                 <br />
-                <span className="text-foreground/40">wherever you</span>{" "}
+                <span className="text-foreground/45">wherever you</span>{" "}
                 <span className={BRAND.gradientText}>study</span>.
               </h2>
 
-              <p className="mt-8 max-w-2xl text-base leading-relaxed text-foreground/60 sm:text-[17px]">
+              <p className="mt-8 max-w-2xl text-base leading-relaxed text-foreground/65 sm:text-[17px]">
                 Study with us in residence at the campus, or one-to-one from
                 wherever you are. The teaching, the Sanad, and the standards
                 are the same.
@@ -1242,17 +1314,17 @@ export default function LandingPage() {
             </div>
           </Reveal>
 
-          <div className="grid gap-px overflow-hidden rounded-lg border border-foreground/10 bg-foreground/10 md:grid-cols-2">
+          <div className="grid gap-px overflow-hidden rounded-2xl border border-foreground/10 bg-foreground/10 md:grid-cols-2">
             {CAMPUSES.map((campus, index) => {
               const Icon = campus.icon;
               return (
-                <Reveal key={campus.href} delay={index * 0.06}>
+                <motion.div key={campus.href} {...stagger(index)}>
                   <Link
                     href={campus.href}
                     className={cn(
-                      "group relative flex h-full flex-col p-8 transition-colors duration-300 focus:outline-none sm:p-12",
+                      "group relative flex h-full flex-col p-8 transition-colors duration-700 focus:outline-none sm:p-12",
                       campus.primary
-                        ? BRAND.purpleWash
+                        ? "bg-gradient-to-br from-primary-50/60 via-background to-amber-50/30 dark:from-primary-950/30 dark:via-background dark:to-amber-950/15"
                         : cn("bg-background", BRAND.purpleWashHover)
                     )}
                   >
@@ -1260,40 +1332,40 @@ export default function LandingPage() {
                       <span
                         aria-hidden
                         className={cn(
-                          "absolute inset-y-0 left-0 w-px",
-                          "bg-gradient-to-b from-primary-700 via-primary-600 to-[--color-gold]"
+                          "absolute inset-y-0 left-0 w-[3px]",
+                          BRAND.gradientRuleVert
                         )}
                       />
                     )}
 
-                    {/* top row */}
                     <div className="mb-10 flex items-start justify-between">
-                      <Icon
+                      <span
                         className={cn(
-                          "h-[20px] w-[20px] transition-colors duration-300",
+                          "flex h-12 w-12 items-center justify-center rounded-xl shadow-md transition-transform duration-700 group-hover:-rotate-3",
                           campus.primary
-                            ? BRAND.purple
-                            : BRAND.purpleSoft
+                            ? BRAND.gradientIcon
+                            : "border border-primary-700/20 bg-background text-primary-700 dark:border-primary-300/20 dark:text-primary-300"
                         )}
-                        strokeWidth={1.5}
-                      />
+                      >
+                        <Icon className="h-5 w-5" strokeWidth={1.75} />
+                      </span>
                       <span
                         dir="rtl"
                         lang="ar"
-                        className="font-arabic text-[15px] leading-none text-foreground/40"
+                        className="font-arabic text-[16px] leading-none text-foreground/50"
                       >
                         {campus.arabic}
                       </span>
                     </div>
 
-                    <h3 className="font-heading text-2xl font-medium tracking-[-0.01em] text-foreground sm:text-[28px]">
+                    <h3 className="font-heading text-2xl font-bold tracking-[-0.01em] text-foreground sm:text-[28px]">
                       {campus.title}
                     </h3>
-                    <p className="mt-2 text-[13px] text-foreground/50">
+                    <p className="mt-2 text-[13px] text-foreground/55">
                       {campus.subtitle}
                     </p>
 
-                    <p className="mt-6 mb-8 flex-1 text-[14px] leading-[1.75] text-foreground/65">
+                    <p className="mt-6 mb-8 flex-1 text-[14px] leading-[1.75] text-foreground/70">
                       {campus.description}
                     </p>
 
@@ -1301,11 +1373,11 @@ export default function LandingPage() {
                       {campus.features.map((feature) => (
                         <li
                           key={feature}
-                          className="flex items-start gap-3 text-[13px] leading-relaxed text-foreground/65"
+                          className="flex items-start gap-3 text-[13px] leading-relaxed text-foreground/70"
                         >
                           <CheckCircle2
-                            className="mt-[3px] h-[13px] w-[13px] shrink-0 text-primary-700/80 dark:text-primary-300/80"
-                            strokeWidth={1.75}
+                            className="mt-[3px] h-[14px] w-[14px] shrink-0 text-primary-700 dark:text-primary-300"
+                            strokeWidth={2}
                           />
                           <span>{feature}</span>
                         </li>
@@ -1315,7 +1387,7 @@ export default function LandingPage() {
                     <div className="flex items-center justify-between border-t border-foreground/10 pt-5">
                       <span
                         className={cn(
-                          "text-[12px] font-medium tracking-wide transition-colors duration-300",
+                          "text-[12px] font-semibold tracking-wide transition-colors duration-500",
                           campus.primary
                             ? BRAND.purple
                             : "text-foreground/60 group-hover:text-primary-700 dark:group-hover:text-primary-300"
@@ -1325,24 +1397,24 @@ export default function LandingPage() {
                       </span>
                       <ArrowRight
                         className={cn(
-                          "h-[14px] w-[14px] transition-transform duration-300 group-hover:translate-x-1",
+                          "h-[14px] w-[14px] transition-transform duration-500 group-hover:translate-x-1",
                           campus.primary
                             ? BRAND.purple
                             : "text-foreground/50 group-hover:text-primary-700 dark:group-hover:text-primary-300"
                         )}
-                        strokeWidth={1.5}
+                        strokeWidth={1.75}
                       />
                     </div>
 
                     <span
                       aria-hidden
                       className={cn(
-                        "pointer-events-none absolute inset-x-0 bottom-0 h-px origin-left scale-x-0 transition-transform duration-500 group-hover:scale-x-100",
-                        BRAND.gradientHairline
+                        "pointer-events-none absolute inset-x-0 bottom-0 h-[2px] origin-left scale-x-0 transition-transform duration-700 group-hover:scale-x-100",
+                        BRAND.gradientRule
                       )}
                     />
                   </Link>
-                </Reveal>
+                </motion.div>
               );
             })}
           </div>
@@ -1359,31 +1431,31 @@ export default function LandingPage() {
               <div className="mb-10 flex items-center gap-4">
                 <span
                   aria-hidden
-                  className={cn("h-px w-10", BRAND.gradientRule)}
+                  className={cn("h-px w-12", BRAND.gradientRule)}
                 />
-                <span className="text-[11px] font-medium uppercase tracking-[0.22em] text-foreground/60">
+                <span className="text-[11px] font-semibold uppercase tracking-[0.22em] text-foreground/70">
                   The Curriculum
                 </span>
                 <span aria-hidden className="h-px flex-1 bg-foreground/10" />
                 <span
                   dir="rtl"
                   lang="ar"
-                  className="font-arabic text-[13px] leading-none text-foreground/45"
+                  className="font-arabic text-[13px] leading-none text-foreground/50"
                 >
                   المنهج الدراسي
                 </span>
               </div>
 
-              <h2 className="font-heading text-4xl font-medium leading-[1.08] tracking-[-0.02em] text-foreground sm:text-5xl md:text-[3.5rem]">
+              <h2 className="font-heading text-4xl font-bold leading-[1.08] tracking-[-0.02em] text-foreground sm:text-5xl md:text-[3.5rem]">
                 A complete course of study,
                 <br />
-                <span className="text-foreground/40">
+                <span className="text-foreground/45">
                   taught the way it was{" "}
                 </span>
                 <span className={BRAND.gradientText}>meant to be taught</span>.
               </h2>
 
-              <p className="mt-8 max-w-2xl text-base leading-relaxed text-foreground/60 sm:text-[17px]">
+              <p className="mt-8 max-w-2xl text-base leading-relaxed text-foreground/65 sm:text-[17px]">
                 Six disciplines, each grounded in authentic transmission and
                 taught in the classical manner — with patience, precision, and
                 the companionship of a teacher.
@@ -1391,22 +1463,22 @@ export default function LandingPage() {
             </div>
           </Reveal>
 
-          <div className="grid gap-px overflow-hidden rounded-lg border border-foreground/10 bg-foreground/10 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-px overflow-hidden rounded-2xl border border-foreground/10 bg-foreground/10 sm:grid-cols-2 lg:grid-cols-3">
             {PROGRAMS.map((program, index) => {
               const Icon = program.icon;
               return (
-                <Reveal key={program.id} delay={index * 0.05}>
+                <motion.div key={program.id} {...stagger(index)}>
                   <Link
                     href={`/onsite/programs/${program.id}`}
                     className={cn(
-                      "group relative flex h-full flex-col bg-background p-8 transition-colors duration-300 focus:outline-none sm:p-10",
+                      "group relative flex h-full flex-col bg-background p-8 transition-colors duration-700 focus:outline-none sm:p-10",
                       BRAND.purpleWashHover
                     )}
                   >
                     <span
                       aria-hidden
                       className={cn(
-                        "absolute left-1/2 top-0 h-px w-8 -translate-x-1/2 opacity-0 transition-opacity duration-500 group-hover:opacity-100",
+                        "absolute left-1/2 top-0 h-[2px] w-12 -translate-x-1/2 opacity-0 transition-opacity duration-700 group-hover:opacity-100",
                         BRAND.gradientRule
                       )}
                     />
@@ -1414,8 +1486,8 @@ export default function LandingPage() {
                     <div className="mb-10 flex items-start justify-between">
                       <span
                         className={cn(
-                          "bg-clip-text text-[11px] font-medium tabular-nums tracking-[0.2em]",
-                          "bg-gradient-to-br from-primary-600/50 to-[--color-gold]/40 text-transparent"
+                          "bg-clip-text text-[11px] font-semibold tabular-nums tracking-[0.2em] text-transparent",
+                          "bg-gradient-to-br from-primary-600 to-[--color-gold]"
                         )}
                       >
                         {String(index + 1).padStart(2, "0")}
@@ -1425,45 +1497,48 @@ export default function LandingPage() {
                         <span
                           dir="rtl"
                           lang="ar"
-                          className="font-arabic text-[18px] leading-none text-foreground/35 transition-colors duration-300 group-hover:text-foreground/55"
+                          className="font-arabic text-[18px] leading-none text-foreground/45 transition-colors duration-700 group-hover:text-foreground/70"
                         >
                           {program.arabic}
                         </span>
-                        <Icon
+                        <span
                           className={cn(
-                            "h-[18px] w-[18px] transition-colors duration-300",
-                            BRAND.purpleSoft,
-                            "group-hover:text-primary-700 dark:group-hover:text-primary-300"
+                            "flex h-10 w-10 items-center justify-center rounded-xl shadow-sm transition-transform duration-700 group-hover:-rotate-3",
+                            BRAND.gradientIconSoft
                           )}
-                          strokeWidth={1.5}
-                        />
+                        >
+                          <Icon
+                            className={cn("h-[18px] w-[18px]", BRAND.purple)}
+                            strokeWidth={1.75}
+                          />
+                        </span>
                       </div>
                     </div>
 
                     <div className="mb-6">
-                      <h3 className="font-heading text-[22px] font-medium tracking-[-0.01em] text-foreground transition-colors duration-300 group-hover:text-primary-700 dark:group-hover:text-primary-300">
+                      <h3 className="font-heading text-[22px] font-bold tracking-[-0.01em] text-foreground transition-colors duration-500 group-hover:text-primary-700 dark:group-hover:text-primary-300">
                         {program.title}
                       </h3>
-                      <p className="mt-1 text-[13px] text-foreground/50">
+                      <p className="mt-1 text-[13px] text-foreground/55">
                         {program.subtitle}
                       </p>
                     </div>
 
-                    <p className="mb-6 flex-1 text-[14px] leading-[1.7] text-foreground/65">
+                    <p className="mb-6 flex-1 text-[14px] leading-[1.7] text-foreground/70">
                       {program.description}
                     </p>
 
-                    <p className="mb-6 border-l border-foreground/10 pl-3 text-[11px] font-medium uppercase tracking-[0.14em] text-foreground/45">
+                    <p className="mb-6 border-l-2 border-primary-700/30 pl-3 text-[11px] font-semibold uppercase tracking-[0.14em] text-foreground/50 dark:border-primary-300/30">
                       {program.teacher}
                     </p>
 
-                    <div className="mb-8 flex flex-wrap items-center gap-x-3 gap-y-1 text-[12px] leading-relaxed text-foreground/55">
+                    <div className="mb-8 flex flex-wrap items-center gap-x-3 gap-y-1 text-[12px] leading-relaxed text-foreground/60">
                       {program.meta.map((item, i) => (
                         <span key={item} className="flex items-center gap-3">
                           {i > 0 && (
                             <span
                               aria-hidden
-                              className="h-1 w-1 rounded-full bg-gradient-to-br from-primary-500/70 to-[--color-gold]/70"
+                              className="h-1 w-1 rounded-full bg-gradient-to-br from-primary-500 to-[--color-gold]"
                             />
                           )}
                           {item}
@@ -1472,42 +1547,44 @@ export default function LandingPage() {
                     </div>
 
                     <div className="flex items-center justify-between border-t border-foreground/10 pt-5">
-                      <span className="text-[12px] font-medium tracking-wide text-foreground/60 transition-colors duration-300 group-hover:text-primary-700 dark:group-hover:text-primary-300">
+                      <span className="text-[12px] font-semibold tracking-wide text-foreground/65 transition-colors duration-500 group-hover:text-primary-700 dark:group-hover:text-primary-300">
                         Read more
                       </span>
                       <ArrowRight
-                        className="h-[13px] w-[13px] text-foreground/50 transition-transform duration-300 group-hover:translate-x-1 group-hover:text-primary-700 dark:group-hover:text-primary-300"
-                        strokeWidth={1.5}
+                        className="h-[13px] w-[13px] text-foreground/50 transition-transform duration-500 group-hover:translate-x-1 group-hover:text-primary-700 dark:group-hover:text-primary-300"
+                        strokeWidth={1.75}
                       />
                     </div>
 
                     <span
                       aria-hidden
                       className={cn(
-                        "pointer-events-none absolute inset-x-0 bottom-0 h-px origin-left scale-x-0 transition-transform duration-500 group-hover:scale-x-100",
-                        BRAND.gradientHairline
+                        "pointer-events-none absolute inset-x-0 bottom-0 h-[2px] origin-left scale-x-0 transition-transform duration-700 group-hover:scale-x-100",
+                        BRAND.gradientRule
                       )}
                     />
                   </Link>
-                </Reveal>
+                </motion.div>
               );
             })}
           </div>
 
           <Reveal delay={0.2}>
             <div className="mt-16 flex flex-col items-start justify-between gap-6 border-t border-foreground/10 pt-10 sm:flex-row sm:items-center">
-              <p className="max-w-xl text-[13px] leading-relaxed text-foreground/50">
+              <p className="max-w-xl text-[13px] leading-relaxed text-foreground/55">
                 Every programme is delivered under scholars holding Ijazah, and
                 prepares students for certification where applicable.
               </p>
               <Link
                 href="/onsite/programs"
-                className="group inline-flex items-center gap-2 text-[13px] font-medium tracking-wide text-foreground transition-opacity hover:opacity-70"
+                className={cn(
+                  "group inline-flex items-center gap-2 rounded-full border border-foreground/15 bg-background px-5 py-2.5 text-[13px] font-semibold tracking-wide text-foreground/80 transition-all duration-500 hover:border-primary-700/40 hover:bg-primary-50/50 hover:text-primary-700 dark:hover:border-primary-300/40 dark:hover:bg-primary-950/20 dark:hover:text-primary-300"
+                )}
               >
                 See all programmes
                 <ArrowRight
-                  className="h-[14px] w-[14px] transition-transform duration-300 group-hover:translate-x-1"
-                  strokeWidth={1.5}
+                  className="h-[14px] w-[14px] transition-transform duration-500 group-hover:translate-x-1"
+                  strokeWidth={1.75}
                 />
               </Link>
             </div>
@@ -1516,70 +1593,80 @@ export default function LandingPage() {
       </section>
 
       {/* ============================================================
-          PRINCIPLES — the three claims
+          PRINCIPLES
           ============================================================ */}
-      <section className="border-y border-foreground/10 bg-background py-24 sm:py-28 md:py-32">
+      <section className="relative border-y border-foreground/10 bg-gradient-to-b from-primary-50/30 via-background to-amber-50/20 dark:from-primary-950/15 dark:via-background dark:to-amber-950/10 py-24 sm:py-28 md:py-32">
         <div className="container mx-auto px-6 lg:px-8">
           <Reveal>
             <div className="mx-auto mb-16 max-w-4xl md:mb-20">
               <div className="mb-10 flex items-center gap-4">
                 <span
                   aria-hidden
-                  className={cn("h-px w-10", BRAND.gradientRule)}
+                  className={cn("h-px w-12", BRAND.gradientRule)}
                 />
-                <span className="text-[11px] font-medium uppercase tracking-[0.22em] text-foreground/60">
+                <span className="text-[11px] font-semibold uppercase tracking-[0.22em] text-foreground/70">
                   Why Al-Maysaroh
                 </span>
                 <span aria-hidden className="h-px flex-1 bg-foreground/10" />
                 <span
                   dir="rtl"
                   lang="ar"
-                  className="font-arabic text-[13px] leading-none text-foreground/45"
+                  className="font-arabic text-[13px] leading-none text-foreground/50"
                 >
                   لماذا الميسرة
                 </span>
               </div>
 
-              <h2 className="font-heading text-4xl font-medium leading-[1.08] tracking-[-0.02em] text-foreground sm:text-5xl md:text-[3.5rem]">
+              <h2 className="font-heading text-4xl font-bold leading-[1.08] tracking-[-0.02em] text-foreground sm:text-5xl md:text-[3.5rem]">
                 Built on tradition,
                 <br />
-                <span className="text-foreground/40">
-                  held to the{" "}
-                </span>
+                <span className="text-foreground/45">held to the </span>
                 <span className={BRAND.gradientText}>standards of it</span>.
               </h2>
             </div>
           </Reveal>
 
-          <div className="grid gap-px overflow-hidden rounded-lg border border-foreground/10 bg-foreground/10 md:grid-cols-3">
+          <div className="grid gap-px overflow-hidden rounded-2xl border border-foreground/10 bg-foreground/10 md:grid-cols-3">
             {PRINCIPLES.map((principle, i) => {
               const Icon = principle.icon;
               return (
-                <Reveal key={principle.title} delay={i * 0.06}>
-                  <div className="group flex h-full flex-col bg-background p-8 transition-colors duration-300 sm:p-10 hover:bg-primary-50/40 dark:hover:bg-primary-950/15">
+                <motion.div key={principle.title} {...stagger(i)}>
+                  <div className="group flex h-full flex-col bg-background p-8 transition-colors duration-700 hover:bg-primary-50/40 dark:hover:bg-primary-950/20 sm:p-10">
                     <div className="mb-10 flex items-center gap-4">
-                      <Icon
-                        className={cn("h-[20px] w-[20px]", BRAND.purpleSoft)}
-                        strokeWidth={1.5}
-                      />
+                      <span
+                        className={cn(
+                          "flex h-12 w-12 items-center justify-center rounded-xl shadow-md transition-transform duration-700 group-hover:-rotate-3",
+                          BRAND.gradientIcon
+                        )}
+                      >
+                        <Icon className="h-5 w-5" strokeWidth={1.75} />
+                      </span>
                       <span
                         dir="rtl"
                         lang="ar"
-                        className="font-arabic text-[15px] leading-none text-foreground/40"
+                        className="font-arabic text-[16px] leading-none text-foreground/50"
                       >
                         {principle.arabic}
                       </span>
                     </div>
 
-                    <h3 className="font-heading text-[20px] font-medium tracking-[-0.01em] text-foreground">
+                    <h3 className="font-heading text-[20px] font-bold tracking-[-0.01em] text-foreground">
                       {principle.title}
                     </h3>
 
-                    <p className="mt-4 text-[14px] leading-[1.75] text-foreground/65">
+                    <p className="mt-4 text-[14px] leading-[1.75] text-foreground/70">
                       {principle.description}
                     </p>
+
+                    <span
+                      aria-hidden
+                      className={cn(
+                        "mt-8 h-px w-10 origin-left scale-x-0 transition-transform duration-700 group-hover:scale-x-100",
+                        BRAND.gradientRule
+                      )}
+                    />
                   </div>
-                </Reveal>
+                </motion.div>
               );
             })}
           </div>
@@ -1596,59 +1683,73 @@ export default function LandingPage() {
               <div className="mb-10 flex items-center gap-4">
                 <span
                   aria-hidden
-                  className={cn("h-px w-10", BRAND.gradientRule)}
+                  className={cn("h-px w-12", BRAND.gradientRule)}
                 />
-                <span className="text-[11px] font-medium uppercase tracking-[0.22em] text-foreground/60">
+                <span className="text-[11px] font-semibold uppercase tracking-[0.22em] text-foreground/70">
                   From the Students
                 </span>
                 <span aria-hidden className="h-px flex-1 bg-foreground/10" />
                 <span
                   dir="rtl"
                   lang="ar"
-                  className="font-arabic text-[13px] leading-none text-foreground/45"
+                  className="font-arabic text-[13px] leading-none text-foreground/50"
                 >
                   كلام الطلبة
                 </span>
               </div>
 
-              <h2 className="font-heading text-4xl font-medium leading-[1.08] tracking-[-0.02em] text-foreground sm:text-5xl md:text-[3.5rem]">
-                In their own words.
+              <h2 className="font-heading text-4xl font-bold leading-[1.08] tracking-[-0.02em] text-foreground sm:text-5xl md:text-[3.5rem]">
+                In their own{" "}
+                <span className={BRAND.gradientText}>words</span>.
               </h2>
             </div>
           </Reveal>
 
-          <div className="grid gap-px overflow-hidden rounded-lg border border-foreground/10 bg-foreground/10 md:grid-cols-2">
+          <div className="grid gap-px overflow-hidden rounded-2xl border border-foreground/10 bg-foreground/10 md:grid-cols-2">
             {TESTIMONIALS.map((t, i) => (
-              <Reveal key={t.name} delay={i * 0.06}>
-                <figure className="flex h-full flex-col bg-background p-8 sm:p-12">
+              <motion.div key={t.name} {...stagger(i)}>
+                <figure className="group flex h-full flex-col bg-background p-8 transition-colors duration-700 hover:bg-primary-50/30 dark:hover:bg-primary-950/15 sm:p-12">
                   <Quote
-                    className="mb-8 h-5 w-5 text-primary-700/30 dark:text-primary-300/30"
+                    className={cn(
+                      "mb-8 h-6 w-6",
+                      "text-primary-700/40 dark:text-primary-300/40"
+                    )}
                     strokeWidth={1.5}
                   />
                   <blockquote className="flex-1 font-heading text-[19px] font-normal leading-[1.55] tracking-[-0.005em] text-foreground/85 sm:text-[21px]">
                     {t.content}
                   </blockquote>
                   <figcaption className="mt-10 border-t border-foreground/10 pt-6">
-                    <div className="flex items-baseline justify-between">
-                      <div>
-                        <p className="text-[13px] font-medium text-foreground">
-                          {t.name}
-                        </p>
-                        <p className="mt-0.5 text-[12px] text-foreground/50">
-                          {t.role}
-                        </p>
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <span
+                          className={cn(
+                            "flex h-11 w-11 items-center justify-center rounded-full text-[14px] font-semibold shadow-md",
+                            BRAND.gradientAvatar
+                          )}
+                        >
+                          {t.name.charAt(0)}
+                        </span>
+                        <div>
+                          <p className="text-[13px] font-semibold text-foreground">
+                            {t.name}
+                          </p>
+                          <p className="mt-0.5 text-[12px] text-foreground/55">
+                            {t.role}
+                          </p>
+                        </div>
                       </div>
                       <span
                         dir="rtl"
                         lang="ar"
-                        className="font-arabic text-[13px] leading-none text-foreground/40"
+                        className="font-arabic text-[14px] leading-none text-foreground/45"
                       >
                         {t.arabic}
                       </span>
                     </div>
                   </figcaption>
                 </figure>
-              </Reveal>
+              </motion.div>
             ))}
           </div>
         </div>
@@ -1663,7 +1764,7 @@ export default function LandingPage() {
           className="pointer-events-none absolute inset-0"
           style={{
             background:
-              "radial-gradient(900px 500px at 50% -10%, hsl(262 83% 58% / 0.06), transparent 60%), radial-gradient(700px 400px at 50% 110%, #d4af37 / 0.05, transparent 60%)",
+              "radial-gradient(900px 500px at 50% -10%, hsl(262 83% 58% / 0.10), transparent 60%), radial-gradient(700px 400px at 50% 110%, #d4af37 / 0.08, transparent 60%)",
           }}
         />
 
@@ -1673,24 +1774,24 @@ export default function LandingPage() {
               <div className="mb-10 flex items-center justify-center gap-4">
                 <span
                   aria-hidden
-                  className="h-px w-10 bg-gradient-to-r from-transparent to-primary-600/60"
+                  className="h-px w-12 bg-gradient-to-r from-transparent to-primary-600/60"
                 />
-                <span className="text-[11px] font-medium uppercase tracking-[0.22em] text-foreground/60">
+                <span className="text-[11px] font-semibold uppercase tracking-[0.22em] text-foreground/70">
                   Admissions
                 </span>
                 <span
                   aria-hidden
-                  className="h-px w-10 bg-gradient-to-l from-transparent to-[--color-gold]/60"
+                  className="h-px w-12 bg-gradient-to-l from-transparent to-[--color-gold]/60"
                 />
               </div>
 
-              <h2 className="font-heading text-4xl font-medium leading-[1.05] tracking-[-0.025em] text-foreground sm:text-5xl md:text-6xl">
+              <h2 className="font-heading text-4xl font-bold leading-[1.05] tracking-[-0.025em] text-foreground sm:text-5xl md:text-6xl">
                 The next step is
                 <br />
                 <span className={BRAND.gradientText}>a conversation</span>.
               </h2>
 
-              <p className="mx-auto mt-8 max-w-xl text-base leading-relaxed text-foreground/60 sm:text-[17px]">
+              <p className="mx-auto mt-8 max-w-xl text-base leading-relaxed text-foreground/65 sm:text-[17px]">
                 Every admission begins with a short conversation — so we can
                 place you with the right teacher, on the right path, at the
                 right pace.
@@ -1700,30 +1801,30 @@ export default function LandingPage() {
                 <Link
                   href="/onsite/admissions"
                   className={cn(
-                    "group inline-flex items-center gap-2 rounded-full px-6 py-3 text-[13px] font-medium tracking-wide text-white shadow-sm transition-all duration-300",
+                    "group inline-flex items-center gap-2 rounded-full px-6 py-3 text-[13px] font-semibold tracking-wide text-white shadow-lg shadow-primary-700/20 transition-all duration-500",
                     BRAND.gradientButton,
                     BRAND.gradientButtonHover
                   )}
                 >
                   Begin admissions
                   <ArrowRight
-                    className="h-[14px] w-[14px] transition-transform duration-300 group-hover:translate-x-1"
-                    strokeWidth={1.5}
+                    className="h-[14px] w-[14px] transition-transform duration-500 group-hover:translate-x-1"
+                    strokeWidth={1.75}
                   />
                 </Link>
                 <Link
                   href="/physical/contact"
-                  className="group inline-flex items-center gap-2 rounded-full border border-foreground/15 px-6 py-3 text-[13px] font-medium tracking-wide text-foreground/75 transition-colors duration-300 hover:border-primary-700/40 hover:text-primary-700 dark:hover:border-primary-300/40 dark:hover:text-primary-300"
+                  className="group inline-flex items-center gap-2 rounded-full border border-foreground/15 bg-background/60 px-6 py-3 text-[13px] font-semibold tracking-wide text-foreground/80 backdrop-blur transition-all duration-500 hover:border-primary-700/40 hover:bg-primary-50/40 hover:text-primary-700 dark:hover:border-primary-300/40 dark:hover:bg-primary-950/20 dark:hover:text-primary-300"
                 >
                   Speak with the administration
                   <ArrowRight
-                    className="h-[14px] w-[14px] transition-transform duration-300 group-hover:translate-x-1"
-                    strokeWidth={1.5}
+                    className="h-[14px] w-[14px] transition-transform duration-500 group-hover:translate-x-1"
+                    strokeWidth={1.75}
                   />
                 </Link>
               </div>
 
-              <p className="mt-8 text-[12px] text-foreground/45">
+              <p className="mt-8 text-[12px] text-foreground/50">
                 Free assessment · No commitment · All ages welcome
               </p>
             </div>
@@ -1732,36 +1833,33 @@ export default function LandingPage() {
       </section>
 
       {/* ============================================================
-          FOOTNOTE STRIP — the final colophon
+          FOOTNOTE STRIP
           ============================================================ */}
       <div className="border-t border-foreground/10 bg-background py-6">
         <div className="container mx-auto px-6 lg:px-8">
-          <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-[11px] text-foreground/50">
+          <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-[11px] text-foreground/60">
             <span className="flex items-center gap-2">
               <ShieldCheck
-                className="h-3.5 w-3.5 text-primary-700/70 dark:text-primary-300/70"
-                strokeWidth={1.5}
+                className="h-3.5 w-3.5 text-primary-700/80 dark:text-primary-300/80"
+                strokeWidth={1.75}
               />
               Ijazah Certified
             </span>
             <span className="flex items-center gap-2">
-              <Crown
-                className="h-3.5 w-3.5 text-[--color-gold]"
-                strokeWidth={1.5}
-              />
+              <Crown className="h-3.5 w-3.5 text-[--color-gold]" strokeWidth={1.75} />
               Authentic Sanad
             </span>
             <span className="flex items-center gap-2">
               <Users
-                className="h-3.5 w-3.5 text-primary-700/70 dark:text-primary-300/70"
-                strokeWidth={1.5}
+                className="h-3.5 w-3.5 text-primary-700/80 dark:text-primary-300/80"
+                strokeWidth={1.75}
               />
               50+ Students
             </span>
             <span className="flex items-center gap-2">
               <Globe
                 className="h-3.5 w-3.5 text-[--color-gold]"
-                strokeWidth={1.5}
+                strokeWidth={1.75}
               />
               5+ Countries
             </span>
