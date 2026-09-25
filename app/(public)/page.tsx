@@ -1085,7 +1085,7 @@ export default function LandingPage() {
               </span>
               <span aria-hidden className="h-px flex-1 bg-foreground/10" />
               <span className="text-[11px] font-semibold uppercase tracking-[0.24em] text-foreground/70">
-                Est. 1445
+                Est. 2018
               </span>
               <span
                 aria-hidden
