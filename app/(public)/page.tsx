@@ -1764,6 +1764,7 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 import {
   ArrowRight,
+  ArrowUpRight,
   Globe,
   Building2,
   ShieldCheck,
@@ -1775,16 +1776,18 @@ import {
   GraduationCap,
   Compass,
   Check,
+  Quote,
 } from "lucide-react";
 import { Reveal } from "@/components/shared/section-animation";
 import { cn } from "@/lib/utils";
 
 /* ------------------------------------------------------------------ */
-/*  BRAND — saturated purple → gold                                     */
+/*  BRAND — saturated purple → gold                                    */
 /* ------------------------------------------------------------------ */
 
 const GRADIENT = "from-purple-700 via-purple-600 to-amber-500";
-const GRADIENT_DARK = "dark:from-purple-400 dark:via-purple-400 dark:to-amber-400";
+const GRADIENT_DARK =
+  "dark:from-purple-400 dark:via-purple-400 dark:to-amber-400";
 
 const gradientText = cn(
   "bg-gradient-to-r bg-clip-text text-transparent",
@@ -1792,40 +1795,32 @@ const gradientText = cn(
   GRADIENT_DARK
 );
 
-const gradientFill = cn(
-  "bg-gradient-to-r",
-  GRADIENT,
-  GRADIENT_DARK
-);
+const gradientFill = cn("bg-gradient-to-r", GRADIENT, GRADIENT_DARK);
 
 const gradientFillHover = cn(
   "hover:from-purple-800 hover:via-purple-700 hover:to-amber-600",
   "dark:hover:from-purple-300 dark:hover:via-purple-300 dark:hover:to-amber-300"
 );
 
-const gradientRule = cn(
-  "bg-gradient-to-r",
-  GRADIENT,
-  GRADIENT_DARK
-);
+const gradientRule = cn("bg-gradient-to-r", GRADIENT, GRADIENT_DARK);
 
 /* ------------------------------------------------------------------ */
-/*  MOTION — one register                                               */
+/*  MOTION — one register, with weight                                 */
 /* ------------------------------------------------------------------ */
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
 const fadeUp = {
-  initial: { opacity: 0, y: 16 },
+  initial: { opacity: 0, y: 20 },
   animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.7, ease: EASE },
+  transition: { duration: 0.9, ease: EASE },
 };
 
 const stagger = (i: number) => ({
-  initial: { opacity: 0, y: 14 },
+  initial: { opacity: 0, y: 16 },
   whileInView: { opacity: 1, y: 0 },
   viewport: { once: true, margin: "-60px" },
-  transition: { duration: 0.5, delay: i * 0.06, ease: EASE },
+  transition: { duration: 0.65, delay: i * 0.07, ease: EASE },
 });
 
 /* ------------------------------------------------------------------ */
@@ -1833,10 +1828,10 @@ const stagger = (i: number) => ({
 /* ------------------------------------------------------------------ */
 
 const STATS = [
-  { value: "50+", label: "Students in residence" },
-  { value: "5", label: "Countries represented" },
-  { value: "1,400", label: "Years of Sanad" },
-  { value: "94%", label: "Completion rate" },
+  { value: "50+", label: "Students in residence", arabic: "بِحَمْدِ اللَّه" },
+  { value: "5", label: "Countries represented", arabic: "عَالَمِيًّا" },
+  { value: "1,400", label: "Years of Sanad", arabic: "سَنَد مُتَّصِل" },
+  { value: "94%", label: "Completion rate", arabic: "نِسْبَة الإِتْمَام" },
 ] as const;
 
 const TRUST_SEALS = [
@@ -1861,6 +1856,8 @@ const CAMPUSES = [
       "Supervised study",
     ],
     icon: Building2,
+    primary: true,
+    cta: "Enter the campus",
   },
   {
     href: "/online",
@@ -1876,6 +1873,8 @@ const CAMPUSES = [
       "Global access",
     ],
     icon: Globe,
+    primary: false,
+    cta: "Study online",
   },
 ] as const;
 
@@ -1888,6 +1887,7 @@ const PROGRAMS = [
     icon: BookOpen,
     description:
       "Complete memorisation of the Qur'an with structured daily revision and personal pacing.",
+    teacher: "Under scholars of Ijazah",
     meta: ["Sabq", "Muraja'ah", "One-to-one"],
   },
   {
@@ -1898,6 +1898,7 @@ const PROGRAMS = [
     icon: Mic,
     description:
       "The articulation points, the attributes of letters, and the rules of recitation — studied and applied.",
+    teacher: "Under certified reciters",
     meta: ["Makharij", "Sifaat", "Applied"],
   },
   {
@@ -1908,6 +1909,7 @@ const PROGRAMS = [
     icon: Crown,
     description:
       "The ten authentic Qira'at, studied with verified Sanad and preparation for Ijazah.",
+    teacher: "Under scholars of transmission",
     meta: ["Ten Qira'at", "Sanad", "Ijazah"],
   },
   {
@@ -1918,6 +1920,7 @@ const PROGRAMS = [
     icon: Globe,
     description:
       "Classical Arabic grammar and morphology — the tools to read the Qur'an and its sciences.",
+    teacher: "Under scholars of the Arabic tongue",
     meta: ["Nahw", "Sarf", "Reading"],
   },
   {
@@ -1928,6 +1931,7 @@ const PROGRAMS = [
     icon: Compass,
     description:
       "Classical and contemporary exegesis of the Qur'an, studied from the primary sources.",
+    teacher: "Under scholars of Tafsir",
     meta: ["Classical", "Analysis", "Applied"],
   },
   {
@@ -1938,6 +1942,7 @@ const PROGRAMS = [
     icon: Heart,
     description:
       "Careful, unhurried grounding in Qur'anic recitation and character for children aged five to twelve.",
+    teacher: "Under primary-stage teachers",
     meta: ["Juz 'Amma", "Manners", "Family portal"],
   },
 ] as const;
@@ -1946,18 +1951,21 @@ const PRINCIPLES = [
   {
     icon: ShieldCheck,
     title: "Authentic Sanad",
+    arabic: "سَنَد",
     description:
       "An unbroken chain of transmission to the Prophet ﷺ, preserved teacher to student for fourteen centuries.",
   },
   {
     icon: Users,
     title: "One-to-One Instruction",
+    arabic: "فَرْدِي",
     description:
       "Every student is taught individually — paced, corrected, and encouraged by a qualified teacher.",
   },
   {
     icon: GraduationCap,
     title: "Ijazah Certification",
+    arabic: "إِجَازَة",
     description:
       "Formal certification in recitation and memorisation, recognised by scholarly councils.",
   },
@@ -1967,12 +1975,14 @@ const TESTIMONIALS = [
   {
     name: "Isā",
     role: "Online student",
+    arabic: "عَنْ بُعْد",
     content:
       "I am grateful for the comprehensive curriculum and the dedication of the teachers at Al-Maysaroh.",
   },
   {
     name: "Yūsuf",
     role: "Boarding student",
+    arabic: "الحَرَم",
     content:
       "The boarding programme has been a transformative experience for my spiritual growth and my memorisation.",
   },
@@ -1989,41 +1999,55 @@ export default function LandingPage() {
           HERO
           ============================================================ */}
       <section className="relative overflow-hidden">
-        <div
-          aria-hidden
-          className="pointer-events-none absolute inset-0"
-          style={{
-            background:
-              "radial-gradient(1100px 700px at 50% -10%, rgba(147,51,234,0.14), transparent 60%), radial-gradient(900px 600px at 50% 110%, rgba(245,158,11,0.11), transparent 60%)",
-          }}
-        />
+        {/* The gradient wash — (2a) */}
+        <div aria-hidden className="pointer-events-none absolute inset-0">
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                "radial-gradient(1100px 700px at 50% -10%, rgba(147,51,234,0.16), transparent 60%), radial-gradient(900px 600px at 50% 110%, rgba(245,158,11,0.13), transparent 60%)",
+            }}
+          />
+        </div>
 
-        <div className="container relative z-10 mx-auto px-6 py-24 sm:py-28 md:py-32 lg:px-8 lg:py-40">
+        <div className="container relative z-10 mx-auto px-6 py-20 sm:py-24 md:py-28 lg:px-8 lg:py-36">
           <motion.div {...fadeUp} className="mx-auto max-w-5xl text-center">
             {/* Colophon */}
-            <div className="mx-auto mb-12 flex max-w-3xl items-center gap-4">
+            <div className="mx-auto mb-10 flex max-w-3xl items-center gap-4">
               <span aria-hidden className={cn("h-px w-12", gradientRule)} />
               <span className="text-[11px] font-semibold uppercase tracking-[0.24em] text-foreground/70">
                 Al-Maysaroh Institute
               </span>
               <span aria-hidden className="h-px flex-1 bg-foreground/10" />
-              <span
-                dir="rtl"
-                lang="ar"
-                className={cn(
-                  "font-quran text-[18px] font-bold leading-none",
-                  gradientText
-                )}
-              >
-                دار الميسرة
+              <span className="text-[11px] font-semibold uppercase tracking-[0.24em] text-foreground/70">
+                Est. 1445
               </span>
+              <span aria-hidden className={cn("h-px w-12", gradientRule)} />
             </div>
 
+            {/* The giant Arabic wordmark — (2b) */}
+            <motion.h2
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 1.1, delay: 0.1, ease: EASE }}
+              dir="rtl"
+              lang="ar"
+              className={cn(
+                "mx-auto mb-6 bg-clip-text font-quran text-[64px] font-bold leading-[1.15] text-transparent sm:text-[80px] md:text-[96px] lg:text-[108px]",
+                "bg-gradient-to-br",
+                GRADIENT,
+                GRADIENT_DARK
+              )}
+            >
+              دار الميسرة
+            </motion.h2>
+
             {/* H1 */}
-            <h1 className="mx-auto max-w-4xl font-heading text-[2.5rem] font-bold leading-[1.06] tracking-[-0.03em] text-foreground sm:text-5xl md:text-6xl lg:text-7xl">
+            <h1 className="mx-auto max-w-4xl font-heading text-[2.25rem] font-bold leading-[1.08] tracking-[-0.03em] text-foreground sm:text-[2.75rem] md:text-5xl lg:text-[3.5rem]">
               A madrasah for the{" "}
               <span className={gradientText}>memorisation</span> and{" "}
-              <span className={gradientText}>recitation</span> of the Qur&apos;an.
+              <span className={gradientText}>recitation</span> of the
+              Qur&apos;an.
             </h1>
 
             <p className="mx-auto mt-8 max-w-2xl text-base leading-relaxed text-foreground/70 sm:text-[17px]">
@@ -2050,9 +2074,7 @@ export default function LandingPage() {
 
               <Link
                 href="/online"
-                className={cn(
-                  "group inline-flex items-center gap-2 rounded-full px-7 py-3.5 text-[13px] font-semibold tracking-wide text-foreground/85 transition-all duration-300 hover:text-foreground"
-                )}
+                className="group inline-flex items-center gap-2 rounded-full px-7 py-3.5 text-[13px] font-semibold tracking-wide text-foreground/85 transition-all duration-300 hover:text-foreground"
               >
                 Online Campus
                 <ArrowRight
@@ -2066,7 +2088,7 @@ export default function LandingPage() {
       </section>
 
       {/* ============================================================
-          STATS — flat
+          STATS — flat, bilingual
           ============================================================ */}
       <section className="border-y border-foreground/10">
         <div className="container mx-auto px-6 lg:px-8">
@@ -2074,6 +2096,13 @@ export default function LandingPage() {
             {STATS.map((stat, i) => (
               <motion.div key={stat.label} {...stagger(i)}>
                 <div className="flex flex-col bg-background px-6 py-10 sm:px-8">
+                  <span
+                    dir="rtl"
+                    lang="ar"
+                    className="mb-4 font-arabic text-[13px] leading-none text-foreground/40"
+                  >
+                    {stat.arabic}
+                  </span>
                   <span className="font-heading text-4xl font-bold tabular-nums tracking-[-0.02em] text-foreground sm:text-5xl">
                     {stat.value}
                   </span>
@@ -2123,7 +2152,7 @@ export default function LandingPage() {
       </section>
 
       {/* ============================================================
-          CAMPUSES — hairline grid
+          CAMPUSES — hairline grid, featured card gets gradient bar
           ============================================================ */}
       <section className="bg-background py-24 sm:py-28 md:py-32">
         <div className="container mx-auto px-6 lg:px-8">
@@ -2152,12 +2181,33 @@ export default function LandingPage() {
                   <Link
                     href={campus.href}
                     className={cn(
-                      "group relative flex h-full flex-col bg-background p-8 transition-colors duration-300 hover:bg-purple-50/40 dark:hover:bg-purple-950/15 sm:p-12"
+                      "group relative flex h-full flex-col p-8 transition-colors duration-300 sm:p-12",
+                      campus.primary
+                        ? "bg-purple-50/50 dark:bg-purple-950/25"
+                        : "bg-background hover:bg-purple-50/40 dark:hover:bg-purple-950/15"
                     )}
                   >
+                    {/* Featured gets the gradient vertical bar */}
+                    {campus.primary && (
+                      <span
+                        aria-hidden
+                        className={cn(
+                          "absolute inset-y-0 left-0 w-[3px]",
+                          "bg-gradient-to-b",
+                          GRADIENT,
+                          GRADIENT_DARK
+                        )}
+                      />
+                    )}
+
                     <div className="mb-10 flex items-start justify-between">
                       <Icon
-                        className="h-[22px] w-[22px] text-purple-700/80 transition-colors duration-300 group-hover:text-purple-700 dark:text-purple-300/80 dark:group-hover:text-purple-300"
+                        className={cn(
+                          "h-[22px] w-[22px] transition-colors duration-300",
+                          campus.primary
+                            ? "text-purple-700 dark:text-purple-300"
+                            : "text-purple-700/80 dark:text-purple-300/80"
+                        )}
                         strokeWidth={1.5}
                       />
                       <span
@@ -2196,22 +2246,42 @@ export default function LandingPage() {
                     </ul>
 
                     <div className="flex items-center justify-between border-t border-foreground/10 pt-5">
-                      <span className="text-[12px] font-semibold tracking-wide text-foreground/70 transition-colors duration-300 group-hover:text-purple-700 dark:group-hover:text-purple-300">
-                        Explore
+                      <span
+                        className={cn(
+                          "text-[12px] font-semibold tracking-wide transition-colors duration-300",
+                          campus.primary
+                            ? "text-purple-700 dark:text-purple-300"
+                            : "text-foreground/70 group-hover:text-purple-700 dark:group-hover:text-purple-300"
+                        )}
+                      >
+                        {campus.cta}
                       </span>
-                      <ArrowRight
-                        className="h-[14px] w-[14px] text-foreground/50 transition-transform duration-300 group-hover:translate-x-1 group-hover:text-purple-700 dark:group-hover:text-purple-300"
-                        strokeWidth={1.5}
-                      />
+                      <span
+                        className={cn(
+                          "flex h-8 w-8 items-center justify-center rounded-full transition-all duration-300",
+                          campus.primary
+                            ? cn(gradientFill, "text-white")
+                            : "border border-foreground/15 text-foreground/60 group-hover:border-transparent group-hover:text-white",
+                          !campus.primary &&
+                            "group-hover:bg-gradient-to-br group-hover:from-purple-700 group-hover:to-amber-500"
+                        )}
+                      >
+                        <ArrowUpRight
+                          className="h-[13px] w-[13px]"
+                          strokeWidth={2}
+                        />
+                      </span>
                     </div>
 
-                    <span
-                      aria-hidden
-                      className={cn(
-                        "pointer-events-none absolute inset-x-0 bottom-0 h-[2px] origin-left scale-x-0 transition-transform duration-500 group-hover:scale-x-100",
-                        gradientRule
-                      )}
-                    />
+                    {!campus.primary && (
+                      <span
+                        aria-hidden
+                        className={cn(
+                          "pointer-events-none absolute inset-x-0 bottom-0 h-[2px] origin-left scale-x-0 transition-transform duration-500 group-hover:scale-x-100",
+                          gradientRule
+                        )}
+                      />
+                    )}
                   </Link>
                 </motion.div>
               );
@@ -2221,7 +2291,7 @@ export default function LandingPage() {
       </section>
 
       {/* ============================================================
-          PROGRAMS — hairline grid
+          PROGRAMS — hairline grid, gradient icon tiles, ArrowUpRight chip
           ============================================================ */}
       <section className="bg-background pb-24 sm:pb-28 md:pb-32">
         <div className="container mx-auto px-6 lg:px-8">
@@ -2240,6 +2310,11 @@ export default function LandingPage() {
                 <span className={gradientText}>transmitted teacher to student</span>
                 .
               </h2>
+
+              <p className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-foreground/65 sm:text-[17px]">
+                Each grounded in authentic transmission, taught in the
+                classical manner.
+              </p>
             </div>
           </Reveal>
 
@@ -2252,8 +2327,23 @@ export default function LandingPage() {
                     href={`/onsite/programs/${program.id}`}
                     className="group relative flex h-full flex-col bg-background p-8 transition-colors duration-300 hover:bg-purple-50/40 dark:hover:bg-purple-950/15 sm:p-9"
                   >
+                    <span
+                      aria-hidden
+                      className={cn(
+                        "absolute left-1/2 top-0 h-[2px] w-10 -translate-x-1/2 opacity-0 transition-opacity duration-500 group-hover:opacity-100",
+                        gradientRule
+                      )}
+                    />
+
                     <div className="mb-8 flex items-start justify-between">
-                      <span className="font-heading text-[18px] font-bold tabular-nums text-foreground/25 transition-colors duration-300 group-hover:text-foreground/45">
+                      <span
+                        className={cn(
+                          "bg-clip-text font-heading text-[18px] font-bold tabular-nums text-transparent",
+                          "bg-gradient-to-br",
+                          GRADIENT,
+                          GRADIENT_DARK
+                        )}
+                      >
                         {String(index + 1).padStart(2, "0")}
                       </span>
 
@@ -2265,10 +2355,17 @@ export default function LandingPage() {
                         >
                           {program.arabic}
                         </span>
-                        <Icon
-                          className="h-[20px] w-[20px] text-purple-700/80 transition-colors duration-300 group-hover:text-purple-700 dark:text-purple-300/80 dark:group-hover:text-purple-300"
-                          strokeWidth={1.5}
-                        />
+                        <span
+                          className={cn(
+                            "flex h-10 w-10 items-center justify-center rounded-xl shadow-md shadow-purple-700/15",
+                            gradientFill
+                          )}
+                        >
+                          <Icon
+                            className="h-[18px] w-[18px] text-white"
+                            strokeWidth={1.75}
+                          />
+                        </span>
                       </div>
                     </div>
 
@@ -2283,6 +2380,10 @@ export default function LandingPage() {
                       {program.description}
                     </p>
 
+                    <p className="mb-6 border-l-2 border-purple-700/30 pl-3 text-[11px] font-semibold uppercase tracking-[0.14em] text-foreground/55 dark:border-purple-300/30">
+                      {program.teacher}
+                    </p>
+
                     <div className="mb-6 text-[12px] text-foreground/55">
                       {program.meta.join("  ·  ")}
                     </div>
@@ -2291,10 +2392,12 @@ export default function LandingPage() {
                       <span className="text-[12px] font-semibold tracking-wide text-foreground/70 transition-colors duration-300 group-hover:text-purple-700 dark:group-hover:text-purple-300">
                         Read more
                       </span>
-                      <ArrowRight
-                        className="h-[13px] w-[13px] text-foreground/50 transition-transform duration-300 group-hover:translate-x-1 group-hover:text-purple-700 dark:group-hover:text-purple-300"
-                        strokeWidth={1.5}
-                      />
+                      <span className="flex h-8 w-8 items-center justify-center rounded-full border border-foreground/15 text-foreground/60 transition-all duration-300 group-hover:border-transparent group-hover:bg-gradient-to-br group-hover:from-purple-700 group-hover:to-amber-500 group-hover:text-white">
+                        <ArrowUpRight
+                          className="h-[13px] w-[13px]"
+                          strokeWidth={2}
+                        />
+                      </span>
                     </div>
 
                     <span
@@ -2332,7 +2435,7 @@ export default function LandingPage() {
       </section>
 
       {/* ============================================================
-          PRINCIPLES — hairline grid
+          PRINCIPLES — hairline grid, gradient icon tiles
           ============================================================ */}
       <section className="border-y border-foreground/10 bg-background py-24 sm:py-28 md:py-32">
         <div className="container mx-auto px-6 lg:px-8">
@@ -2359,13 +2462,31 @@ export default function LandingPage() {
               return (
                 <motion.div key={principle.title} {...stagger(i)}>
                   <div className="flex h-full flex-col bg-background p-8 sm:p-10">
-                    <Icon
-                      className="mb-8 h-[22px] w-[22px] text-purple-700/80 dark:text-purple-300/80"
-                      strokeWidth={1.5}
-                    />
+                    <div className="mb-8 flex items-center gap-4">
+                      <span
+                        className={cn(
+                          "flex h-12 w-12 items-center justify-center rounded-xl shadow-md shadow-purple-700/15",
+                          gradientFill
+                        )}
+                      >
+                        <Icon
+                          className="h-5 w-5 text-white"
+                          strokeWidth={1.75}
+                        />
+                      </span>
+                      <span
+                        dir="rtl"
+                        lang="ar"
+                        className="font-arabic text-[16px] leading-none text-foreground/45"
+                      >
+                        {principle.arabic}
+                      </span>
+                    </div>
+
                     <h3 className="font-heading text-[20px] font-bold tracking-[-0.01em] text-foreground">
                       {principle.title}
                     </h3>
+
                     <p className="mt-4 text-[14px] leading-[1.75] text-foreground/70">
                       {principle.description}
                     </p>
@@ -2378,7 +2499,7 @@ export default function LandingPage() {
       </section>
 
       {/* ============================================================
-          TESTIMONIALS
+          TESTIMONIALS — serif pull quote, gradient avatar
           ============================================================ */}
       <section className="bg-background py-24 sm:py-28 md:py-32">
         <div className="container mx-auto px-6 lg:px-8">
@@ -2403,13 +2524,39 @@ export default function LandingPage() {
             {TESTIMONIALS.map((t, i) => (
               <motion.div key={t.name} {...stagger(i)}>
                 <figure className="flex h-full flex-col bg-background p-8 sm:p-12">
+                  <Quote
+                    className="mb-6 h-6 w-6 text-purple-700/40 dark:text-purple-300/40"
+                    strokeWidth={1.5}
+                  />
                   <blockquote className="flex-1 font-heading text-[20px] font-normal leading-[1.55] tracking-[-0.005em] text-foreground/85 sm:text-[22px]">
                     {t.content}
                   </blockquote>
-                  <figcaption className="mt-10 border-t border-foreground/10 pt-6">
-                    <p className="text-[12px] font-semibold uppercase tracking-[0.16em] text-foreground/60">
-                      — {t.name}, {t.role}
-                    </p>
+                  <figcaption className="mt-10 flex items-center justify-between border-t border-foreground/10 pt-6">
+                    <div className="flex items-center gap-3">
+                      <span
+                        className={cn(
+                          "flex h-11 w-11 items-center justify-center rounded-full text-[14px] font-bold text-white shadow-md shadow-purple-700/20",
+                          gradientFill
+                        )}
+                      >
+                        {t.name.charAt(0)}
+                      </span>
+                      <div>
+                        <p className="text-[13px] font-semibold text-foreground">
+                          {t.name}
+                        </p>
+                        <p className="mt-0.5 text-[12px] text-foreground/55">
+                          {t.role}
+                        </p>
+                      </div>
+                    </div>
+                    <span
+                      dir="rtl"
+                      lang="ar"
+                      className="font-arabic text-[14px] leading-none text-foreground/45"
+                    >
+                      {t.arabic}
+                    </span>
                   </figcaption>
                 </figure>
               </motion.div>
@@ -2427,7 +2574,7 @@ export default function LandingPage() {
           className="pointer-events-none absolute inset-0"
           style={{
             background:
-              "radial-gradient(1000px 600px at 50% 100%, rgba(147,51,234,0.12), transparent 60%), radial-gradient(900px 500px at 50% 0%, rgba(245,158,11,0.10), transparent 60%)",
+              "radial-gradient(1000px 600px at 50% 100%, rgba(147,51,234,0.14), transparent 60%), radial-gradient(900px 500px at 50% 0%, rgba(245,158,11,0.12), transparent 60%)",
           }}
         />
 
