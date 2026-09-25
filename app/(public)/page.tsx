@@ -839,13 +839,11 @@ import {
   Crown,
   Mic,
   Heart,
-  CheckCircle2,
+  Check,
   GraduationCap,
   Compass,
   Quote,
-  Sparkles,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Reveal } from "@/components/shared/section-animation";
 
@@ -854,53 +852,31 @@ import { Reveal } from "@/components/shared/section-animation";
 /* ------------------------------------------------------------------ */
 
 const BRAND = {
-  // Solid
   purple: "text-primary-700 dark:text-primary-300",
-  purpleSoft: "text-primary-700/80 dark:text-primary-300/80",
-  gold: "text-[--color-gold]",
-  purpleBg: "bg-primary-700 dark:bg-primary-600",
-  purpleWash: "bg-primary-50/60 dark:bg-primary-950/25",
-  purpleWashHover: "hover:bg-primary-50/60 dark:hover:bg-primary-950/25",
 
-  // Brand gradient — appears liberally but calibrated
+  // Gradient — appears in exactly 3 forms page-wide
   gradientText:
-    "bg-gradient-to-r from-primary-700 via-primary-600 to-[--color-gold] bg-clip-text text-transparent dark:from-primary-300 dark:via-primary-300 dark:to-[--color-gold]",
-  gradientTextReverse:
-    "bg-gradient-to-l from-primary-700 via-primary-600 to-[--color-gold] bg-clip-text text-transparent dark:from-primary-300 dark:via-primary-300 dark:to-[--color-gold]",
+    "bg-gradient-to-r from-primary-700 via-primary-600 to-[--color-gold] bg-clip-text text-transparent",
   gradientRule: "bg-gradient-to-r from-primary-600 to-[--color-gold]",
-  gradientRuleVert:
-    "bg-gradient-to-b from-primary-700 via-primary-600 to-[--color-gold]",
-  gradientHairline:
-    "bg-gradient-to-r from-primary-600/60 via-[--color-gold]/50 to-transparent",
   gradientButton:
-    "bg-gradient-to-r from-primary-700 via-primary-700 to-[--color-gold] dark:from-primary-600 dark:via-primary-600 dark:to-[--color-gold]",
-  gradientButtonHover:
-    "hover:from-primary-800 hover:via-primary-800 hover:to-[--color-gold] dark:hover:from-primary-500 dark:hover:via-primary-500",
-  gradientIcon:
-    "bg-gradient-to-br from-primary-600 to-[--color-gold] text-white",
-  gradientIconSoft:
-    "bg-gradient-to-br from-primary-100 to-amber-100 dark:from-primary-950/60 dark:to-amber-950/40",
-  gradientAvatar:
-    "bg-gradient-to-br from-primary-600 via-primary-500 to-[--color-gold] text-white",
+    "bg-gradient-to-r from-primary-700 via-primary-600 to-[--color-gold]",
+  gradientWashHero:
+    "radial-gradient(1400px 700px at 70% -10%, hsl(262 83% 58% / 0.11), transparent 55%), radial-gradient(1100px 600px at 10% 110%, #d4af37 / 0.10, transparent 55%)",
+  gradientWashSection:
+    "radial-gradient(1000px 500px at 90% -10%, hsl(262 83% 58% / 0.06), transparent 60%), radial-gradient(900px 500px at 0% 110%, #d4af37 / 0.06, transparent 60%)",
 };
 
 /* ------------------------------------------------------------------ */
-/*  MOTION PRESETS — slow, calm, dignified                             */
+/*  MOTION — slow and deliberate                                       */
 /* ------------------------------------------------------------------ */
 
 const EASE = [0.22, 1, 0.36, 1] as const;
 
-const fadeUp = {
-  initial: { opacity: 0, y: 20 },
-  animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.9, ease: EASE },
-};
-
-const stagger = (i: number) => ({
-  initial: { opacity: 0, y: 20 },
+const reveal = (i = 0) => ({
+  initial: { opacity: 0, y: 24 },
   whileInView: { opacity: 1, y: 0 },
-  viewport: { once: true, margin: "-80px" },
-  transition: { duration: 0.7, delay: i * 0.08, ease: EASE },
+  viewport: { once: true, margin: "-100px" },
+  transition: { duration: 0.9, delay: i * 0.07, ease: EASE },
 });
 
 /* ------------------------------------------------------------------ */
@@ -908,17 +884,17 @@ const stagger = (i: number) => ({
 /* ------------------------------------------------------------------ */
 
 const STATS = [
-  { value: "50+", label: "Students in residence", arabic: "بِحَمْدِ اللَّه" },
-  { value: "5", label: "Countries represented", arabic: "عَالَمِيًّا" },
-  { value: "1,400", label: "Years of Sanad", arabic: "سَنَد مُتَّصِل" },
-  { value: "94%", label: "Completion rate", arabic: "نِسْبَة الإِتْمَام" },
+  { value: "50+", label: "Students in residence" },
+  { value: "5", label: "Countries represented" },
+  { value: "1,400", label: "Years of Sanad" },
+  { value: "94%", label: "Completion rate" },
 ] as const;
 
-const TRUST_SEALS = [
-  { label: "Ijazah Authenticated", arabic: "إِجَازَة", icon: ShieldCheck },
-  { label: "Authentic Sanad", arabic: "سَنَد", icon: Crown },
-  { label: "One-to-One Instruction", arabic: "فَرْدِي", icon: Users },
-  { label: "Global Reach", arabic: "عَالَمِي", icon: Globe },
+const TRUST = [
+  { label: "Ijazah Authenticated", icon: ShieldCheck },
+  { label: "Authentic Sanad", icon: Crown },
+  { label: "One-to-One Instruction", icon: Users },
+  { label: "Global Reach", icon: Globe },
 ] as const;
 
 const CAMPUSES = [
@@ -928,7 +904,7 @@ const CAMPUSES = [
     arabic: "الحَرَم",
     subtitle: "Residential study",
     description:
-      "Full-time memorisation and recitation at our residential campus — with boarding, a structured daily routine, and community life.",
+      "Full-time memorisation and recitation at our residential campus — boarding, structured daily routine, and community life.",
     features: [
       "Boarding available",
       "Structured daily routine",
@@ -1031,21 +1007,18 @@ const PRINCIPLES = [
   {
     icon: ShieldCheck,
     title: "Authentic Sanad",
-    arabic: "سَنَد",
     description:
       "An unbroken chain of transmission to the Prophet ﷺ, preserved teacher to student for fourteen centuries.",
   },
   {
     icon: Users,
     title: "One-to-One Instruction",
-    arabic: "فَرْدِي",
     description:
       "Every student is taught individually — paced, corrected, and encouraged by a qualified teacher.",
   },
   {
     icon: GraduationCap,
     title: "Ijazah Certification",
-    arabic: "إِجَازَة",
     description:
       "Formal certification in recitation and memorisation, recognised by scholarly councils.",
   },
@@ -1055,18 +1028,32 @@ const TESTIMONIALS = [
   {
     name: "Isā",
     role: "Online student",
-    arabic: "عَنْ بُعْد",
     content:
       "I am grateful for the comprehensive curriculum and the dedication of the teachers at Al-Maysaroh.",
   },
   {
     name: "Yūsuf",
     role: "Boarding student",
-    arabic: "الحَرَم",
     content:
       "The boarding programme has been a transformative experience for my spiritual growth and my memorisation.",
   },
 ] as const;
+
+/* ------------------------------------------------------------------ */
+/*  SHARED COMPONENTS                                                  */
+/* ------------------------------------------------------------------ */
+
+function SectionLabel({ children }: { children: React.ReactNode }) {
+  return (
+    <div className="mb-10 flex items-center gap-4">
+      <span aria-hidden className={cn("h-px w-12", BRAND.gradientRule)} />
+      <span className="text-[11px] font-semibold uppercase tracking-[0.24em] text-foreground/70">
+        {children}
+      </span>
+      <span aria-hidden className="h-px flex-1 bg-foreground/10" />
+    </div>
+  );
+}
 
 /* ------------------------------------------------------------------ */
 /*  PAGE                                                               */
@@ -1076,101 +1063,85 @@ export default function LandingPage() {
   return (
     <main className="min-h-screen overflow-hidden bg-background">
       {/* ============================================================
-          HERO
+          HERO — one large gradient wash, everything else calm
           ============================================================ */}
       <section className="relative overflow-hidden">
-        {/* Layered brand wash — purple + gold, alive but calm */}
-        <div aria-hidden className="pointer-events-none absolute inset-0">
-          <div
-            className="absolute inset-0"
-            style={{
-              background:
-                "radial-gradient(1000px 600px at 85% -10%, hsl(262 83% 58% / 0.10), transparent 60%), radial-gradient(800px 500px at 10% 110%, #d4af37 / 0.08, transparent 60%)",
-            }}
-          />
-          <div
-            className="absolute inset-0 opacity-[0.04] dark:opacity-[0.06]"
-            style={{
-              backgroundImage:
-                "linear-gradient(to right, currentColor 1px, transparent 1px), linear-gradient(to bottom, currentColor 1px, transparent 1px)",
-              backgroundSize: "56px 56px",
-              maskImage:
-                "radial-gradient(ellipse at center, black 30%, transparent 75%)",
-              WebkitMaskImage:
-                "radial-gradient(ellipse at center, black 30%, transparent 75%)",
-            }}
-          />
-        </div>
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0"
+          style={{ background: BRAND.gradientWashHero }}
+        />
 
-        <div className="container relative z-10 mx-auto px-6 py-24 sm:py-28 md:py-32 lg:px-8 lg:py-40">
-          <motion.div {...fadeUp} className="mx-auto max-w-5xl">
-            {/* Colophon */}
-            <div className="mb-10 flex items-center gap-4">
-              <span
-                aria-hidden
-                className={cn("h-px w-12", BRAND.gradientRule)}
-              />
-              <span className="text-[11px] font-semibold uppercase tracking-[0.22em] text-foreground/70">
-                Al-Maysaroh Institute
-              </span>
-              <span aria-hidden className="h-px flex-1 bg-foreground/10" />
+        <div className="container relative z-10 mx-auto px-6 py-28 sm:py-32 md:py-40 lg:px-8 lg:py-48">
+          <motion.div
+            initial={{ opacity: 0, y: 28 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1.1, ease: EASE }}
+            className="mx-auto max-w-5xl"
+          >
+            {/* Wordmark — the gradient moment */}
+            <div className="mb-10 flex items-center gap-5">
               <span
                 dir="rtl"
                 lang="ar"
                 className={cn(
-                  "font-quran text-[16px] leading-none",
+                  "font-quran text-[26px] leading-none sm:text-[32px]",
                   BRAND.gradientText
                 )}
               >
                 دار الميسرة
               </span>
+              <span aria-hidden className="h-px w-10 bg-foreground/15" />
+              <span className="text-[11px] font-semibold uppercase tracking-[0.24em] text-foreground/60">
+                Al-Maysaroh Institute
+              </span>
             </div>
 
             {/* H1 */}
-            <h1 className="font-heading text-[2.75rem] font-bold leading-[1.05] tracking-[-0.025em] text-foreground sm:text-6xl md:text-7xl lg:text-[5.25rem]">
+            <h1 className="font-heading text-[2.75rem] font-bold leading-[1.02] tracking-[-0.03em] text-foreground sm:text-6xl md:text-7xl lg:text-[5.5rem]">
               Your journey to
               <br />
-              <span className="text-foreground/45">Qur&apos;anic</span>{" "}
+              <span className="text-foreground/35">Qur&apos;anic</span>{" "}
               <span className={BRAND.gradientText}>excellence</span>,
               <br />
-              <span className="text-foreground/45">
+              <span className="text-foreground/35">
                 transmitted as it was{" "}
               </span>
               <span className={BRAND.purple}>received</span>.
             </h1>
 
             {/* Lead */}
-            <p className="mt-8 max-w-2xl text-base leading-relaxed text-foreground/65 sm:text-[17px]">
-              A traditional madrasah for the memorisation and recitation of the
-              Qur&apos;an — grounded in authentic Sanad, taught one student at
-              a time, and offered both online and at our residential campus.
+            <p className="mt-10 max-w-2xl text-base leading-relaxed text-foreground/65 sm:text-[18px]">
+              A traditional madrasah for the memorisation and recitation of
+              the Qur&apos;an — grounded in authentic Sanad, taught one
+              student at a time, and offered both online and at our
+              residential campus.
             </p>
 
-            {/* CTAs */}
-            <div className="mt-12 flex flex-col items-start gap-3 sm:flex-row sm:items-center">
+            {/* CTAs — one gradient, one flat */}
+            <div className="mt-14 flex flex-col items-start gap-4 sm:flex-row sm:items-center">
               <Link
                 href="/onsite"
                 className={cn(
-                  "group inline-flex items-center gap-2 rounded-full px-6 py-3 text-[13px] font-semibold tracking-wide text-white shadow-lg shadow-primary-700/20 transition-all duration-500",
-                  BRAND.gradientButton,
-                  BRAND.gradientButtonHover
+                  "group inline-flex items-center gap-3 rounded-full px-7 py-3.5 text-[13px] font-semibold tracking-wide text-white shadow-xl shadow-primary-700/25 transition-all duration-500 hover:shadow-2xl hover:shadow-primary-700/30",
+                  BRAND.gradientButton
                 )}
               >
                 Enter the Physical Campus
                 <ArrowRight
-                  className="h-[14px] w-[14px] transition-transform duration-500 group-hover:translate-x-1"
-                  strokeWidth={1.75}
+                  className="h-[15px] w-[15px] transition-transform duration-500 group-hover:translate-x-1"
+                  strokeWidth={2}
                 />
               </Link>
 
               <Link
                 href="/online"
-                className="group inline-flex items-center gap-2 rounded-full border border-foreground/15 bg-background/60 px-6 py-3 text-[13px] font-semibold tracking-wide text-foreground/80 backdrop-blur transition-all duration-500 hover:border-primary-700/40 hover:bg-primary-50/40 hover:text-primary-700 dark:hover:border-primary-300/40 dark:hover:bg-primary-950/20 dark:hover:text-primary-300"
+                className="group inline-flex items-center gap-3 rounded-full border border-foreground/20 px-7 py-3.5 text-[13px] font-semibold tracking-wide text-foreground/85 transition-all duration-500 hover:border-primary-700/50 hover:text-primary-700 dark:hover:border-primary-300/50 dark:hover:text-primary-300"
               >
                 Study Online
                 <ArrowRight
-                  className="h-[14px] w-[14px] transition-transform duration-500 group-hover:translate-x-1"
-                  strokeWidth={1.75}
+                  className="h-[15px] w-[15px] transition-transform duration-500 group-hover:translate-x-1"
+                  strokeWidth={2}
                 />
               </Link>
             </div>
@@ -1179,39 +1150,20 @@ export default function LandingPage() {
       </section>
 
       {/* ============================================================
-          STATS — gradient numbers, bilingual captions
+          STATS — flat numbers, generous grid
           ============================================================ */}
-      <section className="border-y border-foreground/10 bg-gradient-to-r from-primary-50/40 via-background to-amber-50/30 dark:from-primary-950/20 dark:via-background dark:to-amber-950/10">
+      <section className="border-y border-foreground/10 bg-background">
         <div className="container mx-auto px-6 lg:px-8">
           <div className="grid grid-cols-2 gap-px overflow-hidden bg-foreground/10 md:grid-cols-4">
             {STATS.map((stat, i) => (
-              <motion.div key={stat.label} {...stagger(i)}>
-                <div className="group flex flex-col bg-background px-6 py-10 transition-colors duration-700 hover:bg-primary-50/30 dark:hover:bg-primary-950/15 sm:px-8">
-                  <span
-                    dir="rtl"
-                    lang="ar"
-                    className="mb-4 font-arabic text-[13px] leading-none text-foreground/40"
-                  >
-                    {stat.arabic}
-                  </span>
-                  <span
-                    className={cn(
-                      "bg-clip-text font-heading text-4xl font-bold tabular-nums tracking-[-0.02em] text-transparent sm:text-5xl",
-                      "bg-gradient-to-br from-primary-700 to-[--color-gold] dark:from-primary-300 dark:to-[--color-gold]"
-                    )}
-                  >
+              <motion.div key={stat.label} {...reveal(i)}>
+                <div className="flex flex-col bg-background px-8 py-12 sm:px-10">
+                  <span className="font-heading text-[2.75rem] font-bold tabular-nums leading-none tracking-[-0.03em] text-primary-700 dark:text-primary-300 sm:text-5xl">
                     {stat.value}
                   </span>
-                  <span className="mt-2 text-[12px] leading-relaxed text-foreground/60">
+                  <span className="mt-4 text-[12px] font-medium uppercase tracking-[0.14em] text-foreground/55">
                     {stat.label}
                   </span>
-                  <span
-                    aria-hidden
-                    className={cn(
-                      "mt-5 h-px w-8 origin-left scale-x-0 transition-transform duration-700 group-hover:scale-x-100",
-                      BRAND.gradientRule
-                    )}
-                  />
                 </div>
               </motion.div>
             ))}
@@ -1220,43 +1172,23 @@ export default function LandingPage() {
       </section>
 
       {/* ============================================================
-          TRUST SEALS — gradient icon tiles
+          TRUST SEALS — quiet, no decoration
           ============================================================ */}
-      <section className="border-b border-foreground/10 bg-background py-16 md:py-20">
+      <section className="border-b border-foreground/10 bg-background py-20 md:py-24">
         <div className="container mx-auto px-6 lg:px-8">
-          <div className="grid grid-cols-2 gap-10 md:grid-cols-4 md:gap-6">
-            {TRUST_SEALS.map((item, i) => {
+          <div className="grid grid-cols-2 gap-12 md:grid-cols-4 md:gap-8">
+            {TRUST.map((item, i) => {
               const Icon = item.icon;
               return (
-                <motion.div key={item.label} {...stagger(i)}>
-                  <div className="group flex flex-col items-start">
-                    <div className="mb-5 flex items-center gap-4">
-                      <span
-                        className={cn(
-                          "flex h-11 w-11 items-center justify-center rounded-xl shadow-md transition-transform duration-700 group-hover:-rotate-3",
-                          BRAND.gradientIcon
-                        )}
-                      >
-                        <Icon className="h-[18px] w-[18px]" strokeWidth={1.75} />
-                      </span>
-                      <span
-                        dir="rtl"
-                        lang="ar"
-                        className="font-arabic text-[15px] leading-none text-foreground/50"
-                      >
-                        {item.arabic}
-                      </span>
-                    </div>
-                    <span className="text-[13px] font-semibold leading-snug text-foreground/80">
+                <motion.div key={item.label} {...reveal(i)}>
+                  <div className="flex flex-col items-start">
+                    <Icon
+                      className="mb-6 h-[22px] w-[22px] text-primary-700 dark:text-primary-300"
+                      strokeWidth={1.5}
+                    />
+                    <span className="text-[14px] font-semibold leading-snug text-foreground/85">
                       {item.label}
                     </span>
-                    <span
-                      aria-hidden
-                      className={cn(
-                        "mt-4 h-px w-6 origin-left",
-                        BRAND.gradientRule
-                      )}
-                    />
                   </div>
                 </motion.div>
               );
@@ -1268,41 +1200,22 @@ export default function LandingPage() {
       {/* ============================================================
           TWO CAMPUSES
           ============================================================ */}
-      <section className="relative bg-background py-24 sm:py-28 md:py-32 lg:py-40">
+      <section className="relative bg-background py-28 sm:py-32 md:py-40">
         <div
           aria-hidden
           className="pointer-events-none absolute inset-0"
-          style={{
-            background:
-              "radial-gradient(800px 400px at 15% -10%, hsl(262 83% 58% / 0.05), transparent 60%)",
-          }}
+          style={{ background: BRAND.gradientWashSection }}
         />
 
         <div className="container relative mx-auto px-6 lg:px-8">
           <Reveal>
-            <div className="mx-auto mb-16 max-w-4xl md:mb-20">
-              <div className="mb-10 flex items-center gap-4">
-                <span
-                  aria-hidden
-                  className={cn("h-px w-12", BRAND.gradientRule)}
-                />
-                <span className="text-[11px] font-semibold uppercase tracking-[0.22em] text-foreground/70">
-                  Two Campuses
-                </span>
-                <span aria-hidden className="h-px flex-1 bg-foreground/10" />
-                <span
-                  dir="rtl"
-                  lang="ar"
-                  className="font-arabic text-[13px] leading-none text-foreground/50"
-                >
-                  الحَرَمَان
-                </span>
-              </div>
+            <div className="mx-auto mb-20 max-w-4xl">
+              <SectionLabel>Two Campuses</SectionLabel>
 
-              <h2 className="font-heading text-4xl font-bold leading-[1.08] tracking-[-0.02em] text-foreground sm:text-5xl md:text-[3.5rem]">
+              <h2 className="font-heading text-[2.5rem] font-bold leading-[1.05] tracking-[-0.025em] text-foreground sm:text-5xl md:text-[3.75rem]">
                 The same curriculum,
                 <br />
-                <span className="text-foreground/45">wherever you</span>{" "}
+                <span className="text-foreground/35">wherever you </span>
                 <span className={BRAND.gradientText}>study</span>.
               </h2>
 
@@ -1314,105 +1227,69 @@ export default function LandingPage() {
             </div>
           </Reveal>
 
-          <div className="grid gap-px overflow-hidden rounded-2xl border border-foreground/10 bg-foreground/10 md:grid-cols-2">
-            {CAMPUSES.map((campus, index) => {
+          <div className="grid gap-6 lg:grid-cols-2 lg:gap-8">
+            {CAMPUSES.map((campus, i) => {
               const Icon = campus.icon;
               return (
-                <motion.div key={campus.href} {...stagger(index)}>
+                <motion.div key={campus.href} {...reveal(i)}>
                   <Link
                     href={campus.href}
                     className={cn(
-                      "group relative flex h-full flex-col p-8 transition-colors duration-700 focus:outline-none sm:p-12",
+                      "group relative flex h-full flex-col rounded-2xl border bg-background p-10 transition-all duration-700 sm:p-12",
                       campus.primary
-                        ? "bg-gradient-to-br from-primary-50/60 via-background to-amber-50/30 dark:from-primary-950/30 dark:via-background dark:to-amber-950/15"
-                        : cn("bg-background", BRAND.purpleWashHover)
+                        ? "border-primary-700/30 shadow-xl shadow-primary-700/5 hover:shadow-2xl hover:shadow-primary-700/10 dark:border-primary-300/30"
+                        : "border-foreground/10 hover:border-primary-700/30 dark:hover:border-primary-300/30"
                     )}
                   >
-                    {campus.primary && (
-                      <span
-                        aria-hidden
-                        className={cn(
-                          "absolute inset-y-0 left-0 w-[3px]",
-                          BRAND.gradientRuleVert
-                        )}
-                      />
-                    )}
-
                     <div className="mb-10 flex items-start justify-between">
-                      <span
-                        className={cn(
-                          "flex h-12 w-12 items-center justify-center rounded-xl shadow-md transition-transform duration-700 group-hover:-rotate-3",
-                          campus.primary
-                            ? BRAND.gradientIcon
-                            : "border border-primary-700/20 bg-background text-primary-700 dark:border-primary-300/20 dark:text-primary-300"
-                        )}
-                      >
-                        <Icon className="h-5 w-5" strokeWidth={1.75} />
-                      </span>
+                      <Icon
+                        className="h-7 w-7 text-primary-700 dark:text-primary-300"
+                        strokeWidth={1.5}
+                      />
                       <span
                         dir="rtl"
                         lang="ar"
-                        className="font-arabic text-[16px] leading-none text-foreground/50"
+                        className="font-quran text-[20px] leading-none text-foreground/45"
                       >
                         {campus.arabic}
                       </span>
                     </div>
 
-                    <h3 className="font-heading text-2xl font-bold tracking-[-0.01em] text-foreground sm:text-[28px]">
+                    <h3 className="font-heading text-[28px] font-bold tracking-[-0.02em] text-foreground sm:text-[32px]">
                       {campus.title}
                     </h3>
-                    <p className="mt-2 text-[13px] text-foreground/55">
+                    <p className="mt-2 text-[13px] font-medium uppercase tracking-[0.14em] text-foreground/55">
                       {campus.subtitle}
                     </p>
 
-                    <p className="mt-6 mb-8 flex-1 text-[14px] leading-[1.75] text-foreground/70">
+                    <p className="mt-8 mb-10 flex-1 text-[15px] leading-[1.75] text-foreground/70">
                       {campus.description}
                     </p>
 
-                    <ul className="mb-8 space-y-2.5">
+                    <ul className="mb-10 space-y-3">
                       {campus.features.map((feature) => (
                         <li
                           key={feature}
-                          className="flex items-start gap-3 text-[13px] leading-relaxed text-foreground/70"
+                          className="flex items-start gap-3 text-[14px] leading-relaxed text-foreground/70"
                         >
-                          <CheckCircle2
+                          <Check
                             className="mt-[3px] h-[14px] w-[14px] shrink-0 text-primary-700 dark:text-primary-300"
-                            strokeWidth={2}
+                            strokeWidth={2.25}
                           />
                           <span>{feature}</span>
                         </li>
                       ))}
                     </ul>
 
-                    <div className="flex items-center justify-between border-t border-foreground/10 pt-5">
-                      <span
-                        className={cn(
-                          "text-[12px] font-semibold tracking-wide transition-colors duration-500",
-                          campus.primary
-                            ? BRAND.purple
-                            : "text-foreground/60 group-hover:text-primary-700 dark:group-hover:text-primary-300"
-                        )}
-                      >
+                    <div className="flex items-center justify-between border-t border-foreground/10 pt-6">
+                      <span className="text-[13px] font-semibold tracking-wide text-foreground/75 transition-colors duration-500 group-hover:text-primary-700 dark:group-hover:text-primary-300">
                         {campus.cta}
                       </span>
                       <ArrowRight
-                        className={cn(
-                          "h-[14px] w-[14px] transition-transform duration-500 group-hover:translate-x-1",
-                          campus.primary
-                            ? BRAND.purple
-                            : "text-foreground/50 group-hover:text-primary-700 dark:group-hover:text-primary-300"
-                        )}
-                        strokeWidth={1.75}
+                        className="h-[15px] w-[15px] text-foreground/45 transition-transform duration-500 group-hover:translate-x-1.5 group-hover:text-primary-700 dark:group-hover:text-primary-300"
+                        strokeWidth={2}
                       />
                     </div>
-
-                    <span
-                      aria-hidden
-                      className={cn(
-                        "pointer-events-none absolute inset-x-0 bottom-0 h-[2px] origin-left scale-x-0 transition-transform duration-700 group-hover:scale-x-100",
-                        BRAND.gradientRule
-                      )}
-                    />
                   </Link>
                 </motion.div>
               );
@@ -1424,32 +1301,16 @@ export default function LandingPage() {
       {/* ============================================================
           PROGRAMS
           ============================================================ */}
-      <section className="bg-background pb-24 sm:pb-28 md:pb-32 lg:pb-40">
+      <section className="bg-background pb-28 sm:pb-32 md:pb-40">
         <div className="container mx-auto px-6 lg:px-8">
           <Reveal>
-            <div className="mx-auto mb-16 max-w-4xl md:mb-20">
-              <div className="mb-10 flex items-center gap-4">
-                <span
-                  aria-hidden
-                  className={cn("h-px w-12", BRAND.gradientRule)}
-                />
-                <span className="text-[11px] font-semibold uppercase tracking-[0.22em] text-foreground/70">
-                  The Curriculum
-                </span>
-                <span aria-hidden className="h-px flex-1 bg-foreground/10" />
-                <span
-                  dir="rtl"
-                  lang="ar"
-                  className="font-arabic text-[13px] leading-none text-foreground/50"
-                >
-                  المنهج الدراسي
-                </span>
-              </div>
+            <div className="mx-auto mb-20 max-w-4xl">
+              <SectionLabel>The Curriculum</SectionLabel>
 
-              <h2 className="font-heading text-4xl font-bold leading-[1.08] tracking-[-0.02em] text-foreground sm:text-5xl md:text-[3.5rem]">
+              <h2 className="font-heading text-[2.5rem] font-bold leading-[1.05] tracking-[-0.025em] text-foreground sm:text-5xl md:text-[3.75rem]">
                 A complete course of study,
                 <br />
-                <span className="text-foreground/45">
+                <span className="text-foreground/35">
                   taught the way it was{" "}
                 </span>
                 <span className={BRAND.gradientText}>meant to be taught</span>.
@@ -1463,106 +1324,57 @@ export default function LandingPage() {
             </div>
           </Reveal>
 
-          <div className="grid gap-px overflow-hidden rounded-2xl border border-foreground/10 bg-foreground/10 sm:grid-cols-2 lg:grid-cols-3">
-            {PROGRAMS.map((program, index) => {
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 lg:gap-7">
+            {PROGRAMS.map((program, i) => {
               const Icon = program.icon;
               return (
-                <motion.div key={program.id} {...stagger(index)}>
+                <motion.div key={program.id} {...reveal(i % 3)}>
                   <Link
                     href={`/onsite/programs/${program.id}`}
-                    className={cn(
-                      "group relative flex h-full flex-col bg-background p-8 transition-colors duration-700 focus:outline-none sm:p-10",
-                      BRAND.purpleWashHover
-                    )}
+                    className="group relative flex h-full flex-col rounded-2xl border border-foreground/10 bg-background p-8 transition-all duration-700 hover:border-primary-700/30 hover:shadow-xl hover:shadow-primary-700/5 dark:hover:border-primary-300/30 sm:p-9"
                   >
-                    <span
-                      aria-hidden
-                      className={cn(
-                        "absolute left-1/2 top-0 h-[2px] w-12 -translate-x-1/2 opacity-0 transition-opacity duration-700 group-hover:opacity-100",
-                        BRAND.gradientRule
-                      )}
-                    />
-
-                    <div className="mb-10 flex items-start justify-between">
+                    <div className="mb-8 flex items-start justify-between">
+                      <Icon
+                        className="h-6 w-6 text-primary-700 dark:text-primary-300"
+                        strokeWidth={1.5}
+                      />
                       <span
-                        className={cn(
-                          "bg-clip-text text-[11px] font-semibold tabular-nums tracking-[0.2em] text-transparent",
-                          "bg-gradient-to-br from-primary-600 to-[--color-gold]"
-                        )}
+                        dir="rtl"
+                        lang="ar"
+                        className="font-quran text-[18px] leading-none text-foreground/40"
                       >
-                        {String(index + 1).padStart(2, "0")}
+                        {program.arabic}
                       </span>
-
-                      <div className="flex items-center gap-4">
-                        <span
-                          dir="rtl"
-                          lang="ar"
-                          className="font-arabic text-[18px] leading-none text-foreground/45 transition-colors duration-700 group-hover:text-foreground/70"
-                        >
-                          {program.arabic}
-                        </span>
-                        <span
-                          className={cn(
-                            "flex h-10 w-10 items-center justify-center rounded-xl shadow-sm transition-transform duration-700 group-hover:-rotate-3",
-                            BRAND.gradientIconSoft
-                          )}
-                        >
-                          <Icon
-                            className={cn("h-[18px] w-[18px]", BRAND.purple)}
-                            strokeWidth={1.75}
-                          />
-                        </span>
-                      </div>
                     </div>
 
-                    <div className="mb-6">
-                      <h3 className="font-heading text-[22px] font-bold tracking-[-0.01em] text-foreground transition-colors duration-500 group-hover:text-primary-700 dark:group-hover:text-primary-300">
-                        {program.title}
-                      </h3>
-                      <p className="mt-1 text-[13px] text-foreground/55">
-                        {program.subtitle}
-                      </p>
-                    </div>
+                    <h3 className="font-heading text-[22px] font-bold tracking-[-0.015em] text-foreground transition-colors duration-500 group-hover:text-primary-700 dark:group-hover:text-primary-300">
+                      {program.title}
+                    </h3>
+                    <p className="mt-1.5 text-[13px] font-medium uppercase tracking-[0.1em] text-foreground/50">
+                      {program.subtitle}
+                    </p>
 
-                    <p className="mb-6 flex-1 text-[14px] leading-[1.7] text-foreground/70">
+                    <p className="mt-6 mb-6 flex-1 text-[14px] leading-[1.7] text-foreground/70">
                       {program.description}
                     </p>
 
-                    <p className="mb-6 border-l-2 border-primary-700/30 pl-3 text-[11px] font-semibold uppercase tracking-[0.14em] text-foreground/50 dark:border-primary-300/30">
+                    <p className="mb-6 border-l-2 border-primary-700/40 pl-3 text-[11px] font-semibold uppercase tracking-[0.14em] text-foreground/55 dark:border-primary-300/40">
                       {program.teacher}
                     </p>
 
-                    <div className="mb-8 flex flex-wrap items-center gap-x-3 gap-y-1 text-[12px] leading-relaxed text-foreground/60">
-                      {program.meta.map((item, i) => (
-                        <span key={item} className="flex items-center gap-3">
-                          {i > 0 && (
-                            <span
-                              aria-hidden
-                              className="h-1 w-1 rounded-full bg-gradient-to-br from-primary-500 to-[--color-gold]"
-                            />
-                          )}
-                          {item}
-                        </span>
-                      ))}
+                    <div className="mb-6 text-[12px] leading-relaxed text-foreground/50">
+                      {program.meta.join("  ·  ")}
                     </div>
 
                     <div className="flex items-center justify-between border-t border-foreground/10 pt-5">
-                      <span className="text-[12px] font-semibold tracking-wide text-foreground/65 transition-colors duration-500 group-hover:text-primary-700 dark:group-hover:text-primary-300">
+                      <span className="text-[12px] font-semibold tracking-wide text-foreground/70 transition-colors duration-500 group-hover:text-primary-700 dark:group-hover:text-primary-300">
                         Read more
                       </span>
                       <ArrowRight
-                        className="h-[13px] w-[13px] text-foreground/50 transition-transform duration-500 group-hover:translate-x-1 group-hover:text-primary-700 dark:group-hover:text-primary-300"
-                        strokeWidth={1.75}
+                        className="h-[14px] w-[14px] text-foreground/45 transition-transform duration-500 group-hover:translate-x-1 group-hover:text-primary-700 dark:group-hover:text-primary-300"
+                        strokeWidth={2}
                       />
                     </div>
-
-                    <span
-                      aria-hidden
-                      className={cn(
-                        "pointer-events-none absolute inset-x-0 bottom-0 h-[2px] origin-left scale-x-0 transition-transform duration-700 group-hover:scale-x-100",
-                        BRAND.gradientRule
-                      )}
-                    />
                   </Link>
                 </motion.div>
               );
@@ -1570,21 +1382,19 @@ export default function LandingPage() {
           </div>
 
           <Reveal delay={0.2}>
-            <div className="mt-16 flex flex-col items-start justify-between gap-6 border-t border-foreground/10 pt-10 sm:flex-row sm:items-center">
-              <p className="max-w-xl text-[13px] leading-relaxed text-foreground/55">
+            <div className="mt-20 flex flex-col items-start justify-between gap-6 border-t border-foreground/10 pt-12 sm:flex-row sm:items-center">
+              <p className="max-w-xl text-[14px] leading-relaxed text-foreground/60">
                 Every programme is delivered under scholars holding Ijazah, and
                 prepares students for certification where applicable.
               </p>
               <Link
                 href="/onsite/programs"
-                className={cn(
-                  "group inline-flex items-center gap-2 rounded-full border border-foreground/15 bg-background px-5 py-2.5 text-[13px] font-semibold tracking-wide text-foreground/80 transition-all duration-500 hover:border-primary-700/40 hover:bg-primary-50/50 hover:text-primary-700 dark:hover:border-primary-300/40 dark:hover:bg-primary-950/20 dark:hover:text-primary-300"
-                )}
+                className="group inline-flex items-center gap-3 rounded-full border border-foreground/20 px-6 py-3 text-[13px] font-semibold tracking-wide text-foreground/80 transition-all duration-500 hover:border-primary-700/50 hover:text-primary-700 dark:hover:border-primary-300/50 dark:hover:text-primary-300"
               >
                 See all programmes
                 <ArrowRight
                   className="h-[14px] w-[14px] transition-transform duration-500 group-hover:translate-x-1"
-                  strokeWidth={1.75}
+                  strokeWidth={2}
                 />
               </Link>
             </div>
@@ -1595,76 +1405,45 @@ export default function LandingPage() {
       {/* ============================================================
           PRINCIPLES
           ============================================================ */}
-      <section className="relative border-y border-foreground/10 bg-gradient-to-b from-primary-50/30 via-background to-amber-50/20 dark:from-primary-950/15 dark:via-background dark:to-amber-950/10 py-24 sm:py-28 md:py-32">
-        <div className="container mx-auto px-6 lg:px-8">
-          <Reveal>
-            <div className="mx-auto mb-16 max-w-4xl md:mb-20">
-              <div className="mb-10 flex items-center gap-4">
-                <span
-                  aria-hidden
-                  className={cn("h-px w-12", BRAND.gradientRule)}
-                />
-                <span className="text-[11px] font-semibold uppercase tracking-[0.22em] text-foreground/70">
-                  Why Al-Maysaroh
-                </span>
-                <span aria-hidden className="h-px flex-1 bg-foreground/10" />
-                <span
-                  dir="rtl"
-                  lang="ar"
-                  className="font-arabic text-[13px] leading-none text-foreground/50"
-                >
-                  لماذا الميسرة
-                </span>
-              </div>
+      <section className="relative border-y border-foreground/10 bg-background py-28 sm:py-32 md:py-40">
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0"
+          style={{ background: BRAND.gradientWashSection }}
+        />
 
-              <h2 className="font-heading text-4xl font-bold leading-[1.08] tracking-[-0.02em] text-foreground sm:text-5xl md:text-[3.5rem]">
+        <div className="container relative mx-auto px-6 lg:px-8">
+          <Reveal>
+            <div className="mx-auto mb-20 max-w-4xl">
+              <SectionLabel>Why Al-Maysaroh</SectionLabel>
+
+              <h2 className="font-heading text-[2.5rem] font-bold leading-[1.05] tracking-[-0.025em] text-foreground sm:text-5xl md:text-[3.75rem]">
                 Built on tradition,
                 <br />
-                <span className="text-foreground/45">held to the </span>
+                <span className="text-foreground/35">held to the </span>
                 <span className={BRAND.gradientText}>standards of it</span>.
               </h2>
             </div>
           </Reveal>
 
-          <div className="grid gap-px overflow-hidden rounded-2xl border border-foreground/10 bg-foreground/10 md:grid-cols-3">
+          <div className="grid gap-8 md:grid-cols-3 md:gap-10">
             {PRINCIPLES.map((principle, i) => {
               const Icon = principle.icon;
               return (
-                <motion.div key={principle.title} {...stagger(i)}>
-                  <div className="group flex h-full flex-col bg-background p-8 transition-colors duration-700 hover:bg-primary-50/40 dark:hover:bg-primary-950/20 sm:p-10">
-                    <div className="mb-10 flex items-center gap-4">
-                      <span
-                        className={cn(
-                          "flex h-12 w-12 items-center justify-center rounded-xl shadow-md transition-transform duration-700 group-hover:-rotate-3",
-                          BRAND.gradientIcon
-                        )}
-                      >
-                        <Icon className="h-5 w-5" strokeWidth={1.75} />
-                      </span>
-                      <span
-                        dir="rtl"
-                        lang="ar"
-                        className="font-arabic text-[16px] leading-none text-foreground/50"
-                      >
-                        {principle.arabic}
-                      </span>
-                    </div>
+                <motion.div key={principle.title} {...reveal(i)}>
+                  <div className="flex h-full flex-col rounded-2xl border border-foreground/10 bg-background/80 p-10 backdrop-blur-sm">
+                    <Icon
+                      className="mb-8 h-7 w-7 text-primary-700 dark:text-primary-300"
+                      strokeWidth={1.5}
+                    />
 
-                    <h3 className="font-heading text-[20px] font-bold tracking-[-0.01em] text-foreground">
+                    <h3 className="font-heading text-[22px] font-bold tracking-[-0.01em] text-foreground">
                       {principle.title}
                     </h3>
 
-                    <p className="mt-4 text-[14px] leading-[1.75] text-foreground/70">
+                    <p className="mt-4 text-[15px] leading-[1.75] text-foreground/70">
                       {principle.description}
                     </p>
-
-                    <span
-                      aria-hidden
-                      className={cn(
-                        "mt-8 h-px w-10 origin-left scale-x-0 transition-transform duration-700 group-hover:scale-x-100",
-                        BRAND.gradientRule
-                      )}
-                    />
                   </div>
                 </motion.div>
               );
@@ -1676,77 +1455,37 @@ export default function LandingPage() {
       {/* ============================================================
           TESTIMONIALS
           ============================================================ */}
-      <section className="bg-background py-24 sm:py-28 md:py-32">
+      <section className="bg-background py-28 sm:py-32 md:py-40">
         <div className="container mx-auto px-6 lg:px-8">
           <Reveal>
-            <div className="mx-auto mb-16 max-w-4xl md:mb-20">
-              <div className="mb-10 flex items-center gap-4">
-                <span
-                  aria-hidden
-                  className={cn("h-px w-12", BRAND.gradientRule)}
-                />
-                <span className="text-[11px] font-semibold uppercase tracking-[0.22em] text-foreground/70">
-                  From the Students
-                </span>
-                <span aria-hidden className="h-px flex-1 bg-foreground/10" />
-                <span
-                  dir="rtl"
-                  lang="ar"
-                  className="font-arabic text-[13px] leading-none text-foreground/50"
-                >
-                  كلام الطلبة
-                </span>
-              </div>
+            <div className="mx-auto mb-20 max-w-4xl">
+              <SectionLabel>From the Students</SectionLabel>
 
-              <h2 className="font-heading text-4xl font-bold leading-[1.08] tracking-[-0.02em] text-foreground sm:text-5xl md:text-[3.5rem]">
+              <h2 className="font-heading text-[2.5rem] font-bold leading-[1.05] tracking-[-0.025em] text-foreground sm:text-5xl md:text-[3.75rem]">
                 In their own{" "}
                 <span className={BRAND.gradientText}>words</span>.
               </h2>
             </div>
           </Reveal>
 
-          <div className="grid gap-px overflow-hidden rounded-2xl border border-foreground/10 bg-foreground/10 md:grid-cols-2">
+          <div className="grid gap-8 md:grid-cols-2 md:gap-10">
             {TESTIMONIALS.map((t, i) => (
-              <motion.div key={t.name} {...stagger(i)}>
-                <figure className="group flex h-full flex-col bg-background p-8 transition-colors duration-700 hover:bg-primary-50/30 dark:hover:bg-primary-950/15 sm:p-12">
+              <motion.div key={t.name} {...reveal(i)}>
+                <figure className="flex h-full flex-col rounded-2xl border border-foreground/10 bg-background p-10 sm:p-12">
                   <Quote
-                    className={cn(
-                      "mb-8 h-6 w-6",
-                      "text-primary-700/40 dark:text-primary-300/40"
-                    )}
+                    className="mb-8 h-7 w-7 text-primary-700/30 dark:text-primary-300/30"
                     strokeWidth={1.5}
                   />
-                  <blockquote className="flex-1 font-heading text-[19px] font-normal leading-[1.55] tracking-[-0.005em] text-foreground/85 sm:text-[21px]">
+                  <blockquote className="flex-1 font-heading text-[20px] font-normal leading-[1.55] tracking-[-0.005em] text-foreground/90 sm:text-[22px]">
                     {t.content}
                   </blockquote>
                   <figcaption className="mt-10 border-t border-foreground/10 pt-6">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <span
-                          className={cn(
-                            "flex h-11 w-11 items-center justify-center rounded-full text-[14px] font-semibold shadow-md",
-                            BRAND.gradientAvatar
-                          )}
-                        >
-                          {t.name.charAt(0)}
-                        </span>
-                        <div>
-                          <p className="text-[13px] font-semibold text-foreground">
-                            {t.name}
-                          </p>
-                          <p className="mt-0.5 text-[12px] text-foreground/55">
-                            {t.role}
-                          </p>
-                        </div>
-                      </div>
-                      <span
-                        dir="rtl"
-                        lang="ar"
-                        className="font-arabic text-[14px] leading-none text-foreground/45"
-                      >
-                        {t.arabic}
-                      </span>
-                    </div>
+                    <p className="text-[14px] font-semibold text-foreground">
+                      {t.name}
+                    </p>
+                    <p className="mt-1 text-[13px] text-foreground/55">
+                      {t.role}
+                    </p>
                   </figcaption>
                 </figure>
               </motion.div>
@@ -1758,14 +1497,11 @@ export default function LandingPage() {
       {/* ============================================================
           CLOSING CTA
           ============================================================ */}
-      <section className="relative overflow-hidden border-t border-foreground/10 bg-background py-24 sm:py-28 md:py-32 lg:py-40">
+      <section className="relative overflow-hidden border-t border-foreground/10 bg-background py-28 sm:py-32 md:py-40">
         <div
           aria-hidden
           className="pointer-events-none absolute inset-0"
-          style={{
-            background:
-              "radial-gradient(900px 500px at 50% -10%, hsl(262 83% 58% / 0.10), transparent 60%), radial-gradient(700px 400px at 50% 110%, #d4af37 / 0.08, transparent 60%)",
-          }}
+          style={{ background: BRAND.gradientWashHero }}
         />
 
         <div className="container relative mx-auto px-6 lg:px-8">
@@ -1774,57 +1510,56 @@ export default function LandingPage() {
               <div className="mb-10 flex items-center justify-center gap-4">
                 <span
                   aria-hidden
-                  className="h-px w-12 bg-gradient-to-r from-transparent to-primary-600/60"
+                  className={cn("h-px w-12", BRAND.gradientRule)}
                 />
-                <span className="text-[11px] font-semibold uppercase tracking-[0.22em] text-foreground/70">
+                <span className="text-[11px] font-semibold uppercase tracking-[0.24em] text-foreground/70">
                   Admissions
                 </span>
                 <span
                   aria-hidden
-                  className="h-px w-12 bg-gradient-to-l from-transparent to-[--color-gold]/60"
+                  className={cn("h-px w-12", BRAND.gradientRule)}
                 />
               </div>
 
-              <h2 className="font-heading text-4xl font-bold leading-[1.05] tracking-[-0.025em] text-foreground sm:text-5xl md:text-6xl">
+              <h2 className="font-heading text-[2.5rem] font-bold leading-[1.05] tracking-[-0.03em] text-foreground sm:text-5xl md:text-[4rem]">
                 The next step is
                 <br />
                 <span className={BRAND.gradientText}>a conversation</span>.
               </h2>
 
-              <p className="mx-auto mt-8 max-w-xl text-base leading-relaxed text-foreground/65 sm:text-[17px]">
+              <p className="mx-auto mt-10 max-w-xl text-base leading-relaxed text-foreground/65 sm:text-[17px]">
                 Every admission begins with a short conversation — so we can
                 place you with the right teacher, on the right path, at the
                 right pace.
               </p>
 
-              <div className="mt-12 flex flex-col items-center justify-center gap-3 sm:flex-row">
+              <div className="mt-14 flex flex-col items-center justify-center gap-4 sm:flex-row">
                 <Link
                   href="/onsite/admissions"
                   className={cn(
-                    "group inline-flex items-center gap-2 rounded-full px-6 py-3 text-[13px] font-semibold tracking-wide text-white shadow-lg shadow-primary-700/20 transition-all duration-500",
-                    BRAND.gradientButton,
-                    BRAND.gradientButtonHover
+                    "group inline-flex items-center gap-3 rounded-full px-7 py-3.5 text-[13px] font-semibold tracking-wide text-white shadow-xl shadow-primary-700/25 transition-all duration-500 hover:shadow-2xl hover:shadow-primary-700/30",
+                    BRAND.gradientButton
                   )}
                 >
                   Begin admissions
                   <ArrowRight
-                    className="h-[14px] w-[14px] transition-transform duration-500 group-hover:translate-x-1"
-                    strokeWidth={1.75}
+                    className="h-[15px] w-[15px] transition-transform duration-500 group-hover:translate-x-1"
+                    strokeWidth={2}
                   />
                 </Link>
                 <Link
                   href="/physical/contact"
-                  className="group inline-flex items-center gap-2 rounded-full border border-foreground/15 bg-background/60 px-6 py-3 text-[13px] font-semibold tracking-wide text-foreground/80 backdrop-blur transition-all duration-500 hover:border-primary-700/40 hover:bg-primary-50/40 hover:text-primary-700 dark:hover:border-primary-300/40 dark:hover:bg-primary-950/20 dark:hover:text-primary-300"
+                  className="group inline-flex items-center gap-3 rounded-full border border-foreground/20 px-7 py-3.5 text-[13px] font-semibold tracking-wide text-foreground/85 transition-all duration-500 hover:border-primary-700/50 hover:text-primary-700 dark:hover:border-primary-300/50 dark:hover:text-primary-300"
                 >
                   Speak with the administration
                   <ArrowRight
-                    className="h-[14px] w-[14px] transition-transform duration-500 group-hover:translate-x-1"
-                    strokeWidth={1.75}
+                    className="h-[15px] w-[15px] transition-transform duration-500 group-hover:translate-x-1"
+                    strokeWidth={2}
                   />
                 </Link>
               </div>
 
-              <p className="mt-8 text-[12px] text-foreground/50">
+              <p className="mt-10 text-[12px] font-medium uppercase tracking-[0.14em] text-foreground/45">
                 Free assessment · No commitment · All ages welcome
               </p>
             </div>
@@ -1835,28 +1570,31 @@ export default function LandingPage() {
       {/* ============================================================
           FOOTNOTE STRIP
           ============================================================ */}
-      <div className="border-t border-foreground/10 bg-background py-6">
+      <div className="border-t border-foreground/10 bg-background py-8">
         <div className="container mx-auto px-6 lg:px-8">
-          <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-[11px] text-foreground/60">
-            <span className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center justify-center gap-x-10 gap-y-4 text-[12px] font-medium uppercase tracking-[0.12em] text-foreground/55">
+            <span className="flex items-center gap-2.5">
               <ShieldCheck
-                className="h-3.5 w-3.5 text-primary-700/80 dark:text-primary-300/80"
+                className="h-3.5 w-3.5 text-primary-700 dark:text-primary-300"
                 strokeWidth={1.75}
               />
               Ijazah Certified
             </span>
-            <span className="flex items-center gap-2">
-              <Crown className="h-3.5 w-3.5 text-[--color-gold]" strokeWidth={1.75} />
+            <span className="flex items-center gap-2.5">
+              <Crown
+                className="h-3.5 w-3.5 text-[--color-gold]"
+                strokeWidth={1.75}
+              />
               Authentic Sanad
             </span>
-            <span className="flex items-center gap-2">
+            <span className="flex items-center gap-2.5">
               <Users
-                className="h-3.5 w-3.5 text-primary-700/80 dark:text-primary-300/80"
+                className="h-3.5 w-3.5 text-primary-700 dark:text-primary-300"
                 strokeWidth={1.75}
               />
               50+ Students
             </span>
-            <span className="flex items-center gap-2">
+            <span className="flex items-center gap-2.5">
               <Globe
                 className="h-3.5 w-3.5 text-[--color-gold]"
                 strokeWidth={1.75}
