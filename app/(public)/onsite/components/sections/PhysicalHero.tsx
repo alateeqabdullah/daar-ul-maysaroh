@@ -693,7 +693,7 @@ export function PhysicalHero({ className }: PhysicalHeroProps) {
         <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-background to-transparent sm:h-32" />
       </motion.div>
 
-      <div className="container relative z-10 mx-auto grid items-center gap-6 px-4 xs:px-5 sm:gap-8 sm:px-6 md:gap-12 lg:grid-cols-2 lg:gap-16 lg:px-8 xl:gap-24">
+      <div className="container relative z-10 mx-auto -grid items-center gap-6 px-4 xs:px-5 sm:gap-8 sm:px-6 md:gap-12 lg:grid-cols-2 lg:gap-16 lg:px-8 xl:gap-24">
         {/* ============================================================
             LEFT — CONTENT
             ============================================================ */}
