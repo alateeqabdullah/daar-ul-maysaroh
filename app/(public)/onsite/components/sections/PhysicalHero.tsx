@@ -562,7 +562,7 @@ import {
   GraduationCap,
   Heart,
   Star,
-  BookOpen,
+ 
 } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
@@ -626,7 +626,7 @@ export function PhysicalHero({ className }: PhysicalHeroProps) {
     <section
       ref={containerRef}
       className={cn(
-        "relative flex min-h-screen items-center overflow-hidden bg-background pt-16 pb-10 xs:pt-20 xs:pb-12 sm:pt-24 sm:pb-16 md:min-h-[110vh] md:pt-32 md:pb-20",
+        "relative flex min-h-screen items-center overflow-hidden bg-background pt-16 pb-10 xs:pt-24 xs:pb-12 sm:pt-28 sm:pb-16 md:min-h-[110vh] md:pt-32 md:pb-20",
         className
       )}
     >
@@ -682,15 +682,15 @@ export function PhysicalHero({ className }: PhysicalHeroProps) {
               "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'%3E%3Cg fill='none' stroke='%237c3aed' stroke-width='0.8'%3E%3Cpath d='M60 10 L110 60 L60 110 L10 60 Z'/%3E%3Cpath d='M60 25 L95 60 L60 95 L25 60 Z'/%3E%3Cpath d='M60 10 L60 110 M10 60 L110 60'/%3E%3C/g%3E%3C/svg%3E\")",
             backgroundSize: isMobile ? "90px 90px" : "120px 120px",
             maskImage:
-              "radial-gradient(ellipse at center, black 30%, transparent 75%)",
+              "radial-linear(ellipse at center, black 30%, transparent 75%)",
             WebkitMaskImage:
-              "radial-gradient(ellipse at center, black 30%, transparent 75%)",
+              "radial-linear(ellipse at center, black 30%, transparent 75%)",
           }}
         />
 
         {/* Edge fades */}
-        <div className="absolute left-0 right-0 top-0 h-24 bg-gradient-to-b from-background to-transparent sm:h-32" />
-        <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-background to-transparent sm:h-32" />
+        <div className="absolute left-0 right-0 top-0 h-24 bg-linear-to-b from-background to-transparent sm:h-32" />
+        <div className="absolute bottom-0 left-0 right-0 h-24 bg-linear-to-t from-background to-transparent sm:h-32" />
       </motion.div>
 
       <div className="container relative z-10 mx-auto -grid items-center gap-6 px-4 xs:px-5 sm:gap-8 sm:px-6 md:gap-12 lg:grid-cols-2 lg:gap-16 lg:px-8 xl:gap-24">
@@ -735,12 +735,12 @@ export function PhysicalHero({ className }: PhysicalHeroProps) {
             <h1 className="font-heading text-4xl font-black leading-[1.05] tracking-tighter xs:text-5xl sm:text-5xl md:text-5xl lg:text-6xl xl:text-[4.25rem]">
               A Community Centered on{" "}
               <span className="relative inline-block">
-                <span className="relative z-10 bg-gradient-to-r from-purple-600 via-purple-700 to-amber-600 bg-clip-text text-transparent">
+                <span className="relative z-10 bg-linear-to-r from-purple-600 via-purple-700 to-amber-600 bg-clip-text text-transparent">
                   The Qur&apos;an.
                 </span>
                 <motion.span
                   aria-hidden
-                  className="absolute -bottom-2 left-0 right-0 h-1.5 rounded-full bg-gradient-to-r from-purple-600 to-amber-600 opacity-30"
+                  className="absolute -bottom-2 left-0 right-0 h-1.5 rounded-full bg-linear-to-r from-purple-600 to-amber-600 opacity-30"
                   initial={{ width: 0 }}
                   animate={{ width: "100%" }}
                   transition={{ delay: 0.8, duration: 1, ease: "easeOut" }}
@@ -792,7 +792,7 @@ export function PhysicalHero({ className }: PhysicalHeroProps) {
                     initial={{ scale: 0, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
                     transition={{ delay: 0.3 + i * 0.08, duration: 0.4 }}
-                    className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-background bg-gradient-to-br from-purple-600 to-purple-800 text-[10px] font-black text-white/60 shadow-lg sm:h-9 sm:w-9 md:h-10 md:w-10"
+                    className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-background bg-linear-to-br from-purple-600 to-purple-800 text-[10px] font-black text-white/60 shadow-lg sm:h-9 sm:w-9 md:h-10 md:w-10"
                   >
                     {String.fromCharCode(65 + i)}
                   </motion.div>
@@ -838,7 +838,7 @@ export function PhysicalHero({ className }: PhysicalHeroProps) {
               >
                 <Button
                   size={isMobile ? "default" : "lg"}
-                  className="group relative h-12 w-full overflow-hidden rounded-2xl bg-gradient-to-r from-purple-600 via-purple-700 to-amber-600 px-6 text-xs font-black text-white shadow-2xl transition-all hover:from-purple-700 hover:to-amber-700 xs:h-13 xs:w-auto xs:px-7 xs:text-sm sm:h-14 sm:rounded-3xl sm:px-8 md:h-15 md:px-10 md:text-base lg:h-16 lg:px-12"
+                  className="group relative h-12 w-full overflow-hidden rounded-2xl bg-linear-to-r from-purple-600 via-purple-700 to-amber-600 px-6 text-xs font-black text-white shadow-2xl transition-all hover:from-purple-700 hover:to-amber-700 xs:h-13 xs:w-auto xs:px-7 xs:text-sm sm:h-14 sm:rounded-3xl sm:px-8 md:h-15 md:px-10 md:text-base lg:h-16 lg:px-12"
                 >
                   <span className="relative z-10 flex items-center justify-center gap-2">
                     APPLY NOW
@@ -847,7 +847,7 @@ export function PhysicalHero({ className }: PhysicalHeroProps) {
                   {shouldAnimate && (
                     <motion.span
                       aria-hidden
-                      className="absolute inset-0 -skew-x-12 bg-gradient-to-r from-transparent via-white/25 to-transparent"
+                      className="absolute inset-0 -skew-x-12 bg-linear-to-r from-transparent via-white/25 to-transparent"
                       animate={{ x: ["-150%", "250%"] }}
                       transition={{
                         duration: 3.5,
@@ -891,7 +891,7 @@ export function PhysicalHero({ className }: PhysicalHeroProps) {
             perspective: perspectiveValue,
             scale: scaleValue,
           }}
-          className="relative order-1 mb-8 flex h-[420px] items-center justify-center sm:h-[500px] md:h-[600px] lg:order-2 lg:mb-0 lg:h-[800px]"
+          className="relative order-1 mb-8 flex h-[420px] items-center justify-center sm:h-[500px] md:h-[600px] lg:order-2 lg:mb-0 lg:h-[800px] pt-28"
         >
           {/* Orbital rings */}
           {!isMobile && shouldAnimate && (
@@ -915,7 +915,7 @@ export function PhysicalHero({ className }: PhysicalHeroProps) {
           )}
 
           {/* Card */}
-          <div className="institutional-card group relative w-full max-w-[90vw] overflow-hidden rounded-3xl border border-purple-200 bg-gradient-to-br from-background via-purple-50/5 to-amber-50/5 p-8 text-center shadow-2xl dark:border-purple-800 sm:max-w-[500px] sm:p-10 md:max-w-[600px] md:rounded-[5rem] md:p-14 md:shadow-3xl lg:p-16">
+          <div className="institutional-card group relative w-full max-w-[90vw] overflow-hidden rounded-3xl border border-purple-200 bg-linear-to-br from-background via-purple-50/5 to-amber-50/5 p-8 text-center shadow-2xl dark:border-purple-800 sm:max-w-[500px] sm:p-10 md:max-w-[600px] md:rounded-[5rem] md:p-14 md:shadow-3xl lg:p-16">
             {/* corner glows */}
             <div className="absolute -left-20 -top-20 h-48 w-48 rounded-full bg-purple-600/10 blur-3xl transition-all duration-1000 group-hover:bg-purple-600/20 md:-left-32 md:-top-32 md:h-80 md:w-80 md:blur-[120px]" />
             <div className="absolute -bottom-20 -right-20 h-48 w-48 rounded-full bg-amber-500/10 blur-3xl transition-all duration-1000 group-hover:bg-amber-500/20 md:-bottom-32 md:-right-32 md:h-80 md:w-80 md:blur-[120px]" />
@@ -924,7 +924,7 @@ export function PhysicalHero({ className }: PhysicalHeroProps) {
             <div className="pointer-events-none absolute inset-0 rounded-3xl border border-white/5 md:rounded-[5rem]" />
 
             {/* hover wash */}
-            <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-transparent via-purple-600/5 to-transparent opacity-0 transition-opacity duration-700 group-hover:opacity-100 md:rounded-[5rem]" />
+            <div className="absolute inset-0 rounded-3xl bg-linear-to-br from-transparent via-purple-600/5 to-transparent opacity-0 transition-opacity duration-700 group-hover:opacity-100 md:rounded-[5rem]" />
 
             {/* --- content --- */}
             <div className="relative z-10">
@@ -936,13 +936,13 @@ export function PhysicalHero({ className }: PhysicalHeroProps) {
                 className="mb-6 inline-flex items-center justify-center md:mb-8"
               >
                 <div className="relative">
-                  <div className="absolute inset-0 rounded-full bg-gradient-to-br from-purple-600 to-amber-500 opacity-30 blur-2xl" />
+                  <div className="absolute inset-0 rounded-full bg-linear-to-br from-purple-600 to-amber-500 opacity-30 blur-2xl" />
                   <Image
                     src={Logo}
                     width={120}
                     height={120}
                     alt="Daar-ul-Maysaroh logo"
-                    className="relative h-24 w-24 rounded-full bg-gradient-to-br from-purple-600 to-amber-500 p-1.5 shadow-2xl transition-all duration-500 group-hover:scale-105 group-hover:rotate-2 md:h-28 md:w-28"
+                    className="relative h-24 w-24 rounded-full bg-linear-to-br from-purple-600 to-amber-500 p-1.5 shadow-2xl transition-all duration-500 group-hover:scale-105 group-hover:rotate-2 md:h-28 md:w-28"
                   />
                 </div>
               </motion.div>
@@ -963,14 +963,14 @@ export function PhysicalHero({ className }: PhysicalHeroProps) {
 
               {/* Divider with location */}
               <div className="mt-6 flex items-center justify-center gap-4 md:mt-8 md:gap-6">
-                <div className="h-px w-12 bg-gradient-to-r from-transparent to-amber-500/50 md:w-20" />
+                <div className="h-px w-12 bg-linear-to-r from-transparent to-amber-500/50 md:w-20" />
                 <div className="flex flex-col items-center">
                   <MapPin className="mb-1 h-4 w-4 text-amber-500 md:h-5 md:w-5" />
                   <p className="whitespace-nowrap text-[9px] font-black uppercase tracking-[0.3em] text-amber-500 md:text-[10px] md:tracking-[0.4em]">
                     Ibadan Campus
                   </p>
                 </div>
-                <div className="h-px w-12 bg-gradient-to-l from-transparent to-amber-500/50 md:w-20" />
+                <div className="h-px w-12 bg-linear-to-l from-transparent to-amber-500/50 md:w-20" />
               </div>
 
               {/* Stats — with inline trust badge */}
@@ -1003,7 +1003,7 @@ export function PhysicalHero({ className }: PhysicalHeroProps) {
             </div>
 
             {/* bottom accent line */}
-            <div className="absolute bottom-0 left-0 right-0 h-0.5 origin-left scale-x-0 bg-gradient-to-r from-transparent via-purple-600/60 to-transparent transition-transform duration-700 group-hover:scale-x-100" />
+            <div className="absolute bottom-0 left-0 right-0 h-0.5 origin-left scale-x-0 bg-linear-to-r from-transparent via-purple-600/60 to-transparent transition-transform duration-700 group-hover:scale-x-100" />
           </div>
         </motion.div>
       </div>
@@ -1022,7 +1022,7 @@ export function PhysicalHero({ className }: PhysicalHeroProps) {
           <motion.div
             animate={{ y: [0, 8, 0] }}
             transition={{ duration: 1.6, repeat: Infinity, ease: "easeInOut" }}
-            className="h-10 w-px bg-gradient-to-b from-purple-700 to-transparent md:h-14"
+            className="h-10 w-px bg-linear-to-b from-purple-700 to-transparent md:h-14"
           />
         </motion.div>
       )}
